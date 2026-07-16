@@ -37,3 +37,7 @@ export {
   type ExportKnowledgeDocumentsResult,
   type KnowledgeDocumentExportFormat,
 } from "./ExportKnowledgeDocumentsUseCase";
+export {
+  CreateKnowledgeSourceUseCase,
+  type CreateKnowledgeSourceInput,
+} from "./CreateKnowledgeSourceUseCase";

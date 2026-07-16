@@ -10,10 +10,10 @@ composition root, and dependency-free validation runners.
 
 ## Status
 
-**Task 10 — Workspace-scoped document boundary.**
-`KnowledgeDocument` now carries a required `workspaceId`; the repository
-port and every list/page/create/update/delete/search/export use case are
-scoped to a single workspace. Validate with:
+**Task 11 — Workspace-scoped knowledge source registry.**
+`KnowledgeSource` (`workspaceId`, `id`, `name`) can be registered via
+`CreateKnowledgeSourceUseCase` and `DefaultInMemoryKnowledgeSourceRepository`,
+with the same workspace isolation as knowledge documents. Validate with:
 
 ```bash
 pnpm install
@@ -49,9 +49,10 @@ See [`docs/architecture.md`](docs/architecture.md) and
 |---|---|
 | `pnpm validate:skeleton` | Assert directory, barrel, docs, and script integrity |
 | `pnpm validate:repository` | DefaultInMemoryRepository port contract |
-| `pnpm validate:application` | List + Page + Create + Update + Delete + Search + Export knowledge document use cases |
+| `pnpm validate:repository:source` | DefaultInMemoryKnowledgeSourceRepository port contract |
+| `pnpm validate:application` | List + Page + Create + Update + Delete + Search + Export knowledge document use cases + Create knowledge source use case |
 | `pnpm typecheck` | TypeScript strict check (`tsc --noEmit`) |
-| `pnpm validate` | skeleton + repository + application + typecheck |
+| `pnpm validate` | skeleton + repository + repository:source + application + typecheck |
 | `pnpm infra:config` | `docker compose ... config` (optional) |
 
 ## Dependencies

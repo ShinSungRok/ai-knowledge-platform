@@ -112,6 +112,14 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   string plus a count; it has no knowledge of HTTP, file systems, or
   storage — a caller (composition/API layer, when it exists) decides what to
   do with the output.
+- `KnowledgeSource` is a minimal workspace-scoped registry entry
+  (`workspaceId`, `id`, `name`) with `KnowledgeSourceRepository` /
+  `DefaultInMemoryKnowledgeSourceRepository` and
+  `CreateKnowledgeSourceUseCase`, following the same
+  domain → port → in-memory adapter → use case pattern and workspace
+  isolation as `KnowledgeDocument`. There is no update/delete/list use case,
+  no link to `KnowledgeDocument`, and no connector/sync detail on the model
+  yet.
 - Database adapters, HTTP/server, search, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + application + typecheck).

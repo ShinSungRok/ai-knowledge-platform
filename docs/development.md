@@ -19,11 +19,12 @@ exit non-zero on failure.
 Current validators:
 
 ```bash
-pnpm validate:skeleton     # directory + barrel + docs integrity
-pnpm validate:repository   # DefaultInMemoryRepository port contract
-pnpm validate:application  # List + Page + Create + Update + Delete + Search + Export use cases
-pnpm typecheck             # TypeScript strict check
-pnpm validate              # skeleton + repository + application + typecheck
+pnpm validate:skeleton         # directory + barrel + docs integrity
+pnpm validate:repository       # DefaultInMemoryRepository port contract
+pnpm validate:repository:source # DefaultInMemoryKnowledgeSourceRepository port contract
+pnpm validate:application      # List + Page + Create + Update + Delete + Search + Export + Source use cases
+pnpm typecheck                 # TypeScript strict check
+pnpm validate                  # skeleton + repository + repository:source + application + typecheck
 ```
 
 Formal unit/integration/e2e suites under `tests/` are reserved for later

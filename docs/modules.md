@@ -11,17 +11,18 @@ Module barrels are always present. Task 2 added the storage port/adapter pair.
 Tasks 3–9 add list/page/create/update/delete/search/export application use
 cases for knowledge documents. Task 10 scopes all of the above to a required
 `workspaceId` — the minimal logical tenancy boundary (no Workspace entity or
-repository yet).
+repository yet). Task 11 adds a parallel, workspace-scoped registry for
+`KnowledgeSource` (create-only; no link to `KnowledgeDocument` yet).
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules
 
 | Module | Responsibility |
 |---|---|
-| `domain` | Canonical types (`KnowledgeDocument`, workspace-scoped via `workspaceId`). Zero outward dependencies. |
-| `application` | Use cases (list/page/create/update/delete/search/export), each scoped to a `workspaceId`, over domain types and ports. |
-| `repository` | Persistence-agnostic ports (`KnowledgeDocumentRepository`; `findById`/`findAll`/`deleteById` take `workspaceId`). |
-| `persistence` | Concrete adapters (`DefaultInMemoryRepository`; DB adapters later). |
+| `domain` | Canonical types (`KnowledgeDocument`, `KnowledgeSource`), both workspace-scoped via `workspaceId`. Zero outward dependencies. |
+| `application` | Use cases (list/page/create/update/delete/search/export for documents; create for sources), each scoped to a `workspaceId`, over domain types and ports. |
+| `repository` | Persistence-agnostic ports (`KnowledgeDocumentRepository`, `KnowledgeSourceRepository`); document/source methods take `workspaceId`. |
+| `persistence` | Concrete adapters (`DefaultInMemoryRepository`, `DefaultInMemoryKnowledgeSourceRepository`; DB adapters later). |
 | `pipeline` | Ingestion pipelines from external knowledge sources. |
 | `embedding` | Chunking, embedding, and vector indexing ports/adapters. |
 | `search` | Search engine abstraction (keyword, vector, hybrid). |

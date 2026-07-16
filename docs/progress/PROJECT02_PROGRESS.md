@@ -260,3 +260,32 @@ Scope knowledge documents by workspace
 
 **Status**
 Completed
+
+## Task 11
+
+**Date**
+2026-07-16
+
+**Commit**
+Pending
+
+**Title**
+Add workspace-scoped knowledge source registry
+
+**Summary**
+- Added `KnowledgeSource` domain type (`workspaceId`, `id`, `name`), exported from the domain barrel
+- Added `KnowledgeSourceRepository` port (`save`, `findById(workspaceId, id)`) and `DefaultInMemoryKnowledgeSourceRepository` adapter, reusing the same workspace-partitioned Map + defensive-copy pattern as the document repository
+- Added `CreateKnowledgeSourceUseCase`: rejects empty/blank `workspaceId`/`id`/`name`, rejects duplicate `id` within a workspace, allows the same `id` independently in a different workspace
+- Added `validate:repository:source` and `validate:application:source` runners plus unit-case inventories, wired into the top-level `validate` script and the `validate:application` chain
+- No Workspace entity/CRUD, no Document–Source link, no Connector/Sync/HTTP — scope limited to source registration only
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:repository`
+- `pnpm validate:repository:source`
+- `pnpm validate:application`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
