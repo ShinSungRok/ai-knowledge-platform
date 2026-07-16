@@ -1,0 +1,31 @@
+---
+description: Validation runners and dependency-free correctness checks
+globs: "{app,scripts,tests}/**/*.{ts,tsx,md}"
+alwaysApply: true
+---
+
+# Validation Rules
+
+## Philosophy
+
+Correctness is proven by **dependency-free validation runners** (plain `tsx`
+scripts) that assert invariants and exit non-zero on failure — same approach
+as Project1.
+
+## Rules
+
+- Prefer `scripts/**` and `app/knowledge/**/run*Validation.ts` for contract and
+  architecture checks.
+- Validators must run against fakes/in-memory adapters only — no Docker,
+  network, API keys, or real servers required by default.
+- Every phase that adds capability ships its own validator before the next phase.
+- `pnpm validate` (or the phase-specific `validate:*` script) must pass before
+  commit/close-out.
+
+## Task 1
+
+```bash
+pnpm validate:skeleton
+pnpm typecheck
+pnpm validate
+```

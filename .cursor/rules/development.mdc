@@ -1,0 +1,31 @@
+---
+description: Development workflow, scope discipline, and dependency policy
+alwaysApply: true
+---
+
+# Development Rules
+
+## Scope discipline
+
+- One explicit goal per task; honor the non-goal list.
+- Do not implement features unless the current task asks for them.
+- Keep dependencies minimal — no framework/DB/search/AI SDK until scoped.
+- Document limits in `docs/` when closing a phase.
+
+## Commits
+
+- One focused commit per task.
+- Conventional Commits (`feat(scope):`, `chore(scope):`, `docs(scope):`).
+- Never commit before required validators pass.
+
+## Layout
+
+Respect the repository skeleton:
+
+- `app/knowledge/*` — application modules
+- `docs/` — architecture and guides
+- `tests/` — future formal suites
+- `scripts/` — validation/ops runners
+- `docker/` — infra and image scaffolding
+- `.cursor/rules/` — persistent agent rules
+- `.agents/skills/` — project agent skills

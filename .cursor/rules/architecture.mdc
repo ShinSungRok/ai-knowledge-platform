@@ -1,0 +1,31 @@
+---
+description: Enforce Clean / Hexagonal / DDD architecture for app/knowledge
+globs: app/**/*.ts
+alwaysApply: true
+---
+
+# Architecture Rules
+
+Inherit Project1 (`public-law-ai`) philosophy.
+
+## Boundaries
+
+- `app/knowledge/domain` has **zero outward dependencies**.
+- Business logic depends on **ports (interfaces)**, never concrete adapters.
+- Only `app/knowledge/composition` may import and wire concrete adapters.
+- No upward imports (lower layers never import higher layers).
+- Cross-cutting modules (`evaluation`, `observability`, `reliability`,
+  `security`) may depend downward; production business modules must not depend
+  on them.
+
+## Patterns
+
+- Interfaces before implementations.
+- Name concrete adapters `Default*` / `InMemory*` / `Fake*` + interface name.
+- Prefer explicit use cases in `application` over god-object services.
+- Keep module `index.ts` barrels accurate.
+
+## Task 1 constraint
+
+Do not implement product features in the skeleton phase. Add ports/adapters
+only when a later task explicitly scopes them.

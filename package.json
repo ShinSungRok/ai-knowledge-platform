@@ -1,0 +1,18 @@
+{
+  "name": "ai-knowledge-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Production-shaped TypeScript skeleton for an AI Knowledge Platform (Clean / Hexagonal / DDD).",
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "validate:skeleton": "tsx scripts/validate-skeleton.ts",
+    "validate": "pnpm validate:skeleton && pnpm typecheck",
+    "infra:config": "docker compose -f docker/docker-compose.yml config"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
