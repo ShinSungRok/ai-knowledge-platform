@@ -172,8 +172,19 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   contiguous `order`, and returns an empty array for empty text. It has no
   chunk-storage, chunk-generation-pipeline, natural-language-boundary, or
   embedding responsibility.
+- `ChunkKnowledgeDocumentPipeline` (`app/knowledge/pipeline`) orchestrates
+  `KnowledgeDocumentRepository`, `DocumentChunkRepository`, and
+  `ChunkingService` — pure ports, never concrete adapters — to convert one
+  already-stored `KnowledgeDocument` into chunks and fully replace that
+  document's chunk set via `replaceForDocument`. If the document is not
+  found (missing or a different workspace), it throws without ever calling
+  the chunker or the chunk repository — no partial side effects. Since the
+  chunker is deterministic and `replaceForDocument` always fully replaces,
+  re-running with the same input is stable. Whole-source processing,
+  automatic chunking during sync, and background jobs are out of scope for
+  this pipeline.
 - Database adapters, HTTP/server, search, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
   repository:chunk + application + pipeline connector + pipeline sync +
-  embedding chunker + typecheck).
+  pipeline chunk-document + embedding chunker + typecheck).

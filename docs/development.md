@@ -26,9 +26,10 @@ pnpm validate:repository:chunk # DefaultInMemoryDocumentChunkRepository port con
 pnpm validate:application      # List + Page + Create + Update + Delete + Search + Export + Source use cases
 pnpm validate:pipeline:connector # FakeKnowledgeSourceConnector port contract
 pnpm validate:pipeline:sync    # SyncKnowledgeSourcePipeline idempotent sync behavior
+pnpm validate:pipeline:chunk-document # ChunkKnowledgeDocumentPipeline chunk-and-replace behavior
 pnpm validate:embedding:chunker # FixedSizeDocumentChunker deterministic chunking behavior
 pnpm typecheck                 # TypeScript strict check
-pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application + pipeline:connector + pipeline:sync + embedding:chunker + typecheck
+pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application + pipeline:connector + pipeline:sync + pipeline:chunk-document + embedding:chunker + typecheck
 ```
 
 Formal unit/integration/e2e suites under `tests/` are reserved for later

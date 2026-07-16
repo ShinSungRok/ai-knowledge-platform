@@ -429,3 +429,30 @@ Add deterministic document chunker
 
 **Status**
 Completed
+
+## Task 17
+
+**Date**
+2026-07-16
+
+**Commit**
+Pending
+
+**Title**
+Add document chunking pipeline
+
+**Summary**
+- Added `ChunkKnowledgeDocumentPipeline` in `app/knowledge/pipeline`: constructor injects only `KnowledgeDocumentRepository`, `DocumentChunkRepository`, and `ChunkingService` (pure ports); `chunkDocument({ workspaceId, documentId })` returns `{ documentId, chunkCount }`
+- Looks up the document via `findById(workspaceId, documentId)`; if missing or belonging to a different workspace, throws without ever calling the chunker or the chunk repository — no partial side effects
+- If found, hands the document to the chunker and fully replaces the document's entire existing chunk set via `replaceForDocument` (stale chunks are never merged with new ones; an empty chunker result clears existing chunks)
+- Since the chunker is deterministic and `replaceForDocument` always fully replaces, re-running with the same input is stable — verified with counting fakes proving no chunker/chunk-repository calls on a missing/cross-workspace document, full replacement over pre-seeded stale chunks, empty-text clearing, and repeat-run stability
+- Exported the new pipeline from the `pipeline` barrel; added `validate:pipeline:chunk-document` runner + `tests/unit/chunkKnowledgeDocumentPipeline.cases.ts`, wired into the top-level `validate` chain; no whole-source processing, automatic chunking during sync, background jobs, chunker algorithm change, or `Document` CRUD change introduced
+
+**Validation**
+- `pnpm validate:embedding:chunker`
+- `pnpm validate:pipeline:chunk-document`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
