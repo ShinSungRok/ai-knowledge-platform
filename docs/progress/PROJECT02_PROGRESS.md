@@ -456,3 +456,31 @@ Add document chunking pipeline
 
 **Status**
 Completed
+
+## Task 18
+
+**Date**
+2026-07-16
+
+**Commit**
+Pending
+
+**Title**
+Add source chunk rebuild pipeline
+
+**Summary**
+- Added `RechunkKnowledgeSourcePipeline` in `app/knowledge/pipeline`: constructor injects only `KnowledgeSourceRepository`, `KnowledgeDocumentRepository`, and `ChunkKnowledgeDocumentPipeline`; `rechunk({ workspaceId, sourceId })` returns `{ sourceId, processedDocumentCount, savedChunkCount }`
+- Looks up the source via `findById` first; if missing or belonging to a different workspace, throws without ever calling `findAll` or touching chunk storage — no partial side effects
+- Filters `findAll(workspaceId)` down to documents whose `sourceId` matches the input and delegates each one to `ChunkKnowledgeDocumentPipeline`; documents/chunks belonging to other sources are never read from or written to, and a source with no matching documents succeeds with a zero-count result
+- Since each delegated `chunkDocument` call is itself a full replace and deterministic, re-running `rechunk` for the same source does not duplicate chunks — verified with counting fakes proving no `findAll`/chunk-repository calls on a missing/cross-workspace source, cross-source chunk isolation via a pre-seeded stale chunk that must remain untouched, re-run stability, and the empty-source zero-count case
+- Exported the new pipeline from the `pipeline` barrel; added `validate:pipeline:rechunk-source` runner + `tests/unit/rechunkKnowledgeSourcePipeline.cases.ts`, wired into the top-level `validate` chain; no automatic re-chunking during sync, deletion of documents/chunks removed from the source, background scheduling/retry, or Source CRUD/Connector change introduced
+
+**Validation**
+- `pnpm validate:embedding:chunker`
+- `pnpm validate:pipeline:chunk-document`
+- `pnpm validate:pipeline:rechunk-source`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

@@ -183,8 +183,21 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   re-running with the same input is stable. Whole-source processing,
   automatic chunking during sync, and background jobs are out of scope for
   this pipeline.
+- `RechunkKnowledgeSourcePipeline` (`app/knowledge/pipeline`) orchestrates
+  `KnowledgeSourceRepository`, `KnowledgeDocumentRepository`, and `Chunk
+  KnowledgeDocumentPipeline` to re-chunk only the documents belonging to one
+  `KnowledgeSource`. The source is looked up first — if missing or in a
+  different workspace, it throws without ever listing documents or
+  touching chunk storage — then it filters `findAll(workspaceId)` down to
+  documents whose `sourceId` matches and delegates each to `Chunk
+  KnowledgeDocumentPipeline`; other sources' documents/chunks are never
+  read from or written to, and a source with no matching documents
+  succeeds with a zero-count result. Automatic re-chunking during sync,
+  deletion of documents/chunks removed from the source, and background
+  scheduling/retry are out of scope for this pipeline.
 - Database adapters, HTTP/server, search, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
   repository:chunk + application + pipeline connector + pipeline sync +
-  pipeline chunk-document + embedding chunker + typecheck).
+  pipeline chunk-document + pipeline rechunk-source + embedding chunker +
+  typecheck).

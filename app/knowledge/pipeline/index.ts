@@ -11,10 +11,12 @@
  * canonical document ids, whole-batch validation before any write, and
  * update-in-place on re-sync. `ChunkKnowledgeDocumentPipeline` converts a
  * single already-stored document into chunks via the `ChunkingService`
- * port and fully replaces that document's chunk set. Real connectors,
- * deletion of documents that disappear from the source, automatic
- * chunking during sync, and background scheduling are out of scope until a
- * later task scopes them.
+ * port and fully replaces that document's chunk set;
+ * `RechunkKnowledgeSourcePipeline` re-chunks every document belonging to
+ * one source by delegating each to `ChunkKnowledgeDocumentPipeline`. Real
+ * connectors, deletion of documents/chunks that disappear from the source,
+ * automatic chunking during sync, and background scheduling are out of
+ * scope until a later task scopes them.
  */
 export const KNOWLEDGE_MODULE_PIPELINE = "app/knowledge/pipeline" as const;
 
@@ -36,3 +38,8 @@ export {
   type ChunkKnowledgeDocumentInput,
   type ChunkKnowledgeDocumentResult,
 } from "./ChunkKnowledgeDocumentPipeline";
+export {
+  RechunkKnowledgeSourcePipeline,
+  type RechunkKnowledgeSourceInput,
+  type RechunkKnowledgeSourceResult,
+} from "./RechunkKnowledgeSourcePipeline";

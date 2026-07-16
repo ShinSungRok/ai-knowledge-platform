@@ -27,7 +27,9 @@ deterministic function from `KnowledgeDocument` to ordered `DocumentChunk`s,
 not yet wired to any storage or pipeline. Task 17 adds
 `ChunkKnowledgeDocumentPipeline`, wiring the document repository, chunk
 repository, and `ChunkingService` ports into a single-document chunk-and-
-replace pipeline.
+replace pipeline. Task 18 adds `RechunkKnowledgeSourcePipeline`, which
+re-chunks every document of one source by filtering `findAll` and
+delegating each match to `ChunkKnowledgeDocumentPipeline`.
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules
@@ -38,7 +40,7 @@ Other modules remain skeleton boundaries until scoped.
 | `application` | Use cases (list/page/create/update/delete/search/export for documents; create for sources), each scoped to a `workspaceId`, over domain types and ports. |
 | `repository` | Persistence-agnostic ports (`KnowledgeDocumentRepository`, `KnowledgeSourceRepository`, `DocumentChunkRepository`); methods take `workspaceId` (chunk methods also take `documentId`). |
 | `persistence` | Concrete adapters (`DefaultInMemoryRepository`, `DefaultInMemoryKnowledgeSourceRepository`, `DefaultInMemoryDocumentChunkRepository`; DB adapters later). |
-| `pipeline` | Ingestion pipelines from external knowledge sources. `KnowledgeSourceConnector` port + `FakeKnowledgeSourceConnector` fixture adapter fetch normalized documents (`externalId`/`title`/`text`) for a `KnowledgeSource`; `SyncKnowledgeSourcePipeline` turns those into idempotent, deterministically-keyed `KnowledgeDocument` writes via the repository ports. `ChunkKnowledgeDocumentPipeline` chunks a single stored document via `ChunkingService` and fully replaces its chunk set via `DocumentChunkRepository`. No document deletion, automatic chunking during sync, background scheduling, or real connector yet. |
+| `pipeline` | Ingestion pipelines from external knowledge sources. `KnowledgeSourceConnector` port + `FakeKnowledgeSourceConnector` fixture adapter fetch normalized documents (`externalId`/`title`/`text`) for a `KnowledgeSource`; `SyncKnowledgeSourcePipeline` turns those into idempotent, deterministically-keyed `KnowledgeDocument` writes via the repository ports. `ChunkKnowledgeDocumentPipeline` chunks a single stored document via `ChunkingService` and fully replaces its chunk set via `DocumentChunkRepository`; `RechunkKnowledgeSourcePipeline` re-chunks every document of one source by delegating each to `ChunkKnowledgeDocumentPipeline`. No document/chunk deletion, automatic chunking during sync, background scheduling, or real connector yet. |
 | `embedding` | Chunking, embedding, and vector indexing ports/adapters. `ChunkingService` port + `FixedSizeDocumentChunker` deterministic, fixed-size adapter split a `KnowledgeDocument` into ordered `DocumentChunk`s; no storage, pipeline, or embedding implementation yet. |
 | `search` | Search engine abstraction (keyword, vector, hybrid). |
 | `retrieval` | Retriever port consumed by the RAG flow. |
