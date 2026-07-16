@@ -178,3 +178,30 @@ Implement search use case for knowledge items
 
 **Status**
 Completed
+
+## Task 8
+
+**Date**
+2026-07-16
+
+**Commit**
+Pending
+
+**Title**
+Implement sorting and paging use case for knowledge items
+
+**Summary**
+- Added `ListKnowledgeDocumentsPageUseCase` with sort + page input/output types
+- Sorting limited to `id`/`title` (no creation-date field on domain model yet)
+- Paging validates `page`/`pageSize` bounds and returns `totalCount`/`totalPages`
+- Extended `validate:application` with page runner
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:repository`
+- `pnpm validate:application`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

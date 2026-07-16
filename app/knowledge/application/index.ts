@@ -5,6 +5,13 @@ export const KNOWLEDGE_MODULE_APPLICATION = "app/knowledge/application" as const
 
 export { ListKnowledgeDocumentsUseCase } from "./ListKnowledgeDocumentsUseCase";
 export {
+  ListKnowledgeDocumentsPageUseCase,
+  type ListKnowledgeDocumentsPageInput,
+  type KnowledgeDocumentsPage,
+  type KnowledgeDocumentSortField,
+  type SortOrder,
+} from "./ListKnowledgeDocumentsPageUseCase";
+export {
   CreateKnowledgeDocumentUseCase,
   type CreateKnowledgeDocumentInput,
 } from "./CreateKnowledgeDocumentUseCase";

@@ -95,6 +95,9 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   `CreateKnowledgeDocumentUseCase`, `UpdateKnowledgeDocumentUseCase`,
   `DeleteKnowledgeDocumentUseCase`, `SearchKnowledgeDocumentsUseCase`).
   Search covers `title`/`text` only (no tags on the domain model yet).
+- `ListKnowledgeDocumentsPageUseCase` adds sorting + paging. Sorting is limited
+  to `id`/`title` — `KnowledgeDocument` has no creation-date field yet, so
+  sort-by-creation-date is deferred until the domain model adds one.
 - Database adapters, HTTP/server, search, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + application + typecheck).

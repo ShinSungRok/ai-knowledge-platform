@@ -19,6 +19,7 @@ runner is introduced deliberately.
 |---|---|
 | Case inventory | `tests/unit/defaultInMemoryRepository.cases.ts` |
 | Case inventory | `tests/unit/listKnowledgeDocumentsUseCase.cases.ts` |
+| Case inventory | `tests/unit/listKnowledgeDocumentsPageUseCase.cases.ts` |
 | Case inventory | `tests/unit/createKnowledgeDocumentUseCase.cases.ts` |
 | Case inventory | `tests/unit/updateKnowledgeDocumentUseCase.cases.ts` |
 | Case inventory | `tests/unit/deleteKnowledgeDocumentUseCase.cases.ts` |

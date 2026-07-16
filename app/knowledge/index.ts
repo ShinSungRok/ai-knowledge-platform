@@ -10,12 +10,17 @@ export type { KnowledgeDocument } from "./domain";
 export { KNOWLEDGE_MODULE_APPLICATION } from "./application";
 export {
   ListKnowledgeDocumentsUseCase,
+  ListKnowledgeDocumentsPageUseCase,
   CreateKnowledgeDocumentUseCase,
   UpdateKnowledgeDocumentUseCase,
   DeleteKnowledgeDocumentUseCase,
   SearchKnowledgeDocumentsUseCase,
 } from "./application";
 export type {
+  ListKnowledgeDocumentsPageInput,
+  KnowledgeDocumentsPage,
+  KnowledgeDocumentSortField,
+  SortOrder,
   CreateKnowledgeDocumentInput,
   UpdateKnowledgeDocumentInput,
   DeleteKnowledgeDocumentInput,
