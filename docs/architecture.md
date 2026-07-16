@@ -90,6 +90,8 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
 ## 7. Current limitations
 
 - Domain storage port + in-memory adapter exist (`KnowledgeDocumentRepository` /
-  `DefaultInMemoryRepository`). Database adapters are not implemented yet.
-- No runtime server, search, AI provider, or composition wiring yet.
-- Validate with `pnpm validate` (skeleton + repository + typecheck).
+  `DefaultInMemoryRepository`).
+- Basic query use case exists (`ListKnowledgeDocumentsUseCase`).
+- Database adapters, HTTP/server, search, and AI provider wiring are not
+  implemented yet.
+- Validate with `pnpm validate` (skeleton + repository + application + typecheck).

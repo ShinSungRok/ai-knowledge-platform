@@ -50,3 +50,30 @@ Add DefaultInMemoryRepository for domain storage
 
 **Status**
 Completed
+
+## Task 3
+
+**Date**
+2026-07-16
+
+**Commit**
+Pending
+
+**Title**
+Implement basic query use case for knowledge items
+
+**Summary**
+- Added `ListKnowledgeDocumentsUseCase` in `application/`
+- Use case depends only on `KnowledgeDocumentRepository` port
+- Validation seeds `DefaultInMemoryRepository` and asserts list query behavior
+- Wired `pnpm validate:application` into `pnpm validate`
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:repository`
+- `pnpm validate:application`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

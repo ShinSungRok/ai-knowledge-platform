@@ -10,9 +10,8 @@ composition root, and dependency-free validation runners.
 
 ## Status
 
-**Task 2 — Domain storage port + in-memory adapter.** `KnowledgeDocument`,
-`KnowledgeDocumentRepository`, and `DefaultInMemoryRepository` are in place.
-Validate with:
+**Task 3 — Basic knowledge query use case.** `ListKnowledgeDocumentsUseCase`
+lists stored documents through the repository port. Validate with:
 
 ```bash
 pnpm install
@@ -48,8 +47,9 @@ See [`docs/architecture.md`](docs/architecture.md) and
 |---|---|
 | `pnpm validate:skeleton` | Assert directory, barrel, docs, and script integrity |
 | `pnpm validate:repository` | DefaultInMemoryRepository port contract |
+| `pnpm validate:application` | ListKnowledgeDocumentsUseCase query flow |
 | `pnpm typecheck` | TypeScript strict check (`tsc --noEmit`) |
-| `pnpm validate` | skeleton + repository + typecheck |
+| `pnpm validate` | skeleton + repository + application + typecheck |
 | `pnpm infra:config` | `docker compose ... config` (optional) |
 
 ## Dependencies
