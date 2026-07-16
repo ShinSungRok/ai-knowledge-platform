@@ -18,7 +18,8 @@
     "validate:application:export": "tsx app/knowledge/application/runExportKnowledgeDocumentsUseCaseValidation.ts",
     "validate:application:source": "tsx app/knowledge/application/runCreateKnowledgeSourceUseCaseValidation.ts",
     "validate:application": "pnpm validate:application:list && pnpm validate:application:page && pnpm validate:application:create && pnpm validate:application:update && pnpm validate:application:delete && pnpm validate:application:search && pnpm validate:application:export && pnpm validate:application:source",
-    "validate": "pnpm validate:skeleton && pnpm validate:repository && pnpm validate:repository:source && pnpm validate:application && pnpm typecheck",
+    "validate:pipeline:connector": "tsx app/knowledge/pipeline/runFakeKnowledgeSourceConnectorValidation.ts",
+    "validate": "pnpm validate:skeleton && pnpm validate:repository && pnpm validate:repository:source && pnpm validate:application && pnpm validate:pipeline:connector && pnpm typecheck",
     "infra:config": "docker compose -f docker/docker-compose.yml config"
   },
   "devDependencies": {

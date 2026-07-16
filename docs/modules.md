@@ -14,7 +14,10 @@ cases for knowledge documents. Task 10 scopes all of the above to a required
 repository yet). Task 11 adds a parallel, workspace-scoped registry for
 `KnowledgeSource` (create-only). Task 12 links the two: `KnowledgeDocument`
 carries a required `sourceId`, and `CreateKnowledgeDocumentUseCase` verifies
-the referenced source exists in the same workspace before saving.
+the referenced source exists in the same workspace before saving. Task 13
+adds the `pipeline` module's `KnowledgeSourceConnector` outbound port and a
+fixture-backed `FakeKnowledgeSourceConnector`, fetching normalized documents
+for a `KnowledgeSource` — not yet wired to document creation or sync.
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules
@@ -25,7 +28,7 @@ Other modules remain skeleton boundaries until scoped.
 | `application` | Use cases (list/page/create/update/delete/search/export for documents; create for sources), each scoped to a `workspaceId`, over domain types and ports. |
 | `repository` | Persistence-agnostic ports (`KnowledgeDocumentRepository`, `KnowledgeSourceRepository`); document/source methods take `workspaceId`. |
 | `persistence` | Concrete adapters (`DefaultInMemoryRepository`, `DefaultInMemoryKnowledgeSourceRepository`; DB adapters later). |
-| `pipeline` | Ingestion pipelines from external knowledge sources. |
+| `pipeline` | Ingestion pipelines from external knowledge sources. `KnowledgeSourceConnector` port + `FakeKnowledgeSourceConnector` fixture adapter fetch normalized documents (`externalId`/`title`/`text`) for a `KnowledgeSource`; no sync, storage, or canonical document identity policy yet. |
 | `embedding` | Chunking, embedding, and vector indexing ports/adapters. |
 | `search` | Search engine abstraction (keyword, vector, hybrid). |
 | `retrieval` | Retriever port consumed by the RAG flow. |

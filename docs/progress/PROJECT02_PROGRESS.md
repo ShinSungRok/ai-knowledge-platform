@@ -321,3 +321,30 @@ Enforce document source provenance
 
 **Status**
 Completed
+
+## Task 13
+
+**Date**
+2026-07-16
+
+**Commit**
+Pending
+
+**Title**
+Add knowledge source connector boundary
+
+**Summary**
+- Added `KnowledgeSourceConnector` outbound port in `app/knowledge/pipeline` with a single `fetchDocuments(source: KnowledgeSource)` method, and a `ConnectorDocument` return contract (`externalId`, `title`, `text` — no `workspaceId`/`sourceId` duplication, since the caller-supplied `KnowledgeSource` already carries that scope)
+- Added `FakeKnowledgeSourceConnector`: a dependency-free adapter seeded with workspace + source-scoped fixtures; `fetchDocuments` returns only the fixture documents for the exact `(workspaceId, id)` requested, with defensive copies on both fixture input and fetched output, and returns an empty array (not an error) for a source with no fixture
+- Constructor and `fetchDocuments` reject invalid identifiers/fixture values (empty `workspaceId`/`sourceId`/`externalId`/`title`, non-string `text`)
+- Exported the new port and fake adapter from the `pipeline` barrel; `pipeline` depends only on the `KnowledgeSource` domain type — no persistence adapter import
+- Added `validate:pipeline:connector` runner + `tests/unit/fakeKnowledgeSourceConnector.cases.ts`, wired into the top-level `validate` chain; no Sync, storage, real network, Chunk, or Source CRUD introduced
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:pipeline:connector`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

@@ -27,4 +27,5 @@ runner is introduced deliberately.
 | Case inventory | `tests/unit/exportKnowledgeDocumentsUseCase.cases.ts` |
 | Case inventory | `tests/unit/defaultInMemoryKnowledgeSourceRepository.cases.ts` |
 | Case inventory | `tests/unit/createKnowledgeSourceUseCase.cases.ts` |
-| Executable checks | `pnpm validate:repository`, `pnpm validate:repository:source`, `pnpm validate:application` |
+| Case inventory | `tests/unit/fakeKnowledgeSourceConnector.cases.ts` |
+| Executable checks | `pnpm validate:repository`, `pnpm validate:repository:source`, `pnpm validate:application`, `pnpm validate:pipeline:connector` |

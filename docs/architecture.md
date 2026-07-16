@@ -129,6 +129,15 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   required provenance reference into this registry, checked at document
   creation time — but there is still no update/delete/list use case for
   sources, and no connector/sync detail on the model yet.
+- `KnowledgeSourceConnector` (`app/knowledge/pipeline`) is an outbound port
+  for fetching normalized origin documents (`externalId`, `title`, `text`)
+  for a given `KnowledgeSource`. `FakeKnowledgeSourceConnector` is a
+  dependency-free, fixture-backed adapter scoped by `(workspaceId, sourceId)`
+  for validation only. Connectors only fetch/normalize — they never persist,
+  sync, or verify `KnowledgeDocument` provenance, and there is no canonical
+  document identity policy (`externalId` → `KnowledgeDocument.id`) or real
+  HTTP/file/DB-backed connector yet.
 - Database adapters, HTTP/server, search, and AI provider wiring are not
   implemented yet.
-- Validate with `pnpm validate` (skeleton + repository + application + typecheck).
+- Validate with `pnpm validate` (skeleton + repository + application +
+  pipeline connector + typecheck).
