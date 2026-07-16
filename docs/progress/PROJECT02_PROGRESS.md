@@ -97,3 +97,30 @@ Implement create use case for knowledge items
 
 **Status**
 Completed
+
+## Task 5
+
+**Date**
+2026-07-16
+
+**Commit**
+Pending
+
+**Title**
+Implement update use case for knowledge items
+
+**Summary**
+- Added `UpdateKnowledgeDocumentUseCase` with partial title/text patches
+- Update rejects missing documents and empty/invalid patches
+- Validation covers title-only, text-only, and error paths
+- Extended `validate:application` with update runner
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:repository`
+- `pnpm validate:application`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

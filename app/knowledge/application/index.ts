@@ -8,3 +8,7 @@ export {
   CreateKnowledgeDocumentUseCase,
   type CreateKnowledgeDocumentInput,
 } from "./CreateKnowledgeDocumentUseCase";
+export {
+  UpdateKnowledgeDocumentUseCase,
+  type UpdateKnowledgeDocumentInput,
+} from "./UpdateKnowledgeDocumentUseCase";

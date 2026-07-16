@@ -10,8 +10,8 @@ composition root, and dependency-free validation runners.
 
 ## Status
 
-**Task 4 — Create knowledge document use case.**
-`CreateKnowledgeDocumentUseCase` registers documents through the repository
+**Task 5 — Update knowledge document use case.**
+`UpdateKnowledgeDocumentUseCase` patches title/text through the repository
 port. Validate with:
 
 ```bash
@@ -48,7 +48,7 @@ See [`docs/architecture.md`](docs/architecture.md) and
 |---|---|
 | `pnpm validate:skeleton` | Assert directory, barrel, docs, and script integrity |
 | `pnpm validate:repository` | DefaultInMemoryRepository port contract |
-| `pnpm validate:application` | List + Create knowledge document use cases |
+| `pnpm validate:application` | List + Create + Update knowledge document use cases |
 | `pnpm typecheck` | TypeScript strict check (`tsc --noEmit`) |
 | `pnpm validate` | skeleton + repository + application + typecheck |
 | `pnpm infra:config` | `docker compose ... config` (optional) |

@@ -91,8 +91,8 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
 
 - Domain storage port + in-memory adapter exist (`KnowledgeDocumentRepository` /
   `DefaultInMemoryRepository`).
-- Basic query/create use cases exist (`ListKnowledgeDocumentsUseCase`,
-  `CreateKnowledgeDocumentUseCase`).
+- Basic query/create/update use cases exist (`ListKnowledgeDocumentsUseCase`,
+  `CreateKnowledgeDocumentUseCase`, `UpdateKnowledgeDocumentUseCase`).
 - Database adapters, HTTP/server, search, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + application + typecheck).
