@@ -3,7 +3,10 @@
  */
 export const KNOWLEDGE_MODULE_APPLICATION = "app/knowledge/application" as const;
 
-export { ListKnowledgeDocumentsUseCase } from "./ListKnowledgeDocumentsUseCase";
+export {
+  ListKnowledgeDocumentsUseCase,
+  type ListKnowledgeDocumentsInput,
+} from "./ListKnowledgeDocumentsUseCase";
 export {
   ListKnowledgeDocumentsPageUseCase,
   type ListKnowledgeDocumentsPageInput,

@@ -10,7 +10,8 @@
  * - sorts by title descending
  * - paginates results across pages
  * - out-of-range page returns empty items with accurate totalCount
- * - rejects invalid page/pageSize/sortBy/sortOrder
+ * - results (items/totalCount) are scoped to workspaceId
+ * - rejects invalid page/pageSize/sortBy/sortOrder/workspaceId
  * - use case depends on KnowledgeDocumentRepository port only
  *
  * Note: sorting by creation date is out of scope — `KnowledgeDocument` has
@@ -21,6 +22,7 @@ export const LIST_KNOWLEDGE_DOCUMENTS_PAGE_USE_CASE_UNIT_CASES = [
   "sorts_by_title_descending",
   "paginates_results",
   "out_of_range_page_returns_empty",
-  "rejects_invalid_page_and_pageSize_and_sortBy_and_sortOrder",
+  "scoped_to_workspaceId",
+  "rejects_invalid_page_and_pageSize_and_sortBy_and_sortOrder_and_workspaceId",
   "depends_on_repository_port_not_adapter",
 ] as const;

@@ -2,6 +2,9 @@ import { DefaultInMemoryRepository } from "./DefaultInMemoryRepository";
 import type { KnowledgeDocument } from "../domain/KnowledgeDocument";
 import type { KnowledgeDocumentRepository } from "../repository/KnowledgeDocumentRepository";
 
+const WORKSPACE_A = "workspace-a";
+const WORKSPACE_B = "workspace-b";
+
 function assertTruthy(value: unknown, message: string): void {
   if (!value) {
     throw new Error(message);
@@ -37,16 +40,18 @@ async function assertSaveAndFindById(
 ): Promise<void> {
   console.log("[repository] save + findById...");
   const document: KnowledgeDocument = {
+    workspaceId: WORKSPACE_A,
     id: "doc-1",
     title: "Getting Started",
     text: "Knowledge platform domain storage.",
   };
 
   await repository.save(document);
-  const found = await repository.findById("doc-1");
+  const found = await repository.findById(WORKSPACE_A, "doc-1");
 
   assertTruthy(found, "Expected document to be found after save");
   assertEqual(found?.id, "doc-1", "id mismatch");
+  assertEqual(found?.workspaceId, WORKSPACE_A, "workspaceId mismatch");
   assertEqual(found?.title, "Getting Started", "title mismatch");
   assertEqual(
     found?.text,
@@ -59,7 +64,7 @@ async function assertFindMissingReturnsNull(
   repository: KnowledgeDocumentRepository,
 ): Promise<void> {
   console.log("[repository] findById missing returns null...");
-  const found = await repository.findById("missing-id");
+  const found = await repository.findById(WORKSPACE_A, "missing-id");
   assertEqual(found, null, "Expected null for missing document");
 }
 
@@ -68,20 +73,22 @@ async function assertFindAllAndOverwrite(
 ): Promise<void> {
   console.log("[repository] findAll + overwrite...");
   await repository.save({
+    workspaceId: WORKSPACE_A,
     id: "doc-2",
     title: "Second",
     text: "Another document",
   });
   await repository.save({
+    workspaceId: WORKSPACE_A,
     id: "doc-1",
     title: "Getting Started (updated)",
     text: "Updated body",
   });
 
-  const all = await repository.findAll();
+  const all = await repository.findAll(WORKSPACE_A);
   assertEqual(all.length, 2, "Expected two documents");
 
-  const updated = await repository.findById("doc-1");
+  const updated = await repository.findById(WORKSPACE_A, "doc-1");
   assertEqual(
     updated?.title,
     "Getting Started (updated)",
@@ -95,6 +102,7 @@ async function assertDefensiveCopy(
 ): Promise<void> {
   console.log("[repository] defensive copy on read/write...");
   const document: KnowledgeDocument = {
+    workspaceId: WORKSPACE_A,
     id: "doc-3",
     title: "Mutable",
     text: "original",
@@ -103,7 +111,7 @@ async function assertDefensiveCopy(
   document.title = "mutated-input";
   document.text = "mutated-input-text";
 
-  const stored = await repository.findById("doc-3");
+  const stored = await repository.findById(WORKSPACE_A, "doc-3");
   assertEqual(stored?.title, "Mutable", "stored title mutated via input ref");
   assertEqual(stored?.text, "original", "stored text mutated via input ref");
 
@@ -111,7 +119,7 @@ async function assertDefensiveCopy(
     throw new Error("Expected stored document");
   }
   stored.title = "mutated-output";
-  const again = await repository.findById("doc-3");
+  const again = await repository.findById(WORKSPACE_A, "doc-3");
   assertEqual(again?.title, "Mutable", "stored title mutated via output ref");
 }
 
@@ -142,6 +150,7 @@ async function assertValidationErrors(
   console.log("[repository] input validation...");
   await assertRejects(
     repository.save({
+      workspaceId: WORKSPACE_A,
       id: " ",
       title: "Valid",
       text: "body",
@@ -150,16 +159,41 @@ async function assertValidationErrors(
   );
   await assertRejects(
     repository.save({
+      workspaceId: WORKSPACE_A,
       id: "doc-x",
       title: "",
       text: "body",
     }),
     "title must be a non-empty string",
   );
-  await assertRejects(repository.findById(""), "id must be a non-empty string");
   await assertRejects(
-    repository.deleteById(""),
+    repository.save({
+      workspaceId: " ",
+      id: "doc-x",
+      title: "Valid",
+      text: "body",
+    }),
+    "workspaceId must be a non-empty string",
+  );
+  await assertRejects(
+    repository.findById(WORKSPACE_A, ""),
     "id must be a non-empty string",
+  );
+  await assertRejects(
+    repository.findById("", "doc-x"),
+    "workspaceId must be a non-empty string",
+  );
+  await assertRejects(
+    repository.findAll(""),
+    "workspaceId must be a non-empty string",
+  );
+  await assertRejects(
+    repository.deleteById(WORKSPACE_A, ""),
+    "id must be a non-empty string",
+  );
+  await assertRejects(
+    repository.deleteById("", "doc-x"),
+    "workspaceId must be a non-empty string",
   );
 }
 
@@ -168,13 +202,64 @@ async function assertDeleteById(
 ): Promise<void> {
   console.log("[repository] deleteById...");
   await repository.save({
+    workspaceId: WORKSPACE_A,
     id: "doc-del",
     title: "Delete Me",
     text: "temporary",
   });
-  await repository.deleteById("doc-del");
-  const found = await repository.findById("doc-del");
+  await repository.deleteById(WORKSPACE_A, "doc-del");
+  const found = await repository.findById(WORKSPACE_A, "doc-del");
   assertEqual(found, null, "Expected document removed after deleteById");
+}
+
+async function assertSameIdIndependentAcrossWorkspaces(): Promise<void> {
+  console.log("[repository] same id independent across workspaces...");
+  const repository: KnowledgeDocumentRepository = new DefaultInMemoryRepository();
+
+  await repository.save({
+    workspaceId: WORKSPACE_A,
+    id: "shared-id",
+    title: "Workspace A Title",
+    text: "Workspace A body",
+  });
+  await repository.save({
+    workspaceId: WORKSPACE_B,
+    id: "shared-id",
+    title: "Workspace B Title",
+    text: "Workspace B body",
+  });
+
+  const inA = await repository.findById(WORKSPACE_A, "shared-id");
+  const inB = await repository.findById(WORKSPACE_B, "shared-id");
+  assertEqual(inA?.title, "Workspace A Title", "workspace A title mismatch");
+  assertEqual(inB?.title, "Workspace B Title", "workspace B title mismatch");
+
+  await repository.deleteById(WORKSPACE_A, "shared-id");
+  const stillInB = await repository.findById(WORKSPACE_B, "shared-id");
+  assertTruthy(stillInB, "Deleting in workspace A must not affect workspace B");
+  const goneFromA = await repository.findById(WORKSPACE_A, "shared-id");
+  assertEqual(goneFromA, null, "Expected shared-id removed from workspace A only");
+}
+
+async function assertCrossWorkspaceIsolation(): Promise<void> {
+  console.log("[repository] cross-workspace access is blocked...");
+  const repository: KnowledgeDocumentRepository = new DefaultInMemoryRepository();
+
+  await repository.save({
+    workspaceId: WORKSPACE_A,
+    id: "only-in-a",
+    title: "Only In A",
+    text: "body",
+  });
+
+  const foundInB = await repository.findById(WORKSPACE_B, "only-in-a");
+  assertEqual(foundInB, null, "Workspace B must not see workspace A documents");
+
+  const allInB = await repository.findAll(WORKSPACE_B);
+  assertEqual(allInB.length, 0, "Workspace B findAll must not include workspace A documents");
+
+  const allInA = await repository.findAll(WORKSPACE_A);
+  assertEqual(allInA.length, 1, "Workspace A findAll must include its own document");
 }
 
 async function main(): Promise<void> {
@@ -187,6 +272,8 @@ async function main(): Promise<void> {
   await assertDefensiveCopy(repository);
   await assertDeleteById(repository);
   await assertValidationErrors(new DefaultInMemoryRepository());
+  await assertSameIdIndependentAcrossWorkspaces();
+  await assertCrossWorkspaceIsolation();
 
   console.log("DefaultInMemoryRepository validation succeeded.");
 }

@@ -5,10 +5,13 @@ export type KnowledgeDocumentSearchField = "title" | "text";
 
 /**
  * Input for searching knowledge documents.
- * `query` is matched case-insensitively against selected fields.
- * Tags are intentionally out of scope until the domain model includes them.
+ * `workspaceId` scopes the search to a single workspace — documents in
+ * other workspaces are never matched. `query` is matched case-insensitively
+ * against selected fields. Tags are intentionally out of scope until the
+ * domain model includes them.
  */
 export interface SearchKnowledgeDocumentsInput {
+  workspaceId: string;
   query: string;
   fields?: KnowledgeDocumentSearchField[];
 }
@@ -16,7 +19,8 @@ export interface SearchKnowledgeDocumentsInput {
 const DEFAULT_SEARCH_FIELDS: KnowledgeDocumentSearchField[] = ["title", "text"];
 
 /**
- * Search use case: filter knowledge documents by query against title/text.
+ * Search use case: filter knowledge documents by query against title/text
+ * within a workspace.
  *
  * Uses {@link KnowledgeDocumentRepository.findAll} via the port, then applies
  * application-level filtering. Depends only on the port — never on a concrete
@@ -34,11 +38,17 @@ export class SearchKnowledgeDocumentsUseCase {
       throw new Error("SearchKnowledgeDocumentsInput must be an object");
     }
 
+    const workspaceId = this.requireNonEmptyString(
+      input.workspaceId,
+      "workspaceId",
+    );
     const query = this.requireNonEmptyString(input.query, "query");
     const fields = this.resolveFields(input.fields);
     const normalizedQuery = query.toLowerCase();
 
-    const documents = await this.knowledgeDocumentRepository.findAll();
+    const documents = await this.knowledgeDocumentRepository.findAll(
+      workspaceId,
+    );
     return documents.filter((document) =>
       this.matches(document, normalizedQuery, fields),
     );

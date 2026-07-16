@@ -3,10 +3,12 @@ import type { KnowledgeDocumentRepository } from "../repository/KnowledgeDocumen
 
 /**
  * Input for updating a knowledge document.
- * `id` identifies the target; `title` / `text` are optional field patches.
- * At least one of `title` or `text` must be provided.
+ * `workspaceId` + `id` identify the target; `title` / `text` are optional
+ * field patches. At least one of `title` or `text` must be provided. A
+ * document in a different workspace is treated as not found.
  */
 export interface UpdateKnowledgeDocumentInput {
+  workspaceId: string;
   id: string;
   title?: string;
   text?: string;
@@ -31,6 +33,10 @@ export class UpdateKnowledgeDocumentUseCase {
       throw new Error("UpdateKnowledgeDocumentInput must be an object");
     }
 
+    const workspaceId = this.requireNonEmptyString(
+      input.workspaceId,
+      "workspaceId",
+    );
     const id = this.requireNonEmptyString(input.id, "id");
     const hasTitle = input.title !== undefined;
     const hasText = input.text !== undefined;
@@ -41,12 +47,16 @@ export class UpdateKnowledgeDocumentUseCase {
       );
     }
 
-    const existing = await this.knowledgeDocumentRepository.findById(id);
+    const existing = await this.knowledgeDocumentRepository.findById(
+      workspaceId,
+      id,
+    );
     if (!existing) {
       throw new Error(`KnowledgeDocument not found: ${id}`);
     }
 
     const updated: KnowledgeDocument = {
+      workspaceId: existing.workspaceId,
       id: existing.id,
       title: hasTitle
         ? this.requireNonEmptyString(input.title, "title")

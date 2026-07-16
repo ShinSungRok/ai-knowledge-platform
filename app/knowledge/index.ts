@@ -18,6 +18,7 @@ export {
   ExportKnowledgeDocumentsUseCase,
 } from "./application";
 export type {
+  ListKnowledgeDocumentsInput,
   ListKnowledgeDocumentsPageInput,
   KnowledgeDocumentsPage,
   KnowledgeDocumentSortField,

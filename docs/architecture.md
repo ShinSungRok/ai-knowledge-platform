@@ -91,18 +91,27 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
 
 - Domain storage port + in-memory adapter exist (`KnowledgeDocumentRepository` /
   `DefaultInMemoryRepository`).
+- `KnowledgeDocument` carries a required `workspaceId` — the minimal logical
+  tenancy boundary. Storage, list/page/create/update/delete/search/export all
+  read and write scoped to a single `workspaceId`; the same `id` may exist
+  independently in different workspaces, and no operation can see or mutate
+  another workspace's documents. There is no Workspace entity, CRUD, or
+  repository yet — `workspaceId` is only a scoping value on the existing
+  document contract.
 - CRUD + search use cases exist (`ListKnowledgeDocumentsUseCase`,
   `CreateKnowledgeDocumentUseCase`, `UpdateKnowledgeDocumentUseCase`,
-  `DeleteKnowledgeDocumentUseCase`, `SearchKnowledgeDocumentsUseCase`).
-  Search covers `title`/`text` only (no tags on the domain model yet).
-- `ListKnowledgeDocumentsPageUseCase` adds sorting + paging. Sorting is limited
-  to `id`/`title` — `KnowledgeDocument` has no creation-date field yet, so
-  sort-by-creation-date is deferred until the domain model adds one.
-- `ExportKnowledgeDocumentsUseCase` serializes all documents to `json` or
-  `csv` via the repository port. It returns the serialized string plus a
-  count; it has no knowledge of HTTP, file systems, or storage — a caller
-  (composition/API layer, when it exists) decides what to do with the
-  output.
+  `DeleteKnowledgeDocumentUseCase`, `SearchKnowledgeDocumentsUseCase`), all
+  workspace-scoped. Search covers `title`/`text` only (no tags on the domain
+  model yet).
+- `ListKnowledgeDocumentsPageUseCase` adds sorting + paging, scoped to a
+  workspace. Sorting is limited to `id`/`title` — `KnowledgeDocument` has no
+  creation-date field yet, so sort-by-creation-date is deferred until the
+  domain model adds one.
+- `ExportKnowledgeDocumentsUseCase` serializes all documents in a workspace
+  to `json` or `csv` via the repository port. It returns the serialized
+  string plus a count; it has no knowledge of HTTP, file systems, or
+  storage — a caller (composition/API layer, when it exists) decides what to
+  do with the output.
 - Database adapters, HTTP/server, search, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + application + typecheck).

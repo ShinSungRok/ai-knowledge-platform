@@ -6,6 +6,9 @@ import { ListKnowledgeDocumentsPageUseCase } from "./ListKnowledgeDocumentsPageU
 import { DefaultInMemoryRepository } from "../persistence/DefaultInMemoryRepository";
 import type { KnowledgeDocumentRepository } from "../repository/KnowledgeDocumentRepository";
 
+const WORKSPACE_A = "workspace-a";
+const WORKSPACE_B = "workspace-b";
+
 function assertTruthy(value: unknown, message: string): void {
   if (!value) {
     throw new Error(message);
@@ -40,11 +43,12 @@ function assertRejects(
 
 async function seedDocuments(
   repository: KnowledgeDocumentRepository,
+  workspaceId: string = WORKSPACE_A,
 ): Promise<void> {
   const create = new CreateKnowledgeDocumentUseCase(repository);
-  await create.execute({ id: "doc-3", title: "Charlie", text: "third" });
-  await create.execute({ id: "doc-1", title: "Alpha", text: "first" });
-  await create.execute({ id: "doc-2", title: "Bravo", text: "second" });
+  await create.execute({ workspaceId, id: "doc-3", title: "Charlie", text: "third" });
+  await create.execute({ workspaceId, id: "doc-1", title: "Alpha", text: "first" });
+  await create.execute({ workspaceId, id: "doc-2", title: "Bravo", text: "second" });
 }
 
 async function assertDependsOnPortNotAdapter(): Promise<void> {
@@ -75,7 +79,7 @@ async function assertDefaultsToSortedByIdAscending(): Promise<void> {
   await seedDocuments(repository);
   const useCase = new ListKnowledgeDocumentsPageUseCase(repository);
 
-  const result = await useCase.execute();
+  const result = await useCase.execute({ workspaceId: WORKSPACE_A });
   assertEqual(result.page, 1, "default page mismatch");
   assertEqual(result.pageSize, 20, "default pageSize mismatch");
   assertEqual(result.totalCount, 3, "totalCount mismatch");
@@ -93,6 +97,7 @@ async function assertSortsByTitleDescending(): Promise<void> {
   const useCase = new ListKnowledgeDocumentsPageUseCase(repository);
 
   const result = await useCase.execute({
+    workspaceId: WORKSPACE_A,
     sortBy: "title",
     sortOrder: "desc",
   });
@@ -107,13 +112,21 @@ async function assertPaginatesResults(): Promise<void> {
   await seedDocuments(repository);
   const useCase = new ListKnowledgeDocumentsPageUseCase(repository);
 
-  const pageOne = await useCase.execute({ page: 1, pageSize: 2 });
+  const pageOne = await useCase.execute({
+    workspaceId: WORKSPACE_A,
+    page: 1,
+    pageSize: 2,
+  });
   assertEqual(pageOne.items.length, 2, "page 1 items length mismatch");
   assertEqual(pageOne.totalPages, 2, "totalPages mismatch");
   assertEqual(pageOne.items[0]?.id, "doc-1", "page 1 item 0 mismatch");
   assertEqual(pageOne.items[1]?.id, "doc-2", "page 1 item 1 mismatch");
 
-  const pageTwo = await useCase.execute({ page: 2, pageSize: 2 });
+  const pageTwo = await useCase.execute({
+    workspaceId: WORKSPACE_A,
+    page: 2,
+    pageSize: 2,
+  });
   assertEqual(pageTwo.items.length, 1, "page 2 items length mismatch");
   assertEqual(pageTwo.items[0]?.id, "doc-3", "page 2 item 0 mismatch");
 }
@@ -124,9 +137,24 @@ async function assertOutOfRangePageReturnsEmpty(): Promise<void> {
   await seedDocuments(repository);
   const useCase = new ListKnowledgeDocumentsPageUseCase(repository);
 
-  const result = await useCase.execute({ page: 5, pageSize: 2 });
+  const result = await useCase.execute({
+    workspaceId: WORKSPACE_A,
+    page: 5,
+    pageSize: 2,
+  });
   assertEqual(result.items.length, 0, "Expected empty items for out-of-range page");
   assertEqual(result.totalCount, 3, "totalCount should still reflect all documents");
+}
+
+async function assertScopedToWorkspace(): Promise<void> {
+  console.log("[application] page/sort results are scoped to workspaceId...");
+  const repository: KnowledgeDocumentRepository = new DefaultInMemoryRepository();
+  await seedDocuments(repository, WORKSPACE_A);
+  const useCase = new ListKnowledgeDocumentsPageUseCase(repository);
+
+  const otherWorkspace = await useCase.execute({ workspaceId: WORKSPACE_B });
+  assertEqual(otherWorkspace.totalCount, 0, "Other workspace must have zero documents");
+  assertEqual(otherWorkspace.items.length, 0, "Other workspace must have no items");
 }
 
 async function assertRejectsInvalidInput(): Promise<void> {
@@ -135,26 +163,30 @@ async function assertRejectsInvalidInput(): Promise<void> {
   const useCase = new ListKnowledgeDocumentsPageUseCase(repository);
 
   await assertRejects(
-    useCase.execute({ page: 0 }),
+    useCase.execute({ workspaceId: WORKSPACE_A, page: 0 }),
     "page must be a positive integer",
   );
   await assertRejects(
-    useCase.execute({ pageSize: 0 }),
+    useCase.execute({ workspaceId: WORKSPACE_A, pageSize: 0 }),
     "pageSize must be an integer between 1 and 100",
   );
   await assertRejects(
-    useCase.execute({ pageSize: 101 }),
+    useCase.execute({ workspaceId: WORKSPACE_A, pageSize: 101 }),
     "pageSize must be an integer between 1 and 100",
   );
   await assertRejects(
     // @ts-expect-error intentionally invalid for validation coverage
-    useCase.execute({ sortBy: "text" }),
+    useCase.execute({ workspaceId: WORKSPACE_A, sortBy: "text" }),
     'sortBy must be one of "id" or "title"',
   );
   await assertRejects(
     // @ts-expect-error intentionally invalid for validation coverage
-    useCase.execute({ sortOrder: "up" }),
+    useCase.execute({ workspaceId: WORKSPACE_A, sortOrder: "up" }),
     'sortOrder must be one of "asc" or "desc"',
+  );
+  await assertRejects(
+    useCase.execute({ workspaceId: " " }),
+    "workspaceId must be a non-empty string",
   );
 }
 
@@ -164,6 +196,7 @@ async function main(): Promise<void> {
   await assertSortsByTitleDescending();
   await assertPaginatesResults();
   await assertOutOfRangePageReturnsEmpty();
+  await assertScopedToWorkspace();
   await assertRejectsInvalidInput();
   console.log("ListKnowledgeDocumentsPageUseCase validation succeeded.");
 }

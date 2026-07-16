@@ -12,6 +12,8 @@ const MAX_PAGE_SIZE = 100;
 
 /**
  * Input for listing knowledge documents with sorting and paging.
+ * `workspaceId` scopes the query to a single workspace — documents in other
+ * workspaces are never counted, sorted, or returned.
  *
  * Sorting is limited to fields present on {@link KnowledgeDocument} today
  * (`id`, `title`). A creation-date field is not on the domain model yet, so
@@ -19,6 +21,7 @@ const MAX_PAGE_SIZE = 100;
  * adds it to the domain type.
  */
 export interface ListKnowledgeDocumentsPageInput {
+  workspaceId: string;
   page?: number;
   pageSize?: number;
   sortBy?: KnowledgeDocumentSortField;
@@ -35,7 +38,7 @@ export interface KnowledgeDocumentsPage {
 
 /**
  * Sort + page use case: returns a sorted, paginated slice of knowledge
- * documents via the repository port.
+ * documents within a workspace via the repository port.
  *
  * Uses {@link KnowledgeDocumentRepository.findAll} via the port, then applies
  * application-level sorting and paging. Depends only on the port — never on
@@ -47,18 +50,24 @@ export class ListKnowledgeDocumentsPageUseCase {
   ) {}
 
   async execute(
-    input: ListKnowledgeDocumentsPageInput = {},
+    input: ListKnowledgeDocumentsPageInput,
   ): Promise<KnowledgeDocumentsPage> {
     if (!input || typeof input !== "object") {
       throw new Error("ListKnowledgeDocumentsPageInput must be an object");
     }
 
+    const workspaceId = this.requireNonEmptyString(
+      input.workspaceId,
+      "workspaceId",
+    );
     const page = this.resolvePage(input.page);
     const pageSize = this.resolvePageSize(input.pageSize);
     const sortBy = this.resolveSortBy(input.sortBy);
     const sortOrder = this.resolveSortOrder(input.sortOrder);
 
-    const documents = await this.knowledgeDocumentRepository.findAll();
+    const documents = await this.knowledgeDocumentRepository.findAll(
+      workspaceId,
+    );
     const sorted = this.sort(documents, sortBy, sortOrder);
 
     const totalCount = sorted.length;
@@ -79,6 +88,15 @@ export class ListKnowledgeDocumentsPageUseCase {
     return [...documents].sort(
       (a, b) => direction * a[sortBy].localeCompare(b[sortBy]),
     );
+  }
+
+  private requireNonEmptyString(value: unknown, field: string): string {
+    if (typeof value !== "string" || value.trim().length === 0) {
+      throw new Error(
+        `ListKnowledgeDocumentsPageInput.${field} must be a non-empty string`,
+      );
+    }
+    return value.trim();
   }
 
   private resolvePage(page: unknown): number {

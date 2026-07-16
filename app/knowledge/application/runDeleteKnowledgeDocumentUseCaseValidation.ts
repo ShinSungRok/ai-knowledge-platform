@@ -10,6 +10,9 @@ import {
 import { DefaultInMemoryRepository } from "../persistence/DefaultInMemoryRepository";
 import type { KnowledgeDocumentRepository } from "../repository/KnowledgeDocumentRepository";
 
+const WORKSPACE_A = "workspace-a";
+const WORKSPACE_B = "workspace-b";
+
 function assertTruthy(value: unknown, message: string): void {
   if (!value) {
     throw new Error(message);
@@ -72,26 +75,31 @@ async function assertDeletesExistingDocument(): Promise<void> {
   const remove = new DeleteKnowledgeDocumentUseCase(repository);
 
   await create.execute({
+    workspaceId: WORKSPACE_A,
     id: "doc-1",
     title: "To Delete",
     text: "Will be removed",
   });
   await create.execute({
+    workspaceId: WORKSPACE_A,
     id: "doc-2",
     title: "Keep",
     text: "Should remain",
   });
 
-  const input: DeleteKnowledgeDocumentInput = { id: " doc-1 " };
+  const input: DeleteKnowledgeDocumentInput = {
+    workspaceId: WORKSPACE_A,
+    id: " doc-1 ",
+  };
   const deleted = await remove.execute(input);
 
   assertEqual(deleted.id, "doc-1", "deleted id mismatch");
   assertEqual(deleted.title, "To Delete", "deleted title mismatch");
 
-  const missing = await repository.findById("doc-1");
+  const missing = await repository.findById(WORKSPACE_A, "doc-1");
   assertEqual(missing, null, "Expected deleted document to be gone");
 
-  const remaining = await list.execute();
+  const remaining = await list.execute({ workspaceId: WORKSPACE_A });
   assertEqual(remaining.length, 1, "Expected one remaining document");
   assertEqual(remaining[0]?.id, "doc-2", "Wrong document remained");
 }
@@ -102,9 +110,31 @@ async function assertRejectsMissingDocument(): Promise<void> {
   const remove = new DeleteKnowledgeDocumentUseCase(repository);
 
   await assertRejects(
-    remove.execute({ id: "missing" }),
+    remove.execute({ workspaceId: WORKSPACE_A, id: "missing" }),
     "not found",
   );
+}
+
+async function assertRejectsCrossWorkspaceDelete(): Promise<void> {
+  console.log("[application] delete rejects document from a different workspace...");
+  const repository: KnowledgeDocumentRepository = new DefaultInMemoryRepository();
+  const create = new CreateKnowledgeDocumentUseCase(repository);
+  const remove = new DeleteKnowledgeDocumentUseCase(repository);
+
+  await create.execute({
+    workspaceId: WORKSPACE_A,
+    id: "doc-1",
+    title: "Protected",
+    text: "body",
+  });
+
+  await assertRejects(
+    remove.execute({ workspaceId: WORKSPACE_B, id: "doc-1" }),
+    "not found",
+  );
+
+  const stillThere = await repository.findById(WORKSPACE_A, "doc-1");
+  assertTruthy(stillThere, "workspace A document must survive a cross-workspace delete attempt");
 }
 
 async function assertRejectsInvalidId(): Promise<void> {
@@ -113,8 +143,12 @@ async function assertRejectsInvalidId(): Promise<void> {
   const remove = new DeleteKnowledgeDocumentUseCase(repository);
 
   await assertRejects(
-    remove.execute({ id: " " }),
+    remove.execute({ workspaceId: WORKSPACE_A, id: " " }),
     "id must be a non-empty string",
+  );
+  await assertRejects(
+    remove.execute({ workspaceId: " ", id: "doc-1" }),
+    "workspaceId must be a non-empty string",
   );
 }
 
@@ -122,6 +156,7 @@ async function main(): Promise<void> {
   await assertDependsOnPortNotAdapter();
   await assertDeletesExistingDocument();
   await assertRejectsMissingDocument();
+  await assertRejectsCrossWorkspaceDelete();
   await assertRejectsInvalidId();
   console.log("DeleteKnowledgeDocumentUseCase validation succeeded.");
 }

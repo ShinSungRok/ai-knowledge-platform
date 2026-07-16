@@ -5,9 +5,12 @@ export type KnowledgeDocumentExportFormat = "json" | "csv";
 
 /**
  * Input for exporting knowledge documents.
- * `format` selects the output encoding; defaults to `"json"`.
+ * `workspaceId` scopes the export to a single workspace — documents in
+ * other workspaces are never included. `format` selects the output
+ * encoding; defaults to `"json"`.
  */
 export interface ExportKnowledgeDocumentsInput {
+  workspaceId: string;
   format?: KnowledgeDocumentExportFormat;
 }
 
@@ -25,8 +28,8 @@ export interface ExportKnowledgeDocumentsResult {
 const CSV_COLUMNS = ["id", "title", "text"] as const;
 
 /**
- * Export use case: serialize all knowledge documents to JSON or CSV via the
- * repository port.
+ * Export use case: serialize all knowledge documents in a workspace to JSON
+ * or CSV via the repository port.
  *
  * Uses {@link KnowledgeDocumentRepository.findAll} via the port, then applies
  * application-level formatting. Depends only on the port — never on a
@@ -38,19 +41,34 @@ export class ExportKnowledgeDocumentsUseCase {
   ) {}
 
   async execute(
-    input: ExportKnowledgeDocumentsInput = {},
+    input: ExportKnowledgeDocumentsInput,
   ): Promise<ExportKnowledgeDocumentsResult> {
     if (!input || typeof input !== "object") {
       throw new Error("ExportKnowledgeDocumentsInput must be an object");
     }
 
+    const workspaceId = this.requireNonEmptyString(
+      input.workspaceId,
+      "workspaceId",
+    );
     const format = this.resolveFormat(input.format);
-    const documents = await this.knowledgeDocumentRepository.findAll();
+    const documents = await this.knowledgeDocumentRepository.findAll(
+      workspaceId,
+    );
 
     const content =
       format === "json" ? this.toJson(documents) : this.toCsv(documents);
 
     return { format, content, count: documents.length };
+  }
+
+  private requireNonEmptyString(value: unknown, field: string): string {
+    if (typeof value !== "string" || value.trim().length === 0) {
+      throw new Error(
+        `ExportKnowledgeDocumentsInput.${field} must be a non-empty string`,
+      );
+    }
+    return value.trim();
   }
 
   private resolveFormat(

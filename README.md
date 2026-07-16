@@ -10,9 +10,10 @@ composition root, and dependency-free validation runners.
 
 ## Status
 
-**Task 9 — Export knowledge documents use case.**
-`ExportKnowledgeDocumentsUseCase` serializes all documents to `json` or
-`csv` via the repository port. Validate with:
+**Task 10 — Workspace-scoped document boundary.**
+`KnowledgeDocument` now carries a required `workspaceId`; the repository
+port and every list/page/create/update/delete/search/export use case are
+scoped to a single workspace. Validate with:
 
 ```bash
 pnpm install

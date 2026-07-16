@@ -2,9 +2,11 @@ import type { KnowledgeDocument } from "../domain/KnowledgeDocument";
 import type { KnowledgeDocumentRepository } from "../repository/KnowledgeDocumentRepository";
 
 /**
- * Input for deleting a knowledge document by id.
+ * Input for deleting a knowledge document by id, scoped to a workspace. A
+ * document in a different workspace is treated as not found.
  */
 export interface DeleteKnowledgeDocumentInput {
+  workspaceId: string;
   id: string;
 }
 
@@ -26,13 +28,20 @@ export class DeleteKnowledgeDocumentUseCase {
       throw new Error("DeleteKnowledgeDocumentInput must be an object");
     }
 
+    const workspaceId = this.requireNonEmptyString(
+      input.workspaceId,
+      "workspaceId",
+    );
     const id = this.requireNonEmptyString(input.id, "id");
-    const existing = await this.knowledgeDocumentRepository.findById(id);
+    const existing = await this.knowledgeDocumentRepository.findById(
+      workspaceId,
+      id,
+    );
     if (!existing) {
       throw new Error(`KnowledgeDocument not found: ${id}`);
     }
 
-    await this.knowledgeDocumentRepository.deleteById(id);
+    await this.knowledgeDocumentRepository.deleteById(workspaceId, id);
     return existing;
   }
 

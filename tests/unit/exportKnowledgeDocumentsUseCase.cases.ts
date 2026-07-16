@@ -10,7 +10,8 @@
  * - exports an empty json array when repository is empty
  * - produces csv with a header row
  * - escapes csv commas/quotes/newlines correctly
- * - rejects unsupported export format
+ * - export only includes documents from the requested workspace
+ * - rejects unsupported export format and invalid workspaceId
  * - use case depends on KnowledgeDocumentRepository port only
  */
 export const EXPORT_KNOWLEDGE_DOCUMENTS_USE_CASE_UNIT_CASES = [
@@ -18,6 +19,7 @@ export const EXPORT_KNOWLEDGE_DOCUMENTS_USE_CASE_UNIT_CASES = [
   "exports_empty_json_array",
   "exports_csv_with_header",
   "escapes_csv_special_characters",
-  "rejects_invalid_format",
+  "scoped_to_workspaceId",
+  "rejects_invalid_format_and_workspaceId",
   "depends_on_repository_port_not_adapter",
 ] as const;

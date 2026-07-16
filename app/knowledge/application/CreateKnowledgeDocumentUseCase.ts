@@ -5,8 +5,11 @@ import type { KnowledgeDocumentRepository } from "../repository/KnowledgeDocumen
  * Input for creating a knowledge document.
  * Kept separate from the persisted domain type so the use case owns the
  * create contract (validation + normalization) at the application boundary.
+ * `workspaceId` scopes both the duplicate-id check and the write to a single
+ * workspace — the same `id` may exist independently in another workspace.
  */
 export interface CreateKnowledgeDocumentInput {
+  workspaceId: string;
   id: string;
   title: string;
   text: string;
@@ -29,6 +32,7 @@ export class CreateKnowledgeDocumentUseCase {
     const document = this.toDocument(input);
 
     const existing = await this.knowledgeDocumentRepository.findById(
+      document.workspaceId,
       document.id,
     );
     if (existing) {
@@ -44,6 +48,10 @@ export class CreateKnowledgeDocumentUseCase {
       throw new Error("CreateKnowledgeDocumentInput must be an object");
     }
 
+    const workspaceId = this.requireNonEmptyString(
+      input.workspaceId,
+      "workspaceId",
+    );
     const id = this.requireNonEmptyString(input.id, "id");
     const title = this.requireNonEmptyString(input.title, "title");
     if (typeof input.text !== "string") {
@@ -51,6 +59,7 @@ export class CreateKnowledgeDocumentUseCase {
     }
 
     return {
+      workspaceId,
       id,
       title,
       text: input.text,

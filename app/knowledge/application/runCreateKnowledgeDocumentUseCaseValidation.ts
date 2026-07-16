@@ -9,6 +9,9 @@ import { ListKnowledgeDocumentsUseCase } from "./ListKnowledgeDocumentsUseCase";
 import { DefaultInMemoryRepository } from "../persistence/DefaultInMemoryRepository";
 import type { KnowledgeDocumentRepository } from "../repository/KnowledgeDocumentRepository";
 
+const WORKSPACE_A = "workspace-a";
+const WORKSPACE_B = "workspace-b";
+
 function assertTruthy(value: unknown, message: string): void {
   if (!value) {
     throw new Error(message);
@@ -70,6 +73,7 @@ async function assertCreatesAndPersists(): Promise<void> {
   const list = new ListKnowledgeDocumentsUseCase(repository);
 
   const input: CreateKnowledgeDocumentInput = {
+    workspaceId: WORKSPACE_A,
     id: " doc-1 ",
     title: " Getting Started ",
     text: "Create flow for knowledge items.",
@@ -77,14 +81,15 @@ async function assertCreatesAndPersists(): Promise<void> {
 
   const created = await create.execute(input);
   assertEqual(created.id, "doc-1", "id should be trimmed");
+  assertEqual(created.workspaceId, WORKSPACE_A, "workspaceId mismatch");
   assertEqual(created.title, "Getting Started", "title should be trimmed");
   assertEqual(created.text, "Create flow for knowledge items.", "text mismatch");
 
-  const stored = await repository.findById("doc-1");
+  const stored = await repository.findById(WORKSPACE_A, "doc-1");
   assertTruthy(stored, "Expected document in repository after create");
   assertEqual(stored?.title, "Getting Started", "stored title mismatch");
 
-  const listed = await list.execute();
+  const listed = await list.execute({ workspaceId: WORKSPACE_A });
   assertEqual(listed.length, 1, "list should include created document");
   assertEqual(listed[0]?.id, "doc-1", "listed id mismatch");
 }
@@ -95,6 +100,7 @@ async function assertRejectsDuplicateId(): Promise<void> {
   const create = new CreateKnowledgeDocumentUseCase(repository);
 
   await create.execute({
+    workspaceId: WORKSPACE_A,
     id: "doc-dup",
     title: "First",
     text: "body",
@@ -102,12 +108,39 @@ async function assertRejectsDuplicateId(): Promise<void> {
 
   await assertRejects(
     create.execute({
+      workspaceId: WORKSPACE_A,
       id: "doc-dup",
       title: "Second",
       text: "other",
     }),
     "already exists",
   );
+}
+
+async function assertSameIdAllowedInDifferentWorkspace(): Promise<void> {
+  console.log("[application] same id allowed in a different workspace...");
+  const repository: KnowledgeDocumentRepository = new DefaultInMemoryRepository();
+  const create = new CreateKnowledgeDocumentUseCase(repository);
+
+  await create.execute({
+    workspaceId: WORKSPACE_A,
+    id: "doc-dup",
+    title: "Workspace A",
+    text: "body",
+  });
+
+  const createdInB = await create.execute({
+    workspaceId: WORKSPACE_B,
+    id: "doc-dup",
+    title: "Workspace B",
+    text: "other body",
+  });
+  assertEqual(createdInB.workspaceId, WORKSPACE_B, "workspaceId mismatch");
+
+  const inA = await repository.findById(WORKSPACE_A, "doc-dup");
+  const inB = await repository.findById(WORKSPACE_B, "doc-dup");
+  assertEqual(inA?.title, "Workspace A", "workspace A document unaffected");
+  assertEqual(inB?.title, "Workspace B", "workspace B document created independently");
 }
 
 async function assertRejectsInvalidInput(): Promise<void> {
@@ -117,6 +150,7 @@ async function assertRejectsInvalidInput(): Promise<void> {
 
   await assertRejects(
     create.execute({
+      workspaceId: WORKSPACE_A,
       id: " ",
       title: "Valid",
       text: "body",
@@ -125,11 +159,21 @@ async function assertRejectsInvalidInput(): Promise<void> {
   );
   await assertRejects(
     create.execute({
+      workspaceId: WORKSPACE_A,
       id: "doc-x",
       title: "",
       text: "body",
     }),
     "title must be a non-empty string",
+  );
+  await assertRejects(
+    create.execute({
+      workspaceId: " ",
+      id: "doc-y",
+      title: "Valid",
+      text: "body",
+    }),
+    "workspaceId must be a non-empty string",
   );
 }
 
@@ -137,6 +181,7 @@ async function main(): Promise<void> {
   await assertDependsOnPortNotAdapter();
   await assertCreatesAndPersists();
   await assertRejectsDuplicateId();
+  await assertSameIdAllowedInDifferentWorkspace();
   await assertRejectsInvalidInput();
   console.log("CreateKnowledgeDocumentUseCase validation succeeded.");
 }

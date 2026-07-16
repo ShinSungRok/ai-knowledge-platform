@@ -232,3 +232,31 @@ Implement export use case for knowledge items
 
 **Status**
 Completed
+
+## Task 10
+
+**Date**
+2026-07-16
+
+**Commit**
+Pending
+
+**Title**
+Scope knowledge documents by workspace
+
+**Summary**
+- Added required `workspaceId` to `KnowledgeDocument`; the same `id` now exists independently per workspace
+- Changed `KnowledgeDocumentRepository` port (`findById`/`findAll`/`deleteById`) and `DefaultInMemoryRepository` to scope every read/write by `workspaceId`
+- Added required `workspaceId` to every application use case input (list/page/create/update/delete/search/export); cross-workspace reads/writes are rejected as not-found or return empty results
+- Extended repository + all application validation runners and unit-case inventories with same-id-across-workspaces and cross-workspace-isolation coverage
+- No Workspace entity, CRUD, repository, or composition/HTTP wiring introduced — `workspaceId` is only a scoping value on the existing document contract
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:repository`
+- `pnpm validate:application`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

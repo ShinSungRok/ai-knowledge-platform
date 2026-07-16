@@ -9,6 +9,9 @@ import {
 import { DefaultInMemoryRepository } from "../persistence/DefaultInMemoryRepository";
 import type { KnowledgeDocumentRepository } from "../repository/KnowledgeDocumentRepository";
 
+const WORKSPACE_A = "workspace-a";
+const WORKSPACE_B = "workspace-b";
+
 function assertTruthy(value: unknown, message: string): void {
   if (!value) {
     throw new Error(message);
@@ -65,9 +68,11 @@ async function assertDependsOnPortNotAdapter(): Promise<void> {
 
 async function seedDocument(
   repository: KnowledgeDocumentRepository,
+  workspaceId: string = WORKSPACE_A,
 ): Promise<void> {
   const create = new CreateKnowledgeDocumentUseCase(repository);
   await create.execute({
+    workspaceId,
     id: "doc-1",
     title: "Original Title",
     text: "Original body",
@@ -81,6 +86,7 @@ async function assertUpdatesTitleOnly(): Promise<void> {
   const update = new UpdateKnowledgeDocumentUseCase(repository);
 
   const input: UpdateKnowledgeDocumentInput = {
+    workspaceId: WORKSPACE_A,
     id: " doc-1 ",
     title: " Updated Title ",
   };
@@ -90,7 +96,7 @@ async function assertUpdatesTitleOnly(): Promise<void> {
   assertEqual(result.title, "Updated Title", "title should be trimmed/updated");
   assertEqual(result.text, "Original body", "text should be unchanged");
 
-  const stored = await repository.findById("doc-1");
+  const stored = await repository.findById(WORKSPACE_A, "doc-1");
   assertEqual(stored?.title, "Updated Title", "stored title mismatch");
   assertEqual(stored?.text, "Original body", "stored text mismatch");
 }
@@ -102,6 +108,7 @@ async function assertUpdatesTextOnly(): Promise<void> {
   const update = new UpdateKnowledgeDocumentUseCase(repository);
 
   const result = await update.execute({
+    workspaceId: WORKSPACE_A,
     id: "doc-1",
     text: "Updated body",
   });
@@ -117,11 +124,31 @@ async function assertRejectsMissingDocument(): Promise<void> {
 
   await assertRejects(
     update.execute({
+      workspaceId: WORKSPACE_A,
       id: "missing",
       title: "Nope",
     }),
     "not found",
   );
+}
+
+async function assertRejectsCrossWorkspaceUpdate(): Promise<void> {
+  console.log("[application] update rejects document from a different workspace...");
+  const repository: KnowledgeDocumentRepository = new DefaultInMemoryRepository();
+  await seedDocument(repository, WORKSPACE_A);
+  const update = new UpdateKnowledgeDocumentUseCase(repository);
+
+  await assertRejects(
+    update.execute({
+      workspaceId: WORKSPACE_B,
+      id: "doc-1",
+      title: "Should not apply",
+    }),
+    "not found",
+  );
+
+  const stillOriginal = await repository.findById(WORKSPACE_A, "doc-1");
+  assertEqual(stillOriginal?.title, "Original Title", "workspace A document must be untouched");
 }
 
 async function assertRejectsInvalidInput(): Promise<void> {
@@ -131,15 +158,24 @@ async function assertRejectsInvalidInput(): Promise<void> {
   const update = new UpdateKnowledgeDocumentUseCase(repository);
 
   await assertRejects(
-    update.execute({ id: "doc-1" }),
+    update.execute({ workspaceId: WORKSPACE_A, id: "doc-1" }),
     "at least one of title or text",
   );
   await assertRejects(
     update.execute({
+      workspaceId: WORKSPACE_A,
       id: "doc-1",
       title: " ",
     }),
     "title must be a non-empty string",
+  );
+  await assertRejects(
+    update.execute({
+      workspaceId: " ",
+      id: "doc-1",
+      title: "Valid",
+    }),
+    "workspaceId must be a non-empty string",
   );
 }
 
@@ -148,6 +184,7 @@ async function main(): Promise<void> {
   await assertUpdatesTitleOnly();
   await assertUpdatesTextOnly();
   await assertRejectsMissingDocument();
+  await assertRejectsCrossWorkspaceUpdate();
   await assertRejectsInvalidInput();
   console.log("UpdateKnowledgeDocumentUseCase validation succeeded.");
 }

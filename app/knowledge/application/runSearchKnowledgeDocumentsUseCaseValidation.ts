@@ -6,6 +6,9 @@ import { SearchKnowledgeDocumentsUseCase } from "./SearchKnowledgeDocumentsUseCa
 import { DefaultInMemoryRepository } from "../persistence/DefaultInMemoryRepository";
 import type { KnowledgeDocumentRepository } from "../repository/KnowledgeDocumentRepository";
 
+const WORKSPACE_A = "workspace-a";
+const WORKSPACE_B = "workspace-b";
+
 function assertTruthy(value: unknown, message: string): void {
   if (!value) {
     throw new Error(message);
@@ -40,19 +43,23 @@ function assertRejects(
 
 async function seedDocuments(
   repository: KnowledgeDocumentRepository,
+  workspaceId: string = WORKSPACE_A,
 ): Promise<void> {
   const create = new CreateKnowledgeDocumentUseCase(repository);
   await create.execute({
+    workspaceId,
     id: "doc-1",
     title: "Architecture Guide",
     text: "Clean hexagonal boundaries for knowledge storage.",
   });
   await create.execute({
+    workspaceId,
     id: "doc-2",
     title: "Search Patterns",
     text: "Filter documents by title or body text.",
   });
   await create.execute({
+    workspaceId,
     id: "doc-3",
     title: "Operations Runbook",
     text: "Validate with pnpm and commit after review.",
@@ -87,11 +94,17 @@ async function assertSearchesTitleAndText(): Promise<void> {
   await seedDocuments(repository);
   const search = new SearchKnowledgeDocumentsUseCase(repository);
 
-  const byTitle = await search.execute({ query: " architecture " });
+  const byTitle = await search.execute({
+    workspaceId: WORKSPACE_A,
+    query: " architecture ",
+  });
   assertEqual(byTitle.length, 1, "Expected one title match");
   assertEqual(byTitle[0]?.id, "doc-1", "Wrong title match");
 
-  const byText = await search.execute({ query: "FILTER" });
+  const byText = await search.execute({
+    workspaceId: WORKSPACE_A,
+    query: "FILTER",
+  });
   assertEqual(byText.length, 1, "Expected one text match");
   assertEqual(byText[0]?.id, "doc-2", "Wrong text match");
 }
@@ -103,12 +116,14 @@ async function assertFieldScopedSearch(): Promise<void> {
   const search = new SearchKnowledgeDocumentsUseCase(repository);
 
   const titleOnly = await search.execute({
+    workspaceId: WORKSPACE_A,
     query: "filter",
     fields: ["title"],
   });
   assertEqual(titleOnly.length, 0, "Text-only hit must not match title field");
 
   const textOnly = await search.execute({
+    workspaceId: WORKSPACE_A,
     query: "filter",
     fields: ["text"],
   });
@@ -122,8 +137,24 @@ async function assertNoMatchReturnsEmpty(): Promise<void> {
   await seedDocuments(repository);
   const search = new SearchKnowledgeDocumentsUseCase(repository);
 
-  const result = await search.execute({ query: "no-such-term-xyz" });
+  const result = await search.execute({
+    workspaceId: WORKSPACE_A,
+    query: "no-such-term-xyz",
+  });
   assertEqual(result.length, 0, "Expected empty search result");
+}
+
+async function assertCrossWorkspaceIsolation(): Promise<void> {
+  console.log("[application] search does not match documents from other workspaces...");
+  const repository: KnowledgeDocumentRepository = new DefaultInMemoryRepository();
+  await seedDocuments(repository, WORKSPACE_A);
+  const search = new SearchKnowledgeDocumentsUseCase(repository);
+
+  const result = await search.execute({
+    workspaceId: WORKSPACE_B,
+    query: "architecture",
+  });
+  assertEqual(result.length, 0, "Workspace B must not match workspace A documents");
 }
 
 async function assertRejectsInvalidInput(): Promise<void> {
@@ -132,12 +163,16 @@ async function assertRejectsInvalidInput(): Promise<void> {
   const search = new SearchKnowledgeDocumentsUseCase(repository);
 
   await assertRejects(
-    search.execute({ query: " " }),
+    search.execute({ workspaceId: WORKSPACE_A, query: " " }),
     "query must be a non-empty string",
   );
   await assertRejects(
-    search.execute({ query: "ok", fields: [] }),
+    search.execute({ workspaceId: WORKSPACE_A, query: "ok", fields: [] }),
     "fields must be a non-empty array",
+  );
+  await assertRejects(
+    search.execute({ workspaceId: " ", query: "ok" }),
+    "workspaceId must be a non-empty string",
   );
 }
 
@@ -146,6 +181,7 @@ async function main(): Promise<void> {
   await assertSearchesTitleAndText();
   await assertFieldScopedSearch();
   await assertNoMatchReturnsEmpty();
+  await assertCrossWorkspaceIsolation();
   await assertRejectsInvalidInput();
   console.log("SearchKnowledgeDocumentsUseCase validation succeeded.");
 }
