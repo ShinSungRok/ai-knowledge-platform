@@ -10,9 +10,9 @@ composition root, and dependency-free validation runners.
 
 ## Status
 
-**Task 8 — Sort and page knowledge documents use case.**
-`ListKnowledgeDocumentsPageUseCase` sorts by `id`/`title` and paginates
-through the repository port. Validate with:
+**Task 9 — Export knowledge documents use case.**
+`ExportKnowledgeDocumentsUseCase` serializes all documents to `json` or
+`csv` via the repository port. Validate with:
 
 ```bash
 pnpm install
@@ -48,7 +48,7 @@ See [`docs/architecture.md`](docs/architecture.md) and
 |---|---|
 | `pnpm validate:skeleton` | Assert directory, barrel, docs, and script integrity |
 | `pnpm validate:repository` | DefaultInMemoryRepository port contract |
-| `pnpm validate:application` | List + Page + Create + Update + Delete + Search knowledge document use cases |
+| `pnpm validate:application` | List + Page + Create + Update + Delete + Search + Export knowledge document use cases |
 | `pnpm typecheck` | TypeScript strict check (`tsc --noEmit`) |
 | `pnpm validate` | skeleton + repository + application + typecheck |
 | `pnpm infra:config` | `docker compose ... config` (optional) |

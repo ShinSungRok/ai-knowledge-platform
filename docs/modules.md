@@ -8,8 +8,8 @@ responsibility and how it fits into the wider system. Each module has its own
 dependency direction.
 
 Module barrels are always present. Task 2 added the storage port/adapter pair.
-Tasks 3–8 add list/page/create/update/delete/search application use cases for
-knowledge documents.
+Tasks 3–9 add list/page/create/update/delete/search/export application use
+cases for knowledge documents.
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules
@@ -17,7 +17,7 @@ Other modules remain skeleton boundaries until scoped.
 | Module | Responsibility |
 |---|---|
 | `domain` | Canonical types (`KnowledgeDocument`). Zero outward dependencies. |
-| `application` | Use cases (list/page/create/update/delete/search) over domain types and ports. |
+| `application` | Use cases (list/page/create/update/delete/search/export) over domain types and ports. |
 | `repository` | Persistence-agnostic ports (`KnowledgeDocumentRepository` including `deleteById`). |
 | `persistence` | Concrete adapters (`DefaultInMemoryRepository`; DB adapters later). |
 | `pipeline` | Ingestion pipelines from external knowledge sources. |

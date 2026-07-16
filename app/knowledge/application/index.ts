@@ -28,3 +28,9 @@ export {
   type SearchKnowledgeDocumentsInput,
   type KnowledgeDocumentSearchField,
 } from "./SearchKnowledgeDocumentsUseCase";
+export {
+  ExportKnowledgeDocumentsUseCase,
+  type ExportKnowledgeDocumentsInput,
+  type ExportKnowledgeDocumentsResult,
+  type KnowledgeDocumentExportFormat,
+} from "./ExportKnowledgeDocumentsUseCase";

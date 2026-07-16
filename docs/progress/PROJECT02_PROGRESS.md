@@ -185,7 +185,7 @@ Completed
 2026-07-16
 
 **Commit**
-Pending
+962a9c2
 
 **Title**
 Implement sorting and paging use case for knowledge items
@@ -195,6 +195,33 @@ Implement sorting and paging use case for knowledge items
 - Sorting limited to `id`/`title` (no creation-date field on domain model yet)
 - Paging validates `page`/`pageSize` bounds and returns `totalCount`/`totalPages`
 - Extended `validate:application` with page runner
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:repository`
+- `pnpm validate:application`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
+## Task 9
+
+**Date**
+2026-07-16
+
+**Commit**
+Pending
+
+**Title**
+Implement export use case for knowledge items
+
+**Summary**
+- Added `ExportKnowledgeDocumentsUseCase` serializing all documents to `json` (default) or `csv`
+- CSV output escapes commas/quotes/newlines per RFC 4180-style quoting
+- Result carries `format`/`content`/`count`; no HTTP/file-system concerns in the use case
+- Extended `validate:application` with export runner
 
 **Validation**
 - `pnpm validate:skeleton`

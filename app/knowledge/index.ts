@@ -15,6 +15,7 @@ export {
   UpdateKnowledgeDocumentUseCase,
   DeleteKnowledgeDocumentUseCase,
   SearchKnowledgeDocumentsUseCase,
+  ExportKnowledgeDocumentsUseCase,
 } from "./application";
 export type {
   ListKnowledgeDocumentsPageInput,
@@ -26,6 +27,9 @@ export type {
   DeleteKnowledgeDocumentInput,
   SearchKnowledgeDocumentsInput,
   KnowledgeDocumentSearchField,
+  ExportKnowledgeDocumentsInput,
+  ExportKnowledgeDocumentsResult,
+  KnowledgeDocumentExportFormat,
 } from "./application";
 export { KNOWLEDGE_MODULE_REPOSITORY } from "./repository";
 export type { KnowledgeDocumentRepository } from "./repository";

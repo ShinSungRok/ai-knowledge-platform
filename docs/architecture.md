@@ -98,6 +98,11 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
 - `ListKnowledgeDocumentsPageUseCase` adds sorting + paging. Sorting is limited
   to `id`/`title` — `KnowledgeDocument` has no creation-date field yet, so
   sort-by-creation-date is deferred until the domain model adds one.
+- `ExportKnowledgeDocumentsUseCase` serializes all documents to `json` or
+  `csv` via the repository port. It returns the serialized string plus a
+  count; it has no knowledge of HTTP, file systems, or storage — a caller
+  (composition/API layer, when it exists) decides what to do with the
+  output.
 - Database adapters, HTTP/server, search, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + application + typecheck).
