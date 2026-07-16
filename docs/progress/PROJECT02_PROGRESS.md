@@ -151,3 +151,30 @@ Implement delete use case for knowledge items
 
 **Status**
 Completed
+
+## Task 7
+
+**Date**
+2026-07-16
+
+**Commit**
+Pending
+
+**Title**
+Implement search use case for knowledge items
+
+**Summary**
+- Added `SearchKnowledgeDocumentsUseCase` with title/text field filters
+- Case-insensitive substring match via repository `findAll` + application filter
+- Tags deferred (not on `KnowledgeDocument` yet)
+- Extended `validate:application` with search runner
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:repository`
+- `pnpm validate:application`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

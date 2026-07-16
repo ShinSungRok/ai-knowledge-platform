@@ -16,3 +16,8 @@ export {
   DeleteKnowledgeDocumentUseCase,
   type DeleteKnowledgeDocumentInput,
 } from "./DeleteKnowledgeDocumentUseCase";
+export {
+  SearchKnowledgeDocumentsUseCase,
+  type SearchKnowledgeDocumentsInput,
+  type KnowledgeDocumentSearchField,
+} from "./SearchKnowledgeDocumentsUseCase";

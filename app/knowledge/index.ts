@@ -13,11 +13,14 @@ export {
   CreateKnowledgeDocumentUseCase,
   UpdateKnowledgeDocumentUseCase,
   DeleteKnowledgeDocumentUseCase,
+  SearchKnowledgeDocumentsUseCase,
 } from "./application";
 export type {
   CreateKnowledgeDocumentInput,
   UpdateKnowledgeDocumentInput,
   DeleteKnowledgeDocumentInput,
+  SearchKnowledgeDocumentsInput,
+  KnowledgeDocumentSearchField,
 } from "./application";
 export { KNOWLEDGE_MODULE_REPOSITORY } from "./repository";
 export type { KnowledgeDocumentRepository } from "./repository";
