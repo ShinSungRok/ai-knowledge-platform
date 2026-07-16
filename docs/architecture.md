@@ -134,10 +134,21 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   for a given `KnowledgeSource`. `FakeKnowledgeSourceConnector` is a
   dependency-free, fixture-backed adapter scoped by `(workspaceId, sourceId)`
   for validation only. Connectors only fetch/normalize — they never persist,
-  sync, or verify `KnowledgeDocument` provenance, and there is no canonical
-  document identity policy (`externalId` → `KnowledgeDocument.id`) or real
+  sync, or verify `KnowledgeDocument` provenance, and there is no real
   HTTP/file/DB-backed connector yet.
+- `SyncKnowledgeSourcePipeline` (`app/knowledge/pipeline`) orchestrates
+  `KnowledgeSourceRepository`, `KnowledgeDocumentRepository`, and
+  `KnowledgeSourceConnector` into an idempotent sync: it looks up the
+  `KnowledgeSource`, fetches its documents, assigns each a deterministic
+  canonical id (`${encodeURIComponent(sourceId)}:${encodeURIComponent(externalId)}`,
+  with no trimming/transformation of either value), validates and
+  conflict-checks the entire batch before any write, and only then saves —
+  so re-syncing the same source updates existing documents in place instead
+  of duplicating them, and a single invalid or conflicting document rejects
+  the whole batch with no partial writes. It does not delete documents that
+  disappear from the source, and has no background scheduling, retry, or
+  real network access.
 - Database adapters, HTTP/server, search, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + application +
-  pipeline connector + typecheck).
+  pipeline connector + pipeline sync + typecheck).

@@ -348,3 +348,31 @@ Add knowledge source connector boundary
 
 **Status**
 Completed
+
+## Task 14
+
+**Date**
+2026-07-16
+
+**Commit**
+Pending
+
+**Title**
+Add idempotent knowledge source sync pipeline
+
+**Summary**
+- Added `SyncKnowledgeSourcePipeline` in `app/knowledge/pipeline`, injecting only `KnowledgeSourceRepository`, `KnowledgeDocumentRepository`, and `KnowledgeSourceConnector` ports; `sync({ workspaceId, sourceId })` looks up the source first and returns without calling the connector or writing anything if it is missing or belongs to a different workspace
+- Each fetched `ConnectorDocument` is validated (non-empty `externalId`/`title`, string `text`) and assigned a deterministic canonical id `${encodeURIComponent(sourceId)}:${encodeURIComponent(externalId)}` with no trimming/transformation of either value; the whole batch (including duplicate-`externalId`-within-batch and existing-document-under-a-different-`sourceId` conflicts) is validated and conflict-checked before any `save` call, so a single invalid or conflicting document rejects the entire sync with no partial writes
+- Re-syncing the same `(sourceId, externalId)` pair resolves to the same canonical id and updates the existing document's `title`/`text` in place via `KnowledgeDocumentRepository.save` — no duplicate document is created
+- Result is limited to `{ sourceId, fetchedCount, savedCount }`; exported `SyncKnowledgeSourcePipeline` from the `pipeline` barrel, which still depends only on domain types and the repository/connector ports — no concrete persistence adapter import
+- Added `validate:pipeline:sync` runner + `tests/unit/syncKnowledgeSourcePipeline.cases.ts`, wired into the top-level `validate` chain; no real network/HTTP/DB connector, background job, document deletion, or Chunk/Embedding introduced
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:pipeline:connector`
+- `pnpm validate:pipeline:sync`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

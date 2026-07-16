@@ -17,7 +17,9 @@ carries a required `sourceId`, and `CreateKnowledgeDocumentUseCase` verifies
 the referenced source exists in the same workspace before saving. Task 13
 adds the `pipeline` module's `KnowledgeSourceConnector` outbound port and a
 fixture-backed `FakeKnowledgeSourceConnector`, fetching normalized documents
-for a `KnowledgeSource` — not yet wired to document creation or sync.
+for a `KnowledgeSource`. Task 14 adds `SyncKnowledgeSourcePipeline`, wiring
+the connector plus both repository ports into an idempotent, deterministic-id
+sync — no document deletion, background scheduling, or real connector yet.
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules
@@ -28,7 +30,7 @@ Other modules remain skeleton boundaries until scoped.
 | `application` | Use cases (list/page/create/update/delete/search/export for documents; create for sources), each scoped to a `workspaceId`, over domain types and ports. |
 | `repository` | Persistence-agnostic ports (`KnowledgeDocumentRepository`, `KnowledgeSourceRepository`); document/source methods take `workspaceId`. |
 | `persistence` | Concrete adapters (`DefaultInMemoryRepository`, `DefaultInMemoryKnowledgeSourceRepository`; DB adapters later). |
-| `pipeline` | Ingestion pipelines from external knowledge sources. `KnowledgeSourceConnector` port + `FakeKnowledgeSourceConnector` fixture adapter fetch normalized documents (`externalId`/`title`/`text`) for a `KnowledgeSource`; no sync, storage, or canonical document identity policy yet. |
+| `pipeline` | Ingestion pipelines from external knowledge sources. `KnowledgeSourceConnector` port + `FakeKnowledgeSourceConnector` fixture adapter fetch normalized documents (`externalId`/`title`/`text`) for a `KnowledgeSource`; `SyncKnowledgeSourcePipeline` turns those into idempotent, deterministically-keyed `KnowledgeDocument` writes via the repository ports. No document deletion, background scheduling, or real connector yet. |
 | `embedding` | Chunking, embedding, and vector indexing ports/adapters. |
 | `search` | Search engine abstraction (keyword, vector, hybrid). |
 | `retrieval` | Retriever port consumed by the RAG flow. |
