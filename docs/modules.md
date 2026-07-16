@@ -21,8 +21,10 @@ for a `KnowledgeSource`. Task 14 adds `SyncKnowledgeSourcePipeline`, wiring
 the connector plus both repository ports into an idempotent, deterministic-id
 sync. Task 15 adds `DocumentChunk` plus a workspace/document-scoped
 `DocumentChunkRepository` + `DefaultInMemoryDocumentChunkRepository` —
-a replace-the-whole-set storage boundary with no chunking algorithm,
-generation pipeline, or embedding link yet.
+a replace-the-whole-set storage boundary. Task 16 adds the `embedding`
+module's `ChunkingService` port and `FixedSizeDocumentChunker` — a pure,
+deterministic function from `KnowledgeDocument` to ordered `DocumentChunk`s,
+not yet wired to any storage or pipeline.
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules
@@ -34,7 +36,7 @@ Other modules remain skeleton boundaries until scoped.
 | `repository` | Persistence-agnostic ports (`KnowledgeDocumentRepository`, `KnowledgeSourceRepository`, `DocumentChunkRepository`); methods take `workspaceId` (chunk methods also take `documentId`). |
 | `persistence` | Concrete adapters (`DefaultInMemoryRepository`, `DefaultInMemoryKnowledgeSourceRepository`, `DefaultInMemoryDocumentChunkRepository`; DB adapters later). |
 | `pipeline` | Ingestion pipelines from external knowledge sources. `KnowledgeSourceConnector` port + `FakeKnowledgeSourceConnector` fixture adapter fetch normalized documents (`externalId`/`title`/`text`) for a `KnowledgeSource`; `SyncKnowledgeSourcePipeline` turns those into idempotent, deterministically-keyed `KnowledgeDocument` writes via the repository ports. No document deletion, background scheduling, or real connector yet. |
-| `embedding` | Chunking, embedding, and vector indexing ports/adapters. |
+| `embedding` | Chunking, embedding, and vector indexing ports/adapters. `ChunkingService` port + `FixedSizeDocumentChunker` deterministic, fixed-size adapter split a `KnowledgeDocument` into ordered `DocumentChunk`s; no storage, pipeline, or embedding implementation yet. |
 | `search` | Search engine abstraction (keyword, vector, hybrid). |
 | `retrieval` | Retriever port consumed by the RAG flow. |
 | `context` | Prompt context assembly from retrieved documents. |

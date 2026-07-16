@@ -403,3 +403,29 @@ Add traceable document chunk storage
 
 **Status**
 Completed
+
+## Task 16
+
+**Date**
+2026-07-16
+
+**Commit**
+Pending
+
+**Title**
+Add deterministic document chunker
+
+**Summary**
+- Added `ChunkingService` port in `app/knowledge/embedding`: a pure, synchronous `chunk(document: KnowledgeDocument): DocumentChunk[]` with no I/O, storage, or embedding knowledge
+- Added `FixedSizeDocumentChunker(maxChunkLength)`: rejects a non-positive-integer `maxChunkLength`; splits `Array.from(document.text)` into segments of at most `maxChunkLength` Unicode code points (never breaking a surrogate pair/astral character), so chunking is deterministic and reproducible across repeated calls on the same input
+- Each chunk carries the document's own `workspaceId`/`documentId`, a deterministic id `${encodeURIComponent(document.id)}:chunk:${order}`, and a 0-based contiguous `order`; empty `text` yields an empty array; output is independent across calls (mutating one result never affects a later `chunk()` call)
+- Exported the new port/adapter from the `embedding` and top-level `app/knowledge` barrels
+- Added `validate:embedding:chunker` runner + `tests/unit/fixedSizeDocumentChunker.cases.ts`, wired into the top-level `validate` chain; no chunk storage, Source-level processing, Embedding/Vector Index, or external chunking library introduced
+
+**Validation**
+- `pnpm validate:embedding:chunker`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

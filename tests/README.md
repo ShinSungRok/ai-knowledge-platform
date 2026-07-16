@@ -30,4 +30,5 @@ runner is introduced deliberately.
 | Case inventory | `tests/unit/fakeKnowledgeSourceConnector.cases.ts` |
 | Case inventory | `tests/unit/syncKnowledgeSourcePipeline.cases.ts` |
 | Case inventory | `tests/unit/defaultInMemoryDocumentChunkRepository.cases.ts` |
-| Executable checks | `pnpm validate:repository`, `pnpm validate:repository:source`, `pnpm validate:repository:chunk`, `pnpm validate:application`, `pnpm validate:pipeline:connector`, `pnpm validate:pipeline:sync` |
+| Case inventory | `tests/unit/fixedSizeDocumentChunker.cases.ts` |
+| Executable checks | `pnpm validate:repository`, `pnpm validate:repository:source`, `pnpm validate:repository:chunk`, `pnpm validate:application`, `pnpm validate:pipeline:connector`, `pnpm validate:pipeline:sync`, `pnpm validate:embedding:chunker` |

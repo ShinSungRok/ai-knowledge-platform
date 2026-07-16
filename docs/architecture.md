@@ -160,10 +160,20 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   validating the whole batch — scope match, non-empty fields, and
   unique/non-negative-integer `order` — so no partial write is possible.
   `findByDocumentId` returns chunks sorted by `order` ascending. This
-  repository does not verify that the referenced document exists, and there
-  is no chunking algorithm, pipeline, or embedding link yet.
+  repository does not verify that the referenced document exists.
+- `ChunkingService` (`app/knowledge/embedding`) is a pure, synchronous port —
+  `chunk(document: KnowledgeDocument): DocumentChunk[]` — with no I/O and no
+  knowledge of storage, embeddings, or provenance. `FixedSizeDocumentChunker`
+  is the dependency-free adapter: it splits `document.text` into fixed-size
+  segments of at most `maxChunkLength` Unicode code points (via
+  `Array.from`, so astral characters are never split mid-code-point),
+  assigns each chunk the deterministic id
+  `${encodeURIComponent(document.id)}:chunk:${order}` with a 0-based,
+  contiguous `order`, and returns an empty array for empty text. It has no
+  chunk-storage, chunk-generation-pipeline, natural-language-boundary, or
+  embedding responsibility.
 - Database adapters, HTTP/server, search, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
   repository:chunk + application + pipeline connector + pipeline sync +
-  typecheck).
+  embedding chunker + typecheck).

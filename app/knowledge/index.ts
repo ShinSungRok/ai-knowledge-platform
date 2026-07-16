@@ -48,6 +48,8 @@ export {
 } from "./persistence";
 export { KNOWLEDGE_MODULE_PIPELINE } from "./pipeline";
 export { KNOWLEDGE_MODULE_EMBEDDING } from "./embedding";
+export type { ChunkingService } from "./embedding";
+export { FixedSizeDocumentChunker } from "./embedding";
 export { KNOWLEDGE_MODULE_SEARCH } from "./search";
 export { KNOWLEDGE_MODULE_RETRIEVAL } from "./retrieval";
 export { KNOWLEDGE_MODULE_CONTEXT } from "./context";
