@@ -67,6 +67,12 @@ export class DefaultInMemoryRepository implements KnowledgeDocumentRepository {
     }
     this.assertWorkspaceId(document.workspaceId);
     this.assertId(document.id);
+    if (
+      typeof document.sourceId !== "string" ||
+      document.sourceId.trim().length === 0
+    ) {
+      throw new Error("KnowledgeDocument.sourceId must be a non-empty string");
+    }
     if (typeof document.title !== "string" || document.title.trim().length === 0) {
       throw new Error("KnowledgeDocument.title must be a non-empty string");
     }
@@ -91,6 +97,7 @@ export class DefaultInMemoryRepository implements KnowledgeDocumentRepository {
     return {
       workspaceId: document.workspaceId,
       id: document.id,
+      sourceId: document.sourceId,
       title: document.title,
       text: document.text,
     };

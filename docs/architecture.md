@@ -102,7 +102,13 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   `CreateKnowledgeDocumentUseCase`, `UpdateKnowledgeDocumentUseCase`,
   `DeleteKnowledgeDocumentUseCase`, `SearchKnowledgeDocumentsUseCase`), all
   workspace-scoped. Search covers `title`/`text` only (no tags on the domain
-  model yet).
+  model yet). `KnowledgeDocument` carries a required `sourceId`:
+  `CreateKnowledgeDocumentUseCase` depends on both
+  `KnowledgeDocumentRepository` and `KnowledgeSourceRepository` and rejects
+  creation (without saving) unless the referenced `KnowledgeSource` is
+  registered in the same `workspaceId`. `UpdateKnowledgeDocumentUseCase`
+  preserves the original `sourceId` — there is no use case to reassign a
+  document's source yet.
 - `ListKnowledgeDocumentsPageUseCase` adds sorting + paging, scoped to a
   workspace. Sorting is limited to `id`/`title` — `KnowledgeDocument` has no
   creation-date field yet, so sort-by-creation-date is deferred until the
@@ -111,15 +117,18 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   to `json` or `csv` via the repository port. It returns the serialized
   string plus a count; it has no knowledge of HTTP, file systems, or
   storage — a caller (composition/API layer, when it exists) decides what to
-  do with the output.
+  do with the output. Both formats preserve document provenance: JSON
+  includes `sourceId` as a field, and the CSV column order is fixed to
+  `id,sourceId,title,text`.
 - `KnowledgeSource` is a minimal workspace-scoped registry entry
   (`workspaceId`, `id`, `name`) with `KnowledgeSourceRepository` /
   `DefaultInMemoryKnowledgeSourceRepository` and
   `CreateKnowledgeSourceUseCase`, following the same
   domain → port → in-memory adapter → use case pattern and workspace
-  isolation as `KnowledgeDocument`. There is no update/delete/list use case,
-  no link to `KnowledgeDocument`, and no connector/sync detail on the model
-  yet.
+  isolation as `KnowledgeDocument`. `KnowledgeDocument.sourceId` is a
+  required provenance reference into this registry, checked at document
+  creation time — but there is still no update/delete/list use case for
+  sources, and no connector/sync detail on the model yet.
 - Database adapters, HTTP/server, search, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + application + typecheck).

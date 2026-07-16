@@ -58,6 +58,7 @@ export class UpdateKnowledgeDocumentUseCase {
     const updated: KnowledgeDocument = {
       workspaceId: existing.workspaceId,
       id: existing.id,
+      sourceId: existing.sourceId,
       title: hasTitle
         ? this.requireNonEmptyString(input.title, "title")
         : existing.title,

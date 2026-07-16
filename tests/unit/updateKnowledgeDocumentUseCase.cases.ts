@@ -6,7 +6,7 @@
  *   pnpm validate:application:update
  *
  * Covered behaviors:
- * - updates title only and preserves text
+ * - updates title only, preserves text and sourceId
  * - updates text only and preserves title
  * - rejects missing document id
  * - rejects a document that exists only in a different workspace (treated

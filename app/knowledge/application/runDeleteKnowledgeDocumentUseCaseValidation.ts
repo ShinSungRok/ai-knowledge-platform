@@ -8,10 +8,13 @@ import {
   type DeleteKnowledgeDocumentInput,
 } from "./DeleteKnowledgeDocumentUseCase";
 import { DefaultInMemoryRepository } from "../persistence/DefaultInMemoryRepository";
+import { DefaultInMemoryKnowledgeSourceRepository } from "../persistence/DefaultInMemoryKnowledgeSourceRepository";
 import type { KnowledgeDocumentRepository } from "../repository/KnowledgeDocumentRepository";
+import type { KnowledgeSourceRepository } from "../repository/KnowledgeSourceRepository";
 
 const WORKSPACE_A = "workspace-a";
 const WORKSPACE_B = "workspace-b";
+const SOURCE_1 = "source-1";
 
 function assertTruthy(value: unknown, message: string): void {
   if (!value) {
@@ -70,19 +73,24 @@ async function assertDependsOnPortNotAdapter(): Promise<void> {
 async function assertDeletesExistingDocument(): Promise<void> {
   console.log("[application] delete removes existing knowledge document...");
   const repository: KnowledgeDocumentRepository = new DefaultInMemoryRepository();
-  const create = new CreateKnowledgeDocumentUseCase(repository);
+  const sourceRepository: KnowledgeSourceRepository =
+    new DefaultInMemoryKnowledgeSourceRepository();
+  await sourceRepository.save({ workspaceId: WORKSPACE_A, id: SOURCE_1, name: "Docs Portal" });
+  const create = new CreateKnowledgeDocumentUseCase(repository, sourceRepository);
   const list = new ListKnowledgeDocumentsUseCase(repository);
   const remove = new DeleteKnowledgeDocumentUseCase(repository);
 
   await create.execute({
     workspaceId: WORKSPACE_A,
     id: "doc-1",
+    sourceId: SOURCE_1,
     title: "To Delete",
     text: "Will be removed",
   });
   await create.execute({
     workspaceId: WORKSPACE_A,
     id: "doc-2",
+    sourceId: SOURCE_1,
     title: "Keep",
     text: "Should remain",
   });
@@ -118,12 +126,16 @@ async function assertRejectsMissingDocument(): Promise<void> {
 async function assertRejectsCrossWorkspaceDelete(): Promise<void> {
   console.log("[application] delete rejects document from a different workspace...");
   const repository: KnowledgeDocumentRepository = new DefaultInMemoryRepository();
-  const create = new CreateKnowledgeDocumentUseCase(repository);
+  const sourceRepository: KnowledgeSourceRepository =
+    new DefaultInMemoryKnowledgeSourceRepository();
+  await sourceRepository.save({ workspaceId: WORKSPACE_A, id: SOURCE_1, name: "Docs Portal" });
+  const create = new CreateKnowledgeDocumentUseCase(repository, sourceRepository);
   const remove = new DeleteKnowledgeDocumentUseCase(repository);
 
   await create.execute({
     workspaceId: WORKSPACE_A,
     id: "doc-1",
+    sourceId: SOURCE_1,
     title: "Protected",
     text: "body",
   });

@@ -289,3 +289,35 @@ Add workspace-scoped knowledge source registry
 
 **Status**
 Completed
+
+## Task 12
+
+**Date**
+2026-07-16
+
+**Commit**
+Pending
+
+**Title**
+Enforce document source provenance
+
+**Summary**
+- Added required `sourceId` to `KnowledgeDocument` and `CreateKnowledgeDocumentInput`; empty/blank values are rejected the same way as other required fields
+- Changed `CreateKnowledgeDocumentUseCase` to depend on both `KnowledgeDocumentRepository` and `KnowledgeSourceRepository`; before saving, it calls `KnowledgeSourceRepository.findById(workspaceId, sourceId)` and rejects (without saving) when the source is missing or registered in a different workspace
+- `DefaultInMemoryRepository` validates `sourceId` as a required non-empty string on save but does not query source existence — provenance verification stays an application-layer responsibility
+- `UpdateKnowledgeDocumentUseCase` preserves the original `sourceId` (no source-reassignment use case exists)
+- `ExportKnowledgeDocumentsUseCase` CSV output now fixes column order to `id,sourceId,title,text`; JSON output already preserves `sourceId` as a document field
+- Updated the repository validation runner and the create/export application validation runners (plus their unit-case inventories) with unregistered-source and cross-workspace-source-reference rejection cases and export provenance coverage; updated the remaining document use-case validation runners (list/page/update/delete/search) that seed documents through `CreateKnowledgeDocumentUseCase` or the repository directly, since the constructor/domain-shape change is a hard requirement of this task
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:repository`
+- `pnpm validate:repository:source`
+- `pnpm validate:application:create`
+- `pnpm validate:application:export`
+- `pnpm validate:application`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

@@ -4,10 +4,13 @@ import path from "node:path";
 import { CreateKnowledgeDocumentUseCase } from "./CreateKnowledgeDocumentUseCase";
 import { ExportKnowledgeDocumentsUseCase } from "./ExportKnowledgeDocumentsUseCase";
 import { DefaultInMemoryRepository } from "../persistence/DefaultInMemoryRepository";
+import { DefaultInMemoryKnowledgeSourceRepository } from "../persistence/DefaultInMemoryKnowledgeSourceRepository";
 import type { KnowledgeDocumentRepository } from "../repository/KnowledgeDocumentRepository";
+import type { KnowledgeSourceRepository } from "../repository/KnowledgeSourceRepository";
 
 const WORKSPACE_A = "workspace-a";
 const WORKSPACE_B = "workspace-b";
+const SOURCE_1 = "source-1";
 
 function assertTruthy(value: unknown, message: string): void {
   if (!value) {
@@ -45,16 +48,26 @@ async function seedDocuments(
   repository: KnowledgeDocumentRepository,
   workspaceId: string = WORKSPACE_A,
 ): Promise<void> {
-  const create = new CreateKnowledgeDocumentUseCase(repository);
+  const sourceRepository: KnowledgeSourceRepository =
+    new DefaultInMemoryKnowledgeSourceRepository();
+  await sourceRepository.save({
+    workspaceId,
+    id: SOURCE_1,
+    name: "Docs Portal",
+  });
+
+  const create = new CreateKnowledgeDocumentUseCase(repository, sourceRepository);
   await create.execute({
     workspaceId,
     id: "doc-1",
+    sourceId: SOURCE_1,
     title: "Architecture Guide",
     text: "Clean hexagonal boundaries.",
   });
   await create.execute({
     workspaceId,
     id: "doc-2",
+    sourceId: SOURCE_1,
     title: 'Quoted, "Title"',
     text: "Line one\nLine two, with comma",
   });
@@ -98,6 +111,10 @@ async function assertDefaultsToJson(): Promise<void> {
     result.content.includes('"id": "doc-1"'),
     "Expected pretty-printed json to include doc-1",
   );
+  assertTruthy(
+    result.content.includes(`"sourceId": "${SOURCE_1}"`),
+    "Expected pretty-printed json to preserve sourceId provenance",
+  );
 }
 
 async function assertExportsEmptyJsonArray(): Promise<void> {
@@ -118,10 +135,12 @@ async function assertExportsCsvWithHeader(): Promise<void> {
 
   const result = await useCase.execute({ workspaceId: WORKSPACE_A, format: "csv" });
   const lines = result.content.split("\n");
-  assertEqual(lines[0], "id,title,text", "csv header mismatch");
+  assertEqual(lines[0], "id,sourceId,title,text", "csv header mismatch");
   assertTruthy(
-    result.content.includes("doc-1,Architecture Guide,Clean hexagonal boundaries."),
-    "Expected plain csv row for doc-1",
+    result.content.includes(
+      `doc-1,${SOURCE_1},Architecture Guide,Clean hexagonal boundaries.`,
+    ),
+    "Expected plain csv row for doc-1 with sourceId column",
   );
 }
 
@@ -133,8 +152,10 @@ async function assertEscapesCsvSpecialCharacters(): Promise<void> {
 
   const result = await useCase.execute({ workspaceId: WORKSPACE_A, format: "csv" });
   assertTruthy(
-    result.content.includes('doc-2,"Quoted, ""Title""","Line one\nLine two, with comma"'),
-    "Expected escaped csv row for doc-2",
+    result.content.includes(
+      `doc-2,${SOURCE_1},"Quoted, ""Title""","Line one\nLine two, with comma"`,
+    ),
+    "Expected escaped csv row for doc-2 with sourceId column",
   );
 }
 

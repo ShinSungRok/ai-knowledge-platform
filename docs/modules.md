@@ -12,7 +12,9 @@ Tasks 3–9 add list/page/create/update/delete/search/export application use
 cases for knowledge documents. Task 10 scopes all of the above to a required
 `workspaceId` — the minimal logical tenancy boundary (no Workspace entity or
 repository yet). Task 11 adds a parallel, workspace-scoped registry for
-`KnowledgeSource` (create-only; no link to `KnowledgeDocument` yet).
+`KnowledgeSource` (create-only). Task 12 links the two: `KnowledgeDocument`
+carries a required `sourceId`, and `CreateKnowledgeDocumentUseCase` verifies
+the referenced source exists in the same workspace before saving.
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules

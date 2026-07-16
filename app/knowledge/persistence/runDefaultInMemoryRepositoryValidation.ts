@@ -4,6 +4,7 @@ import type { KnowledgeDocumentRepository } from "../repository/KnowledgeDocumen
 
 const WORKSPACE_A = "workspace-a";
 const WORKSPACE_B = "workspace-b";
+const SOURCE_1 = "source-1";
 
 function assertTruthy(value: unknown, message: string): void {
   if (!value) {
@@ -42,6 +43,7 @@ async function assertSaveAndFindById(
   const document: KnowledgeDocument = {
     workspaceId: WORKSPACE_A,
     id: "doc-1",
+    sourceId: SOURCE_1,
     title: "Getting Started",
     text: "Knowledge platform domain storage.",
   };
@@ -52,6 +54,7 @@ async function assertSaveAndFindById(
   assertTruthy(found, "Expected document to be found after save");
   assertEqual(found?.id, "doc-1", "id mismatch");
   assertEqual(found?.workspaceId, WORKSPACE_A, "workspaceId mismatch");
+  assertEqual(found?.sourceId, SOURCE_1, "sourceId mismatch");
   assertEqual(found?.title, "Getting Started", "title mismatch");
   assertEqual(
     found?.text,
@@ -75,12 +78,14 @@ async function assertFindAllAndOverwrite(
   await repository.save({
     workspaceId: WORKSPACE_A,
     id: "doc-2",
+    sourceId: SOURCE_1,
     title: "Second",
     text: "Another document",
   });
   await repository.save({
     workspaceId: WORKSPACE_A,
     id: "doc-1",
+    sourceId: SOURCE_1,
     title: "Getting Started (updated)",
     text: "Updated body",
   });
@@ -104,6 +109,7 @@ async function assertDefensiveCopy(
   const document: KnowledgeDocument = {
     workspaceId: WORKSPACE_A,
     id: "doc-3",
+    sourceId: SOURCE_1,
     title: "Mutable",
     text: "original",
   };
@@ -152,6 +158,7 @@ async function assertValidationErrors(
     repository.save({
       workspaceId: WORKSPACE_A,
       id: " ",
+      sourceId: SOURCE_1,
       title: "Valid",
       text: "body",
     }),
@@ -161,6 +168,7 @@ async function assertValidationErrors(
     repository.save({
       workspaceId: WORKSPACE_A,
       id: "doc-x",
+      sourceId: SOURCE_1,
       title: "",
       text: "body",
     }),
@@ -170,10 +178,21 @@ async function assertValidationErrors(
     repository.save({
       workspaceId: " ",
       id: "doc-x",
+      sourceId: SOURCE_1,
       title: "Valid",
       text: "body",
     }),
     "workspaceId must be a non-empty string",
+  );
+  await assertRejects(
+    repository.save({
+      workspaceId: WORKSPACE_A,
+      id: "doc-x",
+      sourceId: " ",
+      title: "Valid",
+      text: "body",
+    }),
+    "sourceId must be a non-empty string",
   );
   await assertRejects(
     repository.findById(WORKSPACE_A, ""),
@@ -204,6 +223,7 @@ async function assertDeleteById(
   await repository.save({
     workspaceId: WORKSPACE_A,
     id: "doc-del",
+    sourceId: SOURCE_1,
     title: "Delete Me",
     text: "temporary",
   });
@@ -219,12 +239,14 @@ async function assertSameIdIndependentAcrossWorkspaces(): Promise<void> {
   await repository.save({
     workspaceId: WORKSPACE_A,
     id: "shared-id",
+    sourceId: SOURCE_1,
     title: "Workspace A Title",
     text: "Workspace A body",
   });
   await repository.save({
     workspaceId: WORKSPACE_B,
     id: "shared-id",
+    sourceId: SOURCE_1,
     title: "Workspace B Title",
     text: "Workspace B body",
   });
@@ -248,6 +270,7 @@ async function assertCrossWorkspaceIsolation(): Promise<void> {
   await repository.save({
     workspaceId: WORKSPACE_A,
     id: "only-in-a",
+    sourceId: SOURCE_1,
     title: "Only In A",
     text: "body",
   });

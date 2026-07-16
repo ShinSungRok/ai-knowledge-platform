@@ -7,10 +7,13 @@ import {
   type UpdateKnowledgeDocumentInput,
 } from "./UpdateKnowledgeDocumentUseCase";
 import { DefaultInMemoryRepository } from "../persistence/DefaultInMemoryRepository";
+import { DefaultInMemoryKnowledgeSourceRepository } from "../persistence/DefaultInMemoryKnowledgeSourceRepository";
 import type { KnowledgeDocumentRepository } from "../repository/KnowledgeDocumentRepository";
+import type { KnowledgeSourceRepository } from "../repository/KnowledgeSourceRepository";
 
 const WORKSPACE_A = "workspace-a";
 const WORKSPACE_B = "workspace-b";
+const SOURCE_1 = "source-1";
 
 function assertTruthy(value: unknown, message: string): void {
   if (!value) {
@@ -70,10 +73,15 @@ async function seedDocument(
   repository: KnowledgeDocumentRepository,
   workspaceId: string = WORKSPACE_A,
 ): Promise<void> {
-  const create = new CreateKnowledgeDocumentUseCase(repository);
+  const sourceRepository: KnowledgeSourceRepository =
+    new DefaultInMemoryKnowledgeSourceRepository();
+  await sourceRepository.save({ workspaceId, id: SOURCE_1, name: "Docs Portal" });
+
+  const create = new CreateKnowledgeDocumentUseCase(repository, sourceRepository);
   await create.execute({
     workspaceId,
     id: "doc-1",
+    sourceId: SOURCE_1,
     title: "Original Title",
     text: "Original body",
   });
@@ -93,6 +101,7 @@ async function assertUpdatesTitleOnly(): Promise<void> {
   const result = await update.execute(input);
 
   assertEqual(result.id, "doc-1", "id mismatch");
+  assertEqual(result.sourceId, SOURCE_1, "sourceId should be preserved");
   assertEqual(result.title, "Updated Title", "title should be trimmed/updated");
   assertEqual(result.text, "Original body", "text should be unchanged");
 

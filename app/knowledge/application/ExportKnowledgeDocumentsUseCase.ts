@@ -25,7 +25,7 @@ export interface ExportKnowledgeDocumentsResult {
   count: number;
 }
 
-const CSV_COLUMNS = ["id", "title", "text"] as const;
+const CSV_COLUMNS = ["id", "sourceId", "title", "text"] as const;
 
 /**
  * Export use case: serialize all knowledge documents in a workspace to JSON

@@ -8,6 +8,7 @@ import type { KnowledgeDocumentRepository } from "../repository/KnowledgeDocumen
 
 const WORKSPACE_A = "workspace-a";
 const WORKSPACE_B = "workspace-b";
+const SOURCE_1 = "source-1";
 
 function assertTruthy(value: unknown, message: string): void {
   if (!value) {
@@ -48,12 +49,14 @@ async function seedRepository(
     {
       workspaceId: WORKSPACE_A,
       id: "doc-1",
+      sourceId: SOURCE_1,
       title: "Architecture Overview",
       text: "Clean / Hexagonal boundaries for knowledge storage.",
     },
     {
       workspaceId: WORKSPACE_A,
       id: "doc-2",
+      sourceId: SOURCE_1,
       title: "Query Use Case",
       text: "List knowledge documents through the repository port.",
     },
@@ -130,6 +133,7 @@ async function assertPortInjection(): Promise<void> {
   await repository.save({
     workspaceId: WORKSPACE_A,
     id: "doc-x",
+    sourceId: SOURCE_1,
     title: "Injected",
     text: "Wired via port type",
   });

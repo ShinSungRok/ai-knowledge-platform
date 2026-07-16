@@ -4,10 +4,13 @@ import path from "node:path";
 import { CreateKnowledgeDocumentUseCase } from "./CreateKnowledgeDocumentUseCase";
 import { ListKnowledgeDocumentsPageUseCase } from "./ListKnowledgeDocumentsPageUseCase";
 import { DefaultInMemoryRepository } from "../persistence/DefaultInMemoryRepository";
+import { DefaultInMemoryKnowledgeSourceRepository } from "../persistence/DefaultInMemoryKnowledgeSourceRepository";
 import type { KnowledgeDocumentRepository } from "../repository/KnowledgeDocumentRepository";
+import type { KnowledgeSourceRepository } from "../repository/KnowledgeSourceRepository";
 
 const WORKSPACE_A = "workspace-a";
 const WORKSPACE_B = "workspace-b";
+const SOURCE_1 = "source-1";
 
 function assertTruthy(value: unknown, message: string): void {
   if (!value) {
@@ -45,10 +48,32 @@ async function seedDocuments(
   repository: KnowledgeDocumentRepository,
   workspaceId: string = WORKSPACE_A,
 ): Promise<void> {
-  const create = new CreateKnowledgeDocumentUseCase(repository);
-  await create.execute({ workspaceId, id: "doc-3", title: "Charlie", text: "third" });
-  await create.execute({ workspaceId, id: "doc-1", title: "Alpha", text: "first" });
-  await create.execute({ workspaceId, id: "doc-2", title: "Bravo", text: "second" });
+  const sourceRepository: KnowledgeSourceRepository =
+    new DefaultInMemoryKnowledgeSourceRepository();
+  await sourceRepository.save({ workspaceId, id: SOURCE_1, name: "Docs Portal" });
+
+  const create = new CreateKnowledgeDocumentUseCase(repository, sourceRepository);
+  await create.execute({
+    workspaceId,
+    id: "doc-3",
+    sourceId: SOURCE_1,
+    title: "Charlie",
+    text: "third",
+  });
+  await create.execute({
+    workspaceId,
+    id: "doc-1",
+    sourceId: SOURCE_1,
+    title: "Alpha",
+    text: "first",
+  });
+  await create.execute({
+    workspaceId,
+    id: "doc-2",
+    sourceId: SOURCE_1,
+    title: "Bravo",
+    text: "second",
+  });
 }
 
 async function assertDependsOnPortNotAdapter(): Promise<void> {
