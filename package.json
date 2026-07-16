@@ -9,6 +9,7 @@
     "validate:skeleton": "tsx scripts/validate-skeleton.ts",
     "validate:repository": "tsx app/knowledge/persistence/runDefaultInMemoryRepositoryValidation.ts",
     "validate:repository:source": "tsx app/knowledge/persistence/runDefaultInMemoryKnowledgeSourceRepositoryValidation.ts",
+    "validate:repository:chunk": "tsx app/knowledge/persistence/runDefaultInMemoryDocumentChunkRepositoryValidation.ts",
     "validate:application:list": "tsx app/knowledge/application/runListKnowledgeDocumentsUseCaseValidation.ts",
     "validate:application:page": "tsx app/knowledge/application/runListKnowledgeDocumentsPageUseCaseValidation.ts",
     "validate:application:create": "tsx app/knowledge/application/runCreateKnowledgeDocumentUseCaseValidation.ts",
@@ -20,7 +21,7 @@
     "validate:application": "pnpm validate:application:list && pnpm validate:application:page && pnpm validate:application:create && pnpm validate:application:update && pnpm validate:application:delete && pnpm validate:application:search && pnpm validate:application:export && pnpm validate:application:source",
     "validate:pipeline:connector": "tsx app/knowledge/pipeline/runFakeKnowledgeSourceConnectorValidation.ts",
     "validate:pipeline:sync": "tsx app/knowledge/pipeline/runSyncKnowledgeSourcePipelineValidation.ts",
-    "validate": "pnpm validate:skeleton && pnpm validate:repository && pnpm validate:repository:source && pnpm validate:application && pnpm validate:pipeline:connector && pnpm validate:pipeline:sync && pnpm typecheck",
+    "validate": "pnpm validate:skeleton && pnpm validate:repository && pnpm validate:repository:source && pnpm validate:repository:chunk && pnpm validate:application && pnpm validate:pipeline:connector && pnpm validate:pipeline:sync && pnpm typecheck",
     "infra:config": "docker compose -f docker/docker-compose.yml config"
   },
   "devDependencies": {

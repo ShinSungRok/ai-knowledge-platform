@@ -376,3 +376,30 @@ Add idempotent knowledge source sync pipeline
 
 **Status**
 Completed
+
+## Task 15
+
+**Date**
+2026-07-16
+
+**Commit**
+Pending
+
+**Title**
+Add traceable document chunk storage
+
+**Summary**
+- Added `DocumentChunk` domain type (`workspaceId`, `id`, `documentId`, `text`, `order`) — deliberately omits `sourceId`, since provenance already flows through `documentId` → `KnowledgeDocument.sourceId`
+- Added `DocumentChunkRepository` port with `replaceForDocument(workspaceId, documentId, chunks)` (swaps a document's entire chunk set in one call; an empty array clears it) and `findByDocumentId(workspaceId, documentId)` (returns chunks sorted by `order` ascending)
+- Added `DefaultInMemoryDocumentChunkRepository`: partitions storage by `workspaceId` then `documentId`, validates the entire incoming batch — scope match (`chunk.workspaceId`/`documentId` must equal the method arguments), non-empty `workspaceId`/`id`/`documentId`/`text`, unique chunk `id`, unique non-negative-integer `order` — before any mutation, and provides defensive copies on both write input and read output; depends only on the `DocumentChunk` domain type and its own port, never `KnowledgeDocumentRepository`/`KnowledgeSourceRepository`
+- Exported the new type/port/adapter from the `domain`, `repository`, `persistence`, and top-level `app/knowledge` barrels
+- Added `validate:repository:chunk` runner + `tests/unit/defaultInMemoryDocumentChunkRepository.cases.ts`, wired into the top-level `validate` chain; no chunking algorithm, chunk-generation pipeline, document-existence check, Embedding, or `application`/`pipeline` changes introduced
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:repository:chunk`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

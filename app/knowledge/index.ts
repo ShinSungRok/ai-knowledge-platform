@@ -6,7 +6,7 @@
  * (public-law-ai).
  */
 export { KNOWLEDGE_MODULE_DOMAIN } from "./domain";
-export type { KnowledgeDocument, KnowledgeSource } from "./domain";
+export type { KnowledgeDocument, KnowledgeSource, DocumentChunk } from "./domain";
 export { KNOWLEDGE_MODULE_APPLICATION } from "./application";
 export {
   ListKnowledgeDocumentsUseCase,
@@ -35,11 +35,16 @@ export type {
   CreateKnowledgeSourceInput,
 } from "./application";
 export { KNOWLEDGE_MODULE_REPOSITORY } from "./repository";
-export type { KnowledgeDocumentRepository, KnowledgeSourceRepository } from "./repository";
+export type {
+  KnowledgeDocumentRepository,
+  KnowledgeSourceRepository,
+  DocumentChunkRepository,
+} from "./repository";
 export { KNOWLEDGE_MODULE_PERSISTENCE } from "./persistence";
 export {
   DefaultInMemoryRepository,
   DefaultInMemoryKnowledgeSourceRepository,
+  DefaultInMemoryDocumentChunkRepository,
 } from "./persistence";
 export { KNOWLEDGE_MODULE_PIPELINE } from "./pipeline";
 export { KNOWLEDGE_MODULE_EMBEDDING } from "./embedding";

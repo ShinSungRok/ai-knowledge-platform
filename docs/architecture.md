@@ -148,7 +148,22 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   the whole batch with no partial writes. It does not delete documents that
   disappear from the source, and has no background scheduling, retry, or
   real network access.
+- `DocumentChunk` (`app/knowledge/domain`) is a traceable, orderable segment
+  of a `KnowledgeDocument`'s text (`workspaceId`, `id`, `documentId`, `text`,
+  `order`) — it deliberately omits `sourceId`, since provenance already
+  flows through `documentId` → `KnowledgeDocument.sourceId`.
+  `DocumentChunkRepository` / `DefaultInMemoryDocumentChunkRepository`
+  follow the same workspace-scoped, port/in-memory-adapter pattern as the
+  document and source repositories, partitioned by `(workspaceId,
+  documentId)`. The only write method, `replaceForDocument`, swaps a
+  document's entire chunk set in one call (an empty array clears it) after
+  validating the whole batch — scope match, non-empty fields, and
+  unique/non-negative-integer `order` — so no partial write is possible.
+  `findByDocumentId` returns chunks sorted by `order` ascending. This
+  repository does not verify that the referenced document exists, and there
+  is no chunking algorithm, pipeline, or embedding link yet.
 - Database adapters, HTTP/server, search, and AI provider wiring are not
   implemented yet.
-- Validate with `pnpm validate` (skeleton + repository + application +
-  pipeline connector + pipeline sync + typecheck).
+- Validate with `pnpm validate` (skeleton + repository + repository:source +
+  repository:chunk + application + pipeline connector + pipeline sync +
+  typecheck).
