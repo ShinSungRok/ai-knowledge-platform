@@ -19,4 +19,5 @@ runner is introduced deliberately.
 |---|---|
 | Case inventory | `tests/unit/defaultInMemoryRepository.cases.ts` |
 | Case inventory | `tests/unit/listKnowledgeDocumentsUseCase.cases.ts` |
+| Case inventory | `tests/unit/createKnowledgeDocumentUseCase.cases.ts` |
 | Executable checks | `pnpm validate:repository`, `pnpm validate:application` |

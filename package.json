@@ -8,7 +8,9 @@
     "typecheck": "tsc --noEmit",
     "validate:skeleton": "tsx scripts/validate-skeleton.ts",
     "validate:repository": "tsx app/knowledge/persistence/runDefaultInMemoryRepositoryValidation.ts",
-    "validate:application": "tsx app/knowledge/application/runListKnowledgeDocumentsUseCaseValidation.ts",
+    "validate:application:list": "tsx app/knowledge/application/runListKnowledgeDocumentsUseCaseValidation.ts",
+    "validate:application:create": "tsx app/knowledge/application/runCreateKnowledgeDocumentUseCaseValidation.ts",
+    "validate:application": "pnpm validate:application:list && pnpm validate:application:create",
     "validate": "pnpm validate:skeleton && pnpm validate:repository && pnpm validate:application && pnpm typecheck",
     "infra:config": "docker compose -f docker/docker-compose.yml config"
   },

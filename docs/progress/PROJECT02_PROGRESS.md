@@ -68,6 +68,26 @@ Implement basic query use case for knowledge items
 - Validation seeds `DefaultInMemoryRepository` and asserts list query behavior
 - Wired `pnpm validate:application` into `pnpm validate`
 
+**Status**
+Completed
+
+## Task 4
+
+**Date**
+2026-07-16
+
+**Commit**
+Pending
+
+**Title**
+Implement create use case for knowledge items
+
+**Summary**
+- Added `CreateKnowledgeDocumentUseCase` and input contract
+- Create validates input, rejects duplicates, saves via repository port
+- Validation covers persist + list visibility + invalid/duplicate paths
+- Split `validate:application` into list + create runners
+
 **Validation**
 - `pnpm validate:skeleton`
 - `pnpm validate:repository`

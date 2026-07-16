@@ -10,8 +10,9 @@ composition root, and dependency-free validation runners.
 
 ## Status
 
-**Task 3 — Basic knowledge query use case.** `ListKnowledgeDocumentsUseCase`
-lists stored documents through the repository port. Validate with:
+**Task 4 — Create knowledge document use case.**
+`CreateKnowledgeDocumentUseCase` registers documents through the repository
+port. Validate with:
 
 ```bash
 pnpm install
@@ -47,7 +48,7 @@ See [`docs/architecture.md`](docs/architecture.md) and
 |---|---|
 | `pnpm validate:skeleton` | Assert directory, barrel, docs, and script integrity |
 | `pnpm validate:repository` | DefaultInMemoryRepository port contract |
-| `pnpm validate:application` | ListKnowledgeDocumentsUseCase query flow |
+| `pnpm validate:application` | List + Create knowledge document use cases |
 | `pnpm typecheck` | TypeScript strict check (`tsc --noEmit`) |
 | `pnpm validate` | skeleton + repository + application + typecheck |
 | `pnpm infra:config` | `docker compose ... config` (optional) |

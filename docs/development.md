@@ -21,7 +21,7 @@ Current validators:
 ```bash
 pnpm validate:skeleton     # directory + barrel + docs integrity
 pnpm validate:repository   # DefaultInMemoryRepository port contract
-pnpm validate:application  # ListKnowledgeDocumentsUseCase
+pnpm validate:application  # List + Create knowledge document use cases
 pnpm typecheck             # TypeScript strict check
 pnpm validate              # skeleton + repository + application + typecheck
 ```

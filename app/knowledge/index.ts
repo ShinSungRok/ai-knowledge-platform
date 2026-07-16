@@ -8,7 +8,11 @@
 export { KNOWLEDGE_MODULE_DOMAIN } from "./domain";
 export type { KnowledgeDocument } from "./domain";
 export { KNOWLEDGE_MODULE_APPLICATION } from "./application";
-export { ListKnowledgeDocumentsUseCase } from "./application";
+export {
+  ListKnowledgeDocumentsUseCase,
+  CreateKnowledgeDocumentUseCase,
+} from "./application";
+export type { CreateKnowledgeDocumentInput } from "./application";
 export { KNOWLEDGE_MODULE_REPOSITORY } from "./repository";
 export type { KnowledgeDocumentRepository } from "./repository";
 export { KNOWLEDGE_MODULE_PERSISTENCE } from "./persistence";
