@@ -1,16 +1,17 @@
 /**
- * AI Knowledge Platform application core (skeleton).
+ * AI Knowledge Platform application core.
  *
  * Bounded context under `app/knowledge/*`, following Clean / Hexagonal
  * Architecture with Domain-Driven Design boundaries inherited from Project1
  * (public-law-ai).
- *
- * Concrete features are not implemented in Task 1 — only module boundaries.
  */
 export { KNOWLEDGE_MODULE_DOMAIN } from "./domain";
+export type { KnowledgeDocument } from "./domain";
 export { KNOWLEDGE_MODULE_APPLICATION } from "./application";
 export { KNOWLEDGE_MODULE_REPOSITORY } from "./repository";
+export type { KnowledgeDocumentRepository } from "./repository";
 export { KNOWLEDGE_MODULE_PERSISTENCE } from "./persistence";
+export { DefaultInMemoryRepository } from "./persistence";
 export { KNOWLEDGE_MODULE_PIPELINE } from "./pipeline";
 export { KNOWLEDGE_MODULE_EMBEDDING } from "./embedding";
 export { KNOWLEDGE_MODULE_SEARCH } from "./search";

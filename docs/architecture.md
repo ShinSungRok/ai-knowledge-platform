@@ -87,8 +87,9 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
 - **Cross-cutting modules stay decoupled from business logic.**
 - **No upward imports.** The dependency graph stays acyclic.
 
-## 7. Current limitations (Task 1)
+## 7. Current limitations
 
-- Module barrels exist; ports, adapters, and use cases are not implemented.
-- No runtime server, no persistence, no search, no AI provider wiring.
-- Validation proves skeleton integrity only (`pnpm validate:skeleton`).
+- Domain storage port + in-memory adapter exist (`KnowledgeDocumentRepository` /
+  `DefaultInMemoryRepository`). Database adapters are not implemented yet.
+- No runtime server, search, AI provider, or composition wiring yet.
+- Validate with `pnpm validate` (skeleton + repository + typecheck).

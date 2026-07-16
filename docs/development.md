@@ -16,12 +16,13 @@ This repository follows Project1's validation philosophy: correctness is proven
 by **dependency-free runners** (plain `tsx` scripts) that assert invariants and
 exit non-zero on failure.
 
-Task 1 provides:
+Current validators:
 
 ```bash
-pnpm validate:skeleton   # directory + barrel + docs integrity
-pnpm typecheck           # TypeScript strict check
-pnpm validate            # skeleton + typecheck
+pnpm validate:skeleton     # directory + barrel + docs integrity
+pnpm validate:repository   # DefaultInMemoryRepository port contract
+pnpm typecheck             # TypeScript strict check
+pnpm validate              # skeleton + repository + typecheck
 ```
 
 Formal unit/integration/e2e suites under `tests/` are reserved for later

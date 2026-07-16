@@ -17,6 +17,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["app/**/*.ts", "scripts/**/*.ts"],
-  "exclude": ["node_modules", "docker", "tests"]
+  "include": ["app/**/*.ts", "scripts/**/*.ts", "tests/**/*.ts"],
+  "exclude": ["node_modules", "docker"]
 }

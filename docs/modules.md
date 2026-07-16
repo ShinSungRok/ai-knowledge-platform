@@ -7,18 +7,17 @@ responsibility and how it fits into the wider system. Each module has its own
 `index.ts` barrel export. See [`docs/architecture.md`](architecture.md) for
 dependency direction.
 
-All modules below are **skeleton boundaries** in Task 1 — markers are
-exported so the graph is importable and validatable. Features land in later
-phases.
+Module barrels are always present. Task 2 adds the first real port/adapter pair
+for domain storage; other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules
 
 | Module | Responsibility |
 |---|---|
-| `domain` | Canonical, framework-independent knowledge types. Zero outward dependencies. |
+| `domain` | Canonical types (`KnowledgeDocument`). Zero outward dependencies. |
 | `application` | Use-case orchestration over domain types and ports. |
-| `repository` | Persistence-agnostic document access ports. |
-| `persistence` | Concrete repository adapters (JSON, PostgreSQL, etc.). |
+| `repository` | Persistence-agnostic ports (`KnowledgeDocumentRepository`). |
+| `persistence` | Concrete adapters (`DefaultInMemoryRepository`; DB adapters later). |
 | `pipeline` | Ingestion pipelines from external knowledge sources. |
 | `embedding` | Chunking, embedding, and vector indexing ports/adapters. |
 | `search` | Search engine abstraction (keyword, vector, hybrid). |

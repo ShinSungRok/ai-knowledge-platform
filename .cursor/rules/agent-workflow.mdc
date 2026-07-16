@@ -1,0 +1,47 @@
+---
+description: "새로운 Task를 시작하거나 Planning/Developer Agent 역할로 작업할 때 적용하는 Project 2 워크플로"
+alwaysApply: true
+---
+
+# Agent Workflow & Roles
+
+새로운 기능, 버그 수정, 설계 변경 등 의미 있는 Task를 시작하기 전에 다음 문서를 먼저 읽어라.
+
+1. `docs/agent/PROJECT02_INSTRUCTIONS.md`
+   - Project 2의 최상위 개발 원칙이다.
+   - Architecture, Reuse, Validation, Commit, Stop 규칙을 적용하라.
+
+2. `docs/agent/AGENT_OPERATIONS_GUIDE.md`
+   - Agent 역할, Skill 선택 또는 Skill 사용법이 필요한 경우에만 관련 부분을 읽어라.
+   - 일반적인 Task에서는 전체 문서를 불필요하게 읽지 마라.
+
+문서를 읽은 후 현재 역할을 명확히 구분하라.
+
+## Planning Agent
+
+- Repository와 기존 구현을 먼저 분석하라.
+- 직접 코드를 수정하지 마라.
+- 재사용 후보와 Architecture 영향을 검토하라.
+- Task 범위, Validation, Definition of Done을 정의하라.
+- Developer Agent가 실행할 구체적인 Prompt를 작성한 뒤 멈춰라.
+
+## Developer Agent
+
+- 승인된 Planning 결과를 먼저 검토하라.
+- 기존 구현과 추상화를 우선 재사용하라.
+- 승인된 Task 범위만 구현하라.
+- 관련 Validation과 Diff Review를 수행하라.
+- 검증 성공 후 Commit하고 즉시 멈춰라.
+
+모든 작업은 다음 순서를 따른다.
+
+Review
+→ Reuse
+→ Design
+→ Implement
+→ Validate
+→ Diff Review
+→ Commit
+→ Stop
+
+위 절차를 확인하기 전에는 코드를 작성하거나 수정하지 마라.

@@ -10,8 +10,9 @@ composition root, and dependency-free validation runners.
 
 ## Status
 
-**Task 1 — Project skeleton.** Module barrels under `app/knowledge/*`, docs,
-tests/scripts/docker layout, Cursor rules, and agent skills. Validatable with:
+**Task 2 — Domain storage port + in-memory adapter.** `KnowledgeDocument`,
+`KnowledgeDocumentRepository`, and `DefaultInMemoryRepository` are in place.
+Validate with:
 
 ```bash
 pnpm install
@@ -46,8 +47,9 @@ See [`docs/architecture.md`](docs/architecture.md) and
 | Script | Purpose |
 |---|---|
 | `pnpm validate:skeleton` | Assert directory, barrel, docs, and script integrity |
+| `pnpm validate:repository` | DefaultInMemoryRepository port contract |
 | `pnpm typecheck` | TypeScript strict check (`tsc --noEmit`) |
-| `pnpm validate` | skeleton + typecheck |
+| `pnpm validate` | skeleton + repository + typecheck |
 | `pnpm infra:config` | `docker compose ... config` (optional) |
 
 ## Dependencies

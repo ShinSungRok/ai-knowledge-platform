@@ -8,9 +8,14 @@ Test layout reserved for future phases.
 | `integration/` | Cross-module tests against fakes/in-memory adapters |
 | `e2e/` | End-to-end flows (HTTP + composition), still without external services by default |
 
-## Current approach (Task 1)
+## Current approach
 
 Architectural and contract checks run via **validation runners** under
-`scripts/` (and later `app/knowledge/**/run*Validation.ts`), following
-Project1. Prefer those for dependency-free, CI-friendly assertions until a
-formal test runner is introduced deliberately.
+`scripts/` and `app/knowledge/**/run*Validation.ts`, following Project1.
+Prefer those for dependency-free, CI-friendly assertions until a formal test
+runner is introduced deliberately.
+
+| Area | Location |
+|---|---|
+| Case inventory | `tests/unit/defaultInMemoryRepository.cases.ts` |
+| Executable checks | `pnpm validate:repository` |
