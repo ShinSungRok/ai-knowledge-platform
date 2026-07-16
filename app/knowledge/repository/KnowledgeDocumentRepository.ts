@@ -10,4 +10,5 @@ export interface KnowledgeDocumentRepository {
   save(document: KnowledgeDocument): Promise<void>;
   findById(id: string): Promise<KnowledgeDocument | null>;
   findAll(): Promise<KnowledgeDocument[]>;
+  deleteById(id: string): Promise<void>;
 }

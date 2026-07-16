@@ -11,7 +11,8 @@
     "validate:application:list": "tsx app/knowledge/application/runListKnowledgeDocumentsUseCaseValidation.ts",
     "validate:application:create": "tsx app/knowledge/application/runCreateKnowledgeDocumentUseCaseValidation.ts",
     "validate:application:update": "tsx app/knowledge/application/runUpdateKnowledgeDocumentUseCaseValidation.ts",
-    "validate:application": "pnpm validate:application:list && pnpm validate:application:create && pnpm validate:application:update",
+    "validate:application:delete": "tsx app/knowledge/application/runDeleteKnowledgeDocumentUseCaseValidation.ts",
+    "validate:application": "pnpm validate:application:list && pnpm validate:application:create && pnpm validate:application:update && pnpm validate:application:delete",
     "validate": "pnpm validate:skeleton && pnpm validate:repository && pnpm validate:application && pnpm typecheck",
     "infra:config": "docker compose -f docker/docker-compose.yml config"
   },

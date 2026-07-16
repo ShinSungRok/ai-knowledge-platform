@@ -12,10 +12,12 @@ export {
   ListKnowledgeDocumentsUseCase,
   CreateKnowledgeDocumentUseCase,
   UpdateKnowledgeDocumentUseCase,
+  DeleteKnowledgeDocumentUseCase,
 } from "./application";
 export type {
   CreateKnowledgeDocumentInput,
   UpdateKnowledgeDocumentInput,
+  DeleteKnowledgeDocumentInput,
 } from "./application";
 export { KNOWLEDGE_MODULE_REPOSITORY } from "./repository";
 export type { KnowledgeDocumentRepository } from "./repository";

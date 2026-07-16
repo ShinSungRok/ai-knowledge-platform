@@ -12,3 +12,7 @@ export {
   UpdateKnowledgeDocumentUseCase,
   type UpdateKnowledgeDocumentInput,
 } from "./UpdateKnowledgeDocumentUseCase";
+export {
+  DeleteKnowledgeDocumentUseCase,
+  type DeleteKnowledgeDocumentInput,
+} from "./DeleteKnowledgeDocumentUseCase";

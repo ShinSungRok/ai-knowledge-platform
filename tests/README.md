@@ -21,4 +21,5 @@ runner is introduced deliberately.
 | Case inventory | `tests/unit/listKnowledgeDocumentsUseCase.cases.ts` |
 | Case inventory | `tests/unit/createKnowledgeDocumentUseCase.cases.ts` |
 | Case inventory | `tests/unit/updateKnowledgeDocumentUseCase.cases.ts` |
+| Case inventory | `tests/unit/deleteKnowledgeDocumentUseCase.cases.ts` |
 | Executable checks | `pnpm validate:repository`, `pnpm validate:application` |

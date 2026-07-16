@@ -124,3 +124,30 @@ Implement update use case for knowledge items
 
 **Status**
 Completed
+
+## Task 6
+
+**Date**
+2026-07-16
+
+**Commit**
+Pending
+
+**Title**
+Implement delete use case for knowledge items
+
+**Summary**
+- Extended `KnowledgeDocumentRepository` with `deleteById`
+- Implemented `deleteById` on `DefaultInMemoryRepository`
+- Added `DeleteKnowledgeDocumentUseCase` (not-found / invalid-id handling)
+- Extended repository and application validation for delete
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:repository`
+- `pnpm validate:application`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

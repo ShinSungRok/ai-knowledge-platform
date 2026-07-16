@@ -31,6 +31,11 @@ export class DefaultInMemoryRepository implements KnowledgeDocumentRepository {
     );
   }
 
+  async deleteById(id: string): Promise<void> {
+    this.assertId(id);
+    this.documentsById.delete(id);
+  }
+
   private assertDocument(document: KnowledgeDocument): void {
     if (!document || typeof document !== "object") {
       throw new Error("KnowledgeDocument must be an object");

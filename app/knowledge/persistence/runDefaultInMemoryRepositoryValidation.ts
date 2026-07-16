@@ -130,6 +130,10 @@ async function assertPortContract(): Promise<void> {
     typeof repository.findAll === "function",
     "findAll must be defined",
   );
+  assertTruthy(
+    typeof repository.deleteById === "function",
+    "deleteById must be defined",
+  );
 }
 
 async function assertValidationErrors(
@@ -153,6 +157,24 @@ async function assertValidationErrors(
     "title must be a non-empty string",
   );
   await assertRejects(repository.findById(""), "id must be a non-empty string");
+  await assertRejects(
+    repository.deleteById(""),
+    "id must be a non-empty string",
+  );
+}
+
+async function assertDeleteById(
+  repository: KnowledgeDocumentRepository,
+): Promise<void> {
+  console.log("[repository] deleteById...");
+  await repository.save({
+    id: "doc-del",
+    title: "Delete Me",
+    text: "temporary",
+  });
+  await repository.deleteById("doc-del");
+  const found = await repository.findById("doc-del");
+  assertEqual(found, null, "Expected document removed after deleteById");
 }
 
 async function main(): Promise<void> {
@@ -163,6 +185,7 @@ async function main(): Promise<void> {
   await assertFindMissingReturnsNull(repository);
   await assertFindAllAndOverwrite(repository);
   await assertDefensiveCopy(repository);
+  await assertDeleteById(repository);
   await assertValidationErrors(new DefaultInMemoryRepository());
 
   console.log("DefaultInMemoryRepository validation succeeded.");
