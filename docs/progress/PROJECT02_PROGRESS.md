@@ -913,3 +913,33 @@ Define re-ranking contract
 
 **Status**
 Completed
+
+## Task 35
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add deterministic relevance reranker
+
+**Summary**
+- Extracted `DefaultKeywordSearch`'s Unicode letter/number lowercased tokenization into a shared, unexported `app/knowledge/search/tokenize.ts` utility; `DefaultKeywordSearch`'s own scoring behavior and public contract are unchanged (re-validated by `validate:search:keyword`, still green)
+- Added `DefaultReranker` (`app/knowledge/search/DefaultReranker.ts`), the `Reranker` adapter, with **no constructor dependency at all**. For each candidate it computes `coverage` (fraction of the query's unique tokens present in the chunk) and `density` (fraction of the chunk's own tokens that are query-token occurrences) over the shared `tokenize` utility, both `0` when the query or chunk tokenizes to nothing; the reranked score is `coverage + density + <original retrieved score>`, sorted by that score descending then chunk `id` ascending
+- Every candidate is returned (re-ranking never drops one); the input array and its `RetrievedChunk`/`DocumentChunk` objects are never mutated — the adapter returns fresh objects
+- Validates `workspaceId`/`query`/`chunks` and each `RetrievedChunk`'s required identifiers (`chunk.workspaceId`/`chunk.id`/`chunk.documentId`/`chunk.text`, finite `score`) at the adapter boundary; a candidate's own `chunk.workspaceId` is validated for shape but never checked against `input.workspaceId`, since re-ranking has no data store to enforce that isolation against
+- Exported `DefaultReranker` from the `search` and top-level `app/knowledge` barrels
+- Added `runDefaultRerankerValidation.ts` (port contract; token-coverage ranking; equal-coverage density tie resolution; original-score contribution to ranking; exact-score chunk-id tie-break; workspaceId acceptance without candidate filtering; empty-chunks case; input/output immutability and defensive-copy checks; invalid-input rejection; static source-scan confirming no concrete-adapter import) + `tests/unit/defaultReranker.cases.ts`, wired into `validate:search:reranker` and the top-level `validate` chain
+- Updated `docs/modules.md`/`docs/architecture.md`/`docs/development.md` to describe `DefaultReranker`'s scoring formula and the shared `tokenize` extraction; no LLM/cross-encoder re-ranking, external ranking service, hybrid recall change, score calibration configuration, or application use case change introduced
+
+**Validation**
+- `pnpm validate:search:keyword`
+- `pnpm validate:search:rerank-contract`
+- `pnpm validate:search:reranker`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

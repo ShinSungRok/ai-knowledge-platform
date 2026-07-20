@@ -9,8 +9,9 @@
  * `HybridSearch` (Task 29) combines both via deterministic reciprocal-rank
  * fusion; `DefaultHybridSearch` is its default adapter. `Reranker` (Task
  * 34) is the port that deterministically re-orders an already-retrieved
- * `RetrievedChunk[]` by query relevance; a default adapter is a later
- * task.
+ * `RetrievedChunk[]` by query relevance; `DefaultReranker` (Task 35) is
+ * its default adapter, scoring by query token coverage + density + the
+ * candidate's original retrieved score, with no constructor dependency.
  */
 export const KNOWLEDGE_MODULE_SEARCH = "app/knowledge/search" as const;
 
@@ -20,3 +21,4 @@ export type { HybridSearch } from "./HybridSearch";
 export { DefaultHybridSearch } from "./DefaultHybridSearch";
 export type { RerankingInput } from "./RerankingInput";
 export type { Reranker } from "./Reranker";
+export { DefaultReranker } from "./DefaultReranker";

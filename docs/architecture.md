@@ -393,8 +393,31 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   — deterministically re-ordering (and optionally rescoring) an
   already-retrieved candidate set by query relevance within one
   workspace. It never introduces a new candidate or drops one, only
-  reorders the ones it is given. Only the contract is defined so far; a
-  default adapter (`DefaultReranker`) is a later task.
+  reorders the ones it is given. `DefaultReranker` is the adapter: it has
+  **no constructor dependency at all** — no repository, provider, or
+  concrete adapter — and computes relevance purely from `query` and each
+  candidate's own chunk text. `DefaultKeywordSearch`'s Unicode
+  letter/number lowercased tokenization was extracted into a shared,
+  unexported `tokenize` utility in `app/knowledge/search` so both
+  adapters split/lowercase text identically; `DefaultKeywordSearch`'s own
+  scoring behavior and public contract are unchanged by the extraction.
+  For each candidate, `DefaultReranker` computes **coverage** (the
+  fraction of the query's unique tokens that appear at least once in the
+  chunk) and **density** (the fraction of the chunk's own tokens that are
+  occurrences of a query token); both are `0` when the query or the
+  chunk tokenizes to nothing. The reranked score is `coverage + density +
+  <the candidate's original retrieved score>`, and results sort by that
+  score descending, then chunk `id` ascending as a deterministic
+  tie-break. Every candidate is returned, and neither the input array
+  nor its `RetrievedChunk`/`DocumentChunk` objects are mutated — the
+  adapter returns fresh objects. Input is validated — workspaceId/query
+  as non-empty strings, `chunks` as an array of well-formed
+  `RetrievedChunk`s with a finite `score` — before any scoring; a
+  candidate's own `chunk.workspaceId` is validated for shape but never
+  checked against `input.workspaceId`, since re-ranking has no data
+  store to enforce that isolation against (the caller upstream owns it).
+  Cross-encoder/LLM re-ranking, an external ranking service, expanding
+  hybrid recall, and score calibration are out of scope for this adapter.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -402,5 +425,6 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   pipeline chunk-document + pipeline rechunk-source + pipeline
   embed-document + pipeline reindex-source + embedding chunker + embedding
   provider + embedding index + retrieval:vector + search:keyword +
-  search:hybrid + search:rerank-contract + context:contract +
-  context:assembler + application:grounding-context + typecheck).
+  search:hybrid + search:rerank-contract + search:reranker +
+  context:contract + context:assembler + application:grounding-context +
+  typecheck).

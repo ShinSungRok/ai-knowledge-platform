@@ -63,7 +63,7 @@ export type { EmbeddingVector, ScoredEmbeddingVector, VectorIndex } from "./embe
 export { InMemoryVectorIndex } from "./embedding";
 export { KNOWLEDGE_MODULE_SEARCH } from "./search";
 export type { KeywordSearch, HybridSearch, RerankingInput, Reranker } from "./search";
-export { DefaultKeywordSearch, DefaultHybridSearch } from "./search";
+export { DefaultKeywordSearch, DefaultHybridSearch, DefaultReranker } from "./search";
 export { KNOWLEDGE_MODULE_RETRIEVAL } from "./retrieval";
 export type { RetrievalInput, RetrievalResult, RetrievedChunk, VectorRetriever } from "./retrieval";
 export { DefaultVectorRetriever } from "./retrieval";

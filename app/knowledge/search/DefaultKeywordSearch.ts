@@ -3,17 +3,7 @@ import type { DocumentChunkRepository } from "../repository/DocumentChunkReposit
 import type { RetrievalInput } from "../retrieval/RetrievalInput";
 import type { RetrievalResult, RetrievedChunk } from "../retrieval/RetrievalResult";
 import type { KeywordSearch } from "./KeywordSearch";
-
-/** Matches maximal runs of Unicode letters/numbers — the token unit for both query and chunk text. */
-const TOKEN_PATTERN = /[\p{L}\p{N}]+/gu;
-
-function tokenize(text: string): string[] {
-  const matches = text.match(TOKEN_PATTERN);
-  if (!matches) {
-    return [];
-  }
-  return matches.map((token) => token.toLowerCase());
-}
+import { tokenize } from "./tokenize";
 
 /**
  * Default {@link KeywordSearch} adapter: deterministic exact-token-match

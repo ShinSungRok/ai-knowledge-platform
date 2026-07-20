@@ -35,9 +35,10 @@
     "validate:search:keyword": "tsx app/knowledge/search/runDefaultKeywordSearchValidation.ts",
     "validate:search:hybrid": "tsx app/knowledge/search/runDefaultHybridSearchValidation.ts",
     "validate:search:rerank-contract": "tsx app/knowledge/search/runRerankerContractValidation.ts",
+    "validate:search:reranker": "tsx app/knowledge/search/runDefaultRerankerValidation.ts",
     "validate:context:contract": "tsx app/knowledge/context/runGroundingContextContractValidation.ts",
     "validate:context:assembler": "tsx app/knowledge/context/runDefaultContextAssemblerValidation.ts",
-    "validate": "pnpm validate:skeleton && pnpm validate:repository && pnpm validate:repository:source && pnpm validate:repository:chunk && pnpm validate:application && pnpm validate:pipeline:connector && pnpm validate:pipeline:sync && pnpm validate:pipeline:chunk-document && pnpm validate:pipeline:rechunk-source && pnpm validate:pipeline:embed-document && pnpm validate:pipeline:reindex-source && pnpm validate:embedding:chunker && pnpm validate:embedding:provider && pnpm validate:embedding:index && pnpm validate:retrieval:vector && pnpm validate:search:keyword && pnpm validate:search:hybrid && pnpm validate:search:rerank-contract && pnpm validate:context:contract && pnpm validate:context:assembler && pnpm typecheck",
+    "validate": "pnpm validate:skeleton && pnpm validate:repository && pnpm validate:repository:source && pnpm validate:repository:chunk && pnpm validate:application && pnpm validate:pipeline:connector && pnpm validate:pipeline:sync && pnpm validate:pipeline:chunk-document && pnpm validate:pipeline:rechunk-source && pnpm validate:pipeline:embed-document && pnpm validate:pipeline:reindex-source && pnpm validate:embedding:chunker && pnpm validate:embedding:provider && pnpm validate:embedding:index && pnpm validate:retrieval:vector && pnpm validate:search:keyword && pnpm validate:search:hybrid && pnpm validate:search:rerank-contract && pnpm validate:search:reranker && pnpm validate:context:contract && pnpm validate:context:assembler && pnpm typecheck",
     "infra:config": "docker compose -f docker/docker-compose.yml config"
   },
   "devDependencies": {
