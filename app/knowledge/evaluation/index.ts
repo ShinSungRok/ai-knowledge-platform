@@ -8,6 +8,11 @@
  * does not duplicate Domain or RAG business logic. Default evaluator
  * adapters and application run use cases are later tasks. Real benchmark
  * corpus loaders, network, and LLM-as-judge are out of scope.
+ *
+ * `DefaultRetrievalEvaluator` scores Hit@K / MRR deterministically from
+ * pre-fetched retrieval results. `RunRetrievalEvaluationUseCase`
+ * (application) runs hybrid retrieval per case then delegates to the
+ * evaluator port.
  */
 export const KNOWLEDGE_MODULE_EVALUATION = "app/knowledge/evaluation" as const;
 
@@ -32,3 +37,4 @@ export type {
   CitationEvaluatorInput,
   CitationEvaluator,
 } from "./CitationEvaluator";
+export { DefaultRetrievalEvaluator } from "./DefaultRetrievalEvaluator";

@@ -102,3 +102,7 @@ export {
   ProcessNextJobUseCase,
   type ProcessNextJobInput,
 } from "./ProcessNextJobUseCase";
+export {
+  RunRetrievalEvaluationUseCase,
+  type RunRetrievalEvaluationInput,
+} from "./RunRetrievalEvaluationUseCase";

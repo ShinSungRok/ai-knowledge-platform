@@ -2031,3 +2031,31 @@ Define evaluation dataset and metrics contract
 
 **Status**
 Completed
+
+## Task 75
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add retrieval evaluator and run use case
+
+**Summary**
+- Added `DefaultRetrievalEvaluator` (Hit@K / MRR; empty dataset and missing results rejected)
+- Added `RunRetrievalEvaluationUseCase` (RetrieveHybridKnowledgeChunksUseCase + RetrievalEvaluator only)
+- Exported from barrels; wired `validate:evaluation:retrieval` and `validate:application:eval-retrieval`
+- Updated docs; no grounding/citation evaluators or composition wiring
+
+**Validation**
+- `pnpm validate:evaluation:contract`
+- `pnpm validate:application:retrieve-hybrid`
+- `pnpm validate:evaluation:retrieval`
+- `pnpm validate:application:eval-retrieval`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

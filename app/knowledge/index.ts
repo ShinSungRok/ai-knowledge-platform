@@ -32,6 +32,7 @@ export {
   RunAgentWithMemoryUseCase,
   EnqueueJobUseCase,
   ProcessNextJobUseCase,
+  RunRetrievalEvaluationUseCase,
 } from "./application";
 export type {
   ListKnowledgeDocumentsInput,
@@ -64,6 +65,7 @@ export type {
   RunAgentWithMemoryResult,
   EnqueueJobInput,
   ProcessNextJobInput,
+  RunRetrievalEvaluationInput,
 } from "./application";
 export { KNOWLEDGE_MODULE_REPOSITORY } from "./repository";
 export type {
@@ -218,6 +220,7 @@ export type {
   CitationEvaluatorInput,
   CitationEvaluator,
 } from "./evaluation";
+export { DefaultRetrievalEvaluator } from "./evaluation";
 export { KNOWLEDGE_MODULE_OBSERVABILITY } from "./observability";
 export { KNOWLEDGE_MODULE_RELIABILITY } from "./reliability";
 export { KNOWLEDGE_MODULE_SECURITY } from "./security";

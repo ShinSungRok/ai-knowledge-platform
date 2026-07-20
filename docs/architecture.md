@@ -866,8 +866,11 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   aggregate metrics, `EvaluationReport`, and the `RetrievalEvaluator` /
   `GroundingEvaluator` / `CitationEvaluator` ports for scoring
   pre-fetched `RetrievalResult` / `GroundedAnswer` / `CitedGroundedAnswer`
-  artifacts without duplicating Domain/RAG logic. Default evaluator
-  adapters, run use cases, real corpus loaders, and LLM-as-judge remain
+  artifacts without duplicating Domain/RAG logic. `DefaultRetrievalEvaluator`
+  computes Hit@K and MRR with no constructor dependencies;
+  `RunRetrievalEvaluationUseCase` injects only
+  `RetrieveHybridKnowledgeChunksUseCase` and `RetrievalEvaluator`.
+  Grounding/citation adapters, real corpus loaders, and LLM-as-judge remain
   later tasks.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
