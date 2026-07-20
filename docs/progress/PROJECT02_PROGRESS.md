@@ -1429,3 +1429,29 @@ Add MCP tool registry
 
 **Status**
 Completed
+
+## Task 53
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add invoke MCP tool use case
+
+**Summary**
+- Added `InvokeMcpToolUseCase` + `InvokeMcpToolInput` (`name: string`, `arguments: Record<string, unknown>`) to `application`
+- Constructor injects only the `McpToolRegistry` port; `execute` validates input at the application boundary, delegates to `McpToolRegistry.invoke({ name, arguments })`, and returns the `McpToolInvokeResult` unchanged
+- Exported from `application` and top-level barrels; added `runInvokeMcpToolUseCaseValidation.ts` + unit case inventory; wired `validate:application:mcp-invoke` into `validate:application` and top-level `validate`
+- Updated docs; no real MCP transport, Agent planner/executor, multi-tool orchestration, HTTP/API/composition wiring, or auth middleware introduced
+
+**Validation**
+- `pnpm validate:mcp:registry`
+- `pnpm validate:application:mcp-invoke`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

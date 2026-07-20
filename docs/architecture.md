@@ -697,6 +697,17 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   unknown tools. Real MCP host/SDK, auth beyond existing workspace
   validation inside the tool, multi-tool business workflows, and
   composition-root wiring remain out of scope.
+- `InvokeMcpToolUseCase` (`app/knowledge/application`) exposes MCP
+  registry invoke behind one application-boundary entry point: its
+  constructor injects only the `McpToolRegistry` port — never a
+  concrete MCP tool or registry adapter. It validates its own
+  `InvokeMcpToolInput` (`name: string`, `arguments:
+  Record<string, unknown>`) at the application boundary, then calls
+  `McpToolRegistry.invoke({ name, arguments })` and returns the
+  `McpToolInvokeResult` unchanged. Real MCP transport, Agent
+  planner/executor, multi-tool orchestration beyond a single invoke,
+  HTTP/API/composition-root wiring, and auth middleware remain out of
+  scope.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -711,4 +722,5 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   application:generate-text + rag:answer-contract +
   rag:answer-assembler + application:grounded-answer +
   citation:contract + citation:builder + application:cited-answer +
-  mcp:contract + mcp:cited-answer-tool + mcp:registry + typecheck).
+  mcp:contract + mcp:cited-answer-tool + mcp:registry +
+  application:mcp-invoke + typecheck).

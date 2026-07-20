@@ -23,7 +23,7 @@ pnpm validate:skeleton         # directory + barrel + docs integrity
 pnpm validate:repository       # DefaultInMemoryRepository port contract
 pnpm validate:repository:source # DefaultInMemoryKnowledgeSourceRepository port contract
 pnpm validate:repository:chunk # DefaultInMemoryDocumentChunkRepository port contract (findById/findAll + workspace-global id conflict rejection)
-pnpm validate:application      # List + Page + Create + Update + Delete + Search + Export + Source + Retrieve + RetrieveHybrid + RetrieveGroundingContext + BuildGroundedPrompt + GenerateGroundedText + GenerateGroundedAnswer + GenerateCitedGroundedAnswer use cases
+pnpm validate:application      # List + Page + Create + Update + Delete + Search + Export + Source + Retrieve + RetrieveHybrid + RetrieveGroundingContext + BuildGroundedPrompt + GenerateGroundedText + GenerateGroundedAnswer + GenerateCitedGroundedAnswer + InvokeMcpTool use cases
 pnpm validate:pipeline:connector # FakeKnowledgeSourceConnector port contract
 pnpm validate:pipeline:sync    # SyncKnowledgeSourcePipeline idempotent sync behavior
 pnpm validate:pipeline:chunk-document # ChunkKnowledgeDocumentPipeline chunk-and-replace behavior
@@ -57,8 +57,9 @@ pnpm validate:application:cited-answer # GenerateCitedGroundedAnswerUseCase Gene
 pnpm validate:mcp:contract # McpTool/McpToolDefinition/McpToolInvokeInput/McpToolInvokeResult contract export + type-compatibility
 pnpm validate:mcp:cited-answer-tool # GenerateCitedGroundedAnswerMcpTool use-case exposure and non-throwing error mapping
 pnpm validate:mcp:registry # DefaultMcpToolRegistry list ordering, duplicate rejection, known/unknown invoke
+pnpm validate:application:mcp-invoke # InvokeMcpToolUseCase McpToolRegistry.invoke delegation
 pnpm typecheck                 # TypeScript strict check
-pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application (incl. grounding-context + prompt + generate-text + grounded-answer + cited-answer) + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + search:hybrid + search:rerank-contract + search:reranker + search:reranked + context:contract + context:assembler + prompt:contract + prompt:builder + ai:provider-contract + ai:fake-provider + rag:answer-contract + rag:answer-assembler + citation:contract + citation:builder + mcp:contract + mcp:cited-answer-tool + mcp:registry + typecheck
+pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application (incl. grounding-context + prompt + generate-text + grounded-answer + cited-answer + mcp-invoke) + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + search:hybrid + search:rerank-contract + search:reranker + search:reranked + context:contract + context:assembler + prompt:contract + prompt:builder + ai:provider-contract + ai:fake-provider + rag:answer-contract + rag:answer-assembler + citation:contract + citation:builder + mcp:contract + mcp:cited-answer-tool + mcp:registry + typecheck
 ```
 
 Formal unit/integration/e2e suites under `tests/` are reserved for later

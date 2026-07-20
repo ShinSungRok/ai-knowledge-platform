@@ -69,3 +69,7 @@ export {
   GenerateCitedGroundedAnswerUseCase,
   type GenerateCitedGroundedAnswerInput,
 } from "./GenerateCitedGroundedAnswerUseCase";
+export {
+  InvokeMcpToolUseCase,
+  type InvokeMcpToolInput,
+} from "./InvokeMcpToolUseCase";
