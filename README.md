@@ -67,11 +67,40 @@ Pass `{ listen: { host: "127.0.0.1", port: 8080 } }` for an explicit port in
 local/production use. Baseline without observability wrapping:
 `createInMemoryKnowledgeServer` / `createInMemoryKnowledgeComposition`.
 
+Default composition uses `FakeLanguageModelProvider` (no network). Optional
+OpenAI-compatible HTTP LLM:
+
+```ts
+import {
+  createInMemoryKnowledgeComposition,
+  loadLlmHttpProviderConfig,
+} from "./app/knowledge";
+
+const composition = createInMemoryKnowledgeComposition(undefined, {
+  llm: {
+    type: "http",
+    config: loadLlmHttpProviderConfig({
+      baseUrl: process.env.LLM_BASE_URL ?? "https://api.openai.com/v1",
+      apiKey: process.env.LLM_API_KEY!,
+      model: process.env.LLM_MODEL ?? "gpt-4o-mini",
+    }),
+  },
+});
+```
+
+Optional live smoke (skipped when `LLM_API_KEY` is unset; not in `pnpm validate`):
+
+```bash
+pnpm validate:ai:http-provider-live
+LLM_API_KEY=sk-... pnpm validate:ai:http-provider-live
+```
+
 ## Deferred infrastructure
 
 - Real Postgres / OpenSearch adapters (SQL/Fake paths validated; real `pg`
   live optional; OpenSearch client deferred)
-- Real LLM SDK and MCP network transport
+- Official LLM SDKs and MCP network transport (HTTP LLM adapter optional;
+  default composition remains Fake)
 - Express/Fastify, JWT/OIDC AuthN, OTel exporters
   (`NodeHttpListener` + API Key/Bearer AuthN are available)
 

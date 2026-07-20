@@ -1,7 +1,6 @@
 import { GenerateCitedGroundedAnswerUseCase } from "../application/GenerateCitedGroundedAnswerUseCase";
 import { GenerateGroundedAnswerUseCase } from "../application/GenerateGroundedAnswerUseCase";
 import { RetrieveGroundingContextUseCase } from "../application/RetrieveGroundingContextUseCase";
-import { FakeLanguageModelProvider } from "../ai/FakeLanguageModelProvider";
 import { DefaultCitationBuilder } from "../citation/DefaultCitationBuilder";
 import {
   DEFAULT_KNOWLEDGE_RUNTIME_CONFIG,
@@ -21,8 +20,17 @@ import { DefaultHybridSearch } from "../search/DefaultHybridSearch";
 import { DefaultKeywordSearch } from "../search/DefaultKeywordSearch";
 import { DefaultRerankedSearch } from "../search/DefaultRerankedSearch";
 import { DefaultReranker } from "../search/DefaultReranker";
+import {
+  createLanguageModelProvider,
+  type LlmProviderOption,
+} from "./createLanguageModelProvider";
 import type { KnowledgeRuntime } from "./KnowledgeRuntime";
 import type { SqlKnowledgeComposition } from "./SqlKnowledgeComposition";
+
+export type CreateSqlKnowledgeCompositionOptions = {
+  /** Defaults to Fake LLM. */
+  llm?: LlmProviderOption;
+};
 
 /**
  * Composition root with SQL-backed document, source, chunk, and vector index
@@ -31,9 +39,11 @@ import type { SqlKnowledgeComposition } from "./SqlKnowledgeComposition";
  * {@link createInMemoryKnowledgeComposition}.
  *
  * Document-only SQL path remains {@link createSqlDocumentKnowledgeComposition}.
+ * LLM defaults to Fake; pass `{ llm: { type: "http", config } }` for HTTP.
  */
 export function createSqlKnowledgeComposition(
   config: KnowledgeRuntimeConfig = DEFAULT_KNOWLEDGE_RUNTIME_CONFIG,
+  options: CreateSqlKnowledgeCompositionOptions = {},
 ): SqlKnowledgeComposition {
   const sqlGateway = new InMemorySqlGateway();
   const knowledgeDocumentRepository = new SqlKnowledgeDocumentRepository(
@@ -63,7 +73,9 @@ export function createSqlKnowledgeComposition(
     contextAssembler,
   );
   const promptBuilder = new DefaultPromptBuilder();
-  const languageModelProvider = new FakeLanguageModelProvider();
+  const languageModelProvider = createLanguageModelProvider(
+    options.llm ?? { type: "fake" },
+  );
   const groundedAnswerAssembler = new DefaultGroundedAnswerAssembler();
   const generateGroundedAnswerUseCase = new GenerateGroundedAnswerUseCase(
     retrieveGroundingContextUseCase,

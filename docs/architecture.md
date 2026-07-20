@@ -531,10 +531,9 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   grounding sufficiency, structuring an answer, and attaching citations
   are all later, out-of-scope concerns. Only the contract is defined so
   far.
-- `FakeLanguageModelProvider` (`app/knowledge/ai`) is the
-  `LanguageModelProvider` adapter for validating the contract and
-  downstream application flow: it has **no external dependency at
-  all** — no network, API key, model SDK, repository, or
+- `FakeLanguageModelProvider` (`app/knowledge/ai`) remains the **default**
+  `LanguageModelProvider` adapter for composition: it has **no external
+  dependency at all** — no network, API key, model SDK, repository, or
   retrieval/search/context/prompt-builder adapter. `generate` validates
   the given `GroundedPrompt` (`systemInstruction` a non-empty string,
   `userMessage` a string) and echoes `userMessage` back as
@@ -960,9 +959,10 @@ The following remain intentionally out of Project 2 scope:
 
 - Postgres source-of-truth adapter
 - OpenSearch (or other) real vector index adapter
-- Real LLM provider SDK
+- Official LLM provider SDKs (optional `HttpLanguageModelProvider` exists;
+  default composition remains Fake)
 - Real MCP network transport
-- `node:http` / Express TCP listen
+- Express TCP listen
   (`NodeHttpListener` validated post-baseline; Express unused)
 
 Project 2 Platform Baseline remains closed. Sprints 21–24 continue

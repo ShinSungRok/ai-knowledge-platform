@@ -33,6 +33,10 @@ export type {
   CreateListeningOperationsServerOptions,
   ListeningOperationsServer,
 } from "./createListeningOperationsServer";
+export type { LlmProviderOption } from "./createLanguageModelProvider";
+export { createLanguageModelProvider } from "./createLanguageModelProvider";
+export type { CreateInMemoryKnowledgeCompositionOptions } from "./createInMemoryKnowledgeComposition";
+export type { CreateSqlKnowledgeCompositionOptions } from "./createSqlKnowledgeComposition";
 export { createInMemoryKnowledgeComposition } from "./createInMemoryKnowledgeComposition";
 export {
   createInMemoryKnowledgeServer,

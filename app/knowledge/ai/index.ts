@@ -17,6 +17,7 @@ export type { GeneratedText } from "./GeneratedText";
 export type { LanguageModelProvider } from "./LanguageModelProvider";
 export { FakeLanguageModelProvider } from "./FakeLanguageModelProvider";
 export { HttpLanguageModelProvider } from "./HttpLanguageModelProvider";
+export { FetchLlmHttpTransport } from "./FetchLlmHttpTransport";
 export type { LlmHttpProviderConfig } from "./LlmHttpProviderConfig";
 export { loadLlmHttpProviderConfig } from "./loadLlmHttpProviderConfig";
 export type { LlmHttpRequest } from "./LlmHttpRequest";

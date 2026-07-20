@@ -7,22 +7,8 @@
  * - `LLM_BASE_URL` (default `https://api.openai.com/v1`)
  * - `LLM_MODEL` (default `gpt-4o-mini`)
  */
+import { FetchLlmHttpTransport } from "./FetchLlmHttpTransport";
 import { HttpLanguageModelProvider } from "./HttpLanguageModelProvider";
-import type { LlmHttpRequest } from "./LlmHttpRequest";
-import type { LlmHttpResponse } from "./LlmHttpResponse";
-import type { LlmHttpTransport } from "./LlmHttpTransport";
-
-class FetchLlmHttpTransport implements LlmHttpTransport {
-  async fetch(request: LlmHttpRequest): Promise<LlmHttpResponse> {
-    const response = await fetch(request.url, {
-      method: request.method,
-      headers: request.headers,
-      body: request.body,
-    });
-    const bodyText = await response.text();
-    return { status: response.status, bodyText };
-  }
-}
 
 async function main(): Promise<void> {
   const apiKey = process.env["LLM_API_KEY"];

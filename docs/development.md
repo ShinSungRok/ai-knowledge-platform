@@ -96,6 +96,7 @@ pnpm validate:evaluation:citation # DefaultCitationEvaluator evidence-bound cita
 pnpm validate:application:eval-citation # RunCitationEvaluationUseCase cited-answer + evaluator delegation
 pnpm validate:config:runtime # KnowledgeRuntimeConfig loader + defaults
 pnpm validate:composition:in-memory # createInMemoryKnowledgeComposition cited-answer wiring
+pnpm validate:composition:http-llm # optional HTTP LLM composition path via Fake transport
 pnpm validate:http:router # DefaultHttpRouter exact match + 404
 pnpm validate:api:cited-answer # Health + CitedGroundedAnswerController + router wiring
 pnpm validate:server:lifecycle # DefaultKnowledgeServer start/stop/dispatch

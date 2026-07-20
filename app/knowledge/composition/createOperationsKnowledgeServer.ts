@@ -13,11 +13,14 @@ import type { ApiKeyPrincipalEntry } from "../security/ApiKeyAuthenticator";
 import { DefaultWorkspaceAuthorizer } from "../security/DefaultWorkspaceAuthorizer";
 import { HttpBearerGuard } from "../security/HttpBearerGuard";
 import { createInMemoryKnowledgeComposition } from "./createInMemoryKnowledgeComposition";
+import type { LlmProviderOption } from "./createLanguageModelProvider";
 import type { InMemoryKnowledgeComposition } from "./InMemoryKnowledgeComposition";
 
 export type CreateOperationsKnowledgeServerOptions = {
   apiKeys: Readonly<Record<string, ApiKeyPrincipalEntry>>;
   config?: KnowledgeRuntimeConfig;
+  /** Defaults to Fake LLM. */
+  llm?: LlmProviderOption;
 };
 
 /**
@@ -35,7 +38,9 @@ export function createOperationsKnowledgeServer(
   metrics: InMemoryMetrics;
 } {
   const config = options.config ?? DEFAULT_KNOWLEDGE_RUNTIME_CONFIG;
-  const composition = createInMemoryKnowledgeComposition(config);
+  const composition = createInMemoryKnowledgeComposition(config, {
+    llm: options.llm,
+  });
   const logger = new InMemoryLogger();
   const metrics = new InMemoryMetrics();
   const authenticator = new ApiKeyAuthenticator(options.apiKeys);

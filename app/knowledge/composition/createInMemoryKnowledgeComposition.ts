@@ -1,7 +1,6 @@
 import { GenerateCitedGroundedAnswerUseCase } from "../application/GenerateCitedGroundedAnswerUseCase";
 import { GenerateGroundedAnswerUseCase } from "../application/GenerateGroundedAnswerUseCase";
 import { RetrieveGroundingContextUseCase } from "../application/RetrieveGroundingContextUseCase";
-import { FakeLanguageModelProvider } from "../ai/FakeLanguageModelProvider";
 import { DefaultCitationBuilder } from "../citation/DefaultCitationBuilder";
 import {
   DEFAULT_KNOWLEDGE_RUNTIME_CONFIG,
@@ -19,15 +18,25 @@ import { DefaultHybridSearch } from "../search/DefaultHybridSearch";
 import { DefaultKeywordSearch } from "../search/DefaultKeywordSearch";
 import { DefaultRerankedSearch } from "../search/DefaultRerankedSearch";
 import { DefaultReranker } from "../search/DefaultReranker";
+import {
+  createLanguageModelProvider,
+  type LlmProviderOption,
+} from "./createLanguageModelProvider";
 import type { InMemoryKnowledgeComposition } from "./InMemoryKnowledgeComposition";
 import type { KnowledgeRuntime } from "./KnowledgeRuntime";
+
+export type CreateInMemoryKnowledgeCompositionOptions = {
+  llm?: LlmProviderOption;
+};
 
 /**
  * Builds an in-memory/fake composition root wired through the cited-answer
  * application use-case chain. Concrete adapters are imported only here.
+ * LLM defaults to Fake; pass `{ llm: { type: "http", config } }` for HTTP.
  */
 export function createInMemoryKnowledgeComposition(
   config: KnowledgeRuntimeConfig = DEFAULT_KNOWLEDGE_RUNTIME_CONFIG,
+  options: CreateInMemoryKnowledgeCompositionOptions = {},
 ): InMemoryKnowledgeComposition {
   const knowledgeDocumentRepository = new DefaultInMemoryRepository();
   const documentChunkRepository = new DefaultInMemoryDocumentChunkRepository();
@@ -51,7 +60,9 @@ export function createInMemoryKnowledgeComposition(
     contextAssembler,
   );
   const promptBuilder = new DefaultPromptBuilder();
-  const languageModelProvider = new FakeLanguageModelProvider();
+  const languageModelProvider = createLanguageModelProvider(
+    options.llm ?? { type: "fake" },
+  );
   const groundedAnswerAssembler = new DefaultGroundedAnswerAssembler();
   const generateGroundedAnswerUseCase = new GenerateGroundedAnswerUseCase(
     retrieveGroundingContextUseCase,

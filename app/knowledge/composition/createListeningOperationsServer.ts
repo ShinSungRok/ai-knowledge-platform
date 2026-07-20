@@ -15,6 +15,7 @@ import type { ApiKeyPrincipalEntry } from "../security/ApiKeyAuthenticator";
 import { DefaultWorkspaceAuthorizer } from "../security/DefaultWorkspaceAuthorizer";
 import { HttpBearerGuard } from "../security/HttpBearerGuard";
 import { createInMemoryKnowledgeComposition } from "./createInMemoryKnowledgeComposition";
+import type { LlmProviderOption } from "./createLanguageModelProvider";
 import type { InMemoryKnowledgeComposition } from "./InMemoryKnowledgeComposition";
 
 const DEFAULT_LISTEN: HttpListenConfig = {
@@ -26,6 +27,8 @@ export type CreateListeningOperationsServerOptions = {
   apiKeys: Readonly<Record<string, ApiKeyPrincipalEntry>>;
   config?: KnowledgeRuntimeConfig;
   listen?: HttpListenConfig;
+  /** Defaults to Fake LLM. */
+  llm?: LlmProviderOption;
 };
 
 export type ListeningOperationsServer = {
@@ -47,7 +50,9 @@ export function createListeningOperationsServer(
 ): ListeningOperationsServer {
   const config = options.config ?? DEFAULT_KNOWLEDGE_RUNTIME_CONFIG;
   const listenConfig = options.listen ?? DEFAULT_LISTEN;
-  const composition = createInMemoryKnowledgeComposition(config);
+  const composition = createInMemoryKnowledgeComposition(config, {
+    llm: options.llm,
+  });
   const logger = new InMemoryLogger();
   const metrics = new InMemoryMetrics();
   const authenticator = new ApiKeyAuthenticator(options.apiKeys);

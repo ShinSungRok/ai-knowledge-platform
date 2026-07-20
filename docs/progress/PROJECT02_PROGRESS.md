@@ -3131,3 +3131,29 @@ Add Fake transport validation and optional live-skip runner
 **Status**
 Completed
 
+## Task 117
+
+**Date**
+2026-07-21
+
+**Commit**
+5cc3abd
+
+**Title**
+Add optional LLM provider composition wiring and update roadmap
+
+**Summary**
+- Added `FetchLlmHttpTransport`, `LlmProviderOption`, optional HTTP LLM on in-memory/sql/operations/listening (default Fake)
+- Added `validate:composition:http-llm`; roadmap Real LLM → Partial; README/deployment LLM_API_KEY docs
+
+**Validation**
+- `pnpm validate:ai:http-provider`
+- `pnpm validate:composition:in-memory`
+- `pnpm validate:composition:http-llm`
+- `pnpm validate:project:closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

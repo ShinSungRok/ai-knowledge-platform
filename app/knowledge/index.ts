@@ -149,6 +149,7 @@ export type {
 } from "./ai";
 export {
   FakeLanguageModelProvider,
+  FetchLlmHttpTransport,
   HttpLanguageModelProvider,
   loadLlmHttpProviderConfig,
 } from "./ai";
@@ -241,7 +242,15 @@ export type {
 export { DefaultKnowledgeServer, NodeHttpListener } from "./server";
 export { KNOWLEDGE_MODULE_COMPOSITION } from "./composition";
 export type { KnowledgeRuntime, InMemoryKnowledgeComposition } from "./composition";
-export { createInMemoryKnowledgeComposition } from "./composition";
+export type {
+  CreateInMemoryKnowledgeCompositionOptions,
+  CreateSqlKnowledgeCompositionOptions,
+  LlmProviderOption,
+} from "./composition";
+export {
+  createInMemoryKnowledgeComposition,
+  createLanguageModelProvider,
+} from "./composition";
 export { createOperationsKnowledgeServer } from "./composition";
 export type {
   CreateOperationsKnowledgeServerOptions,

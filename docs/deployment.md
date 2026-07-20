@@ -137,10 +137,44 @@ const composition = await createPostgresKnowledgeComposition({ pool });
 // caller owns pool.end()
 ```
 
+## 5b. Optional HTTP LLM provider
+
+Default composition/operations use `FakeLanguageModelProvider` (no network).
+To use an OpenAI-compatible HTTP provider:
+
+```ts
+import {
+  createInMemoryKnowledgeComposition,
+  loadLlmHttpProviderConfig,
+} from "./app/knowledge";
+
+const composition = createInMemoryKnowledgeComposition(undefined, {
+  llm: {
+    type: "http",
+    config: loadLlmHttpProviderConfig({
+      baseUrl: process.env.LLM_BASE_URL ?? "https://api.openai.com/v1",
+      apiKey: process.env.LLM_API_KEY!,
+      model: process.env.LLM_MODEL ?? "gpt-4o-mini",
+    }),
+  },
+});
+```
+
+`operations` / `listening` factories accept the same optional `llm` field.
+Optional live smoke (not in top-level `pnpm validate`):
+
+```bash
+# skip (exit 0) when unset
+pnpm validate:ai:http-provider-live
+
+LLM_API_KEY=sk-... pnpm validate:ai:http-provider-live
+```
+
 ## 6. Current limitations
 
 - No production host, CI deploy pipeline, or secrets management yet.
 - Compose services are placeholders aligned with Project1's infra shape.
 - Express/Fastify not used; TCP listen is `NodeHttpListener` (`node:http`).
 - API Key/Bearer AuthN is wired for cited-answer; JWT/OIDC remain deferred.
+- HTTP LLM is optional; default composition remains Fake (no official LLM SDK).
 - OpenTelemetry/Prometheus exporters are not included.
