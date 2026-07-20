@@ -1084,3 +1084,28 @@ Add build grounded prompt use case
 
 **Status**
 Completed
+
+## Task 41
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Define language model provider contract
+
+**Summary**
+- Added `app/knowledge/ai/GeneratedText.ts` (`{ text: string }` — plain generated text, not yet a grounded answer or citation) and `app/knowledge/ai/LanguageModelProvider.ts` (`generate(prompt: GroundedPrompt): Promise<GeneratedText>` port), reusing the prompt module's own `GroundedPrompt` shape as the provider's only prompt input
+- Updated the `ai` and top-level `app/knowledge` barrels to export the new types; no provider adapter, API key/network/model SDK/streaming dependency, grounded answer validation, citation, or Prompt Builder change introduced — contract only
+- Added `runLanguageModelProviderContractValidation.ts` (module-constant check, an in-file `FakeLanguageModelProviderDouble` test double proving the port is implementable/callable from just the exported types and returns a `GeneratedText`-shaped result, a valid-`GroundedPrompt` case including an empty `userMessage`, and a compile-time type-assignability check that the top-level barrel re-exports the same `LanguageModelProvider` type) + `tests/unit/languageModelProviderContract.cases.ts`
+- Added `validate:ai:provider-contract` to `package.json`, wired into the top-level `validate` chain; no HTTP/composition wiring introduced
+
+**Validation**
+- `pnpm validate:ai:provider-contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

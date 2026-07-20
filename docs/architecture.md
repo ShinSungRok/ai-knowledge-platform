@@ -484,6 +484,20 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   context-assembly flow is unaffected by this use case. This is the
   first use case in this codebase to depend on another use case
   (`RetrieveGroundingContextUseCase`) rather than only on ports.
+- `LanguageModelProvider` (`app/knowledge/ai`) is a port —
+  `generate(prompt: GroundedPrompt): Promise<GeneratedText>`, where
+  `GeneratedText` is `{ text: string }` — a provider-independent LLM
+  generation request. `GroundedPrompt` is this port's **only** prompt
+  input: a provider consumes it, it never constructs, rewrites, or
+  re-derives a prompt of its own, and it never re-retrieves, re-ranks,
+  or re-assembles grounding context — prompt construction is
+  `PromptBuilder`'s responsibility alone. `GeneratedText` is plain
+  generated text, **not yet** a grounded answer or citation — judging
+  grounding sufficiency, structuring an answer, and attaching citations
+  are all later, out-of-scope concerns. Only the contract is defined so
+  far; a fake adapter (`FakeLanguageModelProvider`) is a later task, and
+  no real provider, model SDK, network, or API key dependency is
+  implied.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -494,4 +508,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   search:hybrid + search:rerank-contract + search:reranker +
   search:reranked + context:contract + context:assembler +
   prompt:contract + prompt:builder + application:grounding-context +
-  application:prompt + typecheck).
+  application:prompt + ai:provider-contract + typecheck).
