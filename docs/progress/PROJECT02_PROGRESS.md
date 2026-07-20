@@ -2758,7 +2758,7 @@ Completed
 2026-07-20
 
 **Commit**
-Pending
+bfabd55
 
 **Title**
 Extend knowledge schema for embedding vectors
@@ -2770,6 +2770,31 @@ Extend knowledge schema for embedding vectors
 - Documented as rebuildable search-index persistence (OpenSearch still deferred)
 
 **Validation**
+- `pnpm validate:infra:knowledge-schema`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
+## Task 103
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add SqlVectorIndex adapter
+
+**Summary**
+- Added `SqlVectorIndex` implementing `VectorIndex` via SqlGateway + embeddingVectorSql
+- Same contracts as InMemoryVectorIndex (validation, defensive copy, cosine findNearest)
+- InMemorySqlGateway vector SQL support deferred to Task 104; OpenSearch not included
+
+**Validation**
+- `pnpm validate:embedding:index`
 - `pnpm validate:infra:knowledge-schema`
 - `pnpm typecheck`
 - `pnpm validate`

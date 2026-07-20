@@ -110,7 +110,7 @@ export { EMBEDDING_VECTOR_DIMENSION } from "./embedding";
 export type { EmbeddingProvider } from "./embedding";
 export { FakeEmbeddingProvider } from "./embedding";
 export type { EmbeddingVector, ScoredEmbeddingVector, VectorIndex } from "./embedding";
-export { InMemoryVectorIndex } from "./embedding";
+export { InMemoryVectorIndex, SqlVectorIndex } from "./embedding";
 export { KNOWLEDGE_MODULE_SEARCH } from "./search";
 export type { KeywordSearch, HybridSearch, RerankingInput, Reranker, RerankedSearch } from "./search";
 export { DefaultKeywordSearch, DefaultHybridSearch, DefaultReranker, DefaultRerankedSearch } from "./search";

@@ -11,8 +11,8 @@
  * `VectorIndex` is the port for storing/retrieving an `EmbeddingVector` by
  * `(workspaceId, chunkId)` and for `findNearest` cosine-similarity ranking
  * within a workspace (returning `ScoredEmbeddingVector[]`);
- * `InMemoryVectorIndex` is the dependency-free adapter. Chunk hydration,
- * retrieval, hybrid search, and re-ranking are still deferred.
+ * `InMemoryVectorIndex` and `SqlVectorIndex` (SqlGateway) are adapters.
+ * Chunk hydration, retrieval, hybrid search, and re-ranking live elsewhere.
  */
 export const KNOWLEDGE_MODULE_EMBEDDING = "app/knowledge/embedding" as const;
 
@@ -25,3 +25,4 @@ export type { EmbeddingVector } from "./EmbeddingVector";
 export type { ScoredEmbeddingVector } from "./ScoredEmbeddingVector";
 export type { VectorIndex } from "./VectorIndex";
 export { InMemoryVectorIndex } from "./InMemoryVectorIndex";
+export { SqlVectorIndex } from "./SqlVectorIndex";
