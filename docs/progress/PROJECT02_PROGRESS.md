@@ -2563,3 +2563,29 @@ Add SQL-backed knowledge source repository
 **Status**
 Completed
 
+## Task 95
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add SQL-backed document chunk repository
+
+**Summary**
+- Added `infra/documentChunkSql.ts` parameterized SQL for `document_chunks`
+- Added `SqlDocumentChunkRepository` with replaceForDocument conflict pre-check + delete-then-insert
+- Matches in-memory chunk port ordering and workspace-global id rules
+- InMemorySqlGateway chunk support deferred to Task 96
+
+**Validation**
+- `pnpm validate:repository:chunk`
+- `pnpm validate:repository:sql-document`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
