@@ -2,11 +2,23 @@ import type { SqlGateway } from "./SqlGateway";
 import type { SqlParameter } from "./SqlParameter";
 import type { SqlQueryResult } from "./SqlQueryResult";
 import {
+  SQL_DELETE_CHUNKS_BY_DOCUMENT,
+  SQL_INSERT_DOCUMENT_CHUNK,
+  SQL_SELECT_CHUNK_BY_ID,
+  SQL_SELECT_CHUNK_OWNER_DOCUMENT_ID,
+  SQL_SELECT_CHUNKS_BY_DOCUMENT,
+  SQL_SELECT_CHUNKS_BY_WORKSPACE,
+} from "./documentChunkSql";
+import {
   SQL_DELETE_KNOWLEDGE_DOCUMENT,
   SQL_SELECT_KNOWLEDGE_DOCUMENT_BY_ID,
   SQL_SELECT_KNOWLEDGE_DOCUMENTS_BY_WORKSPACE,
   SQL_UPSERT_KNOWLEDGE_DOCUMENT,
 } from "./knowledgeDocumentSql";
+import {
+  SQL_SELECT_KNOWLEDGE_SOURCE_BY_ID,
+  SQL_UPSERT_KNOWLEDGE_SOURCE,
+} from "./knowledgeSourceSql";
 
 type DocumentRow = {
   workspace_id: string;
@@ -16,45 +28,90 @@ type DocumentRow = {
   text: string;
 };
 
+type SourceRow = {
+  workspace_id: string;
+  id: string;
+  name: string;
+};
+
+type ChunkRow = {
+  workspace_id: string;
+  id: string;
+  document_id: string;
+  source_id: string;
+  order_index: number;
+  text: string;
+};
+
 /**
- * In-memory {@link SqlGateway} that supports the
- * `knowledge_documents` SQL used by {@link SqlKnowledgeDocumentRepository}.
- * Unsupported SQL throws `"Unsupported SQL for InMemorySqlGateway"`.
+ * In-memory {@link SqlGateway} supporting knowledge_documents,
+ * knowledge_sources, and document_chunks SQL constants used by SQL
+ * repository adapters. Unsupported SQL throws
+ * `"Unsupported SQL for InMemorySqlGateway"`.
  */
 export class InMemorySqlGateway implements SqlGateway {
   private readonly documents = new Map<string, DocumentRow>();
+  private readonly sources = new Map<string, SourceRow>();
+  private readonly chunks = new Map<string, ChunkRow>();
 
   async execute(
     sql: string,
     params: readonly SqlParameter[] = [],
   ): Promise<SqlQueryResult> {
     const normalized = normalizeSql(sql);
+
     if (normalized === normalizeSql(SQL_UPSERT_KNOWLEDGE_DOCUMENT)) {
-      return this.upsert(params);
+      return this.upsertDocument(params);
     }
     if (normalized === normalizeSql(SQL_SELECT_KNOWLEDGE_DOCUMENT_BY_ID)) {
-      return this.selectById(params);
+      return this.selectDocumentById(params);
     }
     if (
       normalized === normalizeSql(SQL_SELECT_KNOWLEDGE_DOCUMENTS_BY_WORKSPACE)
     ) {
-      return this.selectByWorkspace(params);
+      return this.selectDocumentsByWorkspace(params);
     }
     if (normalized === normalizeSql(SQL_DELETE_KNOWLEDGE_DOCUMENT)) {
-      return this.deleteById(params);
+      return this.deleteDocumentById(params);
     }
+
+    if (normalized === normalizeSql(SQL_UPSERT_KNOWLEDGE_SOURCE)) {
+      return this.upsertSource(params);
+    }
+    if (normalized === normalizeSql(SQL_SELECT_KNOWLEDGE_SOURCE_BY_ID)) {
+      return this.selectSourceById(params);
+    }
+
+    if (normalized === normalizeSql(SQL_SELECT_CHUNKS_BY_DOCUMENT)) {
+      return this.selectChunksByDocument(params);
+    }
+    if (normalized === normalizeSql(SQL_SELECT_CHUNK_BY_ID)) {
+      return this.selectChunkById(params);
+    }
+    if (normalized === normalizeSql(SQL_SELECT_CHUNKS_BY_WORKSPACE)) {
+      return this.selectChunksByWorkspace(params);
+    }
+    if (normalized === normalizeSql(SQL_DELETE_CHUNKS_BY_DOCUMENT)) {
+      return this.deleteChunksByDocument(params);
+    }
+    if (normalized === normalizeSql(SQL_INSERT_DOCUMENT_CHUNK)) {
+      return this.insertChunk(params);
+    }
+    if (normalized === normalizeSql(SQL_SELECT_CHUNK_OWNER_DOCUMENT_ID)) {
+      return this.selectChunkOwner(params);
+    }
+
     throw new Error("Unsupported SQL for InMemorySqlGateway");
   }
 
-  private upsert(params: readonly SqlParameter[]): SqlQueryResult {
+  private upsertDocument(params: readonly SqlParameter[]): SqlQueryResult {
     this.assertParamCount(params, 5);
     const workspaceId = this.requireStringParam(params[0], "$1");
     const id = this.requireStringParam(params[1], "$2");
     const sourceId = this.requireStringParam(params[2], "$3");
     const title = this.requireStringParam(params[3], "$4");
     const text = this.requireStringParamAllowEmpty(params[4], "$5");
-    const key = this.key(workspaceId, id);
-    this.documents.set(key, {
+    this.documents.set(this.key(workspaceId, id), {
       workspace_id: workspaceId,
       id,
       source_id: sourceId,
@@ -64,7 +121,7 @@ export class InMemorySqlGateway implements SqlGateway {
     return { rows: [], rowCount: 1 };
   }
 
-  private selectById(params: readonly SqlParameter[]): SqlQueryResult {
+  private selectDocumentById(params: readonly SqlParameter[]): SqlQueryResult {
     this.assertParamCount(params, 2);
     const workspaceId = this.requireStringParam(params[0], "$1");
     const id = this.requireStringParam(params[1], "$2");
@@ -72,40 +129,159 @@ export class InMemorySqlGateway implements SqlGateway {
     if (!row) {
       return { rows: [], rowCount: 0 };
     }
-    return { rows: [this.cloneRow(row)], rowCount: 1 };
+    return { rows: [{ ...row }], rowCount: 1 };
   }
 
-  private selectByWorkspace(params: readonly SqlParameter[]): SqlQueryResult {
+  private selectDocumentsByWorkspace(
+    params: readonly SqlParameter[],
+  ): SqlQueryResult {
     this.assertParamCount(params, 1);
     const workspaceId = this.requireStringParam(params[0], "$1");
     const rows = [...this.documents.values()]
       .filter((row) => row.workspace_id === workspaceId)
       .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
-      .map((row) => this.cloneRow(row));
+      .map((row) => ({ ...row }));
     return { rows, rowCount: rows.length };
   }
 
-  private deleteById(params: readonly SqlParameter[]): SqlQueryResult {
+  private deleteDocumentById(params: readonly SqlParameter[]): SqlQueryResult {
     this.assertParamCount(params, 2);
     const workspaceId = this.requireStringParam(params[0], "$1");
     const id = this.requireStringParam(params[1], "$2");
-    const key = this.key(workspaceId, id);
-    const existed = this.documents.delete(key);
+    const existed = this.documents.delete(this.key(workspaceId, id));
     return { rows: [], rowCount: existed ? 1 : 0 };
+  }
+
+  private upsertSource(params: readonly SqlParameter[]): SqlQueryResult {
+    this.assertParamCount(params, 3);
+    const workspaceId = this.requireStringParam(params[0], "$1");
+    const id = this.requireStringParam(params[1], "$2");
+    const name = this.requireStringParam(params[2], "$3");
+    this.sources.set(this.key(workspaceId, id), {
+      workspace_id: workspaceId,
+      id,
+      name,
+    });
+    return { rows: [], rowCount: 1 };
+  }
+
+  private selectSourceById(params: readonly SqlParameter[]): SqlQueryResult {
+    this.assertParamCount(params, 2);
+    const workspaceId = this.requireStringParam(params[0], "$1");
+    const id = this.requireStringParam(params[1], "$2");
+    const row = this.sources.get(this.key(workspaceId, id));
+    if (!row) {
+      return { rows: [], rowCount: 0 };
+    }
+    return { rows: [{ ...row }], rowCount: 1 };
+  }
+
+  private selectChunksByDocument(
+    params: readonly SqlParameter[],
+  ): SqlQueryResult {
+    this.assertParamCount(params, 2);
+    const workspaceId = this.requireStringParam(params[0], "$1");
+    const documentId = this.requireStringParam(params[1], "$2");
+    const rows = [...this.chunks.values()]
+      .filter(
+        (row) =>
+          row.workspace_id === workspaceId && row.document_id === documentId,
+      )
+      .sort((a, b) => {
+        if (a.order_index !== b.order_index) {
+          return a.order_index - b.order_index;
+        }
+        return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
+      })
+      .map((row) => ({ ...row }));
+    return { rows, rowCount: rows.length };
+  }
+
+  private selectChunkById(params: readonly SqlParameter[]): SqlQueryResult {
+    this.assertParamCount(params, 2);
+    const workspaceId = this.requireStringParam(params[0], "$1");
+    const id = this.requireStringParam(params[1], "$2");
+    const row = this.chunks.get(this.key(workspaceId, id));
+    if (!row) {
+      return { rows: [], rowCount: 0 };
+    }
+    return { rows: [{ ...row }], rowCount: 1 };
+  }
+
+  private selectChunksByWorkspace(
+    params: readonly SqlParameter[],
+  ): SqlQueryResult {
+    this.assertParamCount(params, 1);
+    const workspaceId = this.requireStringParam(params[0], "$1");
+    const rows = [...this.chunks.values()]
+      .filter((row) => row.workspace_id === workspaceId)
+      .sort((a, b) => {
+        if (a.document_id !== b.document_id) {
+          return a.document_id < b.document_id ? -1 : 1;
+        }
+        if (a.order_index !== b.order_index) {
+          return a.order_index - b.order_index;
+        }
+        return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
+      })
+      .map((row) => ({ ...row }));
+    return { rows, rowCount: rows.length };
+  }
+
+  private deleteChunksByDocument(
+    params: readonly SqlParameter[],
+  ): SqlQueryResult {
+    this.assertParamCount(params, 2);
+    const workspaceId = this.requireStringParam(params[0], "$1");
+    const documentId = this.requireStringParam(params[1], "$2");
+    let deleted = 0;
+    for (const [key, row] of [...this.chunks.entries()]) {
+      if (row.workspace_id === workspaceId && row.document_id === documentId) {
+        this.chunks.delete(key);
+        deleted += 1;
+      }
+    }
+    return { rows: [], rowCount: deleted };
+  }
+
+  private insertChunk(params: readonly SqlParameter[]): SqlQueryResult {
+    this.assertParamCount(params, 6);
+    const workspaceId = this.requireStringParam(params[0], "$1");
+    const id = this.requireStringParam(params[1], "$2");
+    const documentId = this.requireStringParam(params[2], "$3");
+    const sourceId = this.requireStringParamAllowEmpty(params[3], "$4");
+    const orderIndex = params[4];
+    if (typeof orderIndex !== "number" || !Number.isInteger(orderIndex)) {
+      throw new Error("InMemorySqlGateway $5 must be an integer");
+    }
+    const text = this.requireStringParam(params[5], "$6");
+    this.chunks.set(this.key(workspaceId, id), {
+      workspace_id: workspaceId,
+      id,
+      document_id: documentId,
+      source_id: sourceId,
+      order_index: orderIndex,
+      text,
+    });
+    return { rows: [], rowCount: 1 };
+  }
+
+  private selectChunkOwner(params: readonly SqlParameter[]): SqlQueryResult {
+    this.assertParamCount(params, 2);
+    const workspaceId = this.requireStringParam(params[0], "$1");
+    const id = this.requireStringParam(params[1], "$2");
+    const row = this.chunks.get(this.key(workspaceId, id));
+    if (!row) {
+      return { rows: [], rowCount: 0 };
+    }
+    return {
+      rows: [{ document_id: row.document_id }],
+      rowCount: 1,
+    };
   }
 
   private key(workspaceId: string, id: string): string {
     return `${workspaceId}\0${id}`;
-  }
-
-  private cloneRow(row: DocumentRow): DocumentRow {
-    return {
-      workspace_id: row.workspace_id,
-      id: row.id,
-      source_id: row.source_id,
-      title: row.title,
-      text: row.text,
-    };
   }
 
   private assertParamCount(

@@ -2589,3 +2589,31 @@ Add SQL-backed document chunk repository
 **Status**
 Completed
 
+## Task 96
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Extend InMemorySqlGateway for source and chunk SQL
+
+**Summary**
+- Extended `InMemorySqlGateway` with in-memory stores for `knowledge_sources` and `document_chunks`
+- Normalize-match support for Task 94/95 SQL constants; unsupported SQL still throws
+- Added `runSqlKnowledgeSourceRepositoryValidation` / `runSqlDocumentChunkRepositoryValidation`
+- Wired `validate:repository:sql-source` and `validate:repository:sql-chunk` into top-level `validate`
+
+**Validation**
+- `pnpm validate:infra:in-memory-sql`
+- `pnpm validate:repository:sql-document`
+- `pnpm validate:repository:sql-source`
+- `pnpm validate:repository:sql-chunk`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
