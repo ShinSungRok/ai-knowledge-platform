@@ -114,7 +114,14 @@ instruction string, and `userMessage` is a fixed
 <complete|truncated>\n\nGrounding context:\n<content|[none]>` format,
 using `GroundingContext.content` verbatim (never re-derived from
 `blocks`) so the prompt never contains evidence outside what
-`ContextAssembler` already assembled.
+`ContextAssembler` already assembled. Task 40 adds
+`BuildGroundedPromptUseCase` to `application`, injecting only
+`RetrieveGroundingContextUseCase` and the `PromptBuilder` port: it maps
+its own `workspaceId`/`query`/`retrievalLimit`/`maxCharacters` input into
+a `RetrieveGroundingContextUseCase.execute` call followed by a
+`PromptBuilder.build` call over that result's `GroundingContext`,
+returning the resulting `GroundedPrompt` unchanged — no LLM call or
+citation concern here.
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules
@@ -122,7 +129,7 @@ Other modules remain skeleton boundaries until scoped.
 | Module | Responsibility |
 |---|---|
 | `domain` | Canonical types (`KnowledgeDocument`, `KnowledgeSource`, `DocumentChunk`), all workspace-scoped via `workspaceId`. Zero outward dependencies. |
-| `application` | Use cases (list/page/create/update/delete/search/export for documents; create for sources; retrieve for chunks), each scoped to a `workspaceId`, over domain types and ports. `RetrieveKnowledgeChunksUseCase` depends only on the `VectorRetriever` port; `RetrieveHybridKnowledgeChunksUseCase` depends only on the `HybridSearch` port; `RetrieveGroundingContextUseCase` depends only on the `RerankedSearch` and `ContextAssembler` ports, delegating a reranked search and then a context assembly in sequence. |
+| `application` | Use cases (list/page/create/update/delete/search/export for documents; create for sources; retrieve for chunks), each scoped to a `workspaceId`, over domain types and ports. `RetrieveKnowledgeChunksUseCase` depends only on the `VectorRetriever` port; `RetrieveHybridKnowledgeChunksUseCase` depends only on the `HybridSearch` port; `RetrieveGroundingContextUseCase` depends only on the `RerankedSearch` and `ContextAssembler` ports, delegating a reranked search and then a context assembly in sequence; `BuildGroundedPromptUseCase` depends only on `RetrieveGroundingContextUseCase` and the `PromptBuilder` port, delegating a grounding-context retrieval and then a prompt build in sequence. |
 | `repository` | Persistence-agnostic ports (`KnowledgeDocumentRepository`, `KnowledgeSourceRepository`, `DocumentChunkRepository`); methods take `workspaceId` (chunk methods also take `documentId`; `findById` resolves by `id` alone, a workspace-global identity; `findAll` returns every workspace chunk in deterministic `documentId` → `order` → `id` order). |
 | `persistence` | Concrete adapters (`DefaultInMemoryRepository`, `DefaultInMemoryKnowledgeSourceRepository`, `DefaultInMemoryDocumentChunkRepository`; DB adapters later). |
 | `pipeline` | Ingestion pipelines from external knowledge sources. `KnowledgeSourceConnector` port + `FakeKnowledgeSourceConnector` fixture adapter fetch normalized documents (`externalId`/`title`/`text`) for a `KnowledgeSource`; `SyncKnowledgeSourcePipeline` turns those into idempotent, deterministically-keyed `KnowledgeDocument` writes via the repository ports. `ChunkKnowledgeDocumentPipeline` chunks a single stored document via `ChunkingService` and fully replaces its chunk set via `DocumentChunkRepository`; `RechunkKnowledgeSourcePipeline` re-chunks every document of one source by delegating each to `ChunkKnowledgeDocumentPipeline`. `EmbedDocumentChunksPipeline` embeds one document's chunks via `EmbeddingProvider` and upserts one vector per chunk into `VectorIndex`, validating the whole result set before any write; `ReindexKnowledgeSourceEmbeddingsPipeline` re-embeds every document of one source by delegating each to `EmbedDocumentChunksPipeline`. No document/chunk deletion, automatic chunking/embedding during sync, background scheduling, or real connector yet. |

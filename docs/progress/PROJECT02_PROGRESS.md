@@ -1055,3 +1055,32 @@ Add deterministic grounded prompt builder
 
 **Status**
 Completed
+
+## Task 40
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add build grounded prompt use case
+
+**Summary**
+- Added `BuildGroundedPromptUseCase` + its own `BuildGroundedPromptInput` (`workspaceId`, `query`, `retrievalLimit`, `maxCharacters`) to `application`, mirroring how `RetrieveGroundingContextInput` is kept separate from lower-level input types rather than reusing another use case's input directly
+- Constructor injects only `RetrieveGroundingContextUseCase` and the `PromptBuilder` port — never `RerankedSearch`, `HybridSearch`, `ContextAssembler`, any retrieval/search/context port, or a concrete adapter; `execute` validates `workspaceId`/`query`/`retrievalLimit`/`maxCharacters` at the application boundary, then calls `RetrieveGroundingContextUseCase.execute({ workspaceId, query, retrievalLimit, maxCharacters })` and passes the returned `GroundingContext` straight into `PromptBuilder.build(context)`, returning the resulting `GroundedPrompt` unchanged
+- This is the first use case in this codebase to depend on another use case rather than only on ports; `RetrieveGroundingContextUseCase`'s own reranked-retrieval and context-assembly flow is unaffected
+- Exported the use case + input type from the `application` and top-level `app/knowledge` barrels
+- Added `runBuildGroundedPromptUseCaseValidation.ts` (a static source-scan confirming the use case only imports `RetrieveGroundingContextUseCase`/`PromptBuilder`; a real-harness test with a `CountingRetrieveGroundingContextUseCase` — subclassing `RetrieveGroundingContextUseCase` since its private fields make it non-structurally-typed, and overriding `execute` to delegate to a real inner instance — and a `CountingPromptBuilder`, proving `RetrieveGroundingContextUseCase.execute` is called before `PromptBuilder.build`, each dependency receives correctly-mapped input, and the returned `GroundedPrompt` matches a direct call sequence; invalid input rejected before either dependency is called) + `tests/unit/buildGroundedPromptUseCase.cases.ts`, wired into `validate:application:prompt`, `validate:application` (and therefore the top-level `validate` chain)
+- Updated `docs/architecture.md`/`docs/modules.md`/`docs/development.md` to describe the new use case; no LLM Provider call, grounded answer generation, citation generation, HTTP/API, composition root wiring, or `RetrieveGroundingContextUseCase` behavior change introduced
+
+**Validation**
+- `pnpm validate:application:grounding-context`
+- `pnpm validate:prompt:builder`
+- `pnpm validate:application:prompt`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

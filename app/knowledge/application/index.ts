@@ -53,3 +53,7 @@ export {
   RetrieveGroundingContextUseCase,
   type RetrieveGroundingContextInput,
 } from "./RetrieveGroundingContextUseCase";
+export {
+  BuildGroundedPromptUseCase,
+  type BuildGroundedPromptInput,
+} from "./BuildGroundedPromptUseCase";

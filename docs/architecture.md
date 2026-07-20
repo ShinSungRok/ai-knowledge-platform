@@ -466,6 +466,24 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   array of well-formed `GroundingContextBlock`s — before rendering.
   Prompt template configuration, per-request customization, and any LLM
   call are out of scope for this adapter.
+- `BuildGroundedPromptUseCase` (`app/knowledge/application`) combines
+  grounding-context retrieval and prompt building behind one
+  application-boundary entry point: its constructor injects only
+  `RetrieveGroundingContextUseCase` and the `PromptBuilder` port (never
+  `RerankedSearch`, `HybridSearch`, `ContextAssembler`, any
+  retrieval/search/context port, or a concrete adapter). It validates
+  its own `BuildGroundedPromptInput`
+  (`workspaceId`/`query`/`retrievalLimit`/`maxCharacters`) at the
+  application boundary, then calls
+  `RetrieveGroundingContextUseCase.execute({ workspaceId, query,
+  retrievalLimit, maxCharacters })` and passes the returned
+  `GroundingContext` straight into `PromptBuilder.build(context)`,
+  returning its `GroundedPrompt` unchanged — no LLM call, answer
+  generation, or citation concern here.
+  `RetrieveGroundingContextUseCase`'s own reranked-retrieval and
+  context-assembly flow is unaffected by this use case. This is the
+  first use case in this codebase to depend on another use case
+  (`RetrieveGroundingContextUseCase`) rather than only on ports.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -476,4 +494,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   search:hybrid + search:rerank-contract + search:reranker +
   search:reranked + context:contract + context:assembler +
   prompt:contract + prompt:builder + application:grounding-context +
-  typecheck).
+  application:prompt + typecheck).
