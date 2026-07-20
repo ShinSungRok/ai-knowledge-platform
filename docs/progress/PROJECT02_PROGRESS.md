@@ -1259,3 +1259,29 @@ Add generate grounded answer use case
 
 **Status**
 Completed
+
+## Task 47
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Define citation contract
+
+**Summary**
+- Added `app/knowledge/citation/Citation.ts` (`{ id, sourceId, documentId, chunkId, score, excerpt }`), `app/knowledge/citation/CitedGroundedAnswer.ts` (`{ answer: GroundedAnswer, citations: Citation[] }`), and `app/knowledge/citation/CitationBuilder.ts` (`build(answer): Promise<Citation[]>` port), reusing the rag module's own `GroundedAnswer` shape as-is
+- This is where the evidence-only citation policy will live — every citation must correspond to exactly one entry on `answer.evidence`, and an empty evidence list must produce an empty citation list; contract only, no rendering algorithm, answer-text rewriting, LLM provider change, or HTTP/composition wiring introduced
+- Updated the `citation` and top-level `app/knowledge` barrels to export the new types
+- Added `runCitationBuilderContractValidation.ts` (module-constant check, an in-file `FakeCitationBuilder` test double proving the port is implementable/callable from just the exported types and returns a `Citation[]`-shaped result, an empty-evidence `GroundedAnswer` case, and a compile-time type-assignability check that the top-level barrel re-exports the same `CitationBuilder` type) + `tests/unit/citationBuilderContract.cases.ts`
+- Added `validate:citation:contract` to `package.json`, wired into the top-level `validate` chain
+
+**Validation**
+- `pnpm validate:citation:contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

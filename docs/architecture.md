@@ -601,6 +601,20 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   Citation generation/display, a real LLM provider, streaming, token
   usage, factuality scoring, evaluation datasets, and HTTP/API/
   composition-root wiring are all out of scope for this use case.
+- `CitationBuilder` (`app/knowledge/citation`) is a port —
+  `build(answer: GroundedAnswer): Promise<Citation[]>`, where
+  `Citation` is `{ id, sourceId, documentId, chunkId, score, excerpt }`
+  and `CitedGroundedAnswer` is `{ answer: GroundedAnswer, citations:
+  Citation[] }` — this is where the **evidence-only citation policy**
+  lives: every citation must correspond to exactly one entry on
+  `answer.evidence`, and an empty evidence list must produce an empty
+  citation list — never a fabricated citation from answer text or an
+  LLM extraction. It reuses the rag module's own `GroundedAnswer` shape
+  as-is — citation construction never re-retrieves, re-ranks,
+  re-assembles context, or rewrites answer text. Only the contract is
+  defined so far; a default adapter (`DefaultCitationBuilder`) is a
+  later task. Answer-text citation markers, document-title hydration,
+  and LLM citation extraction remain out of scope.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -613,4 +627,5 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   prompt:contract + prompt:builder + application:grounding-context +
   application:prompt + ai:provider-contract + ai:fake-provider +
   application:generate-text + rag:answer-contract +
-  rag:answer-assembler + application:grounded-answer + typecheck).
+  rag:answer-assembler + application:grounded-answer +
+  citation:contract + typecheck).
