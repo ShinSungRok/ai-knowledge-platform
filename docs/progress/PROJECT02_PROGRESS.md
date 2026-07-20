@@ -2329,3 +2329,28 @@ Add deployment readiness validation and operations wiring
 **Status**
 Completed
 
+## Task 86
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Update portfolio for Project 2 completion
+
+**Summary**
+- Rewrote `docs/portfolio.md` from Task 1 skeleton narrative to Project 2 completed platform
+- Listed Charter capabilities in order (Workspace through Operations)
+- Documented dependency-free validation + intentional non-goals; removed "skeleton only" Project1 framing
+- No code/module behavior changes
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
