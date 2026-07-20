@@ -2167,3 +2167,30 @@ Add in-memory knowledge composition root
 **Status**
 Completed
 
+## Task 80
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add HTTP abstraction and cited-answer API controller
+
+**Summary**
+- Added framework-independent HTTP types, ports, and `DefaultHttpRouter` (exact method+path; JSON 404)
+- Added `HealthController`, `CitedGroundedAnswerController` (KnowledgeRuntime-only), and `createKnowledgeHttpRouter`
+- Added validators + `validate:http:router` / `validate:api:cited-answer`; updated barrels/docs
+- No Express/Fastify/node:http listen, auth, or OpenAPI
+
+**Validation**
+- `pnpm validate:composition:in-memory`
+- `pnpm validate:http:router`
+- `pnpm validate:api:cited-answer`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

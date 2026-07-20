@@ -884,7 +884,11 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   `createInMemoryKnowledgeComposition`, which is the only place that
   imports concrete adapters for the cited-answer path and exposes
   `KnowledgeRuntime` with config-backed optional limit fallbacks.
-- Database adapters, HTTP/server, and real AI provider wiring are not
+- The `http` module provides framework-independent request/response types
+  and `DefaultHttpRouter` (exact method+path match). The `api` module
+  exposes health + cited-answer controllers that depend only on
+  `KnowledgeRuntime`, plus `createKnowledgeHttpRouter`.
+- Real TCP listen / Express/Fastify and real AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
   repository:chunk + application + pipeline connector + pipeline sync +
@@ -906,4 +910,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   application:memory-recall + application:run-agent-memory +
   memory:contract + memory:store + jobs:contract + jobs:store + jobs:sync-handler + jobs:processor + jobs:reindex-handler +
   application:enqueue-job + application:process-next-job +
-  evaluation:contract + config:runtime + composition:in-memory + typecheck).
+  evaluation:contract + config:runtime + composition:in-memory + http:router + api:cited-answer + typecheck).

@@ -92,6 +92,8 @@ pnpm validate:evaluation:citation # DefaultCitationEvaluator evidence-bound cita
 pnpm validate:application:eval-citation # RunCitationEvaluationUseCase cited-answer + evaluator delegation
 pnpm validate:config:runtime # KnowledgeRuntimeConfig loader + defaults
 pnpm validate:composition:in-memory # createInMemoryKnowledgeComposition cited-answer wiring
+pnpm validate:http:router # DefaultHttpRouter exact match + 404
+pnpm validate:api:cited-answer # Health + CitedGroundedAnswerController + router wiring
 pnpm typecheck                 # TypeScript strict check
 pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application (incl. grounding-context + prompt + generate-text + grounded-answer + cited-answer + mcp-invoke + tool-call + run-agent + memory-append + memory-recall + run-agent-memory + enqueue-job + process-next-job) + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + search:hybrid + search:rerank-contract + search:reranker + search:reranked + context:contract + context:assembler + prompt:contract + prompt:builder + ai:provider-contract + ai:fake-provider + rag:answer-contract + rag:answer-assembler + citation:contract + citation:builder + mcp:contract + mcp:cited-answer-tool + mcp:registry + tools:contract + tools:executor + agent:contract + agent:planner + agent:step-executor + agent:reviewer + agent:orchestrator + memory:contract + memory:store + jobs:contract + jobs:store + jobs:sync-handler + jobs:processor + jobs:reindex-handler + typecheck
 ```

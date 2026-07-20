@@ -202,7 +202,21 @@ export { SyncKnowledgeSourceJobHandler } from "./jobs";
 export { DefaultJobProcessor } from "./jobs";
 export { ReindexKnowledgeSourceJobHandler } from "./jobs";
 export { KNOWLEDGE_MODULE_API } from "./api";
+export {
+  HealthController,
+  CitedGroundedAnswerController,
+  createKnowledgeHttpRouter,
+} from "./api";
 export { KNOWLEDGE_MODULE_HTTP } from "./http";
+export type {
+  HttpMethod,
+  HttpRequest,
+  HttpResponse,
+  HttpHandler,
+  HttpRouter,
+  HttpRoute,
+} from "./http";
+export { DefaultHttpRouter } from "./http";
 export { KNOWLEDGE_MODULE_SERVER } from "./server";
 export { KNOWLEDGE_MODULE_COMPOSITION } from "./composition";
 export type { KnowledgeRuntime, InMemoryKnowledgeComposition } from "./composition";
