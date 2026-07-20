@@ -2886,7 +2886,7 @@ Completed
 2026-07-20
 
 **Commit**
-Pending
+b2a919f
 
 **Title**
 Add NodeHttpListener adapter
@@ -2899,6 +2899,30 @@ Add NodeHttpListener adapter
 **Validation**
 - `pnpm validate:http:router`
 - `pnpm validate:server:listener-contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
+## Task 108
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add ephemeral-port listener validation
+
+**Summary**
+- Added `runNodeHttpListenerValidation` on 127.0.0.1:0 with /health, 404, 405, and post-close failure
+- Wired `validate:server:node-listener` into top-level validate; try/finally ensures close
+
+**Validation**
+- `pnpm validate:server:lifecycle`
+- `pnpm validate:server:node-listener`
 - `pnpm typecheck`
 - `pnpm validate`
 
