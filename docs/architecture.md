@@ -156,6 +156,14 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   ports. Adapters and reconciling orchestration are later tasks; the
   existing `SyncKnowledgeSourcePipeline` and `KnowledgeSourceConnector`
   remain unchanged.
+- `DefaultKnowledgeSourceChangeDetector` (`app/knowledge/pipeline`)
+  implements `KnowledgeSourceChangeDetector` with no constructor
+  dependencies: it validates fetched/existing inputs, uses the same
+  canonical id formula as `SyncKnowledgeSourcePipeline`, ignores
+  existing documents from other sources, rejects duplicate fetched
+  `externalId`s, and emits changes ordered by kind then `documentId`.
+  Persistence, reconcile, and sync-pipeline orchestration remain later
+  tasks.
 - `DocumentChunk` (`app/knowledge/domain`) is a traceable, orderable segment
   of a `KnowledgeDocument`'s text (`workspaceId`, `id`, `documentId`, `text`,
   `order`) — it deliberately omits `sourceId`, since provenance already

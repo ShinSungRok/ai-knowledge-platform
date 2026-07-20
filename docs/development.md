@@ -27,6 +27,7 @@ pnpm validate:application      # List + Page + Create + Update + Delete + Search
 pnpm validate:pipeline:connector # FakeKnowledgeSourceConnector port contract
 pnpm validate:pipeline:sync    # SyncKnowledgeSourcePipeline idempotent sync behavior
 pnpm validate:pipeline:sync-change-contract # Sync change-set/lifecycle/detector/reconciler contract
+pnpm validate:pipeline:change-detector # DefaultKnowledgeSourceChangeDetector classification behavior
 pnpm validate:pipeline:chunk-document # ChunkKnowledgeDocumentPipeline chunk-and-replace behavior
 pnpm validate:pipeline:rechunk-source # RechunkKnowledgeSourcePipeline source-scoped rebuild behavior
 pnpm validate:pipeline:embed-document # EmbedDocumentChunksPipeline embed-and-upsert behavior

@@ -1920,3 +1920,29 @@ Define sync change-set and lifecycle contract
 
 **Status**
 Completed
+
+## Task 71
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add deterministic knowledge source change detector
+
+**Summary**
+- Added `DefaultKnowledgeSourceChangeDetector` (no constructor deps): validates input, same canonical id formula as sync pipeline, classifies added/updated/unchanged/removed, deterministic kind+documentId ordering, ignores other-source existing docs, rejects duplicate externalId
+- Exported from pipeline/top-level barrels; updated docs
+- Added `runDefaultKnowledgeSourceChangeDetectorValidation.ts` + unit case inventory; wired `validate:pipeline:change-detector` into top-level `validate`
+- No persistence, reconciler, or sync pipeline changes
+
+**Validation**
+- `pnpm validate:pipeline:sync-change-contract`
+- `pnpm validate:pipeline:change-detector`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

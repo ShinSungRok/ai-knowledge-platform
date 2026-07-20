@@ -22,9 +22,11 @@
  * contracts (`SyncChangeKind`, `SyncDocumentChange`, `SyncChangeSet`,
  * `SyncLifecycleStatus`, `SyncLifecycleResult`) plus the
  * `KnowledgeSourceChangeDetector` and `KnowledgeSourceReconciler` ports
- * for production sync hardening — adapters and reconciling orchestration
- * are later tasks. Real connectors, automatic chunking/embedding during
- * sync, and background scheduling remain out of scope until scoped.
+ * for production sync hardening — `DefaultKnowledgeSourceChangeDetector`
+ * is the deterministic change-detector adapter; reconciler adapters and
+ * reconciling orchestration are later tasks. Real connectors, automatic
+ * chunking/embedding during sync, and background scheduling remain out of
+ * scope until scoped.
  */
 export const KNOWLEDGE_MODULE_PIPELINE = "app/knowledge/pipeline" as const;
 
@@ -50,6 +52,7 @@ export type {
   KnowledgeSourceChangeDetectInput,
   KnowledgeSourceChangeDetector,
 } from "./KnowledgeSourceChangeDetector";
+export { DefaultKnowledgeSourceChangeDetector } from "./DefaultKnowledgeSourceChangeDetector";
 export type {
   KnowledgeSourceReconcileInput,
   KnowledgeSourceReconcileResult,

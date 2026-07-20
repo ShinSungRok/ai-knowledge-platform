@@ -90,6 +90,7 @@ export type {
   KnowledgeSourceReconcileResult,
   KnowledgeSourceReconciler,
 } from "./pipeline";
+export { DefaultKnowledgeSourceChangeDetector } from "./pipeline";
 export { KNOWLEDGE_MODULE_EMBEDDING } from "./embedding";
 export type { ChunkingService } from "./embedding";
 export { FixedSizeDocumentChunker } from "./embedding";
