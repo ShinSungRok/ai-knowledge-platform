@@ -5,12 +5,16 @@ import {
 import type { KnowledgeRuntimeConfig } from "../config/KnowledgeRuntimeConfig";
 import { DefaultKnowledgeServer } from "../server/DefaultKnowledgeServer";
 import type { KnowledgeServer } from "../server/KnowledgeServer";
+import { DefaultWorkspaceAuthorizer } from "../security/DefaultWorkspaceAuthorizer";
+import { HttpWorkspaceGuard } from "../security/HttpWorkspaceGuard";
 import { createInMemoryKnowledgeComposition } from "./createInMemoryKnowledgeComposition";
 import type { InMemoryKnowledgeComposition } from "./InMemoryKnowledgeComposition";
 
 /**
  * Wires in-memory composition → HTTP router → {@link DefaultKnowledgeServer}.
- * Concrete adapter assembly stays in the composition root.
+ * Includes workspace HTTP guard required by the cited-answer API.
+ * Observability wrapping is provided separately by
+ * `createOperationsKnowledgeServer`.
  */
 export function createInMemoryKnowledgeServer(
   config: KnowledgeRuntimeConfig = DEFAULT_KNOWLEDGE_RUNTIME_CONFIG,
@@ -19,7 +23,8 @@ export function createInMemoryKnowledgeServer(
   composition: InMemoryKnowledgeComposition;
 } {
   const composition = createInMemoryKnowledgeComposition(config);
-  const router = createKnowledgeHttpRouter(composition.runtime);
+  const guard = new HttpWorkspaceGuard(new DefaultWorkspaceAuthorizer());
+  const router = createKnowledgeHttpRouter(composition.runtime, guard);
   const server = new DefaultKnowledgeServer(router);
   return { server, composition };
 }

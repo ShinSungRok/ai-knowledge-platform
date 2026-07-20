@@ -265,4 +265,6 @@ export type {
 } from "./reliability";
 export { DefaultRetryPolicy, DefaultTimeoutPolicy } from "./reliability";
 export { KNOWLEDGE_MODULE_SECURITY } from "./security";
+export type { WorkspaceAuthorizer } from "./security";
+export { DefaultWorkspaceAuthorizer, HttpWorkspaceGuard } from "./security";
 export { KNOWLEDGE_MODULE_INFRA } from "./infra";

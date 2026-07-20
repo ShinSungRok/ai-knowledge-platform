@@ -2273,3 +2273,30 @@ Add reliability retry and timeout policies
 **Status**
 Completed
 
+## Task 84
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add workspace authorization and HTTP security guard
+
+**Summary**
+- Added `WorkspaceAuthorizer`/`DefaultWorkspaceAuthorizer` and `HttpWorkspaceGuard` (`x-workspace-id`)
+- Updated `CitedGroundedAnswerController` + `createKnowledgeHttpRouter(runtime, guard)`; guard failures map to 403
+- Health remains unauthenticated; updated API/server validators for header requirements
+- Added `validate:security:workspace` and `validate:security:http-guard`
+
+**Validation**
+- `pnpm validate:security:workspace`
+- `pnpm validate:security:http-guard`
+- `pnpm validate:api:cited-answer`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

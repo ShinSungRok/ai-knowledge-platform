@@ -895,6 +895,8 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   ports with `InMemoryLogger`/`InMemoryMetrics` adapters.
 - The `reliability` module provides deterministic `DefaultRetryPolicy`
   (no delay) and `DefaultTimeoutPolicy` (`Promise.race` + timer).
+- The `security` module provides `DefaultWorkspaceAuthorizer` and
+  `HttpWorkspaceGuard`; cited-answer HTTP requires `x-workspace-id`.
 - Real TCP listen / Express/Fastify and real AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +

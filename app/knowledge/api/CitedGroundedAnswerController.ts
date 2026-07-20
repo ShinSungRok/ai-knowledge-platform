@@ -2,6 +2,7 @@ import type { KnowledgeRuntime } from "../composition/KnowledgeRuntime";
 import type { CitedGroundedAnswer } from "../citation/CitedGroundedAnswer";
 import type { HttpRequest } from "../http/HttpRequest";
 import type { HttpResponse } from "../http/HttpResponse";
+import type { HttpWorkspaceGuard } from "../security/HttpWorkspaceGuard";
 
 const JSON_HEADERS = { "content-type": "application/json" } as const;
 
@@ -54,11 +55,15 @@ function toPlainCitedAnswer(
 }
 
 /**
- * HTTP controller for cited grounded answers. Depends only on
- * {@link KnowledgeRuntime} — never on concrete composition/repos.
+ * HTTP controller for cited grounded answers. Depends on
+ * {@link KnowledgeRuntime} and {@link HttpWorkspaceGuard} — never on
+ * concrete composition/repos.
  */
 export class CitedGroundedAnswerController {
-  constructor(private readonly runtime: KnowledgeRuntime) {}
+  constructor(
+    private readonly runtime: KnowledgeRuntime,
+    private readonly guard: HttpWorkspaceGuard,
+  ) {}
 
   async create(request: HttpRequest): Promise<HttpResponse> {
     const pathMatch = CITED_ANSWER_PATH.exec(request.path);
@@ -70,6 +75,12 @@ export class CitedGroundedAnswerController {
     }
 
     const workspaceId = pathMatch[1]!;
+    try {
+      this.guard.assertRequest(request, workspaceId);
+    } catch (error: unknown) {
+      return jsonResponse(403, { error: errorMessage(error) });
+    }
+
     const body = request.body;
     if (body === null || typeof body !== "object" || Array.isArray(body)) {
       return jsonResponse(400, { error: "body must be a plain object" });

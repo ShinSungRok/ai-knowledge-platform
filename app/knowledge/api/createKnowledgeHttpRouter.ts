@@ -3,6 +3,7 @@ import { DefaultHttpRouter } from "../http/DefaultHttpRouter";
 import type { HttpRequest } from "../http/HttpRequest";
 import type { HttpResponse } from "../http/HttpResponse";
 import type { HttpRouter } from "../http/HttpRouter";
+import type { HttpWorkspaceGuard } from "../security/HttpWorkspaceGuard";
 import { CitedGroundedAnswerController } from "./CitedGroundedAnswerController";
 import { HealthController } from "./HealthController";
 
@@ -10,15 +11,15 @@ const CITED_ANSWER_PATH = /^\/workspaces\/[^/]+\/cited-answers$/;
 
 /**
  * Registers health + cited-answer routes against a {@link KnowledgeRuntime}.
- * Controllers depend only on the runtime abstraction. Exact-match routes
- * use {@link DefaultHttpRouter}; the cited-answer path is parametric and
- * is dispatched before exact matching.
+ * Cited-answer requests are authorized via {@link HttpWorkspaceGuard}.
+ * Health does not require authorization.
  */
 export function createKnowledgeHttpRouter(
   runtime: KnowledgeRuntime,
+  guard: HttpWorkspaceGuard,
 ): HttpRouter {
   const health = new HealthController();
-  const citedAnswers = new CitedGroundedAnswerController(runtime);
+  const citedAnswers = new CitedGroundedAnswerController(runtime, guard);
   const exactRouter = new DefaultHttpRouter([
     {
       method: "GET",

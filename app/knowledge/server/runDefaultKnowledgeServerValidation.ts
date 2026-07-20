@@ -132,7 +132,7 @@ async function assertHealthAndCitedAnswerDispatch(): Promise<void> {
   const cited = await server.dispatch({
     method: "POST",
     path: `/workspaces/${WORKSPACE_A}/cited-answers`,
-    headers: {},
+    headers: { "x-workspace-id": WORKSPACE_A },
     body: { query: "aaaaaaaa", retrievalLimit: 5, maxCharacters: 10_000 },
   });
   assertEqual(cited.status, 200, "cited-answer status");
