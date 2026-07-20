@@ -230,6 +230,8 @@ export { createInMemoryKnowledgeServer } from "./composition";
 export { createOperationsKnowledgeServer } from "./composition";
 export type { SqlDocumentKnowledgeComposition } from "./composition";
 export { createSqlDocumentKnowledgeComposition } from "./composition";
+export type { SqlKnowledgeComposition } from "./composition";
+export { createSqlKnowledgeComposition } from "./composition";
 export { KNOWLEDGE_MODULE_CONFIG } from "./config";
 export type { KnowledgeRuntimeConfig } from "./config";
 export { DEFAULT_KNOWLEDGE_RUNTIME_CONFIG, loadKnowledgeRuntimeConfig } from "./config";

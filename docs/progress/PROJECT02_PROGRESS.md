@@ -2595,7 +2595,7 @@ Completed
 2026-07-20
 
 **Commit**
-Pending
+450f4bd
 
 **Title**
 Extend InMemorySqlGateway for source and chunk SQL
@@ -2611,6 +2611,35 @@ Extend InMemorySqlGateway for source and chunk SQL
 - `pnpm validate:repository:sql-document`
 - `pnpm validate:repository:sql-source`
 - `pnpm validate:repository:sql-chunk`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
+## Task 97
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add full SQL knowledge composition path and update roadmap
+
+**Summary**
+- Added `createSqlKnowledgeComposition` / `SqlKnowledgeComposition` sharing one `InMemorySqlGateway` for document+source+chunk SQL repositories
+- Wired `validate:composition:sql-knowledge` end-to-end (source → document → chunk → cited-answer)
+- Updated roadmap Postgres row (document+source+chunk via InMemorySqlGateway; real `pg` deferred) and Sprint 22 task range
+- Kept document-only SQL composition and default in-memory/operations paths unchanged
+
+**Validation**
+- `pnpm validate:repository:sql-source`
+- `pnpm validate:repository:sql-chunk`
+- `pnpm validate:composition:sql-document`
+- `pnpm validate:composition:sql-knowledge`
+- `pnpm validate:project:closeout`
 - `pnpm typecheck`
 - `pnpm validate`
 

@@ -2,7 +2,7 @@
 
 > Status of AI Knowledge Platform Charter capabilities at Project 2
 > Platform Baseline closeout (Sprint 20), plus post-baseline persistence
-> progress (Sprint 21).
+> progress (Sprints 21–22).
 
 ## Charter capability → Completed
 
@@ -23,7 +23,7 @@
 
 | Item | Status | Notes |
 |---|---|---|
-| Postgres source-of-truth adapter | Partial | SQL gateway + `SqlKnowledgeDocumentRepository` (`InMemorySqlGateway` validated); real `pg` driver still deferred |
+| Postgres source-of-truth adapter | Partial | Document+source+chunk SQL adapters validated via `InMemorySqlGateway`; real `pg` driver still deferred |
 | OpenSearch / real vector index adapter | Deferred | `InMemoryVectorIndex` only |
 | Real LLM provider SDK | Deferred | `FakeLanguageModelProvider` only |
 | MCP network transport | Deferred | In-process MCP ports only |
@@ -38,3 +38,4 @@
 | Task 1–85 | Product/platform capability implementation (Sprints through Establish Operations) |
 | Sprint 20 (Task 86–89) | Project 2 Platform Baseline **closeout** (docs + static validation only) |
 | Sprint 21 (Task 90–93) | Post-baseline Source-of-Truth Persistence (`SqlGateway`, SQL document repository, InMemorySqlGateway, SQL composition path) |
+| Sprint 22 (Task 94–97) | Extend SoT Persistence to Source and Chunk (SQL source/chunk adapters, gateway support, full SQL knowledge composition) |

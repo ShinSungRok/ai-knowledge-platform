@@ -958,8 +958,9 @@ The following remain intentionally out of Project 2 scope:
 - Real MCP network transport
 - `node:http` / Express TCP listen
 
-Project 2 Platform Baseline remains closed. Sprint 21 begins
+Project 2 Platform Baseline remains closed. Sprints 21–22 continue
 post-baseline Source-of-Truth persistence (`SqlGateway` in `infra`,
-`SqlKnowledgeDocumentRepository`, `InMemorySqlGateway`, and
-`createSqlDocumentKnowledgeComposition`). Real `pg` driver remains deferred.
+document/source/chunk SQL repositories, `InMemorySqlGateway`,
+`createSqlDocumentKnowledgeComposition`, and
+`createSqlKnowledgeComposition`). Real `pg` driver remains deferred.
 Default composition/operations paths stay in-memory.
