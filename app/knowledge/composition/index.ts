@@ -16,6 +16,8 @@ export const KNOWLEDGE_MODULE_COMPOSITION = "app/knowledge/composition" as const
 
 export type { KnowledgeRuntime } from "./KnowledgeRuntime";
 export type { InMemoryKnowledgeComposition } from "./InMemoryKnowledgeComposition";
+export type { SqlDocumentKnowledgeComposition } from "./SqlDocumentKnowledgeComposition";
 export { createInMemoryKnowledgeComposition } from "./createInMemoryKnowledgeComposition";
 export { createInMemoryKnowledgeServer } from "./createInMemoryKnowledgeServer";
 export { createOperationsKnowledgeServer } from "./createOperationsKnowledgeServer";
+export { createSqlDocumentKnowledgeComposition } from "./createSqlDocumentKnowledgeComposition";

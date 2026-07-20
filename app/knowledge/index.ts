@@ -226,6 +226,8 @@ export type { KnowledgeRuntime, InMemoryKnowledgeComposition } from "./compositi
 export { createInMemoryKnowledgeComposition } from "./composition";
 export { createInMemoryKnowledgeServer } from "./composition";
 export { createOperationsKnowledgeServer } from "./composition";
+export type { SqlDocumentKnowledgeComposition } from "./composition";
+export { createSqlDocumentKnowledgeComposition } from "./composition";
 export { KNOWLEDGE_MODULE_CONFIG } from "./config";
 export type { KnowledgeRuntimeConfig } from "./config";
 export { DEFAULT_KNOWLEDGE_RUNTIME_CONFIG, loadKnowledgeRuntimeConfig } from "./config";

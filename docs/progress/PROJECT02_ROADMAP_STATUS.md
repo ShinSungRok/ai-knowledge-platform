@@ -1,7 +1,8 @@
 # Project 2 Roadmap Status
 
 > Status of AI Knowledge Platform Charter capabilities at Project 2
-> Platform Baseline closeout (Sprint 20).
+> Platform Baseline closeout (Sprint 20), plus post-baseline persistence
+> progress (Sprint 21).
 
 ## Charter capability → Completed
 
@@ -22,7 +23,7 @@
 
 | Item | Status | Notes |
 |---|---|---|
-| Postgres source-of-truth adapter | Deferred | In-memory repositories only |
+| Postgres source-of-truth adapter | Partial | SQL gateway + `SqlKnowledgeDocumentRepository` (`InMemorySqlGateway` validated); real `pg` driver still deferred |
 | OpenSearch / real vector index adapter | Deferred | `InMemoryVectorIndex` only |
 | Real LLM provider SDK | Deferred | `FakeLanguageModelProvider` only |
 | MCP network transport | Deferred | In-process MCP ports only |
@@ -36,3 +37,4 @@
 |---|---|
 | Task 1–85 | Product/platform capability implementation (Sprints through Establish Operations) |
 | Sprint 20 (Task 86–89) | Project 2 Platform Baseline **closeout** (docs + static validation only) |
+| Sprint 21 (Task 90–93) | Post-baseline Source-of-Truth Persistence (`SqlGateway`, SQL document repository, InMemorySqlGateway, SQL composition path) |

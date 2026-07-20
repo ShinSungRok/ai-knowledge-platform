@@ -38,7 +38,7 @@ keys, or real servers are required for `pnpm validate`.
 
 Project 2 deliberately does **not** include:
 
-- Real Postgres / OpenSearch adapters
+- Real Postgres driver / OpenSearch adapters (SQL gateway + SqlKnowledgeDocumentRepository validated in-memory; `pg` still deferred)
 - Real LLM SDK providers
 - MCP network transport
 - TCP socket listen (Express / `node:http`)

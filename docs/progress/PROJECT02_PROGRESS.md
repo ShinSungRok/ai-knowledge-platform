@@ -2510,3 +2510,31 @@ Add in-memory SQL gateway and repository validation
 **Status**
 Completed
 
+## Task 93
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add SQL-backed composition path and update roadmap status
+
+**Summary**
+- Added `createSqlDocumentKnowledgeComposition` / `SqlDocumentKnowledgeComposition` (SQL documents + in-memory/fake cited-answer stack)
+- Wired `validate:composition:sql-document`
+- Updated roadmap status (Postgres partial; Sprint 21 range) and architecture Completion Boundary
+- Default in-memory/operations composition paths unchanged; no real `pg` driver
+
+**Validation**
+- `pnpm validate:repository:sql-document`
+- `pnpm validate:composition:in-memory`
+- `pnpm validate:composition:sql-document`
+- `pnpm validate:project:closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
