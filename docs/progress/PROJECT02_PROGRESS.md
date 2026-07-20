@@ -1592,3 +1592,29 @@ Define agent contract and module boundary
 
 **Status**
 Completed
+
+## Task 59
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add deterministic knowledge agent planner
+
+**Summary**
+- Added `DeterministicKnowledgeAgentPlanner` implementing `AgentPlanner` with no constructor dependencies
+- `plan` validates `AgentGoal` (non-empty `workspaceId`/`query`; positive integer `retrievalLimit`/`maxCharacters`/`toolTimeoutMs`) and always returns a single step (`id: "step-1"`, `toolName: "generate_cited_grounded_answer"`, arguments `{ workspaceId, query, retrievalLimit, maxCharacters }`) with a copied validated goal; identical inputs yield byte-identical JSON plans
+- Exported from agent and top-level barrels; added `runDeterministicKnowledgeAgentPlannerValidation.ts` + unit case inventory; wired `validate:agent:planner` into top-level `validate`
+- Updated docs; no ToolExecutor/LLM/repository dependency, multi-step planning, reviewer, or orchestrator introduced
+
+**Validation**
+- `pnpm validate:agent:contract`
+- `pnpm validate:agent:planner`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

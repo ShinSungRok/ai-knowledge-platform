@@ -755,8 +755,17 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   `AgentOrchestrator` ports so a knowledge-aware plan can be
   produced, executed via Tool Calling, and reviewed without Memory,
   LLM freeform planning, multi-agent collaboration, or
-  composition-root wiring. Concrete planner/executor/reviewer/
-  orchestrator adapters are later tasks.
+  composition-root wiring. `DeterministicKnowledgeAgentPlanner`
+  (`app/knowledge/agent`) implements `AgentPlanner` with no
+  constructor dependencies: it validates `AgentGoal`
+  (`workspaceId`/`query` non-empty; `retrievalLimit`/`maxCharacters`/
+  `toolTimeoutMs` positive integers), then always returns a single
+  step (`id: "step-1"`, `toolName: "generate_cited_grounded_answer"`,
+  arguments `{ workspaceId, query, retrievalLimit, maxCharacters }`)
+  with a copied validated goal — byte-identical for identical inputs.
+  It never imports ToolExecutor, an LLM provider, or a repository.
+  Step executor, reviewer, orchestrator, and application run use case
+  remain later tasks.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -773,4 +782,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   citation:contract + citation:builder + application:cited-answer +
   mcp:contract + mcp:cited-answer-tool + mcp:registry +
   application:mcp-invoke + tools:contract + tools:executor +
-  application:tool-call + agent:contract + typecheck).
+  application:tool-call + agent:contract + agent:planner + typecheck).

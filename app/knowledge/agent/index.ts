@@ -10,7 +10,9 @@
  * step-executor / reviewer / orchestrator ports (Task 58) define how
  * a knowledge-aware plan can be produced, executed, and reviewed
  * without Memory, LLM freeform planning, multi-agent collaboration,
- * or composition-root wiring. Concrete adapters are later tasks.
+ * or composition-root wiring. `DeterministicKnowledgeAgentPlanner`
+ * (Task 59) is the first concrete planner adapter; step executor /
+ * reviewer / orchestrator adapters are later tasks.
  */
 export const KNOWLEDGE_MODULE_AGENT = "app/knowledge/agent" as const;
 
@@ -27,3 +29,4 @@ export type { AgentPlanner } from "./AgentPlanner";
 export type { AgentStepExecutor } from "./AgentStepExecutor";
 export type { AgentReviewer } from "./AgentReviewer";
 export type { AgentOrchestrator } from "./AgentOrchestrator";
+export { DeterministicKnowledgeAgentPlanner } from "./DeterministicKnowledgeAgentPlanner";
