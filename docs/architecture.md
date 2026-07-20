@@ -904,7 +904,9 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   `validate:deployment:readiness` checks Docker/docs/scripts statically
   without a Docker daemon.
 - Real TCP listen / Express/Fastify and real AI provider wiring are not
-  implemented yet.
+  implemented as Express/Fastify. Post-baseline Sprint 25 adds
+  `NodeHttpListener` (`node:http`) and `createListeningOperationsServer`;
+  Express remains unused and dispatch-only servers are retained.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
   repository:chunk + application + pipeline connector + pipeline sync +
   pipeline chunk-document + pipeline rechunk-source + pipeline
@@ -958,6 +960,7 @@ The following remain intentionally out of Project 2 scope:
 - Real LLM provider SDK
 - Real MCP network transport
 - `node:http` / Express TCP listen
+  (`NodeHttpListener` validated post-baseline; Express unused)
 
 Project 2 Platform Baseline remains closed. Sprints 21–24 continue
 post-baseline persistence (`SqlGateway`, document/source/chunk SQL

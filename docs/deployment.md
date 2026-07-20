@@ -62,8 +62,25 @@ HTTP guard (`x-workspace-id`), `ObservingHttpRouter` (request logs +
 Baseline without observability wrapping remains
 `createInMemoryKnowledgeServer`.
 
-This in-process runtime path is the Project 2 closeout local runtime entry
-— not a production TCP listener.
+This in-process runtime path is the Project 2 closeout local runtime entry.
+For TCP listen use `createListeningOperationsServer` (below).
+
+## 4b. Listening operations server (`node:http`)
+
+```ts
+import { createListeningOperationsServer } from "./app/knowledge";
+
+const listening = createListeningOperationsServer({
+  // default: { host: "127.0.0.1", port: 0 } — ephemeral; specify port in prod
+  listen: { host: "127.0.0.1", port: 0 },
+});
+const address = await listening.start();
+// GET http://127.0.0.1:<address.port>/health
+await listening.stop();
+```
+
+Default `pnpm validate` uses loopback ephemeral ports only (no Docker /
+external network). Express/Fastify are not used.
 
 ## 5. Knowledge schema (SqlGateway)
 
@@ -109,5 +126,5 @@ const composition = await createPostgresKnowledgeComposition({ pool });
 
 - No production host, CI deploy pipeline, or secrets management yet.
 - Compose services are placeholders aligned with Project1's infra shape.
-- No real Express/node:http listen; dispatch is in-process only.
+- Express/Fastify not used; TCP listen is `NodeHttpListener` (`node:http`).
 - OpenTelemetry/Prometheus exporters are not included.

@@ -23,9 +23,9 @@ pnpm validate
 pnpm validate:project:closeout
 ```
 
-## Local runtime (no TCP listen)
+## Local runtime
 
-In-process operations entry (code API only):
+In-process operations entry (dispatch only, no TCP):
 
 ```ts
 import { createOperationsKnowledgeServer } from "./app/knowledge";
@@ -37,14 +37,27 @@ await server.start();
 await server.stop();
 ```
 
-Baseline without observability wrapping: `createInMemoryKnowledgeServer` /
-`createInMemoryKnowledgeComposition`.
+TCP listen via built-in `node:http` (default validate uses `127.0.0.1:0`):
+
+```ts
+import { createListeningOperationsServer } from "./app/knowledge";
+
+const listening = createListeningOperationsServer();
+const { host, port } = await listening.start();
+// GET http://127.0.0.1:<port>/health
+await listening.stop();
+```
+
+Pass `{ listen: { host: "127.0.0.1", port: 8080 } }` for an explicit port in
+local/production use. Baseline without observability wrapping:
+`createInMemoryKnowledgeServer` / `createInMemoryKnowledgeComposition`.
 
 ## Deferred infrastructure
 
-- Real Postgres / OpenSearch adapters (in-memory only today)
+- Real Postgres / OpenSearch adapters (SQL/Fake paths validated; real `pg`
+  live optional; OpenSearch client deferred)
 - Real LLM SDK and MCP network transport
-- TCP listen (`node:http` / Express) and AuthN / OTel exporters
+- Express/Fastify, AuthN / OTel exporters (`NodeHttpListener` is available)
 
 ## Layout
 

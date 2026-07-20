@@ -2,7 +2,7 @@
 
 > Status of AI Knowledge Platform Charter capabilities at Project 2
 > Platform Baseline closeout (Sprint 20), plus post-baseline persistence
-> progress (Sprints 21–24).
+> and listen progress (Sprints 21–25).
 
 ## Charter capability → Completed
 
@@ -27,7 +27,7 @@
 | OpenSearch / real vector index adapter | Partial | `SqlVectorIndex` on SqlGateway validated (rebuildable search-index persistence); OpenSearch client still deferred |
 | Real LLM provider SDK | Deferred | `FakeLanguageModelProvider` only |
 | MCP network transport | Deferred | In-process MCP ports only |
-| `node:http` / Express TCP listen | Deferred | In-process `dispatch` only |
+| `node:http` / Express TCP listen | Partial | `NodeHttpListener` + `createListeningOperationsServer` validated on 127.0.0.1 ephemeral; Express still not used; dispatch-only path retained |
 | AuthN (JWT / OIDC) | Deferred | Workspace header guard only |
 | OpenTelemetry / Prometheus exporters | Deferred | `InMemoryLogger` / `InMemoryMetrics` only |
 
@@ -41,3 +41,4 @@
 | Sprint 22 (Task 94–97) | Extend SoT Persistence to Source and Chunk (SQL source/chunk adapters, gateway support, full SQL knowledge composition) |
 | Sprint 23 (Task 98–101) | Establish Postgres SqlGateway Driver (schema helper, `PostgresSqlGateway`, Fake pool validation, postgres composition factory) |
 | Sprint 24 (Task 102–105) | Establish SQL Vector Index Persistence (`embedding_vectors`, `SqlVectorIndex`, gateway support, SQL/Postgres composition wiring) |
+| Sprint 25 (Task 106–109) | Establish HTTP TCP Listen (`HttpListener`, `NodeHttpListener`, ephemeral validation, listening operations factory) |

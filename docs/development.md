@@ -105,6 +105,7 @@ pnpm validate:security:workspace # DefaultWorkspaceAuthorizer
 pnpm validate:security:http-guard # HttpWorkspaceGuard x-workspace-id
 pnpm validate:http:observing # ObservingHttpRouter logs/metrics
 pnpm validate:composition:operations # createOperationsKnowledgeServer wiring
+pnpm validate:composition:listening-operations # createListeningOperationsServer ephemeral /health
 pnpm validate:deployment:readiness # static Docker/docs/export readiness
 pnpm validate:project:closeout # Project 2 baseline docs/scripts/exports closeout
 pnpm validate:infra:sql-gateway-contract # SqlGateway port contract

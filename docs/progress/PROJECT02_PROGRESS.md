@@ -2911,7 +2911,7 @@ Completed
 2026-07-20
 
 **Commit**
-Pending
+a3b30e9
 
 **Title**
 Add ephemeral-port listener validation
@@ -2923,6 +2923,33 @@ Add ephemeral-port listener validation
 **Validation**
 - `pnpm validate:server:lifecycle`
 - `pnpm validate:server:node-listener`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
+## Task 109
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add listening operations factory and update roadmap
+
+**Summary**
+- Added `createListeningOperationsServer` (operations wiring + NodeHttpListener; default 127.0.0.1:0)
+- Kept `createOperationsKnowledgeServer` dispatch-only; wired `validate:composition:listening-operations`
+- Updated roadmap TCP listen row to Partial; README/deployment listening examples
+
+**Validation**
+- `pnpm validate:server:node-listener`
+- `pnpm validate:composition:operations`
+- `pnpm validate:composition:listening-operations`
+- `pnpm validate:project:closeout`
 - `pnpm typecheck`
 - `pnpm validate`
 

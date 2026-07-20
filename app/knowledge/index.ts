@@ -233,6 +233,11 @@ export type { KnowledgeRuntime, InMemoryKnowledgeComposition } from "./compositi
 export { createInMemoryKnowledgeComposition } from "./composition";
 export { createInMemoryKnowledgeServer } from "./composition";
 export { createOperationsKnowledgeServer } from "./composition";
+export type {
+  CreateListeningOperationsServerOptions,
+  ListeningOperationsServer,
+} from "./composition";
+export { createListeningOperationsServer } from "./composition";
 export type { SqlDocumentKnowledgeComposition } from "./composition";
 export { createSqlDocumentKnowledgeComposition } from "./composition";
 export type { SqlKnowledgeComposition } from "./composition";
