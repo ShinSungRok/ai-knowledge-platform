@@ -621,3 +621,29 @@ Establish workspace-global chunk identity lookup
 
 **Status**
 Completed
+
+## Task 24
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add vector nearest-neighbor query
+
+**Summary**
+- Added `ScoredEmbeddingVector` (`{ vector: EmbeddingVector; score: number }`) to `embedding`, and `VectorIndex.findNearest(workspaceId, queryVector, limit): Promise<ScoredEmbeddingVector[]>` to the port
+- Implemented `findNearest` in `InMemoryVectorIndex`: ranks only vectors within the requested `workspaceId` by cosine similarity to `queryVector`, sorted score descending then `chunkId` ascending for deterministic tie-breaking, truncated to `limit`, each result a defensive copy; a zero-norm query or candidate vector scores `0` instead of dividing by zero
+- Validates `queryVector` is exactly `EMBEDDING_VECTOR_DIMENSION` finite numbers and `limit` is a positive integer, rejecting otherwise with no partial results
+- Updated the two existing `CountingVectorIndex` test doubles (`runEmbedDocumentChunksPipelineValidation.ts`, `runReindexKnowledgeSourceEmbeddingsPipelineValidation.ts`) with a pass-through `findNearest`; exported `ScoredEmbeddingVector` from the `embedding` and top-level barrels
+- Extended `runInMemoryVectorIndexValidation.ts` + `tests/unit/inMemoryVectorIndex.cases.ts` with cases for cosine ranking, workspace isolation, tie-breaking, zero-norm scoring, limit truncation, defensive copies, and invalid query/limit rejection; no Retriever, chunk hydration, Application Use Case, hybrid search/re-ranking, external vector database, or vector deletion API introduced
+
+**Validation**
+- `pnpm validate:embedding:index`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

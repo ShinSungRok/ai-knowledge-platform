@@ -216,9 +216,10 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   provider, API key, network call, batch API, or vector storage/search
   belongs here.
 - `VectorIndex` (`app/knowledge/embedding`) is a port —
-  `upsert(vector: EmbeddingVector): Promise<void>` and
-  `findByChunkId(workspaceId, chunkId): Promise<EmbeddingVector | null>` —
-  treating `(workspaceId, chunkId)` as the vector's identity: `upsert`
+  `upsert(vector: EmbeddingVector): Promise<void>`,
+  `findByChunkId(workspaceId, chunkId): Promise<EmbeddingVector | null>`, and
+  `findNearest(workspaceId, queryVector, limit): Promise<ScoredEmbeddingVector[]>`
+  — treating `(workspaceId, chunkId)` as the vector's identity: `upsert`
   always replaces any existing vector for that identity, never
   accumulates. `InMemoryVectorIndex` is the dependency-free adapter,
   partitioned by `workspaceId` then `chunkId` (mirroring
@@ -226,10 +227,15 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   vector's `workspaceId`/`chunkId` are non-empty and its `vector` has
   exactly `EMBEDDING_VECTOR_DIMENSION` finite-number entries before
   storing, and provides defensive copies on both write input and read
-  output. It never imports `DocumentChunkRepository`,
+  output. `findNearest` (Task 24) ranks only vectors within the requested
+  `workspaceId` by cosine similarity to `queryVector` — descending by
+  score, then ascending by `chunkId` to break exact ties deterministically
+  — returning at most `limit` (a required positive integer) defensive
+  copies as `ScoredEmbeddingVector[]`; a zero-norm query or candidate
+  vector scores `0` rather than throwing (cosine similarity is undefined
+  at zero norm). It never imports `DocumentChunkRepository`,
   `KnowledgeDocumentRepository`, or `KnowledgeSourceRepository`, and has no
-  similarity search, ranking, or chunk/document existence-check
-  responsibility.
+  chunk hydration, hybrid search, or re-ranking responsibility.
 - `EmbedDocumentChunksPipeline` (`app/knowledge/pipeline`) orchestrates
   `DocumentChunkRepository`, `EmbeddingProvider`, and `VectorIndex` — pure
   ports, never concrete adapters — to embed one document's chunks (ordered

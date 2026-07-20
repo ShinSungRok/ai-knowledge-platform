@@ -46,7 +46,10 @@ delegating each match to `EmbedDocumentChunksPipeline`. Task 23 makes
 gains `findById(workspaceId, chunkId)`, and `replaceForDocument` rejects a
 batch that reuses an `id` already owned by a *different* document in the
 same workspace, so `id` can double as the `chunkId` a `VectorIndex` vector
-is keyed by.
+is keyed by. Task 24 adds `ScoredEmbeddingVector` and
+`VectorIndex.findNearest(workspaceId, queryVector, limit)`, ranking vectors
+within one workspace by cosine similarity — `InMemoryVectorIndex` sorts
+descending by score, then ascending by `chunkId` to break ties.
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules

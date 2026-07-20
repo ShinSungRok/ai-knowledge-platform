@@ -6,6 +6,7 @@ import { EMBEDDING_VECTOR_DIMENSION } from "../embedding/EmbeddingVectorDimensio
 import type { EmbeddingProvider } from "../embedding/EmbeddingProvider";
 import type { VectorIndex } from "../embedding/VectorIndex";
 import type { EmbeddingVector } from "../embedding/EmbeddingVector";
+import type { ScoredEmbeddingVector } from "../embedding/ScoredEmbeddingVector";
 import type { DocumentChunkRepository } from "../repository/DocumentChunkRepository";
 import type { DocumentChunk } from "../domain/DocumentChunk";
 
@@ -69,6 +70,14 @@ class CountingVectorIndex implements VectorIndex {
     chunkId: string,
   ): Promise<EmbeddingVector | null> {
     return this.inner.findByChunkId(workspaceId, chunkId);
+  }
+
+  async findNearest(
+    workspaceId: string,
+    queryVector: number[],
+    limit: number,
+  ): Promise<ScoredEmbeddingVector[]> {
+    return this.inner.findNearest(workspaceId, queryVector, limit);
   }
 }
 

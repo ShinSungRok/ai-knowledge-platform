@@ -9,6 +9,7 @@ import type { KnowledgeDocumentRepository } from "../repository/KnowledgeDocumen
 import type { VectorIndex } from "../embedding/VectorIndex";
 import type { KnowledgeDocument } from "../domain/KnowledgeDocument";
 import type { EmbeddingVector } from "../embedding/EmbeddingVector";
+import type { ScoredEmbeddingVector } from "../embedding/ScoredEmbeddingVector";
 
 const WORKSPACE_A = "workspace-a";
 const WORKSPACE_B = "workspace-b";
@@ -85,6 +86,14 @@ class CountingVectorIndex implements VectorIndex {
     chunkId: string,
   ): Promise<EmbeddingVector | null> {
     return this.inner.findByChunkId(workspaceId, chunkId);
+  }
+
+  async findNearest(
+    workspaceId: string,
+    queryVector: number[],
+    limit: number,
+  ): Promise<ScoredEmbeddingVector[]> {
+    return this.inner.findNearest(workspaceId, queryVector, limit);
   }
 }
 

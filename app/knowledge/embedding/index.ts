@@ -9,8 +9,10 @@
  * turning text into a fixed-`EMBEDDING_VECTOR_DIMENSION` vector;
  * `FakeEmbeddingProvider` is a dependency-free, deterministic adapter.
  * `VectorIndex` is the port for storing/retrieving an `EmbeddingVector` by
- * `(workspaceId, chunkId)`; `InMemoryVectorIndex` is the dependency-free
- * adapter. Similarity search/ranking is still deferred.
+ * `(workspaceId, chunkId)` and for `findNearest` cosine-similarity ranking
+ * within a workspace (returning `ScoredEmbeddingVector[]`);
+ * `InMemoryVectorIndex` is the dependency-free adapter. Chunk hydration,
+ * retrieval, hybrid search, and re-ranking are still deferred.
  */
 export const KNOWLEDGE_MODULE_EMBEDDING = "app/knowledge/embedding" as const;
 
@@ -20,5 +22,6 @@ export { EMBEDDING_VECTOR_DIMENSION } from "./EmbeddingVectorDimension";
 export type { EmbeddingProvider } from "./EmbeddingProvider";
 export { FakeEmbeddingProvider } from "./FakeEmbeddingProvider";
 export type { EmbeddingVector } from "./EmbeddingVector";
+export type { ScoredEmbeddingVector } from "./ScoredEmbeddingVector";
 export type { VectorIndex } from "./VectorIndex";
 export { InMemoryVectorIndex } from "./InMemoryVectorIndex";
