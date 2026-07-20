@@ -27,6 +27,8 @@ export {
   InvokeMcpToolUseCase,
   ExecuteToolCallUseCase,
   RunAgentUseCase,
+  AppendMemoryEntryUseCase,
+  RecallMemoryEntriesUseCase,
 } from "./application";
 export type {
   ListKnowledgeDocumentsInput,
@@ -53,6 +55,8 @@ export type {
   InvokeMcpToolInput,
   ExecuteToolCallInput,
   RunAgentInput,
+  AppendMemoryEntryInput,
+  RecallMemoryEntriesInput,
 } from "./application";
 export { KNOWLEDGE_MODULE_REPOSITORY } from "./repository";
 export type {

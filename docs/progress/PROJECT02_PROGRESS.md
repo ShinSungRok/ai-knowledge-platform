@@ -1727,3 +1727,30 @@ Add in-memory memory store
 
 **Status**
 Completed
+
+## Task 64
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add append and recall memory use cases
+
+**Summary**
+- Added `AppendMemoryEntryUseCase` + `AppendMemoryEntryInput` injecting only `MemoryStore`; validates then delegates to `append` and returns `MemoryEntry` unchanged
+- Added `RecallMemoryEntriesUseCase` + `RecallMemoryEntriesInput` (`limit?`); validates then lists session; without limit returns all; with limit returns newest N entries still sequence-ascending
+- Exported from application and top-level barrels; added validation runners + unit case inventories; wired into `validate:application` and top-level `validate`
+- Updated docs; no Agent orchestrator change, Memory-aware planner, or composition wiring introduced
+
+**Validation**
+- `pnpm validate:memory:store`
+- `pnpm validate:application:memory-append`
+- `pnpm validate:application:memory-recall`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

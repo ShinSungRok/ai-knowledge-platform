@@ -796,7 +796,11 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   implements `MemoryStore` with validated append, deterministic
   `id`/`sequence`, sequence-ascending `listBySession`, workspace
   isolation, and defensive copies — never importing Knowledge/
-  search/agent adapters. Application use cases are later tasks.
+  search/agent adapters. `AppendMemoryEntryUseCase` and `RecallMemoryEntriesUseCase`
+  (`app/knowledge/application`) inject only `MemoryStore`: append
+  validates and delegates; recall lists the session and, when `limit`
+  is set, returns the newest `limit` entries still in sequence-
+  ascending order (session memory window, not Knowledge search).
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -815,4 +819,5 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   application:mcp-invoke + tools:contract + tools:executor +
   application:tool-call + agent:contract + agent:planner +
   agent:step-executor + agent:reviewer + agent:orchestrator +
-  application:run-agent + memory:contract + memory:store + typecheck).
+  application:run-agent + application:memory-append +
+  application:memory-recall + memory:contract + memory:store + typecheck).

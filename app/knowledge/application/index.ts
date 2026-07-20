@@ -81,3 +81,11 @@ export {
   RunAgentUseCase,
   type RunAgentInput,
 } from "./RunAgentUseCase";
+export {
+  AppendMemoryEntryUseCase,
+  type AppendMemoryEntryInput,
+} from "./AppendMemoryEntryUseCase";
+export {
+  RecallMemoryEntriesUseCase,
+  type RecallMemoryEntriesInput,
+} from "./RecallMemoryEntriesUseCase";
