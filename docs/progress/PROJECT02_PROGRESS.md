@@ -2406,3 +2406,29 @@ Add project closeout validation runner
 **Status**
 Completed
 
+## Task 89
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Finalize README and Progress Log closeout entry
+
+**Summary**
+- Updated `README.md` for Project 2 Platform Baseline completion, validate/closeout commands, in-memory runtime entry, deferred infra
+- Documented Sprint/Task validation flow and closeout command in `docs/development.md`
+- Project 2 Platform Baseline closeout completed (Sprint 20 / Tasks 86–89)
+- No product code or ops-docs commits
+
+**Validation**
+- `pnpm validate:project:closeout`
+- `pnpm validate:skeleton`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

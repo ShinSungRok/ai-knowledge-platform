@@ -1,8 +1,10 @@
 # AI Knowledge Platform
 
-Production-shaped TypeScript **project skeleton** for a knowledge retrieval and
-grounded Q&A backend. Task 1 establishes structure and architectural boundaries
-only — no product features are implemented yet.
+Production-shaped TypeScript backend for knowledge retrieval and grounded Q&A.
+**Project 2 Platform Baseline is complete**: workspace-scoped knowledge through
+cited RAG answers, MCP/tool/agent/memory/jobs, evaluation, in-process runtime,
+and operations foundations — all proven by dependency-free validation runners
+against fake/in-memory adapters.
 
 Architecture philosophy is inherited from Project1 (`public-law-ai`): **Clean /
 Hexagonal Architecture** with **Domain-Driven Design** boundaries, a single
@@ -10,22 +12,46 @@ composition root, and dependency-free validation runners.
 
 ## Status
 
-**Task 11 — Workspace-scoped knowledge source registry.**
-`KnowledgeSource` (`workspaceId`, `id`, `name`) can be registered via
-`CreateKnowledgeSourceUseCase` and `DefaultInMemoryKnowledgeSourceRepository`,
-with the same workspace isolation as knowledge documents. Validate with:
+**Project 2 Platform Baseline — closed (Sprint 20).**
+Charter capabilities through Operations are implemented and documented. See
+[`docs/portfolio.md`](docs/portfolio.md) and
+[`docs/progress/PROJECT02_ROADMAP_STATUS.md`](docs/progress/PROJECT02_ROADMAP_STATUS.md).
 
 ```bash
 pnpm install
 pnpm validate
+pnpm validate:project:closeout
 ```
+
+## Local runtime (no TCP listen)
+
+In-process operations entry (code API only):
+
+```ts
+import { createOperationsKnowledgeServer } from "./app/knowledge";
+
+const { server, composition, logger, metrics } =
+  createOperationsKnowledgeServer();
+await server.start();
+// server.dispatch({ method, path, headers, body })
+await server.stop();
+```
+
+Baseline without observability wrapping: `createInMemoryKnowledgeServer` /
+`createInMemoryKnowledgeComposition`.
+
+## Deferred infrastructure
+
+- Real Postgres / OpenSearch adapters (in-memory only today)
+- Real LLM SDK and MCP network transport
+- TCP listen (`node:http` / Express) and AuthN / OTel exporters
 
 ## Layout
 
 ```
-app/knowledge/     Clean / Hexagonal module boundaries (skeleton barrels)
+app/knowledge/     Clean / Hexagonal modules (platform baseline)
 docs/              architecture, modules, development, deployment, portfolio
-tests/             unit / integration / e2e placeholders
+tests/             unit case inventories + placeholders
 scripts/           validation runners (tsx)
 docker/            Dockerfile + compose scaffolding
 .cursor/rules/     persistent agent coding rules
@@ -47,24 +73,21 @@ See [`docs/architecture.md`](docs/architecture.md) and
 
 | Script | Purpose |
 |---|---|
-| `pnpm validate:skeleton` | Assert directory, barrel, docs, and script integrity |
-| `pnpm validate:repository` | DefaultInMemoryRepository port contract |
-| `pnpm validate:repository:source` | DefaultInMemoryKnowledgeSourceRepository port contract |
-| `pnpm validate:application` | List + Page + Create + Update + Delete + Search + Export knowledge document use cases + Create knowledge source use case |
+| `pnpm validate` | Full dependency-free platform validation chain + typecheck |
+| `pnpm validate:project:closeout` | Static Project 2 baseline docs/scripts/exports closeout |
+| `pnpm validate:skeleton` | Directory, barrel, docs, and script integrity |
 | `pnpm typecheck` | TypeScript strict check (`tsc --noEmit`) |
-| `pnpm validate` | skeleton + repository + repository:source + application + typecheck |
-| `pnpm infra:config` | `docker compose ... config` (optional) |
+| `pnpm validate:deployment:readiness` | Static Docker/docs/export readiness (no daemon) |
+| `pnpm infra:config` | `docker compose ... config` (requires Docker daemon) |
 
 ## Dependencies
 
-Minimized on purpose for Task 1:
+Minimized for the platform baseline:
 
 - `typescript`, `tsx`, `@types/node` (dev only)
-- No runtime framework, database, search, or AI SDK yet
+- No runtime framework, database, search, or AI SDK
 
-## Roadmap
+## Next
 
-Features (domain model, retrieval, RAG, HTTP, evaluation, etc.) land in later
-phases, each with its own validation runner and docs update. See
-[`docs/development.md`](docs/development.md) and
-[`docs/portfolio.md`](docs/portfolio.md).
+Infrastructure adapters and productization belong to later phases. Project 2
+closeout does not start Project 3. See [`docs/development.md`](docs/development.md).

@@ -111,14 +111,35 @@ pnpm validate                  # skeleton + repository + repository:source + rep
 Formal unit/integration/e2e suites under `tests/` are reserved for later
 phases. Prefer validation runners for architectural and contract checks.
 
-## 3. Commit strategy
+## 3. Sprint / Task validation flow
+
+For each approved Sprint Task:
+
+1. Review the listed files before editing.
+2. Implement only the Task scope (reuse first).
+3. Run the Task's listed `pnpm validate:*` commands, then `pnpm typecheck`.
+4. Append a Progress Log entry under `docs/progress/PROJECT02_PROGRESS.md`.
+5. Diff-review in-scope files, then commit that Task alone.
+
+After all Sprint Tasks: run `pnpm validate`, write the Sprint Report, and stop.
+
+**Project 2 Platform Baseline closeout** (Sprint 20) additionally requires:
+
+```bash
+pnpm validate:project:closeout
+```
+
+This statically checks portfolio/roadmap docs, required scripts, and baseline
+barrel exports without Docker daemon or network.
+
+## 4. Commit strategy
 
 - One focused commit per task.
 - Conventional Commits (`feat(scope):`, `chore(scope):`, `docs(scope):`).
 - Never mark a task done before its required `pnpm validate*` / `pnpm typecheck`
   commands pass.
 
-## 4. Phase strategy
+## 5. Phase strategy
 
 Each phase:
 
@@ -130,7 +151,7 @@ Each phase:
 5. Does not wire new capability into production runtime until an explicitly
    scoped later phase.
 
-## 5. Coding principles
+## 6. Coding principles
 
 - **Interfaces before implementations.**
 - **Composition root owns wiring.**
