@@ -1646,3 +1646,31 @@ Add agent step executor and reviewer
 
 **Status**
 Completed
+
+## Task 61
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add agent orchestrator and run use case
+
+**Summary**
+- Added `DefaultAgentOrchestrator` implementing `AgentOrchestrator` with only planner/stepExecutor/reviewer port dependencies; runs plan→execute→review; maps approved→completed, rejected+non-success→failed, rejected+all-success→rejected; on step throw records failure ToolCallResult (`durationMs: 0`), stops remaining steps, still reviews
+- Added `RunAgentUseCase` + `RunAgentInput` (AgentGoal-shaped fields) to application; injects only `AgentOrchestrator`; validates at application boundary then returns `AgentRunResult` unchanged; existing `ExecuteToolCallUseCase` / `InvokeMcpToolUseCase` retained
+- Exported from agent/application/top-level barrels; added orchestrator and run-agent validation runners + unit case inventories; wired `validate:agent:orchestrator` and `validate:application:run-agent` into `validate:application` / top-level `validate`
+- Updated docs; no Memory, LLM replanning, multi-agent expansion, background jobs, or composition-root wiring introduced
+
+**Validation**
+- `pnpm validate:agent:step-executor`
+- `pnpm validate:agent:reviewer`
+- `pnpm validate:agent:orchestrator`
+- `pnpm validate:application:run-agent`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

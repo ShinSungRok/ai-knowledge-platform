@@ -26,6 +26,7 @@ export {
   GenerateCitedGroundedAnswerUseCase,
   InvokeMcpToolUseCase,
   ExecuteToolCallUseCase,
+  RunAgentUseCase,
 } from "./application";
 export type {
   ListKnowledgeDocumentsInput,
@@ -51,6 +52,7 @@ export type {
   GenerateCitedGroundedAnswerInput,
   InvokeMcpToolInput,
   ExecuteToolCallInput,
+  RunAgentInput,
 } from "./application";
 export { KNOWLEDGE_MODULE_REPOSITORY } from "./repository";
 export type {
@@ -143,6 +145,7 @@ export type {
 export { DeterministicKnowledgeAgentPlanner } from "./agent";
 export { DefaultAgentStepExecutor } from "./agent";
 export { DefaultAgentReviewer } from "./agent";
+export { DefaultAgentOrchestrator } from "./agent";
 export { KNOWLEDGE_MODULE_API } from "./api";
 export { KNOWLEDGE_MODULE_HTTP } from "./http";
 export { KNOWLEDGE_MODULE_SERVER } from "./server";

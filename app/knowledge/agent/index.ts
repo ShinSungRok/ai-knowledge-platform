@@ -14,7 +14,8 @@
  * (Task 59) is the first concrete planner adapter;
  * `DefaultAgentStepExecutor` and `DefaultAgentReviewer` (Task 60)
  * execute plan steps via Tool Calling and review by tool-call status;
- * the orchestrator adapter is a later task.
+ * `DefaultAgentOrchestrator` (Task 61) composes the three role ports
+ * for a full Agent run.
  */
 export const KNOWLEDGE_MODULE_AGENT = "app/knowledge/agent" as const;
 
@@ -34,3 +35,4 @@ export type { AgentOrchestrator } from "./AgentOrchestrator";
 export { DeterministicKnowledgeAgentPlanner } from "./DeterministicKnowledgeAgentPlanner";
 export { DefaultAgentStepExecutor } from "./DefaultAgentStepExecutor";
 export { DefaultAgentReviewer } from "./DefaultAgentReviewer";
+export { DefaultAgentOrchestrator } from "./DefaultAgentOrchestrator";

@@ -773,8 +773,21 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   count: mismatch → `"Step result count mismatch"`; any non-success
   status → `"Tool call did not succeed: <status>"`; all success →
   `"All tool calls succeeded"`. It never reinterprets Domain/RAG
-  answer text. Orchestrator and application run use case remain
-  later tasks.
+  answer text. `DefaultAgentOrchestrator` injects only
+  `AgentPlanner` / `AgentStepExecutor` / `AgentReviewer`: it plans,
+  executes steps in order with `goal.toolTimeoutMs`, reviews, and maps
+  status (`approved`→`completed`; `rejected` with any non-success tool
+  call→`failed`; `rejected` with all-success tool calls→`rejected`).
+  Thrown steps become `{ ok: false, status: "failure", durationMs: 0 }`
+  and stop remaining steps while still reviewing. `RunAgentUseCase`
+  (`app/knowledge/application`) injects only `AgentOrchestrator`,
+  validates AgentGoal-shaped `RunAgentInput` at the application
+  boundary (throwing without calling the orchestrator on invalid
+  input), and returns `AgentRunResult` unchanged. Existing
+  `ExecuteToolCallUseCase` / `InvokeMcpToolUseCase` are retained.
+  Memory, LLM replanning, multi-agent collaboration beyond the three
+  roles, background jobs, and composition-root wiring remain out of
+  scope.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -792,4 +805,5 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   mcp:contract + mcp:cited-answer-tool + mcp:registry +
   application:mcp-invoke + tools:contract + tools:executor +
   application:tool-call + agent:contract + agent:planner +
-  agent:step-executor + agent:reviewer + typecheck).
+  agent:step-executor + agent:reviewer + agent:orchestrator +
+  application:run-agent + typecheck).

@@ -77,3 +77,7 @@ export {
   ExecuteToolCallUseCase,
   type ExecuteToolCallInput,
 } from "./ExecuteToolCallUseCase";
+export {
+  RunAgentUseCase,
+  type RunAgentInput,
+} from "./RunAgentUseCase";
