@@ -49,3 +49,7 @@ export {
   RetrieveHybridKnowledgeChunksUseCase,
   type RetrieveHybridKnowledgeChunksInput,
 } from "./RetrieveHybridKnowledgeChunksUseCase";
+export {
+  RetrieveGroundingContextUseCase,
+  type RetrieveGroundingContextInput,
+} from "./RetrieveGroundingContextUseCase";

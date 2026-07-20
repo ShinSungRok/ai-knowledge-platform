@@ -19,6 +19,7 @@ export {
   CreateKnowledgeSourceUseCase,
   RetrieveKnowledgeChunksUseCase,
   RetrieveHybridKnowledgeChunksUseCase,
+  RetrieveGroundingContextUseCase,
 } from "./application";
 export type {
   ListKnowledgeDocumentsInput,
@@ -37,6 +38,7 @@ export type {
   CreateKnowledgeSourceInput,
   RetrieveKnowledgeChunksInput,
   RetrieveHybridKnowledgeChunksInput,
+  RetrieveGroundingContextInput,
 } from "./application";
 export { KNOWLEDGE_MODULE_REPOSITORY } from "./repository";
 export type {

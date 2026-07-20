@@ -23,7 +23,7 @@ pnpm validate:skeleton         # directory + barrel + docs integrity
 pnpm validate:repository       # DefaultInMemoryRepository port contract
 pnpm validate:repository:source # DefaultInMemoryKnowledgeSourceRepository port contract
 pnpm validate:repository:chunk # DefaultInMemoryDocumentChunkRepository port contract (findById/findAll + workspace-global id conflict rejection)
-pnpm validate:application      # List + Page + Create + Update + Delete + Search + Export + Source + Retrieve + RetrieveHybrid use cases
+pnpm validate:application      # List + Page + Create + Update + Delete + Search + Export + Source + Retrieve + RetrieveHybrid + RetrieveGroundingContext use cases
 pnpm validate:pipeline:connector # FakeKnowledgeSourceConnector port contract
 pnpm validate:pipeline:sync    # SyncKnowledgeSourcePipeline idempotent sync behavior
 pnpm validate:pipeline:chunk-document # ChunkKnowledgeDocumentPipeline chunk-and-replace behavior
@@ -38,8 +38,9 @@ pnpm validate:search:keyword   # DefaultKeywordSearch tokenize/score/rank behavi
 pnpm validate:search:hybrid    # DefaultHybridSearch reciprocal-rank-fusion behavior over VectorRetriever + KeywordSearch
 pnpm validate:context:contract # ContextAssembler/ContextAssemblyInput/GroundingContext contract export + type-compatibility
 pnpm validate:context:assembler # DefaultContextAssembler provenance hydration, whole-block budget, and truncation behavior
+pnpm validate:application:grounding-context # RetrieveGroundingContextUseCase HybridSearch -> ContextAssembler delegation sequence
 pnpm typecheck                 # TypeScript strict check
-pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + search:hybrid + context:contract + context:assembler + typecheck
+pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application (incl. grounding-context) + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + search:hybrid + context:contract + context:assembler + typecheck
 ```
 
 Formal unit/integration/e2e suites under `tests/` are reserved for later

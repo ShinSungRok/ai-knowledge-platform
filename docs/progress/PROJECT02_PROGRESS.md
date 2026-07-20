@@ -860,3 +860,31 @@ Add deterministic grounding context assembler
 
 **Status**
 Completed
+
+## Task 33
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add retrieve grounding context use case
+
+**Summary**
+- Added `RetrieveGroundingContextUseCase` + its own `RetrieveGroundingContextInput` (`workspaceId`, `query`, `retrievalLimit`, `maxCharacters`) to `application`, mirroring how `RetrieveHybridKnowledgeChunksInput` is kept separate from `RetrievalInput`/`ContextAssemblyInput` rather than reusing a port's input type directly
+- Constructor injects only the `HybridSearch` and `ContextAssembler` ports — never `VectorRetriever`, `KeywordSearch`, `EmbeddingProvider`, `VectorIndex`, `DocumentChunkRepository`, `KnowledgeDocumentRepository`, or a concrete adapter; `execute` validates `workspaceId`/`query`/`retrievalLimit`/`maxCharacters` at the application boundary, then calls `HybridSearch.search({ workspaceId, query, limit: retrievalLimit })` and passes the returned `RetrievalResult.chunks` straight into `ContextAssembler.assemble({ workspaceId, query, chunks, maxCharacters })`, returning its `GroundingContext` unchanged; the existing `RetrieveHybridKnowledgeChunksUseCase` and `RetrieveKnowledgeChunksUseCase` are unaffected
+- Exported the use case + input type from the `application` and top-level `app/knowledge` barrels
+- Added `runRetrieveGroundingContextUseCaseValidation.ts` (a static source-scan confirming the use case only imports the `HybridSearch`/`ContextAssembler` ports; a real hybrid-search + real context-assembler harness with counting test doubles proving `HybridSearch.search` is called before `ContextAssembler.assemble`, each dependency receives correctly-mapped input, and the returned `GroundingContext` matches a direct call sequence; invalid input rejected before either dependency is called) + `tests/unit/retrieveGroundingContextUseCase.cases.ts`, wired into `validate:application:grounding-context`, `validate:application` (and therefore the top-level `validate` chain)
+- Updated `docs/architecture.md`/`docs/modules.md`/`docs/development.md` to describe the new use case; no HTTP/API controller, Composition Root wiring, prompt/LLM, citation generation, re-ranking, or existing hybrid retrieval use case change introduced
+
+**Validation**
+- `pnpm validate:search:hybrid`
+- `pnpm validate:context:assembler`
+- `pnpm validate:application:grounding-context`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

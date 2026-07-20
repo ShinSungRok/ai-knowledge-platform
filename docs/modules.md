@@ -77,7 +77,13 @@ provenance are turned into a bounded, deterministic grounding context.
 Task 32 adds `DefaultContextAssembler`, injecting only the
 `KnowledgeDocumentRepository` port to hydrate each ranked chunk's
 provenance, render fixed-format blocks, and enforce a whole-block
-character budget with deterministic truncation.
+character budget with deterministic truncation. Task 33 adds
+`RetrieveGroundingContextUseCase` to `application`, injecting only the
+`HybridSearch` and `ContextAssembler` ports, mapping its own
+`workspaceId`/`query`/`retrievalLimit`/`maxCharacters` input into a
+`HybridSearch.search` call followed by a `ContextAssembler.assemble` call
+over that result's chunks, and returning the resulting `GroundingContext`
+unchanged.
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules
@@ -85,7 +91,7 @@ Other modules remain skeleton boundaries until scoped.
 | Module | Responsibility |
 |---|---|
 | `domain` | Canonical types (`KnowledgeDocument`, `KnowledgeSource`, `DocumentChunk`), all workspace-scoped via `workspaceId`. Zero outward dependencies. |
-| `application` | Use cases (list/page/create/update/delete/search/export for documents; create for sources; retrieve for chunks), each scoped to a `workspaceId`, over domain types and ports. `RetrieveKnowledgeChunksUseCase` depends only on the `VectorRetriever` port; `RetrieveHybridKnowledgeChunksUseCase` depends only on the `HybridSearch` port. |
+| `application` | Use cases (list/page/create/update/delete/search/export for documents; create for sources; retrieve for chunks), each scoped to a `workspaceId`, over domain types and ports. `RetrieveKnowledgeChunksUseCase` depends only on the `VectorRetriever` port; `RetrieveHybridKnowledgeChunksUseCase` depends only on the `HybridSearch` port; `RetrieveGroundingContextUseCase` depends only on the `HybridSearch` and `ContextAssembler` ports, delegating a hybrid search and then a context assembly in sequence. |
 | `repository` | Persistence-agnostic ports (`KnowledgeDocumentRepository`, `KnowledgeSourceRepository`, `DocumentChunkRepository`); methods take `workspaceId` (chunk methods also take `documentId`; `findById` resolves by `id` alone, a workspace-global identity; `findAll` returns every workspace chunk in deterministic `documentId` → `order` → `id` order). |
 | `persistence` | Concrete adapters (`DefaultInMemoryRepository`, `DefaultInMemoryKnowledgeSourceRepository`, `DefaultInMemoryDocumentChunkRepository`; DB adapters later). |
 | `pipeline` | Ingestion pipelines from external knowledge sources. `KnowledgeSourceConnector` port + `FakeKnowledgeSourceConnector` fixture adapter fetch normalized documents (`externalId`/`title`/`text`) for a `KnowledgeSource`; `SyncKnowledgeSourcePipeline` turns those into idempotent, deterministically-keyed `KnowledgeDocument` writes via the repository ports. `ChunkKnowledgeDocumentPipeline` chunks a single stored document via `ChunkingService` and fully replaces its chunk set via `DocumentChunkRepository`; `RechunkKnowledgeSourcePipeline` re-chunks every document of one source by delegating each to `ChunkKnowledgeDocumentPipeline`. `EmbedDocumentChunksPipeline` embeds one document's chunks via `EmbeddingProvider` and upserts one vector per chunk into `VectorIndex`, validating the whole result set before any write; `ReindexKnowledgeSourceEmbeddingsPipeline` re-embeds every document of one source by delegating each to `EmbedDocumentChunksPipeline`. No document/chunk deletion, automatic chunking/embedding during sync, background scheduling, or real connector yet. |

@@ -372,6 +372,21 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   yields empty `blocks` and empty `content`. Prompt generation, citation
   objects, re-ranking, score calibration, and persistence changes are out
   of scope for this adapter.
+- `RetrieveGroundingContextUseCase` (`app/knowledge/application`) combines
+  hybrid retrieval and context assembly behind one application-boundary
+  entry point: its constructor injects only the `HybridSearch` and
+  `ContextAssembler` ports (never `VectorRetriever`, `KeywordSearch`,
+  `EmbeddingProvider`, `VectorIndex`, `DocumentChunkRepository`,
+  `KnowledgeDocumentRepository`, or a concrete adapter). It validates its
+  own `RetrieveGroundingContextInput`
+  (`workspaceId`/`query`/`retrievalLimit`/`maxCharacters`) at the
+  application boundary, then calls
+  `HybridSearch.search({ workspaceId, query, limit: retrievalLimit })`
+  and passes the returned `RetrievalResult.chunks` straight into
+  `ContextAssembler.assemble({ workspaceId, query, chunks, maxCharacters
+  })`, returning its `GroundingContext` unchanged — no re-ranking, prompt
+  building, or citation concern here. `RetrieveHybridKnowledgeChunksUseCase`
+  and `RetrieveKnowledgeChunksUseCase` are unaffected by this use case.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -379,4 +394,5 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   pipeline chunk-document + pipeline rechunk-source + pipeline
   embed-document + pipeline reindex-source + embedding chunker + embedding
   provider + embedding index + retrieval:vector + search:keyword +
-  search:hybrid + context:contract + context:assembler + typecheck).
+  search:hybrid + context:contract + context:assembler +
+  application:grounding-context + typecheck).
