@@ -880,7 +880,11 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   `KnowledgeRuntimeConfig`, `loadKnowledgeRuntimeConfig` (plain-object
   validation + defensive copy, no `process.env`), and
   `DEFAULT_KNOWLEDGE_RUNTIME_CONFIG` for composition defaults.
-- Database adapters, HTTP/server, and AI provider wiring are not
+- The `composition` module (`app/knowledge/composition`) provides
+  `createInMemoryKnowledgeComposition`, which is the only place that
+  imports concrete adapters for the cited-answer path and exposes
+  `KnowledgeRuntime` with config-backed optional limit fallbacks.
+- Database adapters, HTTP/server, and real AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
   repository:chunk + application + pipeline connector + pipeline sync +
@@ -902,4 +906,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   application:memory-recall + application:run-agent-memory +
   memory:contract + memory:store + jobs:contract + jobs:store + jobs:sync-handler + jobs:processor + jobs:reindex-handler +
   application:enqueue-job + application:process-next-job +
-  evaluation:contract + config:runtime + typecheck).
+  evaluation:contract + config:runtime + composition:in-memory + typecheck).

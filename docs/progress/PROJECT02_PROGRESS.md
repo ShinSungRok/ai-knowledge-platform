@@ -2140,3 +2140,30 @@ Define runtime configuration contract and loader
 **Status**
 Completed
 
+## Task 79
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add in-memory knowledge composition root
+
+**Summary**
+- Added `KnowledgeRuntime`, `InMemoryKnowledgeComposition`, and `createInMemoryKnowledgeComposition` wiring cited-answer use-case chain with in-memory/fake adapters
+- Runtime fills missing retrievalLimit/maxCharacters from config defaults
+- Added validation + `validate:composition:in-memory`; updated barrels/docs
+- No HTTP/API/server, agent/memory/jobs/mcp full wiring, or real providers
+
+**Validation**
+- `pnpm validate:config:runtime`
+- `pnpm validate:application:cited-answer`
+- `pnpm validate:composition:in-memory`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

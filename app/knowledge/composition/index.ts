@@ -1,9 +1,16 @@
 /**
- * Skeleton module: `app/knowledge/composition`
+ * Module: `app/knowledge/composition`
  *
- * Composition root — the only place that wires concrete adapters.
+ * Composition root — the only place that wires concrete adapters into a
+ * runnable knowledge runtime.
  *
- * Feature implementation is intentionally deferred. This barrel exists so the
- * module boundary is importable and validatable from day one.
+ * `createInMemoryKnowledgeComposition` assembles in-memory/fake adapters
+ * through the cited-answer use-case chain and exposes a
+ * {@link KnowledgeRuntime} entrypoint. Agent/Memory/Jobs/MCP full wiring
+ * and real DB/network/LLM providers remain out of scope.
  */
 export const KNOWLEDGE_MODULE_COMPOSITION = "app/knowledge/composition" as const;
+
+export type { KnowledgeRuntime } from "./KnowledgeRuntime";
+export type { InMemoryKnowledgeComposition } from "./InMemoryKnowledgeComposition";
+export { createInMemoryKnowledgeComposition } from "./createInMemoryKnowledgeComposition";
