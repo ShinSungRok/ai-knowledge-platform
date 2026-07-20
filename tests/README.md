@@ -34,4 +34,5 @@ runner is introduced deliberately.
 | Case inventory | `tests/unit/chunkKnowledgeDocumentPipeline.cases.ts` |
 | Case inventory | `tests/unit/rechunkKnowledgeSourcePipeline.cases.ts` |
 | Case inventory | `tests/unit/fakeEmbeddingProvider.cases.ts` |
-| Executable checks | `pnpm validate:repository`, `pnpm validate:repository:source`, `pnpm validate:repository:chunk`, `pnpm validate:application`, `pnpm validate:pipeline:connector`, `pnpm validate:pipeline:sync`, `pnpm validate:pipeline:chunk-document`, `pnpm validate:pipeline:rechunk-source`, `pnpm validate:embedding:chunker`, `pnpm validate:embedding:provider` |
+| Case inventory | `tests/unit/inMemoryVectorIndex.cases.ts` |
+| Executable checks | `pnpm validate:repository`, `pnpm validate:repository:source`, `pnpm validate:repository:chunk`, `pnpm validate:application`, `pnpm validate:pipeline:connector`, `pnpm validate:pipeline:sync`, `pnpm validate:pipeline:chunk-document`, `pnpm validate:pipeline:rechunk-source`, `pnpm validate:embedding:chunker`, `pnpm validate:embedding:provider`, `pnpm validate:embedding:index` |

@@ -206,9 +206,24 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   numbers. It rejects an empty or whitespace-only string. No external AI
   provider, API key, network call, batch API, or vector storage/search
   belongs here.
+- `VectorIndex` (`app/knowledge/embedding`) is a port —
+  `upsert(vector: EmbeddingVector): Promise<void>` and
+  `findByChunkId(workspaceId, chunkId): Promise<EmbeddingVector | null>` —
+  treating `(workspaceId, chunkId)` as the vector's identity: `upsert`
+  always replaces any existing vector for that identity, never
+  accumulates. `InMemoryVectorIndex` is the dependency-free adapter,
+  partitioned by `workspaceId` then `chunkId` (mirroring
+  `DefaultInMemoryDocumentChunkRepository`'s pattern); it validates the
+  vector's `workspaceId`/`chunkId` are non-empty and its `vector` has
+  exactly `EMBEDDING_VECTOR_DIMENSION` finite-number entries before
+  storing, and provides defensive copies on both write input and read
+  output. It never imports `DocumentChunkRepository`,
+  `KnowledgeDocumentRepository`, or `KnowledgeSourceRepository`, and has no
+  similarity search, ranking, or chunk/document existence-check
+  responsibility.
 - Database adapters, HTTP/server, search, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
   repository:chunk + application + pipeline connector + pipeline sync +
   pipeline chunk-document + pipeline rechunk-source + embedding chunker +
-  embedding provider + typecheck).
+  embedding provider + embedding index + typecheck).

@@ -8,7 +8,9 @@
  * deterministic fixed-size adapter. `EmbeddingProvider` is the port for
  * turning text into a fixed-`EMBEDDING_VECTOR_DIMENSION` vector;
  * `FakeEmbeddingProvider` is a dependency-free, deterministic adapter.
- * Vector indexing implementation is still deferred.
+ * `VectorIndex` is the port for storing/retrieving an `EmbeddingVector` by
+ * `(workspaceId, chunkId)`; `InMemoryVectorIndex` is the dependency-free
+ * adapter. Similarity search/ranking is still deferred.
  */
 export const KNOWLEDGE_MODULE_EMBEDDING = "app/knowledge/embedding" as const;
 
@@ -17,3 +19,6 @@ export { FixedSizeDocumentChunker } from "./FixedSizeDocumentChunker";
 export { EMBEDDING_VECTOR_DIMENSION } from "./EmbeddingVectorDimension";
 export type { EmbeddingProvider } from "./EmbeddingProvider";
 export { FakeEmbeddingProvider } from "./FakeEmbeddingProvider";
+export type { EmbeddingVector } from "./EmbeddingVector";
+export type { VectorIndex } from "./VectorIndex";
+export { InMemoryVectorIndex } from "./InMemoryVectorIndex";

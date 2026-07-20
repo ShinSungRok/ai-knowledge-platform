@@ -510,3 +510,30 @@ Add deterministic embedding provider
 
 **Status**
 Completed
+
+## Task 20
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add workspace-scoped vector index
+
+**Summary**
+- Added `EmbeddingVector` type (`workspaceId`, `chunkId`, `vector`) and `VectorIndex` port (`upsert(vector)`, `findByChunkId(workspaceId, chunkId)`) in `app/knowledge/embedding`, following Project1's (`public-law-ai`) `EmbeddingVector`/`VectorIndexer` naming pattern
+- Added `InMemoryVectorIndex`: partitions storage by `workspaceId` then `chunkId` (mirroring `DefaultInMemoryDocumentChunkRepository`'s pattern); `(workspaceId, chunkId)` is the vector identity, and `upsert` always fully replaces any existing vector for that identity, never accumulating
+- `upsert` validates non-empty `workspaceId`/`chunkId`, a `vector` of exactly `EMBEDDING_VECTOR_DIMENSION` (8) entries, and every entry a finite number, before any write; provides defensive copies on both write input and read output; imports only its own port and `EMBEDDING_VECTOR_DIMENSION` — never `DocumentChunkRepository`, `KnowledgeDocumentRepository`, or `KnowledgeSourceRepository`
+- No similarity search/ranking, document/chunk existence check, external vector database/OpenSearch, or `EmbeddingProvider` call introduced
+- Exported the new type/port/adapter from the `embedding` and top-level `app/knowledge` barrels; added `validate:embedding:index` runner + `tests/unit/inMemoryVectorIndex.cases.ts`, wired into the top-level `validate` chain
+
+**Validation**
+- `pnpm validate:embedding:provider`
+- `pnpm validate:embedding:index`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
