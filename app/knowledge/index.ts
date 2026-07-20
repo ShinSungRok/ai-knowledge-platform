@@ -66,6 +66,12 @@ export { KNOWLEDGE_MODULE_RETRIEVAL } from "./retrieval";
 export type { RetrievalInput, RetrievalResult, RetrievedChunk, VectorRetriever } from "./retrieval";
 export { DefaultVectorRetriever } from "./retrieval";
 export { KNOWLEDGE_MODULE_CONTEXT } from "./context";
+export type {
+  ContextAssemblyInput,
+  GroundingContextBlock,
+  GroundingContext,
+  ContextAssembler,
+} from "./context";
 export { KNOWLEDGE_MODULE_PROMPT } from "./prompt";
 export { KNOWLEDGE_MODULE_CITATION } from "./citation";
 export { KNOWLEDGE_MODULE_RAG } from "./rag";

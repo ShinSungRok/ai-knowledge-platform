@@ -806,3 +806,28 @@ Add retrieve hybrid knowledge chunks use case
 
 **Status**
 Completed
+
+## Task 31
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Define grounding context assembly contract
+
+**Summary**
+- Added `app/knowledge/context/ContextAssemblyInput.ts` (`{ workspaceId, query, chunks: RetrievedChunk[], maxCharacters }`, reusing `RetrievedChunk` from the retrieval module), `app/knowledge/context/GroundingContext.ts` (`GroundingContextBlock` = `{ sourceId, documentId, chunkId, score, text }`; `GroundingContext` = `{ query, blocks: GroundingContextBlock[], content, truncated }`), and `app/knowledge/context/ContextAssembler.ts` (`assemble(input: ContextAssemblyInput): Promise<GroundingContext>` port)
+- Updated the `context` and top-level `app/knowledge` barrels to export the new types; no rendering algorithm, adapter, hybrid-search call, or application use case implemented — contract only
+- Added `runGroundingContextContractValidation.ts` (module-constant check, an in-file `FakeContextAssembler` test double proving the port is implementable/callable from just the exported types with correct field shapes, an empty-chunk-list case, and a compile-time type-assignability check that the top-level barrel re-exports the same `ContextAssembler` type) + `tests/unit/groundingContextContract.cases.ts`
+- Added `validate:context:contract` to `package.json`, wired into the top-level `validate` chain; no context rendering, hybrid search invocation, application use case, prompt/LLM, or citation code introduced
+
+**Validation**
+- `pnpm validate:context:contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

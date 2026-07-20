@@ -343,6 +343,16 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   `HybridSearch.search` and returns its `RetrievalResult` unchanged.
   `RetrieveKnowledgeChunksUseCase` and the `VectorRetriever` contract are
   untouched by this use case.
+- `ContextAssembler` (`app/knowledge/context`) is a port —
+  `assemble(input: ContextAssemblyInput): Promise<GroundingContext>`, where
+  `ContextAssemblyInput` is `{ workspaceId, query, chunks: RetrievedChunk[],
+  maxCharacters }` and `GroundingContext` is `{ query, blocks:
+  GroundingContextBlock[], content, truncated }` (`GroundingContextBlock` =
+  `{ sourceId, documentId, chunkId, score, text }`) — turning ranked,
+  retrieved chunks plus their document provenance into a bounded,
+  deterministic grounding context for a downstream Prompt Builder /
+  Citation capability. Only the contract is defined so far; a default
+  adapter (`DefaultContextAssembler`) is a later task.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -350,4 +360,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   pipeline chunk-document + pipeline rechunk-source + pipeline
   embed-document + pipeline reindex-source + embedding chunker + embedding
   provider + embedding index + retrieval:vector + search:keyword +
-  search:hybrid + typecheck).
+  search:hybrid + context:contract + typecheck).

@@ -69,7 +69,12 @@ into a deterministic exact-token-match lexical ranking over
 into a deterministic reciprocal-rank-fusion combination of both. Task 30
 adds `RetrieveHybridKnowledgeChunksUseCase` to `application`, injecting
 only the `HybridSearch` port, mirroring `RetrieveKnowledgeChunksUseCase`'s
-validation-then-delegate shape.
+validation-then-delegate shape. Task 31 adds the `context` module's
+grounding context contract — `ContextAssemblyInput`,
+`GroundingContextBlock`, `GroundingContext`, and the `ContextAssembler`
+port — defining how ranked, retrieved chunks and their document
+provenance are turned into a bounded, deterministic grounding context;
+no adapter yet.
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules
@@ -84,7 +89,7 @@ Other modules remain skeleton boundaries until scoped.
 | `embedding` | Chunking, embedding, and vector indexing ports/adapters. `ChunkingService` port + `FixedSizeDocumentChunker` deterministic, fixed-size adapter split a `KnowledgeDocument` into ordered `DocumentChunk`s. `EmbeddingProvider` port + `FakeEmbeddingProvider` deterministic adapter turn text into a fixed-`EMBEDDING_VECTOR_DIMENSION` (8) vector. `VectorIndex` port + `InMemoryVectorIndex` adapter upsert/find an `EmbeddingVector` by `(workspaceId, chunkId)`, and rank vectors within a workspace via `findNearest` (cosine similarity, `ScoredEmbeddingVector[]`); chunk hydration, hybrid search, and re-ranking are still deferred. |
 | `retrieval` | `VectorRetriever` port + `DefaultVectorRetriever` adapter turn a `RetrievalInput` (`workspaceId`, `query`, `limit`) into a `RetrievalResult` (`query`, ranked `RetrievedChunk[]`) by embedding the query via `EmbeddingProvider`, ranking via `VectorIndex.findNearest`, and hydrating each result to its `DocumentChunk` via `DocumentChunkRepository.findById` — excluding stale results. Keyword/hybrid retrieval, re-ranking, and context assembly are still deferred. |
 | `search` | Search engine abstraction (keyword, vector, hybrid). `KeywordSearch` port + `DefaultKeywordSearch` adapter turn a `RetrievalInput` into a `RetrievalResult` by loading every chunk in the workspace via `DocumentChunkRepository.findAll`, tokenizing query/chunk text into lowercased Unicode letter/number tokens, and scoring by summed exact match counts of the query's de-duplicated tokens. `HybridSearch` port + `DefaultHybridSearch` adapter wire only `VectorRetriever` and `KeywordSearch`, running both with the same `RetrievalInput` and fusing their results by chunk id via reciprocal-rank fusion (`1 / (60 + rank)` per source, summed for chunks found by both). |
-| `context` | Prompt context assembly from retrieved documents. |
+| `context` | Prompt context assembly from retrieved documents. `ContextAssemblyInput` (`workspaceId`, `query`, ranked `RetrievedChunk[]`, `maxCharacters`) + `GroundingContext` (`query`, ordered `GroundingContextBlock[]`, rendered `content`, `truncated`) define the `ContextAssembler` port's `assemble` contract; a default adapter is still deferred. |
 | `prompt` | Prompt construction from context. |
 | `citation` | Citation building from retrieved sources. |
 | `rag` | RAG answer assembly (answer + citations). |
