@@ -42,9 +42,10 @@ pnpm validate:search:reranked # DefaultRerankedSearch HybridSearch -> Reranker d
 pnpm validate:context:contract # ContextAssembler/ContextAssemblyInput/GroundingContext contract export + type-compatibility
 pnpm validate:context:assembler # DefaultContextAssembler provenance hydration, whole-block budget, and truncation behavior
 pnpm validate:prompt:contract # PromptBuilder/GroundedPrompt contract export + type-compatibility
+pnpm validate:prompt:builder # DefaultPromptBuilder fixed-format, evidence-bound prompt rendering
 pnpm validate:application:grounding-context # RetrieveGroundingContextUseCase RerankedSearch -> ContextAssembler delegation sequence
 pnpm typecheck                 # TypeScript strict check
-pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application (incl. grounding-context) + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + search:hybrid + search:rerank-contract + search:reranker + search:reranked + context:contract + context:assembler + prompt:contract + typecheck
+pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application (incl. grounding-context) + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + search:hybrid + search:rerank-contract + search:reranker + search:reranked + context:contract + context:assembler + prompt:contract + prompt:builder + typecheck
 ```
 
 Formal unit/integration/e2e suites under `tests/` are reserved for later

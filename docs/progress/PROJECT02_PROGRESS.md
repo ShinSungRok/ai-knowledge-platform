@@ -1025,3 +1025,33 @@ Define grounded prompt contract
 
 **Status**
 Completed
+
+## Task 39
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add deterministic grounded prompt builder
+
+**Summary**
+- Added `DefaultPromptBuilder` (`app/knowledge/prompt/DefaultPromptBuilder.ts`), the `PromptBuilder` adapter, with **no constructor dependency at all** — no repository, retrieval/search/context adapter, framework, or LLM provider
+- `systemInstruction` is always the fixed instruction string naming the assistant's role and its grounding-context-only constraint; `userMessage` is always the fixed format `Question:\n<query>\n\nGrounding context status: <complete|truncated>\n\nGrounding context:\n<content|[none]>`, where the status comes from `GroundingContext.truncated` and the grounding-context section is `GroundingContext.content` verbatim (`[none]` when empty) — **never re-derived from `blocks`**, so the prompt never contains evidence outside what `ContextAssembler` already assembled
+- Input `GroundingContext` (and its `blocks` array/objects) are never mutated; repeated calls with the same input return byte-identical output
+- Validates `query`/`content` as strings, `truncated` as a boolean, and `blocks` as an array of well-formed `GroundingContextBlock`s (non-empty `sourceId`/`documentId`/`chunkId`, finite `score`, string `text`) at the adapter boundary
+- Exported `DefaultPromptBuilder` from the `prompt` and top-level `app/knowledge` barrels
+- Added `runDefaultPromptBuilderValidation.ts` (port contract; fixed systemInstruction regardless of context; complete-status verbatim-content rendering; truncated-status rendering; `[none]` fallback for empty content; proof that the grounding-context section is never re-derived from `blocks`; deterministic repeated-call output; input/blocks immutability; invalid-context and malformed-block rejection; static source-scan confirming no concrete-adapter/LLM-provider/repository import) + `tests/unit/defaultPromptBuilder.cases.ts`, wired into `validate:prompt:builder` and the top-level `validate` chain
+- Updated `docs/modules.md`/`docs/architecture.md`/`docs/development.md` to describe `DefaultPromptBuilder`'s LLM-independent responsibility; no LLM call, answer parsing/generation, citation object, prompt template configuration, or context assembly/re-ranking change introduced
+
+**Validation**
+- `pnpm validate:context:assembler`
+- `pnpm validate:prompt:contract`
+- `pnpm validate:prompt:builder`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

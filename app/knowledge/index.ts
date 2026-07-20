@@ -77,6 +77,7 @@ export type {
 export { DefaultContextAssembler } from "./context";
 export { KNOWLEDGE_MODULE_PROMPT } from "./prompt";
 export type { GroundedPrompt, PromptBuilder } from "./prompt";
+export { DefaultPromptBuilder } from "./prompt";
 export { KNOWLEDGE_MODULE_CITATION } from "./citation";
 export { KNOWLEDGE_MODULE_RAG } from "./rag";
 export { KNOWLEDGE_MODULE_AI } from "./ai";

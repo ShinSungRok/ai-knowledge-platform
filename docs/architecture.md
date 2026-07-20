@@ -446,8 +446,26 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   shape and never re-retrieves, re-ranks, or re-assembles context; it
   only renders the context it is given. An LLM provider is this port's
   **output consumer**, never something `PromptBuilder` calls or
-  constructs internally. Only the contract is defined so far; a default
-  adapter (`DefaultPromptBuilder`) is a later task.
+  constructs internally. `DefaultPromptBuilder` is the adapter: it has
+  **no constructor dependency at all** — no repository,
+  retrieval/search/context adapter, framework, or LLM provider.
+  `systemInstruction` is always the same fixed instruction string
+  (naming the assistant's role and its grounding-context-only
+  constraint); `userMessage` is always the fixed format
+  `Question:\n<query>\n\nGrounding context status:
+  <complete|truncated>\n\nGrounding context:\n<content|[none]>`, where
+  the status is `truncated` whenever `GroundingContext.truncated` is
+  `true` and `complete` otherwise, and the grounding-context section is
+  exactly `[none]` whenever `GroundingContext.content` is empty and the
+  verbatim `content` otherwise — **never re-derived from `blocks`**, so
+  the prompt never contains evidence outside what `ContextAssembler`
+  already assembled. The input `GroundingContext` (and its `blocks`) are
+  never mutated, and repeated calls with the same input return
+  byte-identical output. Input is validated —
+  `query`/`content` as strings, `truncated` as a boolean, `blocks` as an
+  array of well-formed `GroundingContextBlock`s — before rendering.
+  Prompt template configuration, per-request customization, and any LLM
+  call are out of scope for this adapter.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -457,4 +475,5 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   provider + embedding index + retrieval:vector + search:keyword +
   search:hybrid + search:rerank-contract + search:reranker +
   search:reranked + context:contract + context:assembler +
-  prompt:contract + application:grounding-context + typecheck).
+  prompt:contract + prompt:builder + application:grounding-context +
+  typecheck).
