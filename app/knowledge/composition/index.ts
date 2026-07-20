@@ -9,7 +9,7 @@
  * {@link KnowledgeRuntime} entrypoint. `createInMemoryKnowledgeServer`
  * wires that runtime through the HTTP router into a
  * {@link DefaultKnowledgeServer}. `createOperationsKnowledgeServer` adds
- * workspace guard + `ObservingHttpRouter` (logger/metrics). Agent/Memory/
+ * Bearer AuthN + workspace AuthZ + `ObservingHttpRouter` (logger/metrics). Agent/Memory/
  * Jobs/MCP full wiring and real DB/network/LLM providers remain out of scope.
  * `createSqlDocumentKnowledgeComposition` wires SQL documents only;
  * `createSqlKnowledgeComposition` wires document+source+chunk SQL over a
@@ -31,7 +31,10 @@ export type {
   ListeningOperationsServer,
 } from "./createListeningOperationsServer";
 export { createInMemoryKnowledgeComposition } from "./createInMemoryKnowledgeComposition";
-export { createInMemoryKnowledgeServer } from "./createInMemoryKnowledgeServer";
+export {
+  createInMemoryKnowledgeServer,
+  IN_MEMORY_SERVER_TEST_API_KEY,
+} from "./createInMemoryKnowledgeServer";
 export { createOperationsKnowledgeServer } from "./createOperationsKnowledgeServer";
 export { createListeningOperationsServer } from "./createListeningOperationsServer";
 export { createSqlDocumentKnowledgeComposition } from "./createSqlDocumentKnowledgeComposition";

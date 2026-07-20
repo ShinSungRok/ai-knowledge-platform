@@ -897,10 +897,12 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   ports with `InMemoryLogger`/`InMemoryMetrics` adapters.
 - The `reliability` module provides deterministic `DefaultRetryPolicy`
   (no delay) and `DefaultTimeoutPolicy` (`Promise.race` + timer).
-- The `security` module provides `DefaultWorkspaceAuthorizer` and
-  `HttpWorkspaceGuard`; cited-answer HTTP requires `x-workspace-id`.
+- The `security` module provides `Authenticator`/`AuthPrincipal`,
+  `ApiKeyAuthenticator`, `HttpBearerGuard`, `DefaultWorkspaceAuthorizer`, and
+  `HttpWorkspaceGuard`; cited-answer HTTP requires
+  `Authorization: Bearer <api-key>` then workspace AuthZ against the principal.
 - `ObservingHttpRouter` and `createOperationsKnowledgeServer` wire
-  logging/metrics/guard for operations-ready in-process dispatch.
+  logging/metrics/AuthN+AuthZ for operations-ready in-process dispatch.
   `validate:deployment:readiness` checks Docker/docs/scripts statically
   without a Docker daemon.
 - Real TCP listen / Express/Fastify and real AI provider wiring are not

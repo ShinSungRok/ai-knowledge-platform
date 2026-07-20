@@ -2986,7 +2986,7 @@ Completed
 2026-07-20
 
 **Commit**
-Pending
+0588e55
 
 **Title**
 Add API key authenticator and Bearer HTTP guard
@@ -3000,6 +3000,32 @@ Add API key authenticator and Bearer HTTP guard
 - `pnpm validate:security:auth-contract`
 - `pnpm validate:security:api-key`
 - `pnpm validate:security:bearer-guard`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
+## Task 112
+
+**Date**
+2026-07-20
+
+**Commit**
+13857ca
+
+**Title**
+Wire AuthN into cited-answer HTTP path
+
+**Summary**
+- `CitedGroundedAnswerController` / `createKnowledgeHttpRouter` take Bearer AuthN then workspace AuthZ (no `x-workspace-id`)
+- AuthN → 401, AuthZ → 403; Health stays public
+- Composition in-memory/operations/listening factories wire ApiKeyAuthenticator + HttpBearerGuard
+
+**Validation**
+- `pnpm validate:security:bearer-guard`
+- `pnpm validate:api:cited-answer`
+- `pnpm validate:server:node-listener`
 - `pnpm typecheck`
 - `pnpm validate`
 

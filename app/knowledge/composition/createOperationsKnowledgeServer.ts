@@ -8,14 +8,16 @@ import { InMemoryLogger } from "../observability/InMemoryLogger";
 import { InMemoryMetrics } from "../observability/InMemoryMetrics";
 import { DefaultKnowledgeServer } from "../server/DefaultKnowledgeServer";
 import type { KnowledgeServer } from "../server/KnowledgeServer";
+import { ApiKeyAuthenticator } from "../security/ApiKeyAuthenticator";
 import { DefaultWorkspaceAuthorizer } from "../security/DefaultWorkspaceAuthorizer";
-import { HttpWorkspaceGuard } from "../security/HttpWorkspaceGuard";
+import { HttpBearerGuard } from "../security/HttpBearerGuard";
 import { createInMemoryKnowledgeComposition } from "./createInMemoryKnowledgeComposition";
 import type { InMemoryKnowledgeComposition } from "./InMemoryKnowledgeComposition";
+import { IN_MEMORY_SERVER_TEST_API_KEY } from "./createInMemoryKnowledgeServer";
 
 /**
- * Operations-ready in-memory server: composition + workspace guard +
- * observing HTTP router + {@link DefaultKnowledgeServer}.
+ * Operations-ready in-memory server: composition + Bearer AuthN +
+ * workspace AuthZ + observing HTTP router + {@link DefaultKnowledgeServer}.
  * Baseline without observability remains {@link createInMemoryKnowledgeServer}.
  */
 export function createOperationsKnowledgeServer(
@@ -29,8 +31,19 @@ export function createOperationsKnowledgeServer(
   const composition = createInMemoryKnowledgeComposition(config);
   const logger = new InMemoryLogger();
   const metrics = new InMemoryMetrics();
-  const guard = new HttpWorkspaceGuard(new DefaultWorkspaceAuthorizer());
-  const innerRouter = createKnowledgeHttpRouter(composition.runtime, guard);
+  const authenticator = new ApiKeyAuthenticator({
+    [IN_MEMORY_SERVER_TEST_API_KEY]: {
+      subject: "test-user",
+      workspaceId: "workspace-a",
+    },
+  });
+  const bearerGuard = new HttpBearerGuard(authenticator);
+  const workspaceAuthorizer = new DefaultWorkspaceAuthorizer();
+  const innerRouter = createKnowledgeHttpRouter(
+    composition.runtime,
+    bearerGuard,
+    workspaceAuthorizer,
+  );
   const router = new ObservingHttpRouter(innerRouter, logger, metrics);
   const server = new DefaultKnowledgeServer(router);
   return { server, composition, logger, metrics };

@@ -2,7 +2,8 @@ import type { KnowledgeRuntime } from "../composition/KnowledgeRuntime";
 import type { CitedGroundedAnswer } from "../citation/CitedGroundedAnswer";
 import type { HttpRequest } from "../http/HttpRequest";
 import type { HttpResponse } from "../http/HttpResponse";
-import type { HttpWorkspaceGuard } from "../security/HttpWorkspaceGuard";
+import type { HttpBearerGuard } from "../security/HttpBearerGuard";
+import type { WorkspaceAuthorizer } from "../security/WorkspaceAuthorizer";
 
 const JSON_HEADERS = { "content-type": "application/json" } as const;
 
@@ -55,14 +56,15 @@ function toPlainCitedAnswer(
 }
 
 /**
- * HTTP controller for cited grounded answers. Depends on
- * {@link KnowledgeRuntime} and {@link HttpWorkspaceGuard} — never on
- * concrete composition/repos.
+ * HTTP controller for cited grounded answers.
+ * AuthN via {@link HttpBearerGuard}, then AuthZ via {@link WorkspaceAuthorizer}.
+ * Does not require `x-workspace-id`; principal.workspaceId is the AuthZ input.
  */
 export class CitedGroundedAnswerController {
   constructor(
     private readonly runtime: KnowledgeRuntime,
-    private readonly guard: HttpWorkspaceGuard,
+    private readonly bearerGuard: HttpBearerGuard,
+    private readonly workspaceAuthorizer: WorkspaceAuthorizer,
   ) {}
 
   async create(request: HttpRequest): Promise<HttpResponse> {
@@ -75,8 +77,19 @@ export class CitedGroundedAnswerController {
     }
 
     const workspaceId = pathMatch[1]!;
+
+    let principal;
     try {
-      this.guard.assertRequest(request, workspaceId);
+      principal = await this.bearerGuard.authenticateRequest(request);
+    } catch (error: unknown) {
+      return jsonResponse(401, { error: errorMessage(error) });
+    }
+
+    try {
+      this.workspaceAuthorizer.authorize({
+        workspaceId,
+        principalWorkspaceId: principal.workspaceId,
+      });
     } catch (error: unknown) {
       return jsonResponse(403, { error: errorMessage(error) });
     }

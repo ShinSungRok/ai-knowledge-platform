@@ -55,8 +55,9 @@ await server.start();
 await server.stop();
 ```
 
-`createOperationsKnowledgeServer` wires in-memory composition, workspace
-HTTP guard (`x-workspace-id`), `ObservingHttpRouter` (request logs +
+`createOperationsKnowledgeServer` wires in-memory composition, Bearer
+AuthN (`Authorization: Bearer <api-key>`) plus workspace AuthZ,
+`ObservingHttpRouter` (request logs +
 `http.requests` metrics), and `DefaultKnowledgeServer`.
 
 Baseline without observability wrapping remains

@@ -1,6 +1,7 @@
 import type { DocumentChunk } from "../domain/DocumentChunk";
 import type { KnowledgeDocument } from "../domain/KnowledgeDocument";
 import { FakeEmbeddingProvider } from "../embedding/FakeEmbeddingProvider";
+import { IN_MEMORY_SERVER_TEST_API_KEY } from "./createInMemoryKnowledgeServer";
 import { createOperationsKnowledgeServer } from "./createOperationsKnowledgeServer";
 import { KNOWLEDGE_MODULE_COMPOSITION } from "./index";
 
@@ -82,7 +83,7 @@ async function assertOperationsServerDispatch(): Promise<void> {
   const cited = await server.dispatch({
     method: "POST",
     path: `/workspaces/${WORKSPACE_A}/cited-answers`,
-    headers: { "x-workspace-id": WORKSPACE_A },
+    headers: { Authorization: `Bearer ${IN_MEMORY_SERVER_TEST_API_KEY}` },
     body: { query: "aaaaaaaa", retrievalLimit: 5, maxCharacters: 10_000 },
   });
   assertEqual(cited.status, 200, "cited-answer");
@@ -101,9 +102,9 @@ async function assertOperationsServerDispatch(): Promise<void> {
   await server.stop();
 }
 
-async function assertForbiddenWithoutHeader(): Promise<void> {
+async function assertUnauthorizedWithoutBearer(): Promise<void> {
   console.log(
-    "[composition] operations server enforces workspace guard on cited-answer...",
+    "[composition] operations server enforces Bearer AuthN on cited-answer...",
   );
   const { server } = createOperationsKnowledgeServer();
   await server.start();
@@ -113,14 +114,14 @@ async function assertForbiddenWithoutHeader(): Promise<void> {
     headers: {},
     body: { query: "aaaaaaaa" },
   });
-  assertEqual(response.status, 403, "forbidden");
+  assertEqual(response.status, 401, "unauthorized");
   await server.stop();
 }
 
 async function main(): Promise<void> {
   assertModuleConstant();
   await assertOperationsServerDispatch();
-  await assertForbiddenWithoutHeader();
+  await assertUnauthorizedWithoutBearer();
   console.log("createOperationsKnowledgeServer validation succeeded.");
 }
 

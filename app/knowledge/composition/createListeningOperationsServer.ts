@@ -10,10 +10,12 @@ import type { HttpListenAddress } from "../server/HttpListenAddress";
 import type { HttpListenConfig } from "../server/HttpListenConfig";
 import type { HttpListener } from "../server/HttpListener";
 import { NodeHttpListener } from "../server/NodeHttpListener";
+import { ApiKeyAuthenticator } from "../security/ApiKeyAuthenticator";
 import { DefaultWorkspaceAuthorizer } from "../security/DefaultWorkspaceAuthorizer";
-import { HttpWorkspaceGuard } from "../security/HttpWorkspaceGuard";
+import { HttpBearerGuard } from "../security/HttpBearerGuard";
 import { createInMemoryKnowledgeComposition } from "./createInMemoryKnowledgeComposition";
 import type { InMemoryKnowledgeComposition } from "./InMemoryKnowledgeComposition";
+import { IN_MEMORY_SERVER_TEST_API_KEY } from "./createInMemoryKnowledgeServer";
 
 const DEFAULT_LISTEN: HttpListenConfig = {
   host: "127.0.0.1",
@@ -35,12 +37,9 @@ export type ListeningOperationsServer = {
 };
 
 /**
- * Operations wiring (composition + workspace guard + observing router) with
- * a {@link NodeHttpListener} for TCP listen. Dispatch-only path remains
- * {@link createOperationsKnowledgeServer}.
- *
- * Default listen is `{ host: "127.0.0.1", port: 0 }` (ephemeral). Production
- * callers should pass an explicit host/port.
+ * Operations wiring with {@link NodeHttpListener} for TCP listen.
+ * Cited-answer requires Bearer API key AuthN.
+ * Default listen is `{ host: "127.0.0.1", port: 0 }`.
  */
 export function createListeningOperationsServer(
   options: CreateListeningOperationsServerOptions = {},
@@ -50,8 +49,19 @@ export function createListeningOperationsServer(
   const composition = createInMemoryKnowledgeComposition(config);
   const logger = new InMemoryLogger();
   const metrics = new InMemoryMetrics();
-  const guard = new HttpWorkspaceGuard(new DefaultWorkspaceAuthorizer());
-  const innerRouter = createKnowledgeHttpRouter(composition.runtime, guard);
+  const authenticator = new ApiKeyAuthenticator({
+    [IN_MEMORY_SERVER_TEST_API_KEY]: {
+      subject: "test-user",
+      workspaceId: "workspace-a",
+    },
+  });
+  const bearerGuard = new HttpBearerGuard(authenticator);
+  const workspaceAuthorizer = new DefaultWorkspaceAuthorizer();
+  const innerRouter = createKnowledgeHttpRouter(
+    composition.runtime,
+    bearerGuard,
+    workspaceAuthorizer,
+  );
   const router = new ObservingHttpRouter(innerRouter, logger, metrics);
   const listener = new NodeHttpListener(router);
 

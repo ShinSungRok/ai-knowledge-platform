@@ -6,14 +6,18 @@ import { FakeEmbeddingProvider } from "../embedding/FakeEmbeddingProvider";
 import { createInMemoryKnowledgeComposition } from "../composition/createInMemoryKnowledgeComposition";
 import type { KnowledgeRuntime } from "../composition/KnowledgeRuntime";
 import type { CitedGroundedAnswer } from "../citation/CitedGroundedAnswer";
+import { ApiKeyAuthenticator } from "../security/ApiKeyAuthenticator";
 import { DefaultWorkspaceAuthorizer } from "../security/DefaultWorkspaceAuthorizer";
-import { HttpWorkspaceGuard } from "../security/HttpWorkspaceGuard";
+import { HttpBearerGuard } from "../security/HttpBearerGuard";
+import type { WorkspaceAuthorizer } from "../security/WorkspaceAuthorizer";
 import { CitedGroundedAnswerController } from "./CitedGroundedAnswerController";
 import { createKnowledgeHttpRouter } from "./createKnowledgeHttpRouter";
 import { HealthController } from "./HealthController";
 import { KNOWLEDGE_MODULE_API } from "./index";
 
 const WORKSPACE_A = "workspace-a";
+const TEST_API_KEY = "test-api-key";
+const OTHER_WORKSPACE_KEY = "other-workspace-key";
 
 function assertTruthy(value: unknown, message: string): void {
   if (!value) {
@@ -29,14 +33,39 @@ function assertEqual(actual: unknown, expected: unknown, message: string): void 
   }
 }
 
-function buildGuard(): HttpWorkspaceGuard {
-  return new HttpWorkspaceGuard(new DefaultWorkspaceAuthorizer());
+function buildAuth(): {
+  bearerGuard: HttpBearerGuard;
+  workspaceAuthorizer: WorkspaceAuthorizer;
+} {
+  const authenticator = new ApiKeyAuthenticator({
+    [TEST_API_KEY]: { subject: "test-user", workspaceId: WORKSPACE_A },
+    [OTHER_WORKSPACE_KEY]: {
+      subject: "other-user",
+      workspaceId: "other-workspace",
+    },
+  });
+  return {
+    bearerGuard: new HttpBearerGuard(authenticator),
+    workspaceAuthorizer: new DefaultWorkspaceAuthorizer(),
+  };
 }
 
-function authorizedHeaders(
+function bearerHeaders(
+  token: string = TEST_API_KEY,
   extra: Record<string, string> = {},
 ): Record<string, string> {
-  return { "x-workspace-id": WORKSPACE_A, ...extra };
+  return { Authorization: `Bearer ${token}`, ...extra };
+}
+
+function buildController(
+  runtime: KnowledgeRuntime,
+): CitedGroundedAnswerController {
+  const { bearerGuard, workspaceAuthorizer } = buildAuth();
+  return new CitedGroundedAnswerController(
+    runtime,
+    bearerGuard,
+    workspaceAuthorizer,
+  );
 }
 
 async function seedRuntime(): Promise<{
@@ -96,11 +125,13 @@ async function assertCitedAnswerSuccess(): Promise<void> {
     "[api] CitedGroundedAnswerController returns 200 with answer and citations...",
   );
   const { runtime } = await seedRuntime();
-  const controller = new CitedGroundedAnswerController(runtime, buildGuard());
+  const controller = buildController(runtime);
   const response = await controller.create({
     method: "POST",
     path: `/workspaces/${WORKSPACE_A}/cited-answers`,
-    headers: authorizedHeaders({ "content-type": "application/json" }),
+    headers: bearerHeaders(TEST_API_KEY, {
+      "content-type": "application/json",
+    }),
     body: { query: "aaaaaaaa", retrievalLimit: 5, maxCharacters: 10_000 },
   });
   assertEqual(response.status, 200, "status");
@@ -116,22 +147,42 @@ async function assertCitedAnswerSuccess(): Promise<void> {
   assertTruthy(body.citations.length > 0, "citations present");
 }
 
-async function assertForbiddenWithoutHeader(): Promise<void> {
+async function assertUnauthorizedWithoutBearer(): Promise<void> {
   console.log(
-    "[api] CitedGroundedAnswerController returns 403 when x-workspace-id is missing...",
+    "[api] CitedGroundedAnswerController returns 401 when Bearer token is missing...",
   );
   const { runtime } = await seedRuntime();
-  const controller = new CitedGroundedAnswerController(runtime, buildGuard());
+  const controller = buildController(runtime);
   const response = await controller.create({
     method: "POST",
     path: `/workspaces/${WORKSPACE_A}/cited-answers`,
     headers: {},
     body: { query: "aaaaaaaa" },
   });
-  assertEqual(response.status, 403, "status");
+  assertEqual(response.status, 401, "status");
   assertEqual(
     (response.body as { error: string }).error,
-    "Missing x-workspace-id header",
+    "Missing or invalid Authorization bearer token",
+    "error",
+  );
+}
+
+async function assertUnauthorizedOnBadToken(): Promise<void> {
+  console.log(
+    "[api] CitedGroundedAnswerController returns 401 on unknown Bearer token...",
+  );
+  const { runtime } = await seedRuntime();
+  const controller = buildController(runtime);
+  const response = await controller.create({
+    method: "POST",
+    path: `/workspaces/${WORKSPACE_A}/cited-answers`,
+    headers: bearerHeaders("unknown-token"),
+    body: { query: "aaaaaaaa" },
+  });
+  assertEqual(response.status, 401, "status");
+  assertEqual(
+    (response.body as { error: string }).error,
+    "Authentication failed",
     "error",
   );
 }
@@ -141,11 +192,11 @@ async function assertForbiddenOnMismatch(): Promise<void> {
     "[api] CitedGroundedAnswerController returns 403 on workspace mismatch...",
   );
   const { runtime } = await seedRuntime();
-  const controller = new CitedGroundedAnswerController(runtime, buildGuard());
+  const controller = buildController(runtime);
   const response = await controller.create({
     method: "POST",
     path: `/workspaces/${WORKSPACE_A}/cited-answers`,
-    headers: { "x-workspace-id": "other-workspace" },
+    headers: bearerHeaders(OTHER_WORKSPACE_KEY),
     body: { query: "aaaaaaaa" },
   });
   assertEqual(response.status, 403, "status");
@@ -159,12 +210,12 @@ async function assertForbiddenOnMismatch(): Promise<void> {
 async function assertInvalidInput400(): Promise<void> {
   console.log("[api] CitedGroundedAnswerController rejects invalid input with 400...");
   const { runtime } = await seedRuntime();
-  const controller = new CitedGroundedAnswerController(runtime, buildGuard());
+  const controller = buildController(runtime);
 
   const missingQuery = await controller.create({
     method: "POST",
     path: `/workspaces/${WORKSPACE_A}/cited-answers`,
-    headers: authorizedHeaders(),
+    headers: bearerHeaders(),
     body: {},
   });
   assertEqual(missingQuery.status, 400, "missing query");
@@ -172,7 +223,7 @@ async function assertInvalidInput400(): Promise<void> {
   const badBody = await controller.create({
     method: "POST",
     path: `/workspaces/${WORKSPACE_A}/cited-answers`,
-    headers: authorizedHeaders(),
+    headers: bearerHeaders(),
     body: "nope",
   });
   assertEqual(badBody.status, 400, "non-object body");
@@ -181,11 +232,11 @@ async function assertInvalidInput400(): Promise<void> {
 async function assertMethodNotAllowed(): Promise<void> {
   console.log("[api] CitedGroundedAnswerController returns 405 for non-POST...");
   const { runtime } = await seedRuntime();
-  const controller = new CitedGroundedAnswerController(runtime, buildGuard());
+  const controller = buildController(runtime);
   const response = await controller.create({
     method: "GET",
     path: `/workspaces/${WORKSPACE_A}/cited-answers`,
-    headers: authorizedHeaders(),
+    headers: bearerHeaders(),
   });
   assertEqual(response.status, 405, "status");
 }
@@ -203,14 +254,11 @@ async function assertRuntimeThrow500(): Promise<void> {
       throw new Error("boom");
     },
   };
-  const controller = new CitedGroundedAnswerController(
-    failingRuntime,
-    buildGuard(),
-  );
+  const controller = buildController(failingRuntime);
   const response = await controller.create({
     method: "POST",
     path: `/workspaces/${WORKSPACE_A}/cited-answers`,
-    headers: authorizedHeaders(),
+    headers: bearerHeaders(),
     body: { query: "q" },
   });
   assertEqual(response.status, 500, "status");
@@ -219,10 +267,15 @@ async function assertRuntimeThrow500(): Promise<void> {
 
 async function assertRouterWiresHealthAndCitedAnswer(): Promise<void> {
   console.log(
-    "[api] createKnowledgeHttpRouter wires health (no auth) and cited-answer (with guard)...",
+    "[api] createKnowledgeHttpRouter wires health (no auth) and cited-answer (Bearer AuthN)...",
   );
   const { runtime } = await seedRuntime();
-  const router = createKnowledgeHttpRouter(runtime, buildGuard());
+  const { bearerGuard, workspaceAuthorizer } = buildAuth();
+  const router = createKnowledgeHttpRouter(
+    runtime,
+    bearerGuard,
+    workspaceAuthorizer,
+  );
 
   const health = await router.handle({
     method: "GET",
@@ -234,15 +287,15 @@ async function assertRouterWiresHealthAndCitedAnswer(): Promise<void> {
   const cited = await router.handle({
     method: "POST",
     path: `/workspaces/${WORKSPACE_A}/cited-answers`,
-    headers: authorizedHeaders(),
+    headers: bearerHeaders(),
     body: { query: "aaaaaaaa", retrievalLimit: 5, maxCharacters: 10_000 },
   });
   assertEqual(cited.status, 200, "cited-answer");
 }
 
-function assertControllerDependsOnlyOnRuntimeAndGuard(): void {
+function assertControllerDependsOnlyOnPorts(): void {
   console.log(
-    "[api] CitedGroundedAnswerController imports KnowledgeRuntime and HttpWorkspaceGuard, not concrete composition adapters...",
+    "[api] CitedGroundedAnswerController imports KnowledgeRuntime, HttpBearerGuard, WorkspaceAuthorizer — not concrete adapters...",
   );
   const source = readFileSync(
     path.resolve(
@@ -258,6 +311,8 @@ function assertControllerDependsOnlyOnRuntimeAndGuard(): void {
     "FakeEmbeddingProvider",
     "FakeLanguageModelProvider",
     "DefaultWorkspaceAuthorizer",
+    "ApiKeyAuthenticator",
+    "HttpWorkspaceGuard",
   ];
   for (const reference of forbidden) {
     assertTruthy(
@@ -270,8 +325,12 @@ function assertControllerDependsOnlyOnRuntimeAndGuard(): void {
     "must import KnowledgeRuntime",
   );
   assertTruthy(
-    source.includes('from "../security/HttpWorkspaceGuard"'),
-    "must import HttpWorkspaceGuard",
+    source.includes('from "../security/HttpBearerGuard"'),
+    "must import HttpBearerGuard",
+  );
+  assertTruthy(
+    source.includes('from "../security/WorkspaceAuthorizer"'),
+    "must import WorkspaceAuthorizer",
   );
 }
 
@@ -279,13 +338,14 @@ async function main(): Promise<void> {
   assertModuleConstant();
   await assertHealth();
   await assertCitedAnswerSuccess();
-  await assertForbiddenWithoutHeader();
+  await assertUnauthorizedWithoutBearer();
+  await assertUnauthorizedOnBadToken();
   await assertForbiddenOnMismatch();
   await assertInvalidInput400();
   await assertMethodNotAllowed();
   await assertRuntimeThrow500();
   await assertRouterWiresHealthAndCitedAnswer();
-  assertControllerDependsOnlyOnRuntimeAndGuard();
+  assertControllerDependsOnlyOnPorts();
   console.log("CitedGroundedAnswerController validation succeeded.");
 }
 

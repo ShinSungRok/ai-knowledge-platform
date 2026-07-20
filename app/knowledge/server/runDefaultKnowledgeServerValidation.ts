@@ -3,7 +3,10 @@ import path from "node:path";
 import type { DocumentChunk } from "../domain/DocumentChunk";
 import type { KnowledgeDocument } from "../domain/KnowledgeDocument";
 import { FakeEmbeddingProvider } from "../embedding/FakeEmbeddingProvider";
-import { createInMemoryKnowledgeServer } from "../composition/createInMemoryKnowledgeServer";
+import {
+  createInMemoryKnowledgeServer,
+  IN_MEMORY_SERVER_TEST_API_KEY,
+} from "../composition/createInMemoryKnowledgeServer";
 import { DefaultHttpRouter } from "../http/DefaultHttpRouter";
 import { DefaultKnowledgeServer } from "./DefaultKnowledgeServer";
 import { KNOWLEDGE_MODULE_SERVER } from "./index";
@@ -132,7 +135,7 @@ async function assertHealthAndCitedAnswerDispatch(): Promise<void> {
   const cited = await server.dispatch({
     method: "POST",
     path: `/workspaces/${WORKSPACE_A}/cited-answers`,
-    headers: { "x-workspace-id": WORKSPACE_A },
+    headers: { Authorization: `Bearer ${IN_MEMORY_SERVER_TEST_API_KEY}` },
     body: { query: "aaaaaaaa", retrievalLimit: 5, maxCharacters: 10_000 },
   });
   assertEqual(cited.status, 200, "cited-answer status");
