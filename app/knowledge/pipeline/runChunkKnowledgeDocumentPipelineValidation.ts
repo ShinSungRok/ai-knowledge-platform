@@ -79,6 +79,10 @@ class CountingDocumentChunkRepository implements DocumentChunkRepository {
   ): Promise<DocumentChunk | null> {
     return this.inner.findById(workspaceId, chunkId);
   }
+
+  async findAll(workspaceId: string): Promise<DocumentChunk[]> {
+    return this.inner.findAll(workspaceId);
+  }
 }
 
 function buildHarness() {

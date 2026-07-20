@@ -67,6 +67,10 @@ async function assertPortContract(): Promise<void> {
     typeof repository.findById === "function",
     "findById must be defined",
   );
+  assertTruthy(
+    typeof repository.findAll === "function",
+    "findAll must be defined",
+  );
 }
 
 async function assertFindReturnsOrderAscending(): Promise<void> {
@@ -293,6 +297,105 @@ async function assertFixedSizeDocumentChunkerIdsAreWorkspaceGlobalCompatible(): 
   assertEqual(resolvedFromTwo?.documentId, documentTwo.id, "expected doc-beta's first chunk id to resolve back to doc-beta");
 }
 
+async function assertFindAllReturnsDeterministicWorkspaceOrder(): Promise<void> {
+  console.log("[repository] findAll returns every workspace chunk ordered by documentId, then order, then id...");
+  const repository: DocumentChunkRepository = new DefaultInMemoryDocumentChunkRepository();
+
+  // Insert out of order across documents, and out of order within a
+  // document, to prove findAll's ordering does not depend on insertion
+  // order or Map iteration order.
+  await repository.replaceForDocument(WORKSPACE_A, "doc-b", [
+    chunk({ id: "doc-b-chunk-1", documentId: "doc-b", order: 1, text: "b1" }),
+    chunk({ id: "doc-b-chunk-0", documentId: "doc-b", order: 0, text: "b0" }),
+  ]);
+  await repository.replaceForDocument(WORKSPACE_A, "doc-a", [
+    chunk({ id: "doc-a-chunk-0", documentId: "doc-a", order: 0, text: "a0" }),
+  ]);
+
+  const all = await repository.findAll(WORKSPACE_A);
+  assertEqual(all.length, 3, "expected all 3 chunks across both documents");
+  assertEqual(
+    all.map((c) => c.id).join(","),
+    "doc-a-chunk-0,doc-b-chunk-0,doc-b-chunk-1",
+    "expected findAll ordered by documentId ascending, then order ascending",
+  );
+}
+
+async function assertFindAllOrdersAcrossManyDocumentsAndOrders(): Promise<void> {
+  console.log("[repository] findAll's documentId-then-order ordering holds across many documents/chunks, regardless of insertion order...");
+  const repository: DocumentChunkRepository = new DefaultInMemoryDocumentChunkRepository();
+
+  await repository.replaceForDocument(WORKSPACE_A, "doc-z", [
+    chunk({ id: "doc-z-chunk-0", documentId: "doc-z", order: 0 }),
+  ]);
+  await repository.replaceForDocument(WORKSPACE_A, "doc-m", [
+    chunk({ id: "doc-m-chunk-1", documentId: "doc-m", order: 1 }),
+    chunk({ id: "doc-m-chunk-0", documentId: "doc-m", order: 0 }),
+    chunk({ id: "doc-m-chunk-2", documentId: "doc-m", order: 2 }),
+  ]);
+
+  const all = await repository.findAll(WORKSPACE_A);
+  assertEqual(
+    all.map((c) => c.id).join(","),
+    "doc-m-chunk-0,doc-m-chunk-1,doc-m-chunk-2,doc-z-chunk-0",
+    "expected findAll fully ordered by documentId ascending, then order ascending, independent of insertion/write order",
+  );
+}
+
+async function assertFindAllIsolatesByWorkspace(): Promise<void> {
+  console.log("[repository] findAll only returns chunks within the requested workspace...");
+  const repository: DocumentChunkRepository = new DefaultInMemoryDocumentChunkRepository();
+  await repository.replaceForDocument(WORKSPACE_A, DOCUMENT_1, [
+    chunk({ workspaceId: WORKSPACE_A, id: "a-chunk", text: "workspace a" }),
+  ]);
+  await repository.replaceForDocument(WORKSPACE_B, DOCUMENT_1, [
+    chunk({ workspaceId: WORKSPACE_B, id: "b-chunk", text: "workspace b" }),
+  ]);
+
+  const fromA = await repository.findAll(WORKSPACE_A);
+  const fromB = await repository.findAll(WORKSPACE_B);
+  assertEqual(fromA.length, 1, "expected only workspace A's chunk");
+  assertEqual(fromA[0]?.id, "a-chunk", "expected workspace A's own chunk");
+  assertEqual(fromB.length, 1, "expected only workspace B's chunk");
+  assertEqual(fromB[0]?.id, "b-chunk", "expected workspace B's own chunk");
+}
+
+async function assertFindAllReturnsEmptyArrayForUnknownWorkspace(): Promise<void> {
+  console.log("[repository] findAll returns an empty array for a workspace with no chunks...");
+  const repository: DocumentChunkRepository = new DefaultInMemoryDocumentChunkRepository();
+  const all = await repository.findAll("workspace-unknown");
+  assertEqual(all.length, 0, "expected an empty array for an unknown workspace");
+}
+
+async function assertFindAllDefensiveCopy(): Promise<void> {
+  console.log("[repository] findAll returns defensive copies...");
+  const repository: DocumentChunkRepository = new DefaultInMemoryDocumentChunkRepository();
+  await repository.replaceForDocument(WORKSPACE_A, DOCUMENT_1, [
+    chunk({ id: "chunk-1", text: "original" }),
+  ]);
+
+  const first = await repository.findAll(WORKSPACE_A);
+  const firstChunk = first[0];
+  if (!firstChunk) {
+    throw new Error("Expected a chunk at index 0");
+  }
+  firstChunk.text = "mutated";
+  first.push(chunk({ id: "chunk-2", text: "must not appear" }));
+
+  const second = await repository.findAll(WORKSPACE_A);
+  assertEqual(second.length, 1, "mutating the findAll result array must not affect stored state");
+  assertEqual(second[0]?.text, "original", "mutating a findAll result object must not affect stored state");
+}
+
+async function assertFindAllRejectsEmptyWorkspaceId(): Promise<void> {
+  console.log("[repository] findAll rejects an empty or whitespace-only workspaceId...");
+  const repository: DocumentChunkRepository = new DefaultInMemoryDocumentChunkRepository();
+  await assertRejects(
+    repository.findAll(" "),
+    "DocumentChunk.workspaceId must be a non-empty string",
+  );
+}
+
 async function assertRejectsScopeMismatch(): Promise<void> {
   console.log("[repository] replaceForDocument rejects chunks whose workspaceId/documentId do not match...");
   const repository: DocumentChunkRepository = new DefaultInMemoryDocumentChunkRepository();
@@ -399,6 +502,12 @@ async function main(): Promise<void> {
   await assertReplaceAllowsSameDocumentToReuseItsOwnChunkIds();
   await assertReplaceRejectsChunkIdOwnedByDifferentDocumentWithoutPartialWrite();
   await assertFixedSizeDocumentChunkerIdsAreWorkspaceGlobalCompatible();
+  await assertFindAllReturnsDeterministicWorkspaceOrder();
+  await assertFindAllOrdersAcrossManyDocumentsAndOrders();
+  await assertFindAllIsolatesByWorkspace();
+  await assertFindAllReturnsEmptyArrayForUnknownWorkspace();
+  await assertFindAllDefensiveCopy();
+  await assertFindAllRejectsEmptyWorkspaceId();
   await assertRejectsScopeMismatch();
   await assertRejectsDuplicateIdAndOrder();
   await assertRejectsInvalidOrder();

@@ -27,6 +27,13 @@
  *   document's chunk set or the ownership index
  * - FixedSizeDocumentChunker-generated ids from two different documents
  *   never collide and each resolves back to its own document via findById
+ * - findAll returns every chunk in a workspace ordered by documentId
+ *   ascending, then order ascending within a document, regardless of
+ *   insertion order or write order
+ * - findAll only returns chunks within the requested workspace, returns
+ *   an empty array for a workspace with no chunks, and returns defensive
+ *   copies
+ * - findAll rejects an empty or whitespace-only workspaceId
  * - replaceForDocument rejects a chunk whose workspaceId/documentId does
  *   not match the method arguments
  * - replaceForDocument rejects duplicate chunk id or duplicate order
@@ -47,6 +54,12 @@ export const DEFAULT_IN_MEMORY_DOCUMENT_CHUNK_REPOSITORY_UNIT_CASES = [
   "replaceForDocument_allows_same_document_to_reuse_its_own_chunk_ids",
   "replaceForDocument_rejects_chunk_id_owned_by_different_document_without_partial_write",
   "fixed_size_document_chunker_ids_are_workspace_global_compatible",
+  "find_all_returns_deterministic_workspace_order",
+  "find_all_orders_across_many_documents_and_orders",
+  "find_all_isolates_by_workspace",
+  "find_all_returns_empty_array_for_unknown_workspace",
+  "find_all_defensive_copy",
+  "find_all_rejects_empty_workspace_id",
   "rejects_workspaceId_and_documentId_scope_mismatch",
   "rejects_duplicate_id_and_duplicate_order",
   "rejects_negative_or_non_integer_order",

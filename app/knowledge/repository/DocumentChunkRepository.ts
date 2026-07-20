@@ -7,7 +7,12 @@ import type { DocumentChunk } from "../domain/DocumentChunk";
  * workspace-global identity: unique across every document in that
  * workspace, not just within one document's own chunk set. `findByDocumentId`
  * still partitions reads by `(workspaceId, documentId)`; `findById` resolves
- * a single chunk anywhere in the workspace by that global identity.
+ * a single chunk anywhere in the workspace by that global identity;
+ * `findAll` returns every chunk in the workspace, ordered deterministically
+ * by `documentId` ascending, then `order` ascending within a document, then
+ * `id` ascending as a final tie-break — so a keyword search or any other
+ * whole-workspace scan gets a stable, repeatable ordering with no reliance
+ * on insertion order.
  *
  * `replaceForDocument` is the only write method: it replaces the entire
  * chunk set for a document in one call (an empty array clears it), so
@@ -34,4 +39,5 @@ export interface DocumentChunkRepository {
     documentId: string,
   ): Promise<DocumentChunk[]>;
   findById(workspaceId: string, chunkId: string): Promise<DocumentChunk | null>;
+  findAll(workspaceId: string): Promise<DocumentChunk[]>;
 }

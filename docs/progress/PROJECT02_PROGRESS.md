@@ -702,3 +702,28 @@ Add retrieve knowledge chunks use case
 
 **Status**
 Completed
+
+## Task 27
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add workspace-scoped document chunk discovery
+
+**Summary**
+- Added `DocumentChunkRepository.findAll(workspaceId): Promise<DocumentChunk[]>`, returning every chunk in a workspace ordered deterministically by `documentId` ascending, then `order` ascending within a document, then `id` ascending as a final tie-break — never relying on `Map` iteration/insertion order
+- Implemented `findAll` in `DefaultInMemoryDocumentChunkRepository` by scanning the workspace's own `chunksByWorkspace` partition and sorting the flattened result; rejects an empty/whitespace `workspaceId`; returns defensive copies
+- Updated the two existing `CountingDocumentChunkRepository` test doubles (`runChunkKnowledgeDocumentPipelineValidation.ts`, `runRechunkKnowledgeSourcePipelineValidation.ts`) with a pass-through `findAll`
+- Extended `runDefaultInMemoryDocumentChunkRepositoryValidation.ts` + `tests/unit/defaultInMemoryDocumentChunkRepository.cases.ts` with cases for deterministic ordering across multiple documents/chunks regardless of insertion order, workspace isolation, empty-workspace result, defensive copy, and invalid-input rejection; no keyword scoring/search module, vector index change, or chunk write contract change introduced
+
+**Validation**
+- `pnpm validate:repository:chunk`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

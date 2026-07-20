@@ -168,7 +168,12 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   in the same workspace (reusing an `id` the *same* document already owns
   is always allowed) — so no partial write is possible, either to storage
   or to the ownership index. `findByDocumentId` returns chunks sorted by
-  `order` ascending. This repository does not verify that the referenced
+  `order` ascending. `findAll(workspaceId)` (Task 27) returns every chunk
+  in the workspace, sorted deterministically by `documentId` ascending,
+  then `order` ascending within a document, then `id` ascending as a final
+  tie-break — never relying on `Map` iteration/insertion order — so a
+  future keyword search or any other whole-workspace scan gets a stable,
+  repeatable ordering. This repository does not verify that the referenced
   document exists.
 - `ChunkingService` (`app/knowledge/embedding`) is a pure, synchronous port —
   `chunk(document: KnowledgeDocument): DocumentChunk[]` — with no I/O and no
