@@ -141,6 +141,8 @@ export type {
   AgentOrchestrator,
 } from "./agent";
 export { DeterministicKnowledgeAgentPlanner } from "./agent";
+export { DefaultAgentStepExecutor } from "./agent";
+export { DefaultAgentReviewer } from "./agent";
 export { KNOWLEDGE_MODULE_API } from "./api";
 export { KNOWLEDGE_MODULE_HTTP } from "./http";
 export { KNOWLEDGE_MODULE_SERVER } from "./server";

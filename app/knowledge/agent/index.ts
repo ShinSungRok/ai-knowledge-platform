@@ -11,8 +11,10 @@
  * a knowledge-aware plan can be produced, executed, and reviewed
  * without Memory, LLM freeform planning, multi-agent collaboration,
  * or composition-root wiring. `DeterministicKnowledgeAgentPlanner`
- * (Task 59) is the first concrete planner adapter; step executor /
- * reviewer / orchestrator adapters are later tasks.
+ * (Task 59) is the first concrete planner adapter;
+ * `DefaultAgentStepExecutor` and `DefaultAgentReviewer` (Task 60)
+ * execute plan steps via Tool Calling and review by tool-call status;
+ * the orchestrator adapter is a later task.
  */
 export const KNOWLEDGE_MODULE_AGENT = "app/knowledge/agent" as const;
 
@@ -30,3 +32,5 @@ export type { AgentStepExecutor } from "./AgentStepExecutor";
 export type { AgentReviewer } from "./AgentReviewer";
 export type { AgentOrchestrator } from "./AgentOrchestrator";
 export { DeterministicKnowledgeAgentPlanner } from "./DeterministicKnowledgeAgentPlanner";
+export { DefaultAgentStepExecutor } from "./DefaultAgentStepExecutor";
+export { DefaultAgentReviewer } from "./DefaultAgentReviewer";

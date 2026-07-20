@@ -1618,3 +1618,31 @@ Add deterministic knowledge agent planner
 
 **Status**
 Completed
+
+## Task 60
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add agent step executor and reviewer
+
+**Summary**
+- Added `DefaultAgentStepExecutor` implementing `AgentStepExecutor` with only a `ToolExecutor` port dependency; validates step/`timeoutMs`, delegates to `ToolExecutor.execute({ name, arguments, timeoutMs })`, returns `{ stepId, toolCall }` unchanged
+- Added `DefaultAgentReviewer` implementing `AgentReviewer` with no constructor dependencies; mismatch → rejected; any non-success tool call status → rejected with status reason; all success → approved; never reinterprets answer text
+- Exported from agent and top-level barrels; added step-executor and reviewer validation runners + unit case inventories; wired `validate:agent:step-executor` and `validate:agent:reviewer` into top-level `validate`
+- Updated docs; no orchestrator, application use case, retry, or Memory introduced
+
+**Validation**
+- `pnpm validate:tools:executor`
+- `pnpm validate:agent:planner`
+- `pnpm validate:agent:step-executor`
+- `pnpm validate:agent:reviewer`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

@@ -764,8 +764,17 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   arguments `{ workspaceId, query, retrievalLimit, maxCharacters }`)
   with a copied validated goal — byte-identical for identical inputs.
   It never imports ToolExecutor, an LLM provider, or a repository.
-  Step executor, reviewer, orchestrator, and application run use case
-  remain later tasks.
+  `DefaultAgentStepExecutor` injects only the `ToolExecutor` port:
+  it validates step id/toolName/arguments and positive `timeoutMs`,
+  then calls `ToolExecutor.execute({ name: toolName, arguments,
+  timeoutMs })` and returns `{ stepId, toolCall }` with the
+  `ToolCallResult` unchanged. `DefaultAgentReviewer` has no
+  constructor dependencies and judges only tool-call status / step
+  count: mismatch → `"Step result count mismatch"`; any non-success
+  status → `"Tool call did not succeed: <status>"`; all success →
+  `"All tool calls succeeded"`. It never reinterprets Domain/RAG
+  answer text. Orchestrator and application run use case remain
+  later tasks.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -782,4 +791,5 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   citation:contract + citation:builder + application:cited-answer +
   mcp:contract + mcp:cited-answer-tool + mcp:registry +
   application:mcp-invoke + tools:contract + tools:executor +
-  application:tool-call + agent:contract + agent:planner + typecheck).
+  application:tool-call + agent:contract + agent:planner +
+  agent:step-executor + agent:reviewer + typecheck).
