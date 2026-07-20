@@ -1,9 +1,18 @@
 /**
- * Skeleton module: `app/knowledge/retrieval`
+ * Module: `app/knowledge/retrieval`
  *
- * Retriever port consumed by the RAG flow.
+ * `VectorRetriever` is the port for turning a query into ranked, hydrated
+ * `DocumentChunk`s within one workspace (`RetrievalInput` →
+ * `RetrievalResult`, each entry a `RetrievedChunk`). `DefaultVectorRetriever`
+ * is the adapter, depending only on `EmbeddingProvider`, `VectorIndex`, and
+ * `DocumentChunkRepository` ports — never a concrete adapter.
  *
- * Feature implementation is intentionally deferred. This barrel exists so the
- * module boundary is importable and validatable from day one.
+ * Keyword/hybrid retrieval, re-ranking, and context assembly are still
+ * deferred.
  */
 export const KNOWLEDGE_MODULE_RETRIEVAL = "app/knowledge/retrieval" as const;
+
+export type { RetrievalInput } from "./RetrievalInput";
+export type { RetrievalResult, RetrievedChunk } from "./RetrievalResult";
+export type { VectorRetriever } from "./VectorRetriever";
+export { DefaultVectorRetriever } from "./DefaultVectorRetriever";

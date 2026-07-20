@@ -647,3 +647,32 @@ Add vector nearest-neighbor query
 
 **Status**
 Completed
+
+## Task 25
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add default vector retriever
+
+**Summary**
+- Added `RetrievalInput` (`workspaceId`, `query`, `limit`), `RetrievalResult`/`RetrievedChunk` (`{ chunk: DocumentChunk, score }`), and the `VectorRetriever` port (`retrieve(input): Promise<RetrievalResult>`) to `retrieval`, following Project 1's `Retriever`/`RetrievalResult` shape
+- Added `DefaultVectorRetriever`, injecting only `EmbeddingProvider`, `VectorIndex`, and `DocumentChunkRepository` ports: converts `query` to a vector via `EmbeddingProvider.embed`, ranks via `VectorIndex.findNearest(workspaceId, queryVector, limit)`, then hydrates each ranked result to its `DocumentChunk` via `DocumentChunkRepository.findById` — silently excluding a stale result whose chunk no longer exists, and never re-sorting (preserves `VectorIndex`'s ranking order, capped at `limit`)
+- Rejects an empty/whitespace `workspaceId`/`query` or a non-positive/non-integer `limit` before any provider/index/repository call
+- Exported the new types/port/adapter from the `retrieval` and top-level `app/knowledge` barrels; added `validate:retrieval:vector` runner (using `FakeEmbeddingProvider`, `InMemoryVectorIndex`, `DefaultInMemoryDocumentChunkRepository` fakes) + `tests/unit/defaultVectorRetriever.cases.ts`, wired into the top-level `validate` chain
+- Validation includes a static source-scan asserting `DefaultVectorRetriever.ts` never references a concrete adapter or the `persistence` module; no Application Use Case, keyword/hybrid retrieval, re-ranking, context assembly, or stale-vector cleanup introduced
+
+**Validation**
+- `pnpm validate:repository:chunk`
+- `pnpm validate:embedding:provider`
+- `pnpm validate:embedding:index`
+- `pnpm validate:retrieval:vector`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

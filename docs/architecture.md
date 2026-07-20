@@ -264,6 +264,25 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   rechunk, similarity search/retriever/hybrid search, background
   scheduling/retry, and Source/Document/Chunk deletion are out of scope
   for this pipeline.
+- `VectorRetriever` (`app/knowledge/retrieval`) is a port —
+  `retrieve(input: RetrievalInput): Promise<RetrievalResult>`, where
+  `RetrievalInput` is `{ workspaceId, query, limit }` and `RetrievalResult`
+  is `{ query, chunks: RetrievedChunk[] }` (`RetrievedChunk` = `{ chunk:
+  DocumentChunk, score }`) — turning a natural-language query into ranked,
+  hydrated chunks within one workspace. `DefaultVectorRetriever` is the
+  adapter: it depends only on `EmbeddingProvider`, `VectorIndex`, and
+  `DocumentChunkRepository` ports (never a concrete adapter), converts
+  `query` to a vector via `EmbeddingProvider.embed`, ranks candidates via
+  `VectorIndex.findNearest(workspaceId, queryVector, limit)`, and resolves
+  each ranked result to its `DocumentChunk` via
+  `DocumentChunkRepository.findById` — silently excluding a stale result
+  whose chunk no longer exists rather than failing the request. It never
+  re-sorts: `chunks` preserves `VectorIndex`'s own ranking order and never
+  exceeds `limit` entries (though it may have fewer once stale vectors are
+  excluded). Rejects an empty/whitespace `workspaceId`/`query` or a
+  non-positive/non-integer `limit`. Keyword/hybrid retrieval, re-ranking,
+  context assembly, and stale-vector cleanup are out of scope for this
+  adapter.
 - Database adapters, HTTP/server, search, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +

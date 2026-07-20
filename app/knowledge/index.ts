@@ -57,6 +57,8 @@ export type { EmbeddingVector, ScoredEmbeddingVector, VectorIndex } from "./embe
 export { InMemoryVectorIndex } from "./embedding";
 export { KNOWLEDGE_MODULE_SEARCH } from "./search";
 export { KNOWLEDGE_MODULE_RETRIEVAL } from "./retrieval";
+export type { RetrievalInput, RetrievalResult, RetrievedChunk, VectorRetriever } from "./retrieval";
+export { DefaultVectorRetriever } from "./retrieval";
 export { KNOWLEDGE_MODULE_CONTEXT } from "./context";
 export { KNOWLEDGE_MODULE_PROMPT } from "./prompt";
 export { KNOWLEDGE_MODULE_CITATION } from "./citation";
