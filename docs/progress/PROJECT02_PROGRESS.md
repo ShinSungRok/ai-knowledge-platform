@@ -2194,3 +2194,30 @@ Add HTTP abstraction and cited-answer API controller
 **Status**
 Completed
 
+## Task 81
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add server lifecycle and request dispatch
+
+**Summary**
+- Added `KnowledgeServer` port and `DefaultKnowledgeServer` (start/stop/dispatch; HttpRouter-only; no TCP)
+- Added `createInMemoryKnowledgeServer` in composition wiring composition → router → server
+- Added validation + `validate:server:lifecycle`; updated barrels/docs
+- No node:http/Express listen, Docker entrypoint, or Operations middleware
+
+**Validation**
+- `pnpm validate:api:cited-answer`
+- `pnpm validate:composition:in-memory`
+- `pnpm validate:server:lifecycle`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

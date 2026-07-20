@@ -218,9 +218,12 @@ export type {
 } from "./http";
 export { DefaultHttpRouter } from "./http";
 export { KNOWLEDGE_MODULE_SERVER } from "./server";
+export type { KnowledgeServer } from "./server";
+export { DefaultKnowledgeServer } from "./server";
 export { KNOWLEDGE_MODULE_COMPOSITION } from "./composition";
 export type { KnowledgeRuntime, InMemoryKnowledgeComposition } from "./composition";
 export { createInMemoryKnowledgeComposition } from "./composition";
+export { createInMemoryKnowledgeServer } from "./composition";
 export { KNOWLEDGE_MODULE_CONFIG } from "./config";
 export type { KnowledgeRuntimeConfig } from "./config";
 export { DEFAULT_KNOWLEDGE_RUNTIME_CONFIG, loadKnowledgeRuntimeConfig } from "./config";

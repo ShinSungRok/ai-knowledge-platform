@@ -888,6 +888,9 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   and `DefaultHttpRouter` (exact method+path match). The `api` module
   exposes health + cited-answer controllers that depend only on
   `KnowledgeRuntime`, plus `createKnowledgeHttpRouter`.
+- The `server` module provides `DefaultKnowledgeServer` (start/stop/dispatch
+  over `HttpRouter` only; no TCP). `createInMemoryKnowledgeServer` in
+  composition wires the full in-memory runtime entrypath.
 - Real TCP listen / Express/Fastify and real AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -910,4 +913,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   application:memory-recall + application:run-agent-memory +
   memory:contract + memory:store + jobs:contract + jobs:store + jobs:sync-handler + jobs:processor + jobs:reindex-handler +
   application:enqueue-job + application:process-next-job +
-  evaluation:contract + config:runtime + composition:in-memory + http:router + api:cited-answer + typecheck).
+  evaluation:contract + config:runtime + composition:in-memory + http:router + api:cited-answer + server:lifecycle + typecheck).
