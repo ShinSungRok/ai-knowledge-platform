@@ -148,6 +148,14 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   the whole batch with no partial writes. It does not delete documents that
   disappear from the source, and has no background scheduling, retry, or
   real network access.
+- Task 70 defines production sync hardening contracts in `pipeline`:
+  `SyncChangeKind` (`added`/`updated`/`unchanged`/`removed`),
+  `SyncDocumentChange` / `SyncChangeSet`, `SyncLifecycleStatus` /
+  `SyncLifecycleResult`, plus `KnowledgeSourceChangeDetector` (pure
+  detect) and `KnowledgeSourceReconciler` (removed-document cleanup)
+  ports. Adapters and reconciling orchestration are later tasks; the
+  existing `SyncKnowledgeSourcePipeline` and `KnowledgeSourceConnector`
+  remain unchanged.
 - `DocumentChunk` (`app/knowledge/domain`) is a traceable, orderable segment
   of a `KnowledgeDocument`'s text (`workspaceId`, `id`, `documentId`, `text`,
   `order`) — it deliberately omits `sourceId`, since provenance already

@@ -78,6 +78,18 @@ export {
   DefaultInMemoryDocumentChunkRepository,
 } from "./persistence";
 export { KNOWLEDGE_MODULE_PIPELINE } from "./pipeline";
+export type {
+  SyncChangeKind,
+  SyncDocumentChange,
+  SyncChangeSet,
+  SyncLifecycleStatus,
+  SyncLifecycleResult,
+  KnowledgeSourceChangeDetectInput,
+  KnowledgeSourceChangeDetector,
+  KnowledgeSourceReconcileInput,
+  KnowledgeSourceReconcileResult,
+  KnowledgeSourceReconciler,
+} from "./pipeline";
 export { KNOWLEDGE_MODULE_EMBEDDING } from "./embedding";
 export type { ChunkingService } from "./embedding";
 export { FixedSizeDocumentChunker } from "./embedding";

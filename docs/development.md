@@ -26,6 +26,7 @@ pnpm validate:repository:chunk # DefaultInMemoryDocumentChunkRepository port con
 pnpm validate:application      # List + Page + Create + Update + Delete + Search + Export + Source + Retrieve + RetrieveHybrid + RetrieveGroundingContext + BuildGroundedPrompt + GenerateGroundedText + GenerateGroundedAnswer + GenerateCitedGroundedAnswer + InvokeMcpTool + ExecuteToolCall + RunAgent + AppendMemory + RecallMemory + RunAgentWithMemory + EnqueueJob + ProcessNextJob use cases
 pnpm validate:pipeline:connector # FakeKnowledgeSourceConnector port contract
 pnpm validate:pipeline:sync    # SyncKnowledgeSourcePipeline idempotent sync behavior
+pnpm validate:pipeline:sync-change-contract # Sync change-set/lifecycle/detector/reconciler contract
 pnpm validate:pipeline:chunk-document # ChunkKnowledgeDocumentPipeline chunk-and-replace behavior
 pnpm validate:pipeline:rechunk-source # RechunkKnowledgeSourcePipeline source-scoped rebuild behavior
 pnpm validate:pipeline:embed-document # EmbedDocumentChunksPipeline embed-and-upsert behavior

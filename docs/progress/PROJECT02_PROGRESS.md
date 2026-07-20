@@ -1892,3 +1892,31 @@ Add reindex job handler and job application use cases
 
 **Status**
 Completed
+
+## Task 70
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Define sync change-set and lifecycle contract
+
+**Summary**
+- Added pipeline sync hardening contracts: `SyncChangeKind`, `SyncDocumentChange`, `SyncChangeSet`, `SyncLifecycleStatus`, `SyncLifecycleResult`
+- Added `KnowledgeSourceChangeDetector` and `KnowledgeSourceReconciler` ports (no adapters)
+- Exported from pipeline and top-level barrels; updated docs
+- Added `runSyncChangeContractValidation.ts` + unit case inventory; wired `validate:pipeline:sync-change-contract` into top-level `validate`
+- Existing `SyncKnowledgeSourcePipeline` / connector / job handlers unchanged
+
+**Validation**
+- `pnpm validate:pipeline:connector`
+- `pnpm validate:pipeline:sync`
+- `pnpm validate:pipeline:sync-change-contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
