@@ -2221,3 +2221,29 @@ Add server lifecycle and request dispatch
 **Status**
 Completed
 
+## Task 82
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Define observability logger and metrics
+
+**Summary**
+- Added `LogLevel`/`LogEvent`/`Logger` and `MetricPoint`/`Metrics` ports
+- Added `InMemoryLogger` (ordered events, defensive copies, clear) and `InMemoryMetrics` (signature accumulation, sorted getPoints)
+- Added `validate:observability:contract`; updated barrels/docs
+- No HTTP middleware wiring, reliability/security, or real exporters
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:observability:contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

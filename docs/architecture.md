@@ -891,6 +891,8 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
 - The `server` module provides `DefaultKnowledgeServer` (start/stop/dispatch
   over `HttpRouter` only; no TCP). `createInMemoryKnowledgeServer` in
   composition wires the full in-memory runtime entrypath.
+- The `observability` module provides dependency-free `Logger`/`Metrics`
+  ports with `InMemoryLogger`/`InMemoryMetrics` adapters.
 - Real TCP listen / Express/Fastify and real AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +

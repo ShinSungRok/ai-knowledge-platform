@@ -249,6 +249,14 @@ export { DefaultRetrievalEvaluator } from "./evaluation";
 export { DefaultGroundingEvaluator } from "./evaluation";
 export { DefaultCitationEvaluator } from "./evaluation";
 export { KNOWLEDGE_MODULE_OBSERVABILITY } from "./observability";
+export type {
+  LogLevel,
+  LogEvent,
+  Logger,
+  MetricPoint,
+  Metrics,
+} from "./observability";
+export { InMemoryLogger, InMemoryMetrics } from "./observability";
 export { KNOWLEDGE_MODULE_RELIABILITY } from "./reliability";
 export { KNOWLEDGE_MODULE_SECURITY } from "./security";
 export { KNOWLEDGE_MODULE_INFRA } from "./infra";
