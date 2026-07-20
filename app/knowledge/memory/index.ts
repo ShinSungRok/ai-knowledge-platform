@@ -8,9 +8,11 @@
  * and recalls session turns only. `MemoryEntryRole`, `MemoryEntry`, and
  * the `MemoryStore` port (Task 62) define the contract; concrete
  * adapters and application use cases are later tasks.
+ * `InMemoryMemoryStore` (Task 63) is the first concrete store adapter.
  */
 export const KNOWLEDGE_MODULE_MEMORY = "app/knowledge/memory" as const;
 
 export type { MemoryEntryRole } from "./MemoryEntryRole";
 export type { MemoryEntry } from "./MemoryEntry";
 export type { MemoryStore, MemoryAppendInput } from "./MemoryStore";
+export { InMemoryMemoryStore } from "./InMemoryMemoryStore";

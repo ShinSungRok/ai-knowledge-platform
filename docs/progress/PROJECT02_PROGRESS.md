@@ -1701,3 +1701,29 @@ Define memory contract and module boundary
 
 **Status**
 Completed
+
+## Task 63
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add in-memory memory store
+
+**Summary**
+- Added `InMemoryMemoryStore` implementing `MemoryStore` with validated append (`workspaceId`/`sessionId`/`content` non-empty; `role` in user|agent|system)
+- Successful append stores entry with 1-based per-session `sequence` and deterministic `id` = `${workspaceId}:${sessionId}:${sequence}`; `listBySession` returns sequence-ascending defensive copies; empty session → `[]`; same sessionId isolated across workspaces
+- Exported from memory and top-level barrels; added `runInMemoryMemoryStoreValidation.ts` + unit case inventory; wired `validate:memory:store` into top-level `validate`
+- Updated docs; no application use case, Agent integration, TTL, or DB persistence introduced
+
+**Validation**
+- `pnpm validate:memory:contract`
+- `pnpm validate:memory:store`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

@@ -792,8 +792,11 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   document/chunk/vector search. Task 62 defines `MemoryEntryRole`,
   `MemoryEntry`, and the `MemoryStore` port (`append` /
   `listBySession`) so conversational turns can be stored and recalled
-  without replacing Knowledge retrieval. Concrete store adapters and
-  application use cases are later tasks.
+  without replacing Knowledge retrieval. `InMemoryMemoryStore`
+  implements `MemoryStore` with validated append, deterministic
+  `id`/`sequence`, sequence-ascending `listBySession`, workspace
+  isolation, and defensive copies — never importing Knowledge/
+  search/agent adapters. Application use cases are later tasks.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -812,4 +815,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   application:mcp-invoke + tools:contract + tools:executor +
   application:tool-call + agent:contract + agent:planner +
   agent:step-executor + agent:reviewer + agent:orchestrator +
-  application:run-agent + memory:contract + typecheck).
+  application:run-agent + memory:contract + memory:store + typecheck).

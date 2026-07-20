@@ -153,6 +153,7 @@ export type {
   MemoryStore,
   MemoryAppendInput,
 } from "./memory";
+export { InMemoryMemoryStore } from "./memory";
 export { KNOWLEDGE_MODULE_API } from "./api";
 export { KNOWLEDGE_MODULE_HTTP } from "./http";
 export { KNOWLEDGE_MODULE_SERVER } from "./server";
