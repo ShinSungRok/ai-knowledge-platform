@@ -14,6 +14,8 @@
  * `createSqlDocumentKnowledgeComposition` wires SQL documents only;
  * `createSqlKnowledgeComposition` wires document+source+chunk SQL over a
  * shared InMemorySqlGateway (vector/cited-answer still in-memory/fake).
+ * `createPostgresKnowledgeComposition` injects a PostgresPool into
+ * PostgresSqlGateway (optional schema apply).
  */
 export const KNOWLEDGE_MODULE_COMPOSITION = "app/knowledge/composition" as const;
 
@@ -21,8 +23,10 @@ export type { KnowledgeRuntime } from "./KnowledgeRuntime";
 export type { InMemoryKnowledgeComposition } from "./InMemoryKnowledgeComposition";
 export type { SqlDocumentKnowledgeComposition } from "./SqlDocumentKnowledgeComposition";
 export type { SqlKnowledgeComposition } from "./SqlKnowledgeComposition";
+export type { CreatePostgresKnowledgeCompositionOptions } from "./createPostgresKnowledgeComposition";
 export { createInMemoryKnowledgeComposition } from "./createInMemoryKnowledgeComposition";
 export { createInMemoryKnowledgeServer } from "./createInMemoryKnowledgeServer";
 export { createOperationsKnowledgeServer } from "./createOperationsKnowledgeServer";
 export { createSqlDocumentKnowledgeComposition } from "./createSqlDocumentKnowledgeComposition";
 export { createSqlKnowledgeComposition } from "./createSqlKnowledgeComposition";
+export { createPostgresKnowledgeComposition } from "./createPostgresKnowledgeComposition";

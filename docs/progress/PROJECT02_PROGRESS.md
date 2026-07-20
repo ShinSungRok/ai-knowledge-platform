@@ -2705,7 +2705,7 @@ Completed
 2026-07-20
 
 **Commit**
-Pending
+0fd624d
 
 **Title**
 Add FakePostgresPool validation for PostgresSqlGateway
@@ -2718,6 +2718,34 @@ Add FakePostgresPool validation for PostgresSqlGateway
 **Validation**
 - `pnpm validate:infra:postgres-gateway`
 - `pnpm validate:infra:knowledge-schema`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
+## Task 101
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add Postgres composition factory and update roadmap
+
+**Summary**
+- Added `createPostgresKnowledgeComposition` (pool inject, optional schema apply, SQL repos + fake cited-answer stack)
+- Widened `SqlKnowledgeComposition.sqlGateway` to `SqlGateway` for InMemory/Postgres compatibility
+- Wired `validate:composition:postgres-knowledge` via FakePostgresPool; updated roadmap/deployment docs
+- Default in-memory/operations/SQL-in-memory paths unchanged; default validate remains dependency-free
+
+**Validation**
+- `pnpm validate:infra:postgres-gateway`
+- `pnpm validate:composition:sql-knowledge`
+- `pnpm validate:composition:postgres-knowledge`
+- `pnpm validate:project:closeout`
 - `pnpm typecheck`
 - `pnpm validate`
 

@@ -79,9 +79,30 @@ await applyKnowledgeSchema(gateway);
 ```
 
 `CREATE TABLE IF NOT EXISTS` makes re-apply safe. Default `pnpm validate`
-uses `InMemorySqlGateway` (DDL no-op + repository SQL) and does not open
-a live Postgres connection. `PostgresSqlGateway` accepts an injected
+uses `InMemorySqlGateway` / `FakePostgresPool` paths and does not open a
+live Postgres connection. `PostgresSqlGateway` accepts an injected
 `PostgresPool` (`pg.Pool`) for optional real-driver use.
+
+Optional live smoke (not part of default validate):
+
+```bash
+# skip (exit 0) when unset
+pnpm validate:infra:postgres-live
+
+DATABASE_URL=postgres://user:pass@localhost:5432/knowledge \
+  pnpm validate:infra:postgres-live
+```
+
+Pool-injected composition:
+
+```ts
+import { Pool } from "pg";
+import { createPostgresKnowledgeComposition } from "./app/knowledge";
+
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const composition = await createPostgresKnowledgeComposition({ pool });
+// caller owns pool.end()
+```
 
 ## 6. Current limitations
 
