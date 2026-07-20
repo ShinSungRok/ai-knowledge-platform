@@ -513,6 +513,26 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   token usage, model configuration, answer parsing, grounding
   sufficiency judgment, and citation are all out of scope for this
   adapter.
+- `GenerateGroundedTextUseCase` (`app/knowledge/application`) combines
+  grounded-prompt construction and LLM generation behind one
+  application-boundary entry point: its constructor injects only
+  `BuildGroundedPromptUseCase` and the `LanguageModelProvider` port
+  (never the grounding-context retrieval use case, a prompt builder, any
+  retrieval/search/context port, or a concrete adapter). It validates
+  its own `GenerateGroundedTextInput`
+  (`workspaceId`/`query`/`retrievalLimit`/`maxCharacters`) at the
+  application boundary, then calls
+  `BuildGroundedPromptUseCase.execute({ workspaceId, query,
+  retrievalLimit, maxCharacters })` and passes the returned
+  `GroundedPrompt` straight into
+  `LanguageModelProvider.generate(prompt)`, returning its
+  `GeneratedText` unchanged. `GeneratedText` here is plain generated
+  text, **not yet** a grounded answer or citation — judging grounding
+  sufficiency, structuring an answer, and attaching citations remain
+  out of scope. `BuildGroundedPromptUseCase`'s own
+  retrieval-then-prompt-building flow is unaffected by this use case.
+  This is the second use case in this codebase to depend on another use
+  case (`BuildGroundedPromptUseCase`) rather than only on ports.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -524,4 +544,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   search:reranked + context:contract + context:assembler +
   prompt:contract + prompt:builder + application:grounding-context +
   application:prompt + ai:provider-contract + ai:fake-provider +
-  typecheck).
+  application:generate-text + typecheck).

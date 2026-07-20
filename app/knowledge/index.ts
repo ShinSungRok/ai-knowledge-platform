@@ -21,6 +21,7 @@ export {
   RetrieveHybridKnowledgeChunksUseCase,
   RetrieveGroundingContextUseCase,
   BuildGroundedPromptUseCase,
+  GenerateGroundedTextUseCase,
 } from "./application";
 export type {
   ListKnowledgeDocumentsInput,
@@ -41,6 +42,7 @@ export type {
   RetrieveHybridKnowledgeChunksInput,
   RetrieveGroundingContextInput,
   BuildGroundedPromptInput,
+  GenerateGroundedTextInput,
 } from "./application";
 export { KNOWLEDGE_MODULE_REPOSITORY } from "./repository";
 export type {

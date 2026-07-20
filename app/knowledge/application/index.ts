@@ -57,3 +57,7 @@ export {
   BuildGroundedPromptUseCase,
   type BuildGroundedPromptInput,
 } from "./BuildGroundedPromptUseCase";
+export {
+  GenerateGroundedTextUseCase,
+  type GenerateGroundedTextInput,
+} from "./GenerateGroundedTextUseCase";

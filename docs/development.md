@@ -23,7 +23,7 @@ pnpm validate:skeleton         # directory + barrel + docs integrity
 pnpm validate:repository       # DefaultInMemoryRepository port contract
 pnpm validate:repository:source # DefaultInMemoryKnowledgeSourceRepository port contract
 pnpm validate:repository:chunk # DefaultInMemoryDocumentChunkRepository port contract (findById/findAll + workspace-global id conflict rejection)
-pnpm validate:application      # List + Page + Create + Update + Delete + Search + Export + Source + Retrieve + RetrieveHybrid + RetrieveGroundingContext + BuildGroundedPrompt use cases
+pnpm validate:application      # List + Page + Create + Update + Delete + Search + Export + Source + Retrieve + RetrieveHybrid + RetrieveGroundingContext + BuildGroundedPrompt + GenerateGroundedText use cases
 pnpm validate:pipeline:connector # FakeKnowledgeSourceConnector port contract
 pnpm validate:pipeline:sync    # SyncKnowledgeSourcePipeline idempotent sync behavior
 pnpm validate:pipeline:chunk-document # ChunkKnowledgeDocumentPipeline chunk-and-replace behavior
@@ -45,10 +45,11 @@ pnpm validate:prompt:contract # PromptBuilder/GroundedPrompt contract export + t
 pnpm validate:prompt:builder # DefaultPromptBuilder fixed-format, evidence-bound prompt rendering
 pnpm validate:application:grounding-context # RetrieveGroundingContextUseCase RerankedSearch -> ContextAssembler delegation sequence
 pnpm validate:application:prompt # BuildGroundedPromptUseCase RetrieveGroundingContextUseCase -> PromptBuilder delegation sequence
+pnpm validate:application:generate-text # GenerateGroundedTextUseCase BuildGroundedPromptUseCase -> LanguageModelProvider delegation sequence
 pnpm validate:ai:provider-contract # LanguageModelProvider/GeneratedText contract export + type-compatibility
 pnpm validate:ai:fake-provider # FakeLanguageModelProvider dependency-free, deterministic prompt-echo behavior
 pnpm typecheck                 # TypeScript strict check
-pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application (incl. grounding-context + prompt) + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + search:hybrid + search:rerank-contract + search:reranker + search:reranked + context:contract + context:assembler + prompt:contract + prompt:builder + ai:provider-contract + ai:fake-provider + typecheck
+pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application (incl. grounding-context + prompt + generate-text) + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + search:hybrid + search:rerank-contract + search:reranker + search:reranked + context:contract + context:assembler + prompt:contract + prompt:builder + ai:provider-contract + ai:fake-provider + typecheck
 ```
 
 Formal unit/integration/e2e suites under `tests/` are reserved for later

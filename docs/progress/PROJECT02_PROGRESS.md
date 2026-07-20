@@ -1138,3 +1138,33 @@ Add deterministic fake language model provider
 
 **Status**
 Completed
+
+## Task 43
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add generate grounded text use case
+
+**Summary**
+- Added `GenerateGroundedTextUseCase` + its own `GenerateGroundedTextInput` (`workspaceId`, `query`, `retrievalLimit`, `maxCharacters`) to `application`, mirroring how `BuildGroundedPromptInput` is kept separate from lower-level input types rather than reusing another use case's input directly
+- Constructor injects only `BuildGroundedPromptUseCase` and the `LanguageModelProvider` port — never the grounding-context retrieval use case, a prompt builder, any retrieval/search/context port, or a concrete adapter; `execute` validates `workspaceId`/`query`/`retrievalLimit`/`maxCharacters` at the application boundary, then calls `BuildGroundedPromptUseCase.execute({ workspaceId, query, retrievalLimit, maxCharacters })` and passes the returned `GroundedPrompt` straight into `LanguageModelProvider.generate(prompt)`, returning the resulting `GeneratedText` unchanged
+- This is the second use case in this codebase to depend on another use case rather than only on ports; `BuildGroundedPromptUseCase`'s own retrieval-then-prompt-building flow is unaffected; `GeneratedText` here is plain generated text, not yet a grounded answer or citation
+- Reworded an initial doc-comment draft that named `RetrieveGroundingContextUseCase`/`PromptBuilder` directly (the static source-scan's own forbidden-reference check would otherwise fail against itself, mirroring the same class of issue fixed in Task 35's `DefaultReranker` doc comment)
+- Exported the use case + input type from the `application` and top-level `app/knowledge` barrels
+- Added `runGenerateGroundedTextUseCaseValidation.ts` (a static source-scan confirming the use case only imports `BuildGroundedPromptUseCase`/`LanguageModelProvider`; a real-harness test with a `CountingBuildGroundedPromptUseCase` — subclassing `BuildGroundedPromptUseCase` since its private fields make it non-structurally-typed, built with dummy port/use-case stubs passed to `super()` and fully overriding `execute` to delegate to a real inner instance — and a `CountingLanguageModelProvider`, proving `BuildGroundedPromptUseCase.execute` is called before `LanguageModelProvider.generate`, each dependency receives correctly-mapped input, and the returned `GeneratedText` matches a direct call sequence; invalid input rejected before either dependency is called) + `tests/unit/generateGroundedTextUseCase.cases.ts`, wired into `validate:application:generate-text`, `validate:application` (and therefore the top-level `validate` chain)
+- Updated `docs/architecture.md`/`docs/modules.md`/`docs/development.md` to describe the new use case; no answer structuring, citation generation, real LLM provider, streaming, HTTP/API, composition root wiring, or `BuildGroundedPromptUseCase`/re-ranking/context-assembly behavior change introduced
+
+**Validation**
+- `pnpm validate:application:prompt`
+- `pnpm validate:ai:fake-provider`
+- `pnpm validate:application:generate-text`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
