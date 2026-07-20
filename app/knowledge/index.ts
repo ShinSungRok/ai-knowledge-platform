@@ -201,6 +201,23 @@ export { KNOWLEDGE_MODULE_SERVER } from "./server";
 export { KNOWLEDGE_MODULE_COMPOSITION } from "./composition";
 export { KNOWLEDGE_MODULE_CONFIG } from "./config";
 export { KNOWLEDGE_MODULE_EVALUATION } from "./evaluation";
+export type {
+  EvaluationCase,
+  EvaluationDataset,
+  RetrievalCaseScore,
+  RetrievalEvaluationMetrics,
+  GroundingCaseScore,
+  GroundingEvaluationMetrics,
+  CitationCaseScore,
+  CitationEvaluationMetrics,
+  EvaluationReport,
+  RetrievalEvaluatorInput,
+  RetrievalEvaluator,
+  GroundingEvaluatorInput,
+  GroundingEvaluator,
+  CitationEvaluatorInput,
+  CitationEvaluator,
+} from "./evaluation";
 export { KNOWLEDGE_MODULE_OBSERVABILITY } from "./observability";
 export { KNOWLEDGE_MODULE_RELIABILITY } from "./reliability";
 export { KNOWLEDGE_MODULE_SECURITY } from "./security";

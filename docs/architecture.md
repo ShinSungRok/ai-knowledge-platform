@@ -860,6 +860,15 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   pipelines (rechunk failure short-circuits reindex). `EnqueueJobUseCase`
   injects only `JobStore`; `ProcessNextJobUseCase` injects only
   `JobProcessor`. Real workers/cron/composition wiring remain out of scope.
+- The `evaluation` module (`app/knowledge/evaluation`) is the Knowledge
+  Quality Evaluation boundary. Task 74 defines `EvaluationCase` /
+  `EvaluationDataset`, retrieval/grounding/citation case scores and
+  aggregate metrics, `EvaluationReport`, and the `RetrievalEvaluator` /
+  `GroundingEvaluator` / `CitationEvaluator` ports for scoring
+  pre-fetched `RetrievalResult` / `GroundedAnswer` / `CitedGroundedAnswer`
+  artifacts without duplicating Domain/RAG logic. Default evaluator
+  adapters, run use cases, real corpus loaders, and LLM-as-judge remain
+  later tasks.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -881,4 +890,5 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   application:run-agent + application:memory-append +
   application:memory-recall + application:run-agent-memory +
   memory:contract + memory:store + jobs:contract + jobs:store + jobs:sync-handler + jobs:processor + jobs:reindex-handler +
-  application:enqueue-job + application:process-next-job + typecheck).
+  application:enqueue-job + application:process-next-job +
+  evaluation:contract + typecheck).

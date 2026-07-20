@@ -2004,3 +2004,30 @@ Add reconciling sync pipeline and wire sync job handler
 
 **Status**
 Completed
+
+## Task 74
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Define evaluation dataset and metrics contract
+
+**Summary**
+- Added evaluation contracts: `EvaluationCase`/`EvaluationDataset`, retrieval/grounding/citation case scores and metrics, `EvaluationReport`
+- Added `RetrievalEvaluator`/`GroundingEvaluator`/`CitationEvaluator` ports (no adapters)
+- Updated evaluation module barrel comment; re-exported from top-level; updated docs
+- Added `runEvaluationContractValidation.ts` + unit case inventory; wired `validate:evaluation:contract` into top-level `validate`
+- No evaluator adapters, use cases, corpus loaders, or composition wiring
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:evaluation:contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

@@ -294,7 +294,7 @@ Other modules remain skeleton boundaries until scoped.
 
 | Module | Responsibility |
 |---|---|
-| `evaluation` | Quality, regression, and benchmark evaluation framework. |
+| `evaluation` | Knowledge Quality Evaluation. `EvaluationCase` / `EvaluationDataset`, retrieval/grounding/citation case scores and aggregate metrics, `EvaluationReport`, and the `RetrievalEvaluator` / `GroundingEvaluator` / `CitationEvaluator` ports define dependency-free scoring contracts over `RetrievalResult`, `GroundedAnswer`, and `CitedGroundedAnswer`. Default evaluator adapters and run use cases are later tasks; no real benchmark corpus loader or LLM-as-judge. |
 | `observability` | Logging, metrics, and health-check foundations. |
 | `reliability` | Retry, timeout, circuit breaker, error classification. |
 | `security` | Rate limiting and input validation foundations. |
