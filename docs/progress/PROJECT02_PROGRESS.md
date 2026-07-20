@@ -1974,3 +1974,33 @@ Add vector delete and knowledge source reconciler
 
 **Status**
 Completed
+
+## Task 73
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add reconciling sync pipeline and wire sync job handler
+
+**Summary**
+- Added `ReconcilingSyncKnowledgeSourcePipeline` (detect → upsert added/updated → reconcile removed); legacy `SyncKnowledgeSourcePipeline` unchanged
+- Wired `SyncKnowledgeSourceJobHandler` to reconciling pipeline with lifecycle summary result shape
+- Added reconciling-sync validation; updated sync-handler/processor validations; wired `validate:pipeline:reconciling-sync` into top-level `validate`
+- Updated barrels/docs
+
+**Validation**
+- `pnpm validate:pipeline:sync`
+- `pnpm validate:pipeline:change-detector`
+- `pnpm validate:pipeline:reconciler`
+- `pnpm validate:pipeline:reconciling-sync`
+- `pnpm validate:jobs:sync-handler`
+- `pnpm validate:jobs:processor`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

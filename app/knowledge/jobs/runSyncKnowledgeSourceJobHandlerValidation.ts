@@ -2,10 +2,14 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 
 import { SyncKnowledgeSourceJobHandler } from "./SyncKnowledgeSourceJobHandler";
-import { SyncKnowledgeSourcePipeline } from "../pipeline/SyncKnowledgeSourcePipeline";
+import { DefaultKnowledgeSourceChangeDetector } from "../pipeline/DefaultKnowledgeSourceChangeDetector";
+import { DefaultKnowledgeSourceReconciler } from "../pipeline/DefaultKnowledgeSourceReconciler";
 import { FakeKnowledgeSourceConnector } from "../pipeline/FakeKnowledgeSourceConnector";
+import { ReconcilingSyncKnowledgeSourcePipeline } from "../pipeline/ReconcilingSyncKnowledgeSourcePipeline";
+import { DefaultInMemoryDocumentChunkRepository } from "../persistence/DefaultInMemoryDocumentChunkRepository";
 import { DefaultInMemoryRepository } from "../persistence/DefaultInMemoryRepository";
 import { DefaultInMemoryKnowledgeSourceRepository } from "../persistence/DefaultInMemoryKnowledgeSourceRepository";
+import { InMemoryVectorIndex } from "../embedding/InMemoryVectorIndex";
 import type { KnowledgeSource } from "../domain/KnowledgeSource";
 import type { JobRecord } from "./JobRecord";
 
@@ -51,16 +55,42 @@ function sampleJob(overrides: Partial<JobRecord> = {}): JobRecord {
   };
 }
 
-function assertDependsOnlyOnSyncPipeline(): void {
-  console.log("[jobs] SyncKnowledgeSourceJobHandler depends only on SyncKnowledgeSourcePipeline...");
+function buildReconcilingPipeline(
+  sourceRepository: DefaultInMemoryKnowledgeSourceRepository,
+  documentRepository: DefaultInMemoryRepository,
+  connector: FakeKnowledgeSourceConnector,
+): ReconcilingSyncKnowledgeSourcePipeline {
+  return new ReconcilingSyncKnowledgeSourcePipeline(
+    sourceRepository,
+    documentRepository,
+    connector,
+    new DefaultKnowledgeSourceChangeDetector(),
+    new DefaultKnowledgeSourceReconciler(
+      documentRepository,
+      new DefaultInMemoryDocumentChunkRepository(),
+      new InMemoryVectorIndex(),
+    ),
+  );
+}
+
+function assertDependsOnlyOnReconcilingPipeline(): void {
+  console.log(
+    "[jobs] SyncKnowledgeSourceJobHandler depends only on ReconcilingSyncKnowledgeSourcePipeline...",
+  );
   const sourcePath = path.resolve(
     process.cwd(),
     "app/knowledge/jobs/SyncKnowledgeSourceJobHandler.ts",
   );
   const source = readFileSync(sourcePath, "utf8");
   assertTruthy(
-    source.includes('from "../pipeline/SyncKnowledgeSourcePipeline"'),
-    "Handler must import SyncKnowledgeSourcePipeline",
+    source.includes(
+      'from "../pipeline/ReconcilingSyncKnowledgeSourcePipeline"',
+    ),
+    "Handler must import ReconcilingSyncKnowledgeSourcePipeline",
+  );
+  assertTruthy(
+    !source.includes('from "../pipeline/SyncKnowledgeSourcePipeline"'),
+    "Handler must not import legacy SyncKnowledgeSourcePipeline",
   );
   const forbiddenReferences = [
     "FakeKnowledgeSourceConnector",
@@ -78,8 +108,10 @@ function assertDependsOnlyOnSyncPipeline(): void {
   }
 }
 
-async function assertExecuteReturnsSyncResult(): Promise<void> {
-  console.log("[jobs] execute delegates to pipeline.sync and returns { sourceId, fetchedCount, savedCount }...");
+async function assertExecuteReturnsLifecycleSummary(): Promise<void> {
+  console.log(
+    "[jobs] execute returns reconciling sync lifecycle summary fields...",
+  );
   const sourceRepository = new DefaultInMemoryKnowledgeSourceRepository();
   const documentRepository = new DefaultInMemoryRepository();
   await registerSource(sourceRepository);
@@ -93,7 +125,7 @@ async function assertExecuteReturnsSyncResult(): Promise<void> {
       ],
     },
   ]);
-  const pipeline = new SyncKnowledgeSourcePipeline(
+  const pipeline = buildReconcilingPipeline(
     sourceRepository,
     documentRepository,
     connector,
@@ -104,12 +136,18 @@ async function assertExecuteReturnsSyncResult(): Promise<void> {
   const result = await handler.execute(sampleJob());
   assertEqual(result["sourceId"], SOURCE, "expected sourceId");
   assertEqual(result["fetchedCount"], 2, "expected fetchedCount=2");
-  assertEqual(result["savedCount"], 2, "expected savedCount=2");
+  assertEqual(result["addedCount"], 2, "expected addedCount=2");
+  assertEqual(result["updatedCount"], 0, "expected updatedCount=0");
+  assertEqual(result["unchangedCount"], 0, "expected unchangedCount=0");
+  assertEqual(result["removedDocumentCount"], 0, "expected removedDocumentCount=0");
+  assertEqual(result["removedChunkCount"], 0, "expected removedChunkCount=0");
+  assertEqual(result["removedVectorCount"], 0, "expected removedVectorCount=0");
+  assertEqual(result["savedCount"], undefined, "legacy savedCount must be absent");
 }
 
 async function main(): Promise<void> {
-  assertDependsOnlyOnSyncPipeline();
-  await assertExecuteReturnsSyncResult();
+  assertDependsOnlyOnReconcilingPipeline();
+  await assertExecuteReturnsLifecycleSummary();
   console.log("SyncKnowledgeSourceJobHandler validation succeeded.");
 }
 

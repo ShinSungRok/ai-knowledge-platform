@@ -29,6 +29,7 @@ pnpm validate:pipeline:sync    # SyncKnowledgeSourcePipeline idempotent sync beh
 pnpm validate:pipeline:sync-change-contract # Sync change-set/lifecycle/detector/reconciler contract
 pnpm validate:pipeline:change-detector # DefaultKnowledgeSourceChangeDetector classification behavior
 pnpm validate:pipeline:reconciler # DefaultKnowledgeSourceReconciler document/chunk/vector cleanup
+pnpm validate:pipeline:reconciling-sync # ReconcilingSyncKnowledgeSourcePipeline detect/upsert/reconcile
 pnpm validate:pipeline:chunk-document # ChunkKnowledgeDocumentPipeline chunk-and-replace behavior
 pnpm validate:pipeline:rechunk-source # RechunkKnowledgeSourcePipeline source-scoped rebuild behavior
 pnpm validate:pipeline:embed-document # EmbedDocumentChunksPipeline embed-and-upsert behavior
@@ -77,7 +78,7 @@ pnpm validate:memory:contract # MemoryEntryRole/MemoryEntry/MemoryStore contract
 pnpm validate:memory:store # InMemoryMemoryStore append/list ordering, workspace isolation, defensive copies
 pnpm validate:jobs:contract # JobType/JobStatus/JobRecord + JobStore/JobHandler/JobProcessor contract export + type-compatibility
 pnpm validate:jobs:store # InMemoryJobStore enqueue/list/get/save, workspace isolation, defensive copies
-pnpm validate:jobs:sync-handler # SyncKnowledgeSourceJobHandler SyncKnowledgeSourcePipeline delegation
+pnpm validate:jobs:sync-handler # SyncKnowledgeSourceJobHandler ReconcilingSyncKnowledgeSourcePipeline delegation
 pnpm validate:jobs:processor # DefaultJobProcessor pending→running→completed/failed retry transitions
 pnpm validate:jobs:reindex-handler # ReindexKnowledgeSourceJobHandler rechunk-then-reindex ordering
 pnpm validate:application:enqueue-job # EnqueueJobUseCase JobStore.enqueue delegation

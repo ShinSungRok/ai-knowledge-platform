@@ -173,7 +173,15 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   `VectorIndex`: for each removed document id it deletes chunk vectors,
   clears chunks, then deletes the document; missing documents are
   skipped; source mismatch throws and stops further deletes without
-  rollback. Reconciling sync orchestration remains a later task.
+  rollback.
+- `ReconcilingSyncKnowledgeSourcePipeline` (`app/knowledge/pipeline`)
+  orchestrates source lookup → connector fetch → change detection →
+  added/updated saves → removed reconcile, returning
+  `SyncLifecycleResult` with `status: "completed"`. Whole-batch duplicate
+  externalId and source-conflict checks run before any write or
+  reconcile. Legacy `SyncKnowledgeSourcePipeline` remains unchanged.
+  `SyncKnowledgeSourceJobHandler` injects only this reconciling pipeline
+  and returns lifecycle summary fields (not `{ savedCount }`).
 - `DocumentChunk` (`app/knowledge/domain`) is a traceable, orderable segment
   of a `KnowledgeDocument`'s text (`workspaceId`, `id`, `documentId`, `text`,
   `order`) — it deliberately omits `sourceId`, since provenance already
@@ -843,8 +851,9 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   duplication. `InMemoryJobStore` implements `JobStore` with validated enqueue,
   deterministic `id`/`sequence`, sequence-ascending lists, getById,
   save-replace, and workspace isolation. `SyncKnowledgeSourceJobHandler` injects only
-  `SyncKnowledgeSourcePipeline` and returns `{ sourceId, fetchedCount,
-  savedCount }`. `DefaultJobProcessor` injects `JobStore` + handlers,
+  `ReconcilingSyncKnowledgeSourcePipeline` and returns lifecycle summary
+  fields (`fetchedCount`, `addedCount`, `updatedCount`, `unchangedCount`,
+  removed counts). `DefaultJobProcessor` injects `JobStore` + handlers,
   rejects duplicate types, processes oldest pending job
   (pending→running→completed/failed, retry while attempts < maxAttempts).
   `ReindexKnowledgeSourceJobHandler` injects only rechunk + reindex

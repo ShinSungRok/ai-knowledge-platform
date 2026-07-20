@@ -92,6 +92,8 @@ export type {
 } from "./pipeline";
 export { DefaultKnowledgeSourceChangeDetector } from "./pipeline";
 export { DefaultKnowledgeSourceReconciler } from "./pipeline";
+export { ReconcilingSyncKnowledgeSourcePipeline } from "./pipeline";
+export type { ReconcilingSyncKnowledgeSourceInput } from "./pipeline";
 export { KNOWLEDGE_MODULE_EMBEDDING } from "./embedding";
 export type { ChunkingService } from "./embedding";
 export { FixedSizeDocumentChunker } from "./embedding";

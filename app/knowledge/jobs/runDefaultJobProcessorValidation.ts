@@ -4,10 +4,14 @@ import path from "node:path";
 import { DefaultJobProcessor } from "./DefaultJobProcessor";
 import { InMemoryJobStore } from "./InMemoryJobStore";
 import { SyncKnowledgeSourceJobHandler } from "./SyncKnowledgeSourceJobHandler";
-import { SyncKnowledgeSourcePipeline } from "../pipeline/SyncKnowledgeSourcePipeline";
+import { DefaultKnowledgeSourceChangeDetector } from "../pipeline/DefaultKnowledgeSourceChangeDetector";
+import { DefaultKnowledgeSourceReconciler } from "../pipeline/DefaultKnowledgeSourceReconciler";
 import { FakeKnowledgeSourceConnector } from "../pipeline/FakeKnowledgeSourceConnector";
+import { ReconcilingSyncKnowledgeSourcePipeline } from "../pipeline/ReconcilingSyncKnowledgeSourcePipeline";
+import { DefaultInMemoryDocumentChunkRepository } from "../persistence/DefaultInMemoryDocumentChunkRepository";
 import { DefaultInMemoryRepository } from "../persistence/DefaultInMemoryRepository";
 import { DefaultInMemoryKnowledgeSourceRepository } from "../persistence/DefaultInMemoryKnowledgeSourceRepository";
+import { InMemoryVectorIndex } from "../embedding/InMemoryVectorIndex";
 import type { KnowledgeSource } from "../domain/KnowledgeSource";
 import type { JobHandler } from "./JobHandler";
 import type { JobRecord } from "./JobRecord";
@@ -57,6 +61,24 @@ async function registerSource(
   } satisfies KnowledgeSource);
 }
 
+function buildReconcilingPipeline(
+  sourceRepository: DefaultInMemoryKnowledgeSourceRepository,
+  documentRepository: DefaultInMemoryRepository,
+  connector: FakeKnowledgeSourceConnector,
+): ReconcilingSyncKnowledgeSourcePipeline {
+  return new ReconcilingSyncKnowledgeSourcePipeline(
+    sourceRepository,
+    documentRepository,
+    connector,
+    new DefaultKnowledgeSourceChangeDetector(),
+    new DefaultKnowledgeSourceReconciler(
+      documentRepository,
+      new DefaultInMemoryDocumentChunkRepository(),
+      new InMemoryVectorIndex(),
+    ),
+  );
+}
+
 function buildSyncHandler(): SyncKnowledgeSourceJobHandler {
   const sourceRepository = new DefaultInMemoryKnowledgeSourceRepository();
   const documentRepository = new DefaultInMemoryRepository();
@@ -70,11 +92,7 @@ function buildSyncHandler(): SyncKnowledgeSourceJobHandler {
     },
   ]);
   return new SyncKnowledgeSourceJobHandler(
-    new SyncKnowledgeSourcePipeline(
-      sourceRepository,
-      documentRepository,
-      connector,
-    ),
+    buildReconcilingPipeline(sourceRepository, documentRepository, connector),
   );
 }
 
@@ -94,11 +112,7 @@ async function buildWiredSyncHandler(): Promise<{
   ]);
   return {
     handler: new SyncKnowledgeSourceJobHandler(
-      new SyncKnowledgeSourcePipeline(
-        sourceRepository,
-        documentRepository,
-        connector,
-      ),
+      buildReconcilingPipeline(sourceRepository, documentRepository, connector),
     ),
     sourceRepository,
   };
@@ -132,7 +146,7 @@ function assertDependsOnlyOnPorts(): void {
   const forbiddenReferences = [
     "InMemoryJobStore",
     "SyncKnowledgeSourceJobHandler",
-    "SyncKnowledgeSourcePipeline",
+    "ReconcilingSyncKnowledgeSourcePipeline",
     "FakeKnowledgeSourceConnector",
     "../pipeline/",
     "../persistence/",
@@ -178,7 +192,8 @@ async function assertCompletedPath(): Promise<void> {
   assertTruthy(processed !== null, "expected a job");
   assertEqual(processed?.status, "completed", "expected completed");
   assertEqual(processed?.attempts, 1, "expected attempts=1");
-  assertEqual(processed?.result?.["savedCount"], 1, "expected savedCount");
+  assertEqual(processed?.result?.["addedCount"], 1, "expected addedCount");
+  assertEqual(processed?.result?.["fetchedCount"], 1, "expected fetchedCount");
   assertEqual(processed?.lastError, undefined, "expected no lastError");
 
   const none = await processor.processNext(WORKSPACE);
