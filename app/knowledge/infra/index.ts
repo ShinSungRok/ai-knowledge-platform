@@ -17,6 +17,7 @@ export type { SqlGateway } from "./SqlGateway";
 export type { PostgresPool } from "./PostgresPool";
 export { InMemorySqlGateway } from "./InMemorySqlGateway";
 export { PostgresSqlGateway } from "./PostgresSqlGateway";
+export { FakePostgresPool } from "./FakePostgresPool";
 export { applyKnowledgeSchema } from "./applyKnowledgeSchema";
 export {
   SQL_CREATE_KNOWLEDGE_SOURCES,

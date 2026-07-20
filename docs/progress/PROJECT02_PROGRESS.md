@@ -2680,7 +2680,7 @@ Completed
 2026-07-20
 
 **Commit**
-Pending
+ca0be69
 
 **Title**
 Add PostgresSqlGateway with pg driver
@@ -2692,6 +2692,31 @@ Add PostgresSqlGateway with pg driver
 
 **Validation**
 - `pnpm validate:infra:sql-gateway-contract`
+- `pnpm validate:infra:knowledge-schema`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
+## Task 100
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add FakePostgresPool validation for PostgresSqlGateway
+
+**Summary**
+- Added `FakePostgresPool` delegating to InMemorySqlGateway (no network/Docker)
+- Added `validate:infra:postgres-gateway` (upsert/select + schema/repository smoke)
+- Added optional `validate:infra:postgres-live` (skip when DATABASE_URL unset; not in top-level validate)
+
+**Validation**
+- `pnpm validate:infra:postgres-gateway`
 - `pnpm validate:infra:knowledge-schema`
 - `pnpm typecheck`
 - `pnpm validate`

@@ -285,6 +285,7 @@ export type {
 export {
   InMemorySqlGateway,
   PostgresSqlGateway,
+  FakePostgresPool,
   applyKnowledgeSchema,
 } from "./infra";
 export {

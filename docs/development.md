@@ -107,6 +107,8 @@ pnpm validate:project:closeout # Project 2 baseline docs/scripts/exports closeou
 pnpm validate:infra:sql-gateway-contract # SqlGateway port contract
 pnpm validate:infra:in-memory-sql # InMemorySqlGateway document/source/chunk SQL
 pnpm validate:infra:knowledge-schema # applyKnowledgeSchema + SQL repos smoke
+pnpm validate:infra:postgres-gateway # PostgresSqlGateway via FakePostgresPool
+pnpm validate:infra:postgres-live # optional live DB (requires DATABASE_URL; not in validate)
 pnpm validate:repository:sql-document # SqlKnowledgeDocumentRepository contract
 pnpm validate:repository:sql-source # SqlKnowledgeSourceRepository via InMemorySqlGateway
 pnpm validate:repository:sql-chunk # SqlDocumentChunkRepository via InMemorySqlGateway
