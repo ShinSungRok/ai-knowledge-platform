@@ -2484,3 +2484,29 @@ Add SQL-backed knowledge document repository
 **Status**
 Completed
 
+## Task 92
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add in-memory SQL gateway and repository validation
+
+**Summary**
+- Added `InMemorySqlGateway` supporting knowledge_documents upsert/select/delete SQL
+- Added `validate:infra:in-memory-sql` and `validate:repository:sql-document` mirroring in-memory repository contracts
+- No real Postgres / ORM / Docker daemon usage
+
+**Validation**
+- `pnpm validate:repository`
+- `pnpm validate:infra:in-memory-sql`
+- `pnpm validate:repository:sql-document`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

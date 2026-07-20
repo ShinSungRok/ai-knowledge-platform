@@ -105,6 +105,8 @@ pnpm validate:composition:operations # createOperationsKnowledgeServer wiring
 pnpm validate:deployment:readiness # static Docker/docs/export readiness
 pnpm validate:project:closeout # Project 2 baseline docs/scripts/exports closeout
 pnpm validate:infra:sql-gateway-contract # SqlGateway port contract
+pnpm validate:infra:in-memory-sql # InMemorySqlGateway knowledge_documents SQL
+pnpm validate:repository:sql-document # SqlKnowledgeDocumentRepository contract
 pnpm typecheck                 # TypeScript strict check
 pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application (incl. grounding-context + prompt + generate-text + grounded-answer + cited-answer + mcp-invoke + tool-call + run-agent + memory-append + memory-recall + run-agent-memory + enqueue-job + process-next-job) + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + search:hybrid + search:rerank-contract + search:reranker + search:reranked + context:contract + context:assembler + prompt:contract + prompt:builder + ai:provider-contract + ai:fake-provider + rag:answer-contract + rag:answer-assembler + citation:contract + citation:builder + mcp:contract + mcp:cited-answer-tool + mcp:registry + tools:contract + tools:executor + agent:contract + agent:planner + agent:step-executor + agent:reviewer + agent:orchestrator + memory:contract + memory:store + jobs:contract + jobs:store + jobs:sync-handler + jobs:processor + jobs:reindex-handler + typecheck
 ```

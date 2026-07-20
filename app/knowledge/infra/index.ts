@@ -12,6 +12,7 @@ export const KNOWLEDGE_MODULE_INFRA = "app/knowledge/infra" as const;
 export type { SqlParameter } from "./SqlParameter";
 export type { SqlQueryResult } from "./SqlQueryResult";
 export type { SqlGateway } from "./SqlGateway";
+export { InMemorySqlGateway } from "./InMemorySqlGateway";
 export {
   SQL_UPSERT_KNOWLEDGE_DOCUMENT,
   SQL_SELECT_KNOWLEDGE_DOCUMENT_BY_ID,
