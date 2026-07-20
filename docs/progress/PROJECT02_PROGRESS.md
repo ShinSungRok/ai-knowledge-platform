@@ -888,3 +888,28 @@ Add retrieve grounding context use case
 
 **Status**
 Completed
+
+## Task 34
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Define re-ranking contract
+
+**Summary**
+- Added `app/knowledge/search/RerankingInput.ts` (`{ workspaceId, query, chunks: RetrievedChunk[] }`, reusing `RetrievedChunk` from the retrieval module) and `app/knowledge/search/Reranker.ts` (`rerank(input: RerankingInput): Promise<RetrievedChunk[]>` port)
+- Updated the `search` and top-level `app/knowledge` barrels to export the new types; no scoring algorithm, adapter, hybrid-search change, or application use case change implemented — contract only
+- Added `runRerankerContractValidation.ts` (module-constant check, an in-file `FakeReranker` test double proving the port is implementable/callable from just the exported types and returns a `RetrievedChunk[]`-shaped result, an empty-chunk-list case, and a compile-time type-assignability check that the top-level barrel re-exports the same `Reranker` type) + `tests/unit/rerankerContract.cases.ts`
+- Added `validate:search:rerank-contract` to `package.json`, wired into the top-level `validate` chain; no relevance scoring, `HybridSearch`/`RetrieveGroundingContextUseCase` change, LLM/cross-encoder provider, prompt, citation, or evaluation framework code introduced
+
+**Validation**
+- `pnpm validate:search:rerank-contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

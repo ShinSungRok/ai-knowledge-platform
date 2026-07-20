@@ -387,6 +387,14 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   })`, returning its `GroundingContext` unchanged — no re-ranking, prompt
   building, or citation concern here. `RetrieveHybridKnowledgeChunksUseCase`
   and `RetrieveKnowledgeChunksUseCase` are unaffected by this use case.
+- `Reranker` (`app/knowledge/search`) is a port —
+  `rerank(input: RerankingInput): Promise<RetrievedChunk[]>`, where
+  `RerankingInput` is `{ workspaceId, query, chunks: RetrievedChunk[] }`
+  — deterministically re-ordering (and optionally rescoring) an
+  already-retrieved candidate set by query relevance within one
+  workspace. It never introduces a new candidate or drops one, only
+  reorders the ones it is given. Only the contract is defined so far; a
+  default adapter (`DefaultReranker`) is a later task.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -394,5 +402,5 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   pipeline chunk-document + pipeline rechunk-source + pipeline
   embed-document + pipeline reindex-source + embedding chunker + embedding
   provider + embedding index + retrieval:vector + search:keyword +
-  search:hybrid + context:contract + context:assembler +
-  application:grounding-context + typecheck).
+  search:hybrid + search:rerank-contract + context:contract +
+  context:assembler + application:grounding-context + typecheck).

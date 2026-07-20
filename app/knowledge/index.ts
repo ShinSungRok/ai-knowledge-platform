@@ -62,7 +62,7 @@ export { FakeEmbeddingProvider } from "./embedding";
 export type { EmbeddingVector, ScoredEmbeddingVector, VectorIndex } from "./embedding";
 export { InMemoryVectorIndex } from "./embedding";
 export { KNOWLEDGE_MODULE_SEARCH } from "./search";
-export type { KeywordSearch, HybridSearch } from "./search";
+export type { KeywordSearch, HybridSearch, RerankingInput, Reranker } from "./search";
 export { DefaultKeywordSearch, DefaultHybridSearch } from "./search";
 export { KNOWLEDGE_MODULE_RETRIEVAL } from "./retrieval";
 export type { RetrievalInput, RetrievalResult, RetrievedChunk, VectorRetriever } from "./retrieval";
