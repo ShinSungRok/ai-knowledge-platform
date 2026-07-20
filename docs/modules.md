@@ -217,7 +217,16 @@ unchanged. Task 57 adds `ExecuteToolCallUseCase` to `application`,
 injecting only the `ToolExecutor` port: it validates
 `{ name, arguments, timeoutMs }` at the application boundary, delegates
 to `ToolExecutor.execute`, and returns the result unchanged (existing
-`InvokeMcpToolUseCase` retained).
+`InvokeMcpToolUseCase` retained). Task 58 adds the `agent` module as a
+role-separated Agent Orchestration boundary above Tool Calling —
+`AgentRole`, `AgentGoal`, `AgentPlanStep`, `AgentPlan`,
+`AgentStepResult`, `AgentReviewDecision`, `AgentReviewResult`,
+`AgentExecutionStatus`, `AgentRunResult`, and the
+`AgentPlanner` / `AgentStepExecutor` / `AgentReviewer` /
+`AgentOrchestrator` ports — so knowledge-aware plan execution and
+review can be expressed without Memory, LLM freeform planning,
+multi-agent collaboration, or composition-root wiring. Concrete
+adapters are later tasks.
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules
@@ -239,6 +248,7 @@ Other modules remain skeleton boundaries until scoped.
 | `ai` | AI provider abstraction (fake + real providers). `GeneratedText` (`text: string`, not yet a grounded answer or citation) + the `LanguageModelProvider` port (`generate(prompt: GroundedPrompt): Promise<GeneratedText>`) define a provider-independent LLM generation contract; `GroundedPrompt` is its only prompt input. `FakeLanguageModelProvider` (no external dependency) validates the prompt and echoes `userMessage` back as `text`, for contract/flow validation only — never a real answer. A real provider is still deferred. |
 | `mcp` | Transport-independent MCP tool capability exposure. `McpToolName` (`"generate_cited_grounded_answer"`), `McpToolDefinition` (`name`, `description`, `inputKeys: readonly string[]`), `McpToolInvokeInput` (`name: string`, `arguments`), `McpToolInvokeResult` (`ok`, `toolName: string`, optional `result: CitedGroundedAnswer` / `error`), the `McpTool` port (`definition` + `invoke(args)`), and the `McpToolRegistry` port (`listTools` / `invoke`) define how application capabilities are exposed as MCP tools without Domain/RAG business-logic duplication and without an MCP SDK or network transport. `GenerateCitedGroundedAnswerMcpTool` injects only `GenerateCitedGroundedAnswerUseCase` and converts failures into non-throwing `ok: false` results. `DefaultMcpToolRegistry` holds a readonly `McpTool[]`, rejects duplicate names, lists definitions name-ascending, and returns structured unknown-tool errors. |
 | `tools` | Transport-independent Tool Calling boundary above MCP capability exposure. `ToolCallStatus` (`"success" \| "invalid_request" \| "unknown_tool" \| "timeout" \| "failure"`), `ToolCallRequest` (`name`, `arguments`, `timeoutMs`), `ToolCallResult` (`ok`, `status`, `toolName`, optional `result`/`error`, `durationMs`), and the `ToolExecutor` port (`execute(request): Promise<ToolCallResult>`) define validated tool-call request/result contracts without an MCP SDK, network transport, or Agent orchestrator. `DefaultToolExecutor` injects only `McpToolRegistry`, maps MCP success/unknown-tool/failure results onto ToolCall statuses, races invoke against `timeoutMs` for structured `timeout` results, and never throws for those cases. |
+| `agent` | Role-separated Agent Orchestration above Tool Calling. `AgentRole` (`"planner" \| "executor" \| "reviewer"`), `AgentGoal` (`workspaceId`, `query`, `retrievalLimit`, `maxCharacters`, `toolTimeoutMs`), `AgentPlanStep` / `AgentPlan`, `AgentStepResult` (wraps `ToolCallResult`), `AgentReviewDecision` / `AgentReviewResult`, `AgentExecutionStatus` / `AgentRunResult`, and the `AgentPlanner` / `AgentStepExecutor` / `AgentReviewer` / `AgentOrchestrator` ports define plan → execute → review without Memory, LLM freeform planning, multi-agent collaboration, or composition-root wiring. Concrete adapters are later tasks. |
 | `api` | Controllers and request/response DTOs. |
 | `http` | Framework-independent HTTP abstraction. |
 | `server` | Production server runtime and lifecycle. |
@@ -263,7 +273,7 @@ app/knowledge/
   repository/ persistence/ pipeline/
   embedding/ search/ retrieval/
   context/ prompt/ citation/ rag/
-  ai/ mcp/ tools/ application/
+  ai/ mcp/ tools/ agent/ application/
   api/ http/ server/
   composition/ config/
   evaluation/ observability/ reliability/ security/

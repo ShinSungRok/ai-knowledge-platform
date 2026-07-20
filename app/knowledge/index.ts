@@ -124,6 +124,22 @@ export type {
   ToolExecutor,
 } from "./tools";
 export { DefaultToolExecutor } from "./tools";
+export { KNOWLEDGE_MODULE_AGENT } from "./agent";
+export type {
+  AgentRole,
+  AgentGoal,
+  AgentPlanStep,
+  AgentPlan,
+  AgentStepResult,
+  AgentReviewDecision,
+  AgentReviewResult,
+  AgentExecutionStatus,
+  AgentRunResult,
+  AgentPlanner,
+  AgentStepExecutor,
+  AgentReviewer,
+  AgentOrchestrator,
+} from "./agent";
 export { KNOWLEDGE_MODULE_API } from "./api";
 export { KNOWLEDGE_MODULE_HTTP } from "./http";
 export { KNOWLEDGE_MODULE_SERVER } from "./server";

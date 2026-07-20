@@ -744,9 +744,19 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   invalid input without calling the executor), then calls
   `ToolExecutor.execute({ name, arguments, timeoutMs })` and returns
   the `ToolCallResult` unchanged. The existing `InvokeMcpToolUseCase`
-  is retained and unchanged. Agent planner/executor/reviewer,
-  multi-step tool orchestration, retry policy, real MCP transport,
+  is retained and unchanged. Retry policy, real MCP transport,
   HTTP/API/composition-root wiring remain out of scope.
+- The `agent` module (`app/knowledge/agent`) is the role-separated
+  Agent Orchestration boundary above Tool Calling. Task 58 defines
+  `AgentRole`, `AgentGoal`, `AgentPlanStep`, `AgentPlan`,
+  `AgentStepResult`, `AgentReviewDecision`, `AgentReviewResult`,
+  `AgentExecutionStatus`, `AgentRunResult`, and the
+  `AgentPlanner` / `AgentStepExecutor` / `AgentReviewer` /
+  `AgentOrchestrator` ports so a knowledge-aware plan can be
+  produced, executed via Tool Calling, and reviewed without Memory,
+  LLM freeform planning, multi-agent collaboration, or
+  composition-root wiring. Concrete planner/executor/reviewer/
+  orchestrator adapters are later tasks.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -763,4 +773,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   citation:contract + citation:builder + application:cited-answer +
   mcp:contract + mcp:cited-answer-tool + mcp:registry +
   application:mcp-invoke + tools:contract + tools:executor +
-  application:tool-call + typecheck).
+  application:tool-call + agent:contract + typecheck).

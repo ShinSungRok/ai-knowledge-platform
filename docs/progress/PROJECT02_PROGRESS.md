@@ -1566,3 +1566,29 @@ Add execute tool call use case
 
 **Status**
 Completed
+
+## Task 58
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Define agent contract and module boundary
+
+**Summary**
+- Added `app/knowledge/agent` module with `KNOWLEDGE_MODULE_AGENT`, role/plan/run types (`AgentRole`, `AgentGoal`, `AgentPlanStep`, `AgentPlan`, `AgentStepResult`, `AgentReviewDecision`, `AgentReviewResult`, `AgentExecutionStatus`, `AgentRunResult`), and ports (`AgentPlanner`, `AgentStepExecutor`, `AgentReviewer`, `AgentOrchestrator`)
+- Registered the module in skeleton `REQUIRED_MODULES` (after `tools`); re-exported from top-level barrel; updated `docs/modules.md`, `docs/architecture.md`, `docs/development.md`
+- Added `runAgentContractValidation.ts` + `tests/unit/agentContract.cases.ts`; wired `validate:agent:contract` into top-level `validate`
+- No planner/executor/reviewer/orchestrator adapters, Memory, LLM planning, multi-agent, or composition-root wiring introduced
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:agent:contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
