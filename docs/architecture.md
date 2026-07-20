@@ -9,7 +9,8 @@ dependencies are allowed to point. It is the map to read alongside
 
 Task 1 ships **module boundaries only** — no feature implementation. The
 philosophy below is inherited from Project1 (`public-law-ai`) and is the
-contract future phases must honor.
+contract Project 2 (and later phases) must honor. Project 2 Platform Baseline
+closeout is documented in §8.
 
 ## 2. Clean Architecture
 
@@ -924,3 +925,35 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   memory:contract + memory:store + jobs:contract + jobs:store + jobs:sync-handler + jobs:processor + jobs:reindex-handler +
   application:enqueue-job + application:process-next-job +
   evaluation:contract + config:runtime + composition:in-memory + http:router + api:cited-answer + server:lifecycle + typecheck).
+
+## 8. Project 2 Completion Boundary
+
+Project 2 Platform Baseline is **complete** for dependency-free platform
+capability. See [`docs/progress/PROJECT02_ROADMAP_STATUS.md`](progress/PROJECT02_ROADMAP_STATUS.md)
+and [`docs/portfolio.md`](portfolio.md).
+
+### Completed platform capability
+
+Workspace isolation; Knowledge Source / Connector / Sync+Reconcile; Chunk /
+Embedding / Vector; Hybrid + Rerank retrieval; Prompt / LLM / Grounding /
+Citation; MCP / Tool Calling / Agent / Memory; Background Jobs; Evaluation;
+Runtime (config, composition, HTTP/API, server lifecycle); Operations
+(logger/metrics, retry/timeout, workspace guard, observing router, deployment
+readiness).
+
+### Composition-only concrete wiring
+
+Concrete adapters are imported and wired **only** in
+`app/knowledge/composition` (and the adapter's own module). Domain,
+application, API controllers, and server depend on ports / runtime
+abstractions — never on Postgres, OpenSearch, or real LLM SDKs.
+
+### Deferred infrastructure
+
+The following remain intentionally out of Project 2 scope:
+
+- Postgres source-of-truth adapter
+- OpenSearch (or other) real vector index adapter
+- Real LLM provider SDK
+- Real MCP network transport
+- `node:http` / Express TCP listen

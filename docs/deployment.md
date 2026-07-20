@@ -6,6 +6,11 @@ Deployment and local infrastructure notes for the AI Knowledge Platform.
 Docker scaffolding and dependency-free deployment readiness validation are
 available; production host/CI deploy pipelines are not yet wired.
 
+**Project 2 closeout criteria:** operations-ready in-memory server
+(`createOperationsKnowledgeServer`) plus `pnpm validate:deployment:readiness`
+(static, Docker-daemon-free). Together with `pnpm validate`, these define the
+Platform Baseline deployment readiness bar for Project 2.
+
 ## 2. Local infrastructure (skeleton)
 
 Compose and image definitions live under `docker/`:
@@ -56,6 +61,9 @@ HTTP guard (`x-workspace-id`), `ObservingHttpRouter` (request logs +
 
 Baseline without observability wrapping remains
 `createInMemoryKnowledgeServer`.
+
+This in-process runtime path is the Project 2 closeout local runtime entry
+— not a production TCP listener.
 
 ## 5. Current limitations
 

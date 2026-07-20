@@ -259,8 +259,10 @@ workers, cron, or network brokers. `InMemoryJobStore` (Task 67) enqueues pending
 and defensive copies. Task 68 adds `SyncKnowledgeSourceJobHandler` (Sync pipeline only) and
 `DefaultJobProcessor` (JobStore + handlers; pending→running→completed/
 failed with retry). Task 69 adds `ReindexKnowledgeSourceJobHandler` (rechunk then reindex),
-`EnqueueJobUseCase`, and `ProcessNextJobUseCase`.
-Other modules remain skeleton boundaries until scoped.
+`EnqueueJobUseCase`, and `ProcessNextJobUseCase`. Tasks 70–85 add Evaluation,
+Runtime, and Operations. The only remaining skeleton-style boundary is
+`infra` (Docker helpers; real adapters deferred). See
+[`docs/progress/PROJECT02_ROADMAP_STATUS.md`](progress/PROJECT02_ROADMAP_STATUS.md).
 
 ## 2. Core modules
 
@@ -287,7 +289,7 @@ Other modules remain skeleton boundaries until scoped.
 | `api` | Controllers and request/response DTOs. `HealthController` (`GET /health`) and `CitedGroundedAnswerController` (`POST /workspaces/{workspaceId}/cited-answers`) depend only on `KnowledgeRuntime`. `createKnowledgeHttpRouter(runtime, guard)` registers both; cited-answer requires `HttpWorkspaceGuard`. |
 | `http` | Framework-independent HTTP abstraction: `HttpMethod`/`HttpRequest`/`HttpResponse`, `HttpHandler`/`HttpRouter` ports, and `DefaultHttpRouter` (exact method+path match; JSON 404 on miss). Also `ObservingHttpRouter` (logger/metrics decorator). No Express/Fastify/node:http listen. |
 | `server` | Production server runtime and lifecycle. `KnowledgeServer` / `DefaultKnowledgeServer` provide start/stop/isRunning/dispatch over an injected `HttpRouter` with no TCP listen. `createInMemoryKnowledgeServer` (composition) wires in-memory composition → HTTP router → server. |
-| `composition` | Composition root — wires concrete adapters. `createInMemoryKnowledgeComposition` assembles in-memory/fake adapters through the cited-answer use-case chain and exposes `KnowledgeRuntime` (`generateCitedGroundedAnswer` with config default fallbacks). Agent/Memory/Jobs/MCP full wiring and real providers remain out of scope. |
+| `composition` | Composition root — wires concrete adapters. `createInMemoryKnowledgeComposition` assembles in-memory/fake adapters through the cited-answer use-case chain and exposes `KnowledgeRuntime`. `createInMemoryKnowledgeServer` and `createOperationsKnowledgeServer` (guard + observing router) provide in-process server entrypaths. Full agent/memory/jobs/MCP platform wiring and real providers remain deferred. |
 | `config` | Typed, validated runtime configuration. `KnowledgeRuntimeConfig` (positive-integer defaults for retrieval limit, max characters, tool timeout, max chunk length), `loadKnowledgeRuntimeConfig` plain-object loader with defensive copy, and `DEFAULT_KNOWLEDGE_RUNTIME_CONFIG`. No `process.env`/dotenv parsing. |
 
 ## 3. Cross-cutting modules
@@ -298,7 +300,7 @@ Other modules remain skeleton boundaries until scoped.
 | `observability` | Logging, metrics, and health-check foundations. `Logger`/`LogEvent`/`LogLevel` and `Metrics`/`MetricPoint` ports with `InMemoryLogger` (ordered events + defensive copies) and `InMemoryMetrics` (signature accumulation + sorted `getPoints`). No OpenTelemetry/Prometheus exporters. |
 | `reliability` | Retry, timeout, circuit breaker, error classification. `RetryPolicy`/`DefaultRetryPolicy` (no-delay retries) and `TimeoutPolicy`/`DefaultTimeoutPolicy` (`Promise.race` + `setTimeout`). Circuit breaker and tools/jobs/HTTP wiring remain out of scope. |
 | `security` | Rate limiting and input validation foundations. `WorkspaceAuthorizer`/`DefaultWorkspaceAuthorizer` and `HttpWorkspaceGuard` (`x-workspace-id`) enforce workspace access on cited-answer HTTP. Health stays unauthenticated. AuthN/rate limit/CORS out of scope. |
-| `infra` | Local Docker infrastructure validation helpers. |
+| `infra` | Local Docker infrastructure scaffolding helpers (`docker/`, `pnpm infra:config`). Real Postgres/OpenSearch adapters are deferred; module remains a boundary constant until infra adapters are scoped. |
 
 ## 4. Top-level shape
 

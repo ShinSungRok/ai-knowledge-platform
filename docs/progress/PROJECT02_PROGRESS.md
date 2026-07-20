@@ -2354,3 +2354,29 @@ Update portfolio for Project 2 completion
 **Status**
 Completed
 
+## Task 87
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Document architecture limits and roadmap completion
+
+**Summary**
+- Added Project 2 Completion Boundary to `docs/architecture.md` (completed capabilities, composition-only wiring, deferred infra)
+- Aligned `docs/modules.md` (composition/operations, infra deferred; removed stale skeleton-only claim)
+- Marked operations-ready server + `validate:deployment:readiness` as Project 2 closeout criteria in `docs/deployment.md`
+- Added `docs/progress/PROJECT02_ROADMAP_STATUS.md` (Completed / Deferred / Task 1–85 + Sprint 20)
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:deployment:readiness`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
