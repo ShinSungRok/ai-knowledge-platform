@@ -736,6 +736,17 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   circuit breaker, Agent-level deadline aggregation, `reliability`
   module implementation, or composition-root wiring are introduced
   here.
+- `ExecuteToolCallUseCase` (`app/knowledge/application`) exposes tool
+  calling behind one application-boundary entry point: its constructor
+  injects only the `ToolExecutor` port — never a concrete tools/mcp
+  adapter. It validates its own `ExecuteToolCallInput` (`name`,
+  `arguments`, `timeoutMs`) at the application boundary (throwing on
+  invalid input without calling the executor), then calls
+  `ToolExecutor.execute({ name, arguments, timeoutMs })` and returns
+  the `ToolCallResult` unchanged. The existing `InvokeMcpToolUseCase`
+  is retained and unchanged. Agent planner/executor/reviewer,
+  multi-step tool orchestration, retry policy, real MCP transport,
+  HTTP/API/composition-root wiring remain out of scope.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -752,4 +763,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   citation:contract + citation:builder + application:cited-answer +
   mcp:contract + mcp:cited-answer-tool + mcp:registry +
   application:mcp-invoke + tools:contract + tools:executor +
-  typecheck).
+  application:tool-call + typecheck).

@@ -73,3 +73,7 @@ export {
   InvokeMcpToolUseCase,
   type InvokeMcpToolInput,
 } from "./InvokeMcpToolUseCase";
+export {
+  ExecuteToolCallUseCase,
+  type ExecuteToolCallInput,
+} from "./ExecuteToolCallUseCase";

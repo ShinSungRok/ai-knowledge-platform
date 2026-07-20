@@ -25,6 +25,7 @@ export {
   GenerateGroundedAnswerUseCase,
   GenerateCitedGroundedAnswerUseCase,
   InvokeMcpToolUseCase,
+  ExecuteToolCallUseCase,
 } from "./application";
 export type {
   ListKnowledgeDocumentsInput,
@@ -49,6 +50,7 @@ export type {
   GenerateGroundedAnswerInput,
   GenerateCitedGroundedAnswerInput,
   InvokeMcpToolInput,
+  ExecuteToolCallInput,
 } from "./application";
 export { KNOWLEDGE_MODULE_REPOSITORY } from "./repository";
 export type {

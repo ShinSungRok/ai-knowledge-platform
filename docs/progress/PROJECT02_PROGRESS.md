@@ -1539,3 +1539,30 @@ Enforce tool call timeout boundary
 
 **Status**
 Completed
+
+## Task 57
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add execute tool call use case
+
+**Summary**
+- Added `ExecuteToolCallUseCase` + `ExecuteToolCallInput` (`name`, `arguments`, `timeoutMs`) to `application`
+- Constructor injects only the `ToolExecutor` port; `execute` validates input at the application boundary (throws on invalid input without calling the executor), delegates to `ToolExecutor.execute({ name, arguments, timeoutMs })`, and returns the `ToolCallResult` unchanged
+- Existing `InvokeMcpToolUseCase` retained and unchanged
+- Exported from `application` and top-level barrels; added `runExecuteToolCallUseCaseValidation.ts` + unit case inventory; wired `validate:application:tool-call` into `validate:application` and top-level `validate`
+- Updated docs; no Agent planner/executor, multi-step orchestration, retry policy, real MCP transport, HTTP/API/composition wiring introduced
+
+**Validation**
+- `pnpm validate:tools:executor`
+- `pnpm validate:application:tool-call`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
