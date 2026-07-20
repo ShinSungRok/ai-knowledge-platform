@@ -1783,3 +1783,29 @@ Add run agent with memory use case
 
 **Status**
 Completed
+
+## Task 66
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Define job contract and module boundary
+
+**Summary**
+- Added `app/knowledge/jobs` module with `KNOWLEDGE_MODULE_JOBS`, `JobType`, `JobStatus`, `JobRecord`, and ports (`JobStore`, `JobHandler`, `JobProcessor`)
+- Registered in skeleton `REQUIRED_MODULES` after `memory`; re-exported from top-level barrel; updated docs
+- Added `runJobContractValidation.ts` + unit case inventory; wired `validate:jobs:contract` into top-level `validate`
+- No in-memory store/processor/handler, real worker, reliability features, or composition wiring introduced
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:jobs:contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

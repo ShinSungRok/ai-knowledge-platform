@@ -809,6 +809,12 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   and returns `{ recalled, run, written }`. Existing `RunAgentUseCase`
   and Agent role adapters are unchanged; memory is not injected into
   the planner.
+- The `jobs` module (`app/knowledge/jobs`) is the Background Job
+  boundary for long-running Sync/Reindex pipeline work. Task 66 defines
+  `JobType`, `JobStatus`, `JobRecord`, and the `JobStore` / `JobHandler` /
+  `JobProcessor` ports so jobs can be enqueued and processed without
+  real workers, cron, network brokers, or Domain business-logic
+  duplication. Concrete store/processor/handler adapters are later tasks.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -829,4 +835,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   agent:step-executor + agent:reviewer + agent:orchestrator +
   application:run-agent + application:memory-append +
   application:memory-recall + application:run-agent-memory +
-  memory:contract + memory:store + typecheck).
+  memory:contract + memory:store + jobs:contract + typecheck).

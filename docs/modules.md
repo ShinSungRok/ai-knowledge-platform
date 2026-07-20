@@ -251,6 +251,10 @@ entries in sequence-ascending order as a session memory window).
 Task 65 adds `RunAgentWithMemoryUseCase` (injects only `MemoryStore` +
 `AgentOrchestrator`): recall → append user → run agent → append fixed
 agent summary; does not change planner/orchestrator adapters.
+Task 66 adds the `jobs` module as a Background Job boundary —
+`JobType`, `JobStatus`, `JobRecord`, and the `JobStore` / `JobHandler` /
+`JobProcessor` ports — for Sync/Reindex pipeline work without real
+workers, cron, or network brokers. Concrete adapters are later tasks.
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules
@@ -274,6 +278,7 @@ Other modules remain skeleton boundaries until scoped.
 | `tools` | Transport-independent Tool Calling boundary above MCP capability exposure. `ToolCallStatus` (`"success" \| "invalid_request" \| "unknown_tool" \| "timeout" \| "failure"`), `ToolCallRequest` (`name`, `arguments`, `timeoutMs`), `ToolCallResult` (`ok`, `status`, `toolName`, optional `result`/`error`, `durationMs`), and the `ToolExecutor` port (`execute(request): Promise<ToolCallResult>`) define validated tool-call request/result contracts without an MCP SDK, network transport, or Agent orchestrator. `DefaultToolExecutor` injects only `McpToolRegistry`, maps MCP success/unknown-tool/failure results onto ToolCall statuses, races invoke against `timeoutMs` for structured `timeout` results, and never throws for those cases. |
 | `agent` | Role-separated Agent Orchestration above Tool Calling. `AgentRole` (`"planner" \| "executor" \| "reviewer"`), `AgentGoal` (`workspaceId`, `query`, `retrievalLimit`, `maxCharacters`, `toolTimeoutMs`), `AgentPlanStep` / `AgentPlan`, `AgentStepResult` (wraps `ToolCallResult`), `AgentReviewDecision` / `AgentReviewResult`, `AgentExecutionStatus` / `AgentRunResult`, and the `AgentPlanner` / `AgentStepExecutor` / `AgentReviewer` / `AgentOrchestrator` ports define plan → execute → review without Memory, LLM freeform planning, multi-agent collaboration, or composition-root wiring. `DeterministicKnowledgeAgentPlanner` (no constructor dependency) validates `AgentGoal` and always returns a single-step plan for `generate_cited_grounded_answer` with `{ workspaceId, query, retrievalLimit, maxCharacters }`. `DefaultAgentStepExecutor` injects only `ToolExecutor` and wraps its unchanged `ToolCallResult`. `DefaultAgentReviewer` (no constructor dependency) approves only when step counts match and every tool call status is `"success"`. `DefaultAgentOrchestrator` injects only the three role ports, runs plan→execute→review, maps status (`completed`/`failed`/`rejected`), and converts thrown steps into `status: "failure"` results without continuing remaining steps. |
 | `memory` | Workspace/session-scoped Agent Memory, separated from Knowledge search. `MemoryEntryRole` (`"user" \| "agent" \| "system"`), `MemoryEntry` (`id`, `workspaceId`, `sessionId`, `role`, `content`, `sequence`), and the `MemoryStore` port (`append` / `listBySession`) define conversational turn storage for Agent runs. Memory does **not** replace Knowledge document/chunk/vector/hybrid search. `InMemoryMemoryStore` assigns 1-based per-session `sequence`, deterministic `id` (`${workspaceId}:${sessionId}:${sequence}`), returns sequence-ascending lists, enforces workspace isolation, and defensive-copies on read/write. `AppendMemoryEntryUseCase` / `RecallMemoryEntriesUseCase` (application) inject only `MemoryStore`; recall optional `limit` returns newest N entries ascending. |
+| `jobs` | Background Job boundary for long-running Sync/Reindex pipeline work. `JobType` (`"sync_knowledge_source" \| "reindex_knowledge_source"`), `JobStatus` (`"pending" \| "running" \| "completed" \| "failed"`), `JobRecord`, and the `JobStore` / `JobHandler` / `JobProcessor` ports define enqueue/process contracts without real workers, cron, or network brokers. Concrete adapters are later tasks. |
 | `api` | Controllers and request/response DTOs. |
 | `http` | Framework-independent HTTP abstraction. |
 | `server` | Production server runtime and lifecycle. |
@@ -298,7 +303,7 @@ app/knowledge/
   repository/ persistence/ pipeline/
   embedding/ search/ retrieval/
   context/ prompt/ citation/ rag/
-  ai/ mcp/ tools/ agent/ memory/ application/
+  ai/ mcp/ tools/ agent/ memory/ jobs/ application/
   api/ http/ server/
   composition/ config/
   evaluation/ observability/ reliability/ security/
