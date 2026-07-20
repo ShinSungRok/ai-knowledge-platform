@@ -1,9 +1,17 @@
 /**
- * Skeleton module: `app/knowledge/reliability`
+ * Module: `app/knowledge/reliability`
  *
- * Retry, timeout, circuit breaker, error classification.
+ * Deterministic retry and timeout policies for Operations.
  *
- * Feature implementation is intentionally deferred. This barrel exists so the
- * module boundary is importable and validatable from day one.
+ * `DefaultRetryPolicy` retries failed operations with no delay.
+ * `DefaultTimeoutPolicy` races operations against `setTimeout` via
+ * `Promise.race`. Circuit breakers and wiring into tools/jobs/HTTP
+ * remain out of scope.
  */
 export const KNOWLEDGE_MODULE_RELIABILITY = "app/knowledge/reliability" as const;
+
+export type { RetryDecision } from "./RetryDecision";
+export type { RetryPolicy } from "./RetryPolicy";
+export { DefaultRetryPolicy } from "./DefaultRetryPolicy";
+export type { TimeoutPolicy } from "./TimeoutPolicy";
+export { DefaultTimeoutPolicy } from "./DefaultTimeoutPolicy";

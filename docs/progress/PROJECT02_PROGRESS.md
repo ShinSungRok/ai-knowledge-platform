@@ -2247,3 +2247,29 @@ Define observability logger and metrics
 **Status**
 Completed
 
+## Task 83
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add reliability retry and timeout policies
+
+**Summary**
+- Added `RetryDecision`/`RetryPolicy`/`DefaultRetryPolicy` (no-delay, positive maxAttempts)
+- Added `TimeoutPolicy`/`DefaultTimeoutPolicy` (Promise.race + setTimeout; clear on success)
+- Added `validate:reliability:retry` and `validate:reliability:timeout`; updated barrels/docs
+- Did not modify ToolExecutor/JobProcessor or add circuit breaker/wiring
+
+**Validation**
+- `pnpm validate:reliability:retry`
+- `pnpm validate:reliability:timeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

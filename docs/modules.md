@@ -296,7 +296,7 @@ Other modules remain skeleton boundaries until scoped.
 |---|---|
 | `evaluation` | Knowledge Quality Evaluation. `EvaluationCase` / `EvaluationDataset`, retrieval/grounding/citation case scores and aggregate metrics, `EvaluationReport`, and the `RetrievalEvaluator` / `GroundingEvaluator` / `CitationEvaluator` ports define dependency-free scoring contracts over `RetrievalResult`, `GroundedAnswer`, and `CitedGroundedAnswer`. `DefaultRetrievalEvaluator` computes Hit@K / MRR; `DefaultGroundingEvaluator` scores insufficient-evidence compliance; `RunRetrievalEvaluationUseCase` / `RunGroundingEvaluationUseCase` (application) run hybrid retrieve or grounded-answer generation then delegate to evaluator ports. `DefaultCitationEvaluator` scores evidence-bound citation correctness; `RunCitationEvaluationUseCase` runs cited-answer generation then delegates. No real benchmark corpus loader or LLM-as-judge. |
 | `observability` | Logging, metrics, and health-check foundations. `Logger`/`LogEvent`/`LogLevel` and `Metrics`/`MetricPoint` ports with `InMemoryLogger` (ordered events + defensive copies) and `InMemoryMetrics` (signature accumulation + sorted `getPoints`). No OpenTelemetry/Prometheus exporters. |
-| `reliability` | Retry, timeout, circuit breaker, error classification. |
+| `reliability` | Retry, timeout, circuit breaker, error classification. `RetryPolicy`/`DefaultRetryPolicy` (no-delay retries) and `TimeoutPolicy`/`DefaultTimeoutPolicy` (`Promise.race` + `setTimeout`). Circuit breaker and tools/jobs/HTTP wiring remain out of scope. |
 | `security` | Rate limiting and input validation foundations. |
 | `infra` | Local Docker infrastructure validation helpers. |
 

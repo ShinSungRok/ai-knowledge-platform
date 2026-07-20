@@ -893,6 +893,8 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   composition wires the full in-memory runtime entrypath.
 - The `observability` module provides dependency-free `Logger`/`Metrics`
   ports with `InMemoryLogger`/`InMemoryMetrics` adapters.
+- The `reliability` module provides deterministic `DefaultRetryPolicy`
+  (no delay) and `DefaultTimeoutPolicy` (`Promise.race` + timer).
 - Real TCP listen / Express/Fastify and real AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +

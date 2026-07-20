@@ -258,5 +258,11 @@ export type {
 } from "./observability";
 export { InMemoryLogger, InMemoryMetrics } from "./observability";
 export { KNOWLEDGE_MODULE_RELIABILITY } from "./reliability";
+export type {
+  RetryDecision,
+  RetryPolicy,
+  TimeoutPolicy,
+} from "./reliability";
+export { DefaultRetryPolicy, DefaultTimeoutPolicy } from "./reliability";
 export { KNOWLEDGE_MODULE_SECURITY } from "./security";
 export { KNOWLEDGE_MODULE_INFRA } from "./infra";
