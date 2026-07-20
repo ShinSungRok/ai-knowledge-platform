@@ -48,8 +48,9 @@ pnpm validate:application:prompt # BuildGroundedPromptUseCase RetrieveGroundingC
 pnpm validate:application:generate-text # GenerateGroundedTextUseCase BuildGroundedPromptUseCase -> LanguageModelProvider delegation sequence
 pnpm validate:ai:provider-contract # LanguageModelProvider/GeneratedText contract export + type-compatibility
 pnpm validate:ai:fake-provider # FakeLanguageModelProvider dependency-free, deterministic prompt-echo behavior
+pnpm validate:rag:answer-contract # GroundedAnswerAssembler/GroundedAnswer/GroundedAnswerAssemblyInput contract export + type-compatibility
 pnpm typecheck                 # TypeScript strict check
-pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application (incl. grounding-context + prompt + generate-text) + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + search:hybrid + search:rerank-contract + search:reranker + search:reranked + context:contract + context:assembler + prompt:contract + prompt:builder + ai:provider-contract + ai:fake-provider + typecheck
+pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application (incl. grounding-context + prompt + generate-text) + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + search:hybrid + search:rerank-contract + search:reranker + search:reranked + context:contract + context:assembler + prompt:contract + prompt:builder + ai:provider-contract + ai:fake-provider + rag:answer-contract + typecheck
 ```
 
 Formal unit/integration/e2e suites under `tests/` are reserved for later

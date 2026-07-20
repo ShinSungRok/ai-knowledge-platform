@@ -84,6 +84,11 @@ export type { GroundedPrompt, PromptBuilder } from "./prompt";
 export { DefaultPromptBuilder } from "./prompt";
 export { KNOWLEDGE_MODULE_CITATION } from "./citation";
 export { KNOWLEDGE_MODULE_RAG } from "./rag";
+export type {
+  GroundedAnswer,
+  GroundedAnswerAssemblyInput,
+  GroundedAnswerAssembler,
+} from "./rag";
 export { KNOWLEDGE_MODULE_AI } from "./ai";
 export type { GeneratedText, LanguageModelProvider } from "./ai";
 export { FakeLanguageModelProvider } from "./ai";

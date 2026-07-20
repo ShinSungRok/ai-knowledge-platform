@@ -533,6 +533,22 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   retrieval-then-prompt-building flow is unaffected by this use case.
   This is the second use case in this codebase to depend on another use
   case (`BuildGroundedPromptUseCase`) rather than only on ports.
+- `GroundedAnswerAssembler` (`app/knowledge/rag`) is a port —
+  `assemble(input: GroundedAnswerAssemblyInput): Promise<GroundedAnswer>`,
+  where `GroundedAnswerAssemblyInput` is `{ context: GroundingContext,
+  generatedText: GeneratedText }` and `GroundedAnswer` is `{ text,
+  evidence: GroundingContextBlock[], insufficientEvidence }` — this is
+  where the **insufficient-evidence policy** lives: whether the given
+  generated text is even eligible to be returned as an answer depends
+  solely on whether the given context carried any evidence, and that
+  decision belongs to this port's implementation, never to
+  `PromptBuilder` (prompt construction) or `LanguageModelProvider`
+  (generation). It reuses the context and ai modules' own
+  `GroundingContext`/`GeneratedText` shapes as-is — assembly never
+  re-retrieves, re-ranks, re-assembles context, or re-invokes a
+  provider. Only the contract is defined so far; a default adapter
+  (`DefaultGroundedAnswerAssembler`) is a later task. Citation
+  formatting/identifiers remain out of scope.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -544,4 +560,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   search:reranked + context:contract + context:assembler +
   prompt:contract + prompt:builder + application:grounding-context +
   application:prompt + ai:provider-contract + ai:fake-provider +
-  application:generate-text + typecheck).
+  application:generate-text + rag:answer-contract + typecheck).

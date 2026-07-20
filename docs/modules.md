@@ -139,7 +139,16 @@ real answer. Task 43 adds `GenerateGroundedTextUseCase` to
 `BuildGroundedPromptUseCase.execute` call followed by a
 `LanguageModelProvider.generate` call over that result's
 `GroundedPrompt`, returning the resulting `GeneratedText` unchanged —
-plain generated text, not yet a grounded answer or citation.
+plain generated text, not yet a grounded answer or citation. Task 44
+adds the `rag` module's grounded-answer assembly contract —
+`GroundedAnswer` (`text`, `evidence: GroundingContextBlock[]`,
+`insufficientEvidence`), `GroundedAnswerAssemblyInput` (`context:
+GroundingContext`, `generatedText: GeneratedText`), and the
+`GroundedAnswerAssembler` port (`assemble(input):
+Promise<GroundedAnswer>`) — defining how generated text and grounding
+evidence are explicitly combined into one answer, with
+insufficient-evidence policy as this module's own responsibility; no
+adapter yet.
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules
@@ -157,7 +166,7 @@ Other modules remain skeleton boundaries until scoped.
 | `context` | Prompt context assembly from retrieved documents. `ContextAssemblyInput` (`workspaceId`, `query`, ranked `RetrievedChunk[]`, `maxCharacters`) + `GroundingContext` (`query`, ordered `GroundingContextBlock[]`, rendered `content`, `truncated`) define the `ContextAssembler` port's `assemble` contract. `DefaultContextAssembler` (its default adapter) depends only on `KnowledgeDocumentRepository`, hydrating each ranked chunk's document provenance in the given order, rendering each as `[sourceId=...;documentId=...;chunkId=...]\n<chunk text>` joined by a blank line, including a block only if it fits the remaining `maxCharacters` budget whole, and skipping (never truncating) an oversized or stale-document candidate while still evaluating later chunks; Prompt Builder / Citation wiring is still deferred. |
 | `prompt` | Prompt construction from a `GroundingContext`. `GroundedPrompt` (`systemInstruction`, `userMessage`, both plain strings) + the `PromptBuilder` port (`build(context: GroundingContext): Promise<GroundedPrompt>`) define an LLM-independent prompt representation. `DefaultPromptBuilder` (no constructor dependency) renders a fixed `systemInstruction` and a fixed `Question:\n<query>\n\nGrounding context status: <complete\|truncated>\n\nGrounding context:\n<content\|[none]>` `userMessage`, using `content` verbatim and never calling or constructing an LLM provider. |
 | `citation` | Citation building from retrieved sources. |
-| `rag` | RAG answer assembly (answer + citations). |
+| `rag` | RAG answer assembly (answer + citations). `GroundedAnswer` (`text`, `evidence: GroundingContextBlock[]`, `insufficientEvidence`) + `GroundedAnswerAssemblyInput` (`context: GroundingContext`, `generatedText: GeneratedText`) + the `GroundedAnswerAssembler` port (`assemble(input): Promise<GroundedAnswer>`) define an explicit contract for combining generated text with grounding evidence — this is where insufficient-evidence policy lives, never in `PromptBuilder`/`LanguageModelProvider`. A default adapter is still deferred. |
 | `ai` | AI provider abstraction (fake + real providers). `GeneratedText` (`text: string`, not yet a grounded answer or citation) + the `LanguageModelProvider` port (`generate(prompt: GroundedPrompt): Promise<GeneratedText>`) define a provider-independent LLM generation contract; `GroundedPrompt` is its only prompt input. `FakeLanguageModelProvider` (no external dependency) validates the prompt and echoes `userMessage` back as `text`, for contract/flow validation only — never a real answer. A real provider is still deferred. |
 | `api` | Controllers and request/response DTOs. |
 | `http` | Framework-independent HTTP abstraction. |

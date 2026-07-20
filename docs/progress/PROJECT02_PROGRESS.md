@@ -1168,3 +1168,29 @@ Add generate grounded text use case
 
 **Status**
 Completed
+
+## Task 44
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Define grounded answer assembly contract
+
+**Summary**
+- Added `app/knowledge/rag/GroundedAnswer.ts` (`{ text, evidence: GroundingContextBlock[], insufficientEvidence }`), `app/knowledge/rag/GroundedAnswerAssemblyInput.ts` (`{ context: GroundingContext, generatedText: GeneratedText }`), and `app/knowledge/rag/GroundedAnswerAssembler.ts` (`assemble(input): Promise<GroundedAnswer>` port), reusing the context and ai modules' own `GroundingContext`/`GeneratedText` shapes as-is
+- This is where the insufficient-evidence policy will live — never in `PromptBuilder` (prompt construction) or `LanguageModelProvider` (generation); contract only, no policy implementation, LLM provider change, citation object, or prompt/re-ranking/context-assembly change introduced
+- Updated the `rag` and top-level `app/knowledge` barrels to export the new types
+- Added `runGroundedAnswerAssemblerContractValidation.ts` (module-constant check, an in-file `FakeGroundedAnswerAssembler` test double proving the port is implementable/callable from just the exported types and returns a `GroundedAnswer`-shaped result, an empty-evidence `GroundingContext` case, and a compile-time type-assignability check that the top-level barrel re-exports the same `GroundedAnswerAssembler` type) + `tests/unit/groundedAnswerAssemblerContract.cases.ts`
+- Added `validate:rag:answer-contract` to `package.json`, wired into the top-level `validate` chain; no HTTP/composition wiring introduced
+
+**Validation**
+- `pnpm validate:rag:answer-contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
