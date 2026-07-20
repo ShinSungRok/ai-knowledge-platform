@@ -19,6 +19,11 @@ import {
   SQL_SELECT_KNOWLEDGE_SOURCE_BY_ID,
   SQL_UPSERT_KNOWLEDGE_SOURCE,
 } from "./knowledgeSourceSql";
+import {
+  SQL_CREATE_DOCUMENT_CHUNKS,
+  SQL_CREATE_KNOWLEDGE_DOCUMENTS,
+  SQL_CREATE_KNOWLEDGE_SOURCES,
+} from "./knowledgeSchemaSql";
 
 type DocumentRow = {
   workspace_id: string;
@@ -46,8 +51,8 @@ type ChunkRow = {
 /**
  * In-memory {@link SqlGateway} supporting knowledge_documents,
  * knowledge_sources, and document_chunks SQL constants used by SQL
- * repository adapters. Unsupported SQL throws
- * `"Unsupported SQL for InMemorySqlGateway"`.
+ * repository adapters. Schema DDL from {@link knowledgeSchemaSql} is a
+ * no-op. Unsupported SQL throws `"Unsupported SQL for InMemorySqlGateway"`.
  */
 export class InMemorySqlGateway implements SqlGateway {
   private readonly documents = new Map<string, DocumentRow>();
@@ -59,6 +64,14 @@ export class InMemorySqlGateway implements SqlGateway {
     params: readonly SqlParameter[] = [],
   ): Promise<SqlQueryResult> {
     const normalized = normalizeSql(sql);
+
+    if (
+      normalized === normalizeSql(SQL_CREATE_KNOWLEDGE_SOURCES) ||
+      normalized === normalizeSql(SQL_CREATE_KNOWLEDGE_DOCUMENTS) ||
+      normalized === normalizeSql(SQL_CREATE_DOCUMENT_CHUNKS)
+    ) {
+      return { rows: [], rowCount: 0 };
+    }
 
     if (normalized === normalizeSql(SQL_UPSERT_KNOWLEDGE_DOCUMENT)) {
       return this.upsertDocument(params);

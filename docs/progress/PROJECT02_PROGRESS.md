@@ -2623,7 +2623,7 @@ Completed
 2026-07-20
 
 **Commit**
-Pending
+b641790
 
 **Title**
 Add full SQL knowledge composition path and update roadmap
@@ -2640,6 +2640,34 @@ Add full SQL knowledge composition path and update roadmap
 - `pnpm validate:composition:sql-document`
 - `pnpm validate:composition:sql-knowledge`
 - `pnpm validate:project:closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
+## Task 98
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Define knowledge schema SQL and apply helper
+
+**Summary**
+- Added `knowledgeSchemaSql` DDL (sources/documents/chunks, IF NOT EXISTS) matching repository column/PK names
+- Added `applyKnowledgeSchema(gateway)` helper; InMemorySqlGateway treats DDL as no-op
+- Added `validate:infra:knowledge-schema` (schema apply + source/document/chunk save/find)
+- Documented schema location and apply usage in deployment docs; no `pg` dependency
+
+**Validation**
+- `pnpm validate:repository:sql-document`
+- `pnpm validate:repository:sql-source`
+- `pnpm validate:repository:sql-chunk`
+- `pnpm validate:infra:knowledge-schema`
 - `pnpm typecheck`
 - `pnpm validate`
 

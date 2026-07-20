@@ -106,6 +106,7 @@ pnpm validate:deployment:readiness # static Docker/docs/export readiness
 pnpm validate:project:closeout # Project 2 baseline docs/scripts/exports closeout
 pnpm validate:infra:sql-gateway-contract # SqlGateway port contract
 pnpm validate:infra:in-memory-sql # InMemorySqlGateway document/source/chunk SQL
+pnpm validate:infra:knowledge-schema # applyKnowledgeSchema + SQL repos smoke
 pnpm validate:repository:sql-document # SqlKnowledgeDocumentRepository contract
 pnpm validate:repository:sql-source # SqlKnowledgeSourceRepository via InMemorySqlGateway
 pnpm validate:repository:sql-chunk # SqlDocumentChunkRepository via InMemorySqlGateway

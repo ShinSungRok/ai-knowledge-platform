@@ -65,7 +65,24 @@ Baseline without observability wrapping remains
 This in-process runtime path is the Project 2 closeout local runtime entry
 — not a production TCP listener.
 
-## 5. Current limitations
+## 5. Knowledge schema (SqlGateway)
+
+DDL for `knowledge_sources`, `knowledge_documents`, and `document_chunks`
+lives in `app/knowledge/infra/knowledgeSchemaSql.ts`. Apply via any
+`SqlGateway`:
+
+```ts
+import { applyKnowledgeSchema, InMemorySqlGateway } from "./app/knowledge";
+
+const gateway = new InMemorySqlGateway();
+await applyKnowledgeSchema(gateway);
+```
+
+`CREATE TABLE IF NOT EXISTS` makes re-apply safe. Default `pnpm validate`
+uses `InMemorySqlGateway` (DDL no-op + repository SQL); real Postgres
+connection remains optional / deferred.
+
+## 6. Current limitations
 
 - No production host, CI deploy pipeline, or secrets management yet.
 - Compose services are placeholders aligned with Project1's infra shape.
