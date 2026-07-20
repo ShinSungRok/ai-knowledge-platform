@@ -21,6 +21,7 @@ import {
 } from "./knowledgeSourceSql";
 import {
   SQL_CREATE_DOCUMENT_CHUNKS,
+  SQL_CREATE_EMBEDDING_VECTORS,
   SQL_CREATE_KNOWLEDGE_DOCUMENTS,
   SQL_CREATE_KNOWLEDGE_SOURCES,
 } from "./knowledgeSchemaSql";
@@ -68,7 +69,8 @@ export class InMemorySqlGateway implements SqlGateway {
     if (
       normalized === normalizeSql(SQL_CREATE_KNOWLEDGE_SOURCES) ||
       normalized === normalizeSql(SQL_CREATE_KNOWLEDGE_DOCUMENTS) ||
-      normalized === normalizeSql(SQL_CREATE_DOCUMENT_CHUNKS)
+      normalized === normalizeSql(SQL_CREATE_DOCUMENT_CHUNKS) ||
+      normalized === normalizeSql(SQL_CREATE_EMBEDDING_VECTORS)
     ) {
       return { rows: [], rowCount: 0 };
     }

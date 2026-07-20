@@ -1,6 +1,7 @@
 import { applyKnowledgeSchema } from "./applyKnowledgeSchema";
 import { InMemorySqlGateway } from "./InMemorySqlGateway";
 import { KNOWLEDGE_MODULE_INFRA } from "./index";
+import { SQL_CREATE_EMBEDDING_VECTORS } from "./knowledgeSchemaSql";
 import { SqlDocumentChunkRepository } from "../persistence/SqlDocumentChunkRepository";
 import { SqlKnowledgeDocumentRepository } from "../persistence/SqlKnowledgeDocumentRepository";
 import { SqlKnowledgeSourceRepository } from "../persistence/SqlKnowledgeSourceRepository";
@@ -77,9 +78,20 @@ async function assertSchemaApplyThenRepositorySmoke(): Promise<void> {
   assertTruthy(found[0]!.id === "chunk-1", "chunk id");
 }
 
+async function assertEmbeddingVectorsDdlAccepted(): Promise<void> {
+  console.log(
+    "[infra] applyKnowledgeSchema accepts embedding_vectors DDL...",
+  );
+  const gateway = new InMemorySqlGateway();
+  await applyKnowledgeSchema(gateway);
+  const result = await gateway.execute(SQL_CREATE_EMBEDDING_VECTORS);
+  assertEqual(result.rowCount, 0, "DDL no-op rowCount");
+}
+
 async function main(): Promise<void> {
   assertModuleConstant();
   await assertSchemaApplyThenRepositorySmoke();
+  await assertEmbeddingVectorsDdlAccepted();
   console.log("Knowledge schema validation succeeded.");
 }
 

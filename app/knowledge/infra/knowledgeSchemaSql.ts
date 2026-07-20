@@ -1,9 +1,10 @@
 /**
- * Canonical DDL for knowledge Source-of-Truth tables.
+ * Canonical DDL for knowledge Source-of-Truth tables and rebuildable
+ * search-index persistence (`embedding_vectors`).
  *
- * Columns and primary keys match repository SQL constants in
- * `knowledgeSourceSql`, `knowledgeDocumentSql`, and `documentChunkSql`.
- * Use {@link applyKnowledgeSchema} to apply via a {@link SqlGateway}.
+ * SoT columns/PKs match repository SQL constants. `embedding_vectors`
+ * stores JSON-serialized embedding arrays for {@link VectorIndex}
+ * rebuild; OpenSearch remains deferred. Use {@link applyKnowledgeSchema}.
  */
 export const SQL_CREATE_KNOWLEDGE_SOURCES = `
 CREATE TABLE IF NOT EXISTS knowledge_sources (
@@ -37,9 +38,23 @@ CREATE TABLE IF NOT EXISTS document_chunks (
 )
 `.trim();
 
+/**
+ * Rebuildable search-index table (not document SoT).
+ * Dimension is enforced by VectorIndex adapters via EMBEDDING_VECTOR_DIMENSION.
+ */
+export const SQL_CREATE_EMBEDDING_VECTORS = `
+CREATE TABLE IF NOT EXISTS embedding_vectors (
+  workspace_id TEXT NOT NULL,
+  chunk_id TEXT NOT NULL,
+  vector_json TEXT NOT NULL,
+  PRIMARY KEY (workspace_id, chunk_id)
+)
+`.trim();
+
 /** Ordered DDL statements for {@link applyKnowledgeSchema}. */
 export const KNOWLEDGE_SCHEMA_DDL = [
   SQL_CREATE_KNOWLEDGE_SOURCES,
   SQL_CREATE_KNOWLEDGE_DOCUMENTS,
   SQL_CREATE_DOCUMENT_CHUNKS,
+  SQL_CREATE_EMBEDDING_VECTORS,
 ] as const;

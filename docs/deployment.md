@@ -67,8 +67,9 @@ This in-process runtime path is the Project 2 closeout local runtime entry
 
 ## 5. Knowledge schema (SqlGateway)
 
-DDL for `knowledge_sources`, `knowledge_documents`, and `document_chunks`
-lives in `app/knowledge/infra/knowledgeSchemaSql.ts`. Apply via any
+DDL for `knowledge_sources`, `knowledge_documents`, `document_chunks`, and
+`embedding_vectors` (rebuildable search-index persistence; OpenSearch still
+deferred) lives in `app/knowledge/infra/knowledgeSchemaSql.ts`. Apply via any
 `SqlGateway`:
 
 ```ts

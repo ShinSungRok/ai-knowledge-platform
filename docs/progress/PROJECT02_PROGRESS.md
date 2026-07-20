@@ -2730,7 +2730,7 @@ Completed
 2026-07-20
 
 **Commit**
-Pending
+e26904d
 
 **Title**
 Add Postgres composition factory and update roadmap
@@ -2746,6 +2746,31 @@ Add Postgres composition factory and update roadmap
 - `pnpm validate:composition:sql-knowledge`
 - `pnpm validate:composition:postgres-knowledge`
 - `pnpm validate:project:closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
+## Task 102
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Extend knowledge schema for embedding vectors
+
+**Summary**
+- Added `embedding_vectors` DDL (`workspace_id`, `chunk_id`, `vector_json`) to schema constants / apply helper
+- Added `embeddingVectorSql` parameterized constants (upsert/select/delete/select-all)
+- InMemorySqlGateway accepts embedding_vectors DDL as no-op; knowledge-schema validation covers DDL apply
+- Documented as rebuildable search-index persistence (OpenSearch still deferred)
+
+**Validation**
+- `pnpm validate:infra:knowledge-schema`
 - `pnpm typecheck`
 - `pnpm validate`
 
