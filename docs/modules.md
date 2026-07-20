@@ -189,8 +189,11 @@ adds the `mcp` module as a transport-independent MCP capability
 boundary — `McpToolName`, `McpToolDefinition`, `McpToolInvokeInput`,
 `McpToolInvokeResult`, and the `McpTool` port — so a cited grounded
 answer can later be exposed as an MCP tool without Domain/RAG
-business-logic duplication and without an MCP SDK or network transport;
-no tool adapter yet.
+business-logic duplication and without an MCP SDK or network transport.
+Task 51 adds `GenerateCitedGroundedAnswerMcpTool`, which injects only
+`GenerateCitedGroundedAnswerUseCase`, exposes fixed definition
+constants, and converts invalid input / use-case failure into
+non-throwing `ok: false` results.
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules
@@ -210,7 +213,7 @@ Other modules remain skeleton boundaries until scoped.
 | `citation` | Citation building from grounded-answer evidence. `Citation` (`id`, `sourceId`, `documentId`, `chunkId`, `score`, `excerpt`) + `CitedGroundedAnswer` (`answer: GroundedAnswer`, `citations: Citation[]`) + the `CitationBuilder` port (`build(answer): Promise<Citation[]>`) define an explicit contract for converting `GroundedAnswer.evidence` into deterministic citations — this is where the evidence-only citation policy lives (never fabricating a citation outside evidence). `DefaultCitationBuilder` (no constructor dependency) emits exactly one citation per evidence block in order, with `id` = `cite:${encodeURIComponent(sourceId)}:${encodeURIComponent(documentId)}:${encodeURIComponent(chunkId)}`, copied provenance, and `excerpt` = block `text` (no truncation); empty evidence → empty citation list. |
 | `rag` | RAG answer assembly (answer + citations). `GroundedAnswer` (`text`, `evidence: GroundingContextBlock[]`, `insufficientEvidence`) + `GroundedAnswerAssemblyInput` (`context: GroundingContext`, `generatedText: GeneratedText`) + the `GroundedAnswerAssembler` port (`assemble(input): Promise<GroundedAnswer>`) define an explicit contract for combining generated text with grounding evidence — this is where insufficient-evidence policy lives, never in `PromptBuilder`/`LanguageModelProvider`. `DefaultGroundedAnswerAssembler` (no constructor dependency) discards generated text and returns a fixed insufficient-evidence message when `context.blocks` is empty, otherwise returns `generatedText.text` plus a defensive copy of `context.blocks` as evidence — truncation alone is never treated as evidence absence. |
 | `ai` | AI provider abstraction (fake + real providers). `GeneratedText` (`text: string`, not yet a grounded answer or citation) + the `LanguageModelProvider` port (`generate(prompt: GroundedPrompt): Promise<GeneratedText>`) define a provider-independent LLM generation contract; `GroundedPrompt` is its only prompt input. `FakeLanguageModelProvider` (no external dependency) validates the prompt and echoes `userMessage` back as `text`, for contract/flow validation only — never a real answer. A real provider is still deferred. |
-| `mcp` | Transport-independent MCP tool capability exposure. `McpToolName` (`"generate_cited_grounded_answer"`), `McpToolDefinition` (`name`, `description`, `inputKeys: readonly string[]`), `McpToolInvokeInput` (`name`, `arguments`), `McpToolInvokeResult` (`ok`, `toolName`, optional `result: CitedGroundedAnswer` / `error`), and the `McpTool` port (`definition` + `invoke(args)`) define how application capabilities are exposed as MCP tools without Domain/RAG business-logic duplication and without an MCP SDK, network transport, or JSON-RPC server. A concrete tool adapter and registry are still deferred. |
+| `mcp` | Transport-independent MCP tool capability exposure. `McpToolName` (`"generate_cited_grounded_answer"`), `McpToolDefinition` (`name`, `description`, `inputKeys: readonly string[]`), `McpToolInvokeInput` (`name`, `arguments`), `McpToolInvokeResult` (`ok`, `toolName`, optional `result: CitedGroundedAnswer` / `error`), and the `McpTool` port (`definition` + `invoke(args)`) define how application capabilities are exposed as MCP tools without Domain/RAG business-logic duplication and without an MCP SDK, network transport, or JSON-RPC server. `GenerateCitedGroundedAnswerMcpTool` injects only `GenerateCitedGroundedAnswerUseCase`, exposes fixed definition constants, and converts invalid input / use-case failure into non-throwing `ok: false` results. A registry is still deferred. |
 | `api` | Controllers and request/response DTOs. |
 | `http` | Framework-independent HTTP abstraction. |
 | `server` | Production server runtime and lifecycle. |

@@ -1375,3 +1375,31 @@ Define MCP tool contract and module boundary
 
 **Status**
 Completed
+
+## Task 51
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add cited grounded answer MCP tool
+
+**Summary**
+- Added `GenerateCitedGroundedAnswerMcpTool` (`app/knowledge/mcp`), implementing `McpTool` with only `GenerateCitedGroundedAnswerUseCase` injected
+- Fixed `definition`: `name` = `"generate_cited_grounded_answer"`, `description` = `"Generate a workspace-scoped grounded answer with evidence-bound citations."`, `inputKeys` = `["workspaceId", "query", "retrievalLimit", "maxCharacters"]`
+- `invoke` validates the four keys with the same rules as the use case's application input; valid → `{ ok: true, toolName, result }`; invalid → `{ ok: false, toolName, error }` without calling the use case; use-case throw → `{ ok: false, toolName, error: <message> }` — never throws across this boundary for those cases
+- Exported from `mcp` and top-level barrels; added `runGenerateCitedGroundedAnswerMcpToolValidation.ts` + unit case inventory; wired `validate:mcp:cited-answer-tool`
+- Updated docs; no additional tools, registry, real MCP transport/SDK, answer/citation policy change, or composition wiring introduced
+
+**Validation**
+- `pnpm validate:application:cited-answer`
+- `pnpm validate:mcp:contract`
+- `pnpm validate:mcp:cited-answer-tool`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

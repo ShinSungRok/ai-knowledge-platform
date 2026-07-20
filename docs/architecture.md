@@ -672,6 +672,19 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   case are later tasks. Real MCP SDK, network transport, JSON-RPC
   server, auth framework, Agent orchestration, and composition-root
   wiring remain out of scope.
+- `GenerateCitedGroundedAnswerMcpTool` (`app/knowledge/mcp`) is the
+  `McpTool` adapter that exposes
+  `GenerateCitedGroundedAnswerUseCase` as the fixed
+  `generate_cited_grounded_answer` capability: its constructor injects
+  only that use case; `definition` is fixed
+  (`name`/`description`/`inputKeys:
+  ["workspaceId","query","retrievalLimit","maxCharacters"]`); `invoke`
+  validates those four keys with the same rules as the use case's
+  application input, then returns `{ ok: true, toolName, result }` on
+  success or `{ ok: false, toolName, error }` on invalid input /
+  use-case failure — **never throws** across this boundary for those
+  cases. No additional tools, registry, real MCP transport/SDK, or
+  composition-root wiring are introduced here.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -686,4 +699,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   application:generate-text + rag:answer-contract +
   rag:answer-assembler + application:grounded-answer +
   citation:contract + citation:builder + application:cited-answer +
-  mcp:contract + typecheck).
+  mcp:contract + mcp:cited-answer-tool + typecheck).
