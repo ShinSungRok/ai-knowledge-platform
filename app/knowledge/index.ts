@@ -227,7 +227,7 @@ export type {
   HttpListenAddress,
   HttpListener,
 } from "./server";
-export { DefaultKnowledgeServer } from "./server";
+export { DefaultKnowledgeServer, NodeHttpListener } from "./server";
 export { KNOWLEDGE_MODULE_COMPOSITION } from "./composition";
 export type { KnowledgeRuntime, InMemoryKnowledgeComposition } from "./composition";
 export { createInMemoryKnowledgeComposition } from "./composition";

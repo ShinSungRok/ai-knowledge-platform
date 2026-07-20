@@ -2861,7 +2861,7 @@ Completed
 2026-07-20
 
 **Commit**
-Pending
+a5558a1
 
 **Title**
 Define HTTP listen config and listener contract
@@ -2873,6 +2873,31 @@ Define HTTP listen config and listener contract
 
 **Validation**
 - `pnpm validate:server:lifecycle`
+- `pnpm validate:server:listener-contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
+## Task 107
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add NodeHttpListener adapter
+
+**Summary**
+- Added `NodeHttpListener` using `node:http.createServer` over an injected HttpRouter
+- Maps IncomingMessage to HttpRequest (GET/POST, pathname, lower-cased headers, JSON body)
+- 405/400/500 JSON error responses; duplicate close throws; no Express/Fastify
+
+**Validation**
+- `pnpm validate:http:router`
 - `pnpm validate:server:listener-contract`
 - `pnpm typecheck`
 - `pnpm validate`
