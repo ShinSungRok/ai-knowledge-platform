@@ -2432,3 +2432,29 @@ Finalize README and Progress Log closeout entry
 **Status**
 Completed
 
+## Task 90
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Define SQL gateway contract and infra boundary
+
+**Summary**
+- Added `SqlParameter`, `SqlQueryResult`, and `SqlGateway` port in `infra`
+- Updated infra module docs from skeleton deferred to SoT SQL gateway boundary
+- Added `validate:infra:sql-gateway-contract`; noted Sprint 21 post-baseline persistence in architecture
+- No repository adapter, real Postgres driver, or composition wiring
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:infra:sql-gateway-contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

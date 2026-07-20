@@ -1,9 +1,14 @@
 /**
- * Skeleton module: `app/knowledge/infra`
+ * Module: `app/knowledge/infra`
  *
- * Local Docker infrastructure validation helpers.
- *
- * Feature implementation is intentionally deferred. This barrel exists so the
- * module boundary is importable and validatable from day one.
+ * Infrastructure edge for Source-of-Truth persistence and local Docker
+ * scaffolding. Defines the {@link SqlGateway} contract (`execute` with
+ * bound {@link SqlParameter}s returning {@link SqlQueryResult}) used by
+ * SQL-backed repository adapters. Real `pg` / ORM drivers remain deferred;
+ * validation uses an in-memory gateway (Sprint 21+).
  */
 export const KNOWLEDGE_MODULE_INFRA = "app/knowledge/infra" as const;
+
+export type { SqlParameter } from "./SqlParameter";
+export type { SqlQueryResult } from "./SqlQueryResult";
+export type { SqlGateway } from "./SqlGateway";

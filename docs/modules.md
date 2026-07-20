@@ -300,7 +300,7 @@ Runtime, and Operations. The only remaining skeleton-style boundary is
 | `observability` | Logging, metrics, and health-check foundations. `Logger`/`LogEvent`/`LogLevel` and `Metrics`/`MetricPoint` ports with `InMemoryLogger` (ordered events + defensive copies) and `InMemoryMetrics` (signature accumulation + sorted `getPoints`). No OpenTelemetry/Prometheus exporters. |
 | `reliability` | Retry, timeout, circuit breaker, error classification. `RetryPolicy`/`DefaultRetryPolicy` (no-delay retries) and `TimeoutPolicy`/`DefaultTimeoutPolicy` (`Promise.race` + `setTimeout`). Circuit breaker and tools/jobs/HTTP wiring remain out of scope. |
 | `security` | Rate limiting and input validation foundations. `WorkspaceAuthorizer`/`DefaultWorkspaceAuthorizer` and `HttpWorkspaceGuard` (`x-workspace-id`) enforce workspace access on cited-answer HTTP. Health stays unauthenticated. AuthN/rate limit/CORS out of scope. |
-| `infra` | Local Docker infrastructure scaffolding helpers (`docker/`, `pnpm infra:config`). Real Postgres/OpenSearch adapters are deferred; module remains a boundary constant until infra adapters are scoped. |
+| `infra` | Infrastructure edge for Source-of-Truth persistence and Docker scaffolding. `SqlGateway` / `SqlParameter` / `SqlQueryResult` define the SQL execute contract for repository adapters. Real `pg` driver remains deferred; local Docker helpers via `pnpm infra:config`. |
 
 ## 4. Top-level shape
 

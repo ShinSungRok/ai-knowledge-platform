@@ -957,3 +957,6 @@ The following remain intentionally out of Project 2 scope:
 - Real LLM provider SDK
 - Real MCP network transport
 - `node:http` / Express TCP listen
+
+Project 2 Platform Baseline remains closed. Sprint 21 begins
+post-baseline Source-of-Truth persistence (`SqlGateway` in `infra`).
