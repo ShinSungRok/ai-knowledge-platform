@@ -101,7 +101,12 @@ original retrieved score. Task 36 adds the `RerankedSearch` port and its
 `DefaultRerankedSearch` adapter, wiring only `HybridSearch` and
 `Reranker`: it runs a hybrid search first, then passes that result's
 chunks to the reranker, returning the reranker's own chunk order as its
-`RetrievalResult` unchanged (never re-sorting a second time).
+`RetrievalResult` unchanged (never re-sorting a second time). Task 38
+adds the `prompt` module's grounded-prompt contract — `GroundedPrompt`
+(`systemInstruction`, `userMessage`, both plain strings) and the
+`PromptBuilder` port (`build(context: GroundingContext):
+Promise<GroundedPrompt>`) — defining how a `GroundingContext` is turned
+into an LLM-independent prompt representation; no adapter yet.
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules
@@ -117,7 +122,7 @@ Other modules remain skeleton boundaries until scoped.
 | `retrieval` | `VectorRetriever` port + `DefaultVectorRetriever` adapter turn a `RetrievalInput` (`workspaceId`, `query`, `limit`) into a `RetrievalResult` (`query`, ranked `RetrievedChunk[]`) by embedding the query via `EmbeddingProvider`, ranking via `VectorIndex.findNearest`, and hydrating each result to its `DocumentChunk` via `DocumentChunkRepository.findById` — excluding stale results. Keyword/hybrid retrieval and context assembly are handled by `search`/`context`; re-ranking is still deferred. |
 | `search` | Search engine abstraction (keyword, vector, hybrid, re-ranking). `KeywordSearch` port + `DefaultKeywordSearch` adapter turn a `RetrievalInput` into a `RetrievalResult` by loading every chunk in the workspace via `DocumentChunkRepository.findAll`, tokenizing query/chunk text into lowercased Unicode letter/number tokens, and scoring by summed exact match counts of the query's de-duplicated tokens. `HybridSearch` port + `DefaultHybridSearch` adapter wire only `VectorRetriever` and `KeywordSearch`, running both with the same `RetrievalInput` and fusing their results by chunk id via reciprocal-rank fusion (`1 / (60 + rank)` per source, summed for chunks found by both). `RerankingInput` (`workspaceId`, `query`, `chunks: RetrievedChunk[]`) + the `Reranker` port (`rerank(input): Promise<RetrievedChunk[]>`) define how a candidate set is deterministically re-ordered by query relevance. `DefaultReranker` (no constructor dependency) scores each candidate as unique query-token coverage + token density + its own original retrieved score (over the same shared `tokenize` utility `DefaultKeywordSearch` uses), sorted by that score descending then chunk id ascending, returning every candidate as fresh, unmutated objects. `RerankedSearch` port + `DefaultRerankedSearch` adapter wire only `HybridSearch` and `Reranker`: it validates a `RetrievalInput`, calls `HybridSearch.search`, passes that result's chunks to `Reranker.rerank({ workspaceId, query, chunks })`, and returns the reranker's own chunk order as its `RetrievalResult` unchanged. |
 | `context` | Prompt context assembly from retrieved documents. `ContextAssemblyInput` (`workspaceId`, `query`, ranked `RetrievedChunk[]`, `maxCharacters`) + `GroundingContext` (`query`, ordered `GroundingContextBlock[]`, rendered `content`, `truncated`) define the `ContextAssembler` port's `assemble` contract. `DefaultContextAssembler` (its default adapter) depends only on `KnowledgeDocumentRepository`, hydrating each ranked chunk's document provenance in the given order, rendering each as `[sourceId=...;documentId=...;chunkId=...]\n<chunk text>` joined by a blank line, including a block only if it fits the remaining `maxCharacters` budget whole, and skipping (never truncating) an oversized or stale-document candidate while still evaluating later chunks; Prompt Builder / Citation wiring is still deferred. |
-| `prompt` | Prompt construction from context. |
+| `prompt` | Prompt construction from a `GroundingContext`. `GroundedPrompt` (`systemInstruction`, `userMessage`, both plain strings) + the `PromptBuilder` port (`build(context: GroundingContext): Promise<GroundedPrompt>`) define an LLM-independent prompt representation; a default adapter is still deferred. |
 | `citation` | Citation building from retrieved sources. |
 | `rag` | RAG answer assembly (answer + citations). |
 | `ai` | AI provider abstraction (fake + real providers). |

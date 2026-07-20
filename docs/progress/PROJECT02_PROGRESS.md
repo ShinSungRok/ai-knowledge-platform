@@ -1000,3 +1000,28 @@ Integrate reranked search into grounding context
 
 **Status**
 Completed
+
+## Task 38
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Define grounded prompt contract
+
+**Summary**
+- Added `app/knowledge/prompt/GroundedPrompt.ts` (`{ systemInstruction, userMessage }`, both plain strings — no message-role framework or provider-specific chat format) and `app/knowledge/prompt/PromptBuilder.ts` (`build(context: GroundingContext): Promise<GroundedPrompt>` port), reusing the context module's own `GroundingContext` shape
+- Updated the `prompt` and top-level `app/knowledge` barrels to export the new types; no rendering algorithm, adapter, LLM provider port, grounded answer generation, or citation generation implemented — contract only
+- Added `runPromptBuilderContractValidation.ts` (module-constant check, an in-file `FakePromptBuilder` test double proving the port is implementable/callable from just the exported types and returns a `GroundedPrompt`-shaped result, an empty-`GroundingContext` case, and a compile-time type-assignability check that the top-level barrel re-exports the same `PromptBuilder` type) + `tests/unit/promptBuilderContract.cases.ts`
+- Added `validate:prompt:contract` to `package.json`, wired into the top-level `validate` chain; no context assembly or re-ranking change introduced
+
+**Validation**
+- `pnpm validate:prompt:contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

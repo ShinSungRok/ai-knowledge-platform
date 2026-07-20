@@ -438,6 +438,16 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   Invalid input is rejected before either dependency is called. The RRF
   fusion inside `DefaultHybridSearch` and the scoring inside
   `DefaultReranker` are both untouched by this adapter.
+- `PromptBuilder` (`app/knowledge/prompt`) is a port —
+  `build(context: GroundingContext): Promise<GroundedPrompt>`, where
+  `GroundedPrompt` is `{ systemInstruction, userMessage }` (both plain
+  strings) — turning a `GroundingContext` into an LLM-independent prompt
+  representation. It reuses the context module's own `GroundingContext`
+  shape and never re-retrieves, re-ranks, or re-assembles context; it
+  only renders the context it is given. An LLM provider is this port's
+  **output consumer**, never something `PromptBuilder` calls or
+  constructs internally. Only the contract is defined so far; a default
+  adapter (`DefaultPromptBuilder`) is a later task.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -447,4 +457,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   provider + embedding index + retrieval:vector + search:keyword +
   search:hybrid + search:rerank-contract + search:reranker +
   search:reranked + context:contract + context:assembler +
-  application:grounding-context + typecheck).
+  prompt:contract + application:grounding-context + typecheck).

@@ -1,9 +1,14 @@
 /**
- * Skeleton module: `app/knowledge/prompt`
+ * Module: `app/knowledge/prompt`
  *
- * Prompt construction from context.
+ * Prompt construction from a `GroundingContext`.
  *
- * Feature implementation is intentionally deferred. This barrel exists so the
- * module boundary is importable and validatable from day one.
+ * `GroundedPrompt` (Task 38) is an LLM-independent prompt representation
+ * (`systemInstruction`, `userMessage`); `PromptBuilder` is the port that
+ * builds one from a `GroundingContext`. A default adapter is a later
+ * task.
  */
 export const KNOWLEDGE_MODULE_PROMPT = "app/knowledge/prompt" as const;
+
+export type { GroundedPrompt } from "./GroundedPrompt";
+export type { PromptBuilder } from "./PromptBuilder";
