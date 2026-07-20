@@ -29,7 +29,10 @@ not yet wired to any storage or pipeline. Task 17 adds
 repository, and `ChunkingService` ports into a single-document chunk-and-
 replace pipeline. Task 18 adds `RechunkKnowledgeSourcePipeline`, which
 re-chunks every document of one source by filtering `findAll` and
-delegating each match to `ChunkKnowledgeDocumentPipeline`.
+delegating each match to `ChunkKnowledgeDocumentPipeline`. Task 19 adds the
+`embedding` module's `EmbeddingProvider` port and `FakeEmbeddingProvider` —
+a pure, deterministic function from text to a fixed-8-dimension vector, not
+yet wired to any storage or pipeline.
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules
@@ -41,7 +44,7 @@ Other modules remain skeleton boundaries until scoped.
 | `repository` | Persistence-agnostic ports (`KnowledgeDocumentRepository`, `KnowledgeSourceRepository`, `DocumentChunkRepository`); methods take `workspaceId` (chunk methods also take `documentId`). |
 | `persistence` | Concrete adapters (`DefaultInMemoryRepository`, `DefaultInMemoryKnowledgeSourceRepository`, `DefaultInMemoryDocumentChunkRepository`; DB adapters later). |
 | `pipeline` | Ingestion pipelines from external knowledge sources. `KnowledgeSourceConnector` port + `FakeKnowledgeSourceConnector` fixture adapter fetch normalized documents (`externalId`/`title`/`text`) for a `KnowledgeSource`; `SyncKnowledgeSourcePipeline` turns those into idempotent, deterministically-keyed `KnowledgeDocument` writes via the repository ports. `ChunkKnowledgeDocumentPipeline` chunks a single stored document via `ChunkingService` and fully replaces its chunk set via `DocumentChunkRepository`; `RechunkKnowledgeSourcePipeline` re-chunks every document of one source by delegating each to `ChunkKnowledgeDocumentPipeline`. No document/chunk deletion, automatic chunking during sync, background scheduling, or real connector yet. |
-| `embedding` | Chunking, embedding, and vector indexing ports/adapters. `ChunkingService` port + `FixedSizeDocumentChunker` deterministic, fixed-size adapter split a `KnowledgeDocument` into ordered `DocumentChunk`s; no storage, pipeline, or embedding implementation yet. |
+| `embedding` | Chunking, embedding, and vector indexing ports/adapters. `ChunkingService` port + `FixedSizeDocumentChunker` deterministic, fixed-size adapter split a `KnowledgeDocument` into ordered `DocumentChunk`s. `EmbeddingProvider` port + `FakeEmbeddingProvider` deterministic adapter turn text into a fixed-`EMBEDDING_VECTOR_DIMENSION` (8) vector; no vector storage/indexing yet. |
 | `search` | Search engine abstraction (keyword, vector, hybrid). |
 | `retrieval` | Retriever port consumed by the RAG flow. |
 | `context` | Prompt context assembly from retrieved documents. |

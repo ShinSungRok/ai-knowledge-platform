@@ -195,9 +195,20 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   succeeds with a zero-count result. Automatic re-chunking during sync,
   deletion of documents/chunks removed from the source, and background
   scheduling/retry are out of scope for this pipeline.
+- `EmbeddingProvider` (`app/knowledge/embedding`) is a port —
+  `embed(text: string): Promise<number[]>` — for turning text into a
+  fixed-`EMBEDDING_VECTOR_DIMENSION` (8) vector, with no storage or
+  indexing knowledge. `FakeEmbeddingProvider` is the dependency-free
+  adapter: it splits text into Unicode code points (via `Array.from`),
+  accumulates each code point's value into one of 8 buckets
+  (`index % EMBEDDING_VECTOR_DIMENSION`), then divides every bucket by the
+  code point count — always a deterministic vector of exactly 8 finite
+  numbers. It rejects an empty or whitespace-only string. No external AI
+  provider, API key, network call, batch API, or vector storage/search
+  belongs here.
 - Database adapters, HTTP/server, search, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
   repository:chunk + application + pipeline connector + pipeline sync +
   pipeline chunk-document + pipeline rechunk-source + embedding chunker +
-  typecheck).
+  embedding provider + typecheck).

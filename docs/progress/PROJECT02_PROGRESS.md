@@ -484,3 +484,29 @@ Add source chunk rebuild pipeline
 
 **Status**
 Completed
+
+## Task 19
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add deterministic embedding provider
+
+**Summary**
+- Added `EMBEDDING_VECTOR_DIMENSION` (8) and `EmbeddingProvider` port (`embed(text: string): Promise<number[]>`) in `app/knowledge/embedding`, following Project1's (`public-law-ai`) `EmbeddingProvider`/`EmbeddingVectorDimension` naming pattern
+- Added `FakeEmbeddingProvider`: splits text into Unicode code points via `Array.from` (never breaking a surrogate pair/astral character), accumulates each code point's value into one of 8 buckets (`index % EMBEDDING_VECTOR_DIMENSION`), then divides every bucket by the code point count — always a deterministic vector of exactly 8 finite numbers; rejects an empty or whitespace-only string
+- No external AI provider, API key, network call, batch embedding API, vector storage, or Chunk Repository/pipeline change introduced
+- Exported the new constant/port/adapter from the `embedding` and top-level `app/knowledge` barrels
+- Added `validate:embedding:provider` runner + `tests/unit/fakeEmbeddingProvider.cases.ts`, wired into the top-level `validate` chain
+
+**Validation**
+- `pnpm validate:embedding:provider`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
