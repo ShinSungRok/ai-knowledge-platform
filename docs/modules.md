@@ -288,7 +288,7 @@ Other modules remain skeleton boundaries until scoped.
 | `http` | Framework-independent HTTP abstraction. |
 | `server` | Production server runtime and lifecycle. |
 | `composition` | Composition root — wires concrete adapters. |
-| `config` | Typed, validated, environment-driven configuration. |
+| `config` | Typed, validated runtime configuration. `KnowledgeRuntimeConfig` (positive-integer defaults for retrieval limit, max characters, tool timeout, max chunk length), `loadKnowledgeRuntimeConfig` plain-object loader with defensive copy, and `DEFAULT_KNOWLEDGE_RUNTIME_CONFIG`. No `process.env`/dotenv parsing. |
 
 ## 3. Cross-cutting modules
 

@@ -206,6 +206,8 @@ export { KNOWLEDGE_MODULE_HTTP } from "./http";
 export { KNOWLEDGE_MODULE_SERVER } from "./server";
 export { KNOWLEDGE_MODULE_COMPOSITION } from "./composition";
 export { KNOWLEDGE_MODULE_CONFIG } from "./config";
+export type { KnowledgeRuntimeConfig } from "./config";
+export { DEFAULT_KNOWLEDGE_RUNTIME_CONFIG, loadKnowledgeRuntimeConfig } from "./config";
 export { KNOWLEDGE_MODULE_EVALUATION } from "./evaluation";
 export type {
   EvaluationCase,

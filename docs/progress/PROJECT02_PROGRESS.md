@@ -2114,3 +2114,29 @@ Add citation evaluator and run use case
 **Status**
 Completed
 
+## Task 78
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Define runtime configuration contract and loader
+
+**Summary**
+- Added `KnowledgeRuntimeConfig`, `DEFAULT_KNOWLEDGE_RUNTIME_CONFIG`, and `loadKnowledgeRuntimeConfig` (plain-object validation + defensive copy; no process.env)
+- Updated config module barrel and top-level exports; updated docs
+- Added `runKnowledgeRuntimeConfigValidation.ts` + unit case inventory; wired `validate:config:runtime`
+- No composition, HTTP/API/server, or env adapter
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:config:runtime`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

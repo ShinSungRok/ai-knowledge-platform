@@ -876,6 +876,10 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   `RunCitationEvaluationUseCase` injects only
   `GenerateCitedGroundedAnswerUseCase` and `CitationEvaluator`.
   Real corpus loaders and LLM-as-judge remain later tasks.
+- The `config` module (`app/knowledge/config`) defines
+  `KnowledgeRuntimeConfig`, `loadKnowledgeRuntimeConfig` (plain-object
+  validation + defensive copy, no `process.env`), and
+  `DEFAULT_KNOWLEDGE_RUNTIME_CONFIG` for composition defaults.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -898,4 +902,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   application:memory-recall + application:run-agent-memory +
   memory:contract + memory:store + jobs:contract + jobs:store + jobs:sync-handler + jobs:processor + jobs:reindex-handler +
   application:enqueue-job + application:process-next-job +
-  evaluation:contract + typecheck).
+  evaluation:contract + config:runtime + typecheck).
