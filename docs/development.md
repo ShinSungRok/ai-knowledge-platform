@@ -23,7 +23,7 @@ pnpm validate:skeleton         # directory + barrel + docs integrity
 pnpm validate:repository       # DefaultInMemoryRepository port contract
 pnpm validate:repository:source # DefaultInMemoryKnowledgeSourceRepository port contract
 pnpm validate:repository:chunk # DefaultInMemoryDocumentChunkRepository port contract (findById/findAll + workspace-global id conflict rejection)
-pnpm validate:application      # List + Page + Create + Update + Delete + Search + Export + Source + Retrieve + RetrieveHybrid + RetrieveGroundingContext + BuildGroundedPrompt + GenerateGroundedText + GenerateGroundedAnswer + GenerateCitedGroundedAnswer + InvokeMcpTool + ExecuteToolCall + RunAgent + AppendMemory + RecallMemory use cases
+pnpm validate:application      # List + Page + Create + Update + Delete + Search + Export + Source + Retrieve + RetrieveHybrid + RetrieveGroundingContext + BuildGroundedPrompt + GenerateGroundedText + GenerateGroundedAnswer + GenerateCitedGroundedAnswer + InvokeMcpTool + ExecuteToolCall + RunAgent + AppendMemory + RecallMemory + RunAgentWithMemory use cases
 pnpm validate:pipeline:connector # FakeKnowledgeSourceConnector port contract
 pnpm validate:pipeline:sync    # SyncKnowledgeSourcePipeline idempotent sync behavior
 pnpm validate:pipeline:chunk-document # ChunkKnowledgeDocumentPipeline chunk-and-replace behavior
@@ -64,6 +64,7 @@ pnpm validate:application:tool-call # ExecuteToolCallUseCase ToolExecutor.execut
 pnpm validate:application:run-agent # RunAgentUseCase AgentOrchestrator.run delegation
 pnpm validate:application:memory-append # AppendMemoryEntryUseCase MemoryStore.append delegation
 pnpm validate:application:memory-recall # RecallMemoryEntriesUseCase listBySession + newest-limit window
+pnpm validate:application:run-agent-memory # RunAgentWithMemoryUseCase recall→append user→run→append agent summary
 pnpm validate:agent:contract # AgentRole/AgentGoal/AgentPlan/AgentRunResult + planner/step-executor/reviewer/orchestrator port contract export + type-compatibility
 pnpm validate:agent:planner # DeterministicKnowledgeAgentPlanner single-step cited-answer plan + invalid-goal rejection + determinism
 pnpm validate:agent:step-executor # DefaultAgentStepExecutor ToolExecutor delegation + invalid step/timeout rejection
@@ -72,7 +73,7 @@ pnpm validate:agent:orchestrator # DefaultAgentOrchestrator plan→execute→rev
 pnpm validate:memory:contract # MemoryEntryRole/MemoryEntry/MemoryStore contract export + type-compatibility
 pnpm validate:memory:store # InMemoryMemoryStore append/list ordering, workspace isolation, defensive copies
 pnpm typecheck                 # TypeScript strict check
-pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application (incl. grounding-context + prompt + generate-text + grounded-answer + cited-answer + mcp-invoke + tool-call + run-agent + memory-append + memory-recall) + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + search:hybrid + search:rerank-contract + search:reranker + search:reranked + context:contract + context:assembler + prompt:contract + prompt:builder + ai:provider-contract + ai:fake-provider + rag:answer-contract + rag:answer-assembler + citation:contract + citation:builder + mcp:contract + mcp:cited-answer-tool + mcp:registry + tools:contract + tools:executor + agent:contract + agent:planner + agent:step-executor + agent:reviewer + agent:orchestrator + memory:contract + memory:store + typecheck
+pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application (incl. grounding-context + prompt + generate-text + grounded-answer + cited-answer + mcp-invoke + tool-call + run-agent + memory-append + memory-recall + run-agent-memory) + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + search:hybrid + search:rerank-contract + search:reranker + search:reranked + context:contract + context:assembler + prompt:contract + prompt:builder + ai:provider-contract + ai:fake-provider + rag:answer-contract + rag:answer-assembler + citation:contract + citation:builder + mcp:contract + mcp:cited-answer-tool + mcp:registry + tools:contract + tools:executor + agent:contract + agent:planner + agent:step-executor + agent:reviewer + agent:orchestrator + memory:contract + memory:store + typecheck
 ```
 
 Formal unit/integration/e2e suites under `tests/` are reserved for later

@@ -1754,3 +1754,32 @@ Add append and recall memory use cases
 
 **Status**
 Completed
+
+## Task 65
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add run agent with memory use case
+
+**Summary**
+- Added `RunAgentWithMemoryUseCase` + `RunAgentWithMemoryInput`/`RunAgentWithMemoryResult` injecting only `MemoryStore` and `AgentOrchestrator`
+- `execute` validates input, recalls session entries, appends user query, runs AgentOrchestrator with AgentGoal fields, appends fixed agent summary (`status=...; decision=...; reason=...`), returns `{ recalled, run, written }`
+- Existing `RunAgentUseCase` and Agent role adapters unchanged; memory not injected into planner
+- Exported from application/top-level barrels; added validation runner + unit case inventory; wired `validate:application:run-agent-memory` into `validate:application` / top-level `validate`
+- Updated docs; no composition wiring, Memory-as-Knowledge, or multi-session summarization introduced
+
+**Validation**
+- `pnpm validate:application:run-agent`
+- `pnpm validate:application:memory-append`
+- `pnpm validate:application:memory-recall`
+- `pnpm validate:application:run-agent-memory`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

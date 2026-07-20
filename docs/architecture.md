@@ -801,6 +801,14 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   validates and delegates; recall lists the session and, when `limit`
   is set, returns the newest `limit` entries still in sequence-
   ascending order (session memory window, not Knowledge search).
+  `RunAgentWithMemoryUseCase` injects only `MemoryStore` and
+  `AgentOrchestrator`: validates input, recalls session entries,
+  appends the user query, runs the orchestrator with AgentGoal fields
+  unchanged, appends a fixed agent summary
+  (`status=<status>; decision=<review.decision>; reason=<review.reason>`),
+  and returns `{ recalled, run, written }`. Existing `RunAgentUseCase`
+  and Agent role adapters are unchanged; memory is not injected into
+  the planner.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -820,4 +828,5 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   application:tool-call + agent:contract + agent:planner +
   agent:step-executor + agent:reviewer + agent:orchestrator +
   application:run-agent + application:memory-append +
-  application:memory-recall + memory:contract + memory:store + typecheck).
+  application:memory-recall + application:run-agent-memory +
+  memory:contract + memory:store + typecheck).

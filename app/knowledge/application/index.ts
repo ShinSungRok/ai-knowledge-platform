@@ -89,3 +89,8 @@ export {
   RecallMemoryEntriesUseCase,
   type RecallMemoryEntriesInput,
 } from "./RecallMemoryEntriesUseCase";
+export {
+  RunAgentWithMemoryUseCase,
+  type RunAgentWithMemoryInput,
+  type RunAgentWithMemoryResult,
+} from "./RunAgentWithMemoryUseCase";

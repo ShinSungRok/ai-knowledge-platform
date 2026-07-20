@@ -29,6 +29,7 @@ export {
   RunAgentUseCase,
   AppendMemoryEntryUseCase,
   RecallMemoryEntriesUseCase,
+  RunAgentWithMemoryUseCase,
 } from "./application";
 export type {
   ListKnowledgeDocumentsInput,
@@ -57,6 +58,8 @@ export type {
   RunAgentInput,
   AppendMemoryEntryInput,
   RecallMemoryEntriesInput,
+  RunAgentWithMemoryInput,
+  RunAgentWithMemoryResult,
 } from "./application";
 export { KNOWLEDGE_MODULE_REPOSITORY } from "./repository";
 export type {
