@@ -943,3 +943,32 @@ Add deterministic relevance reranker
 
 **Status**
 Completed
+
+## Task 36
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add reranked hybrid search
+
+**Summary**
+- Added `RerankedSearch` port (`app/knowledge/search/RerankedSearch.ts`, `search(input: RetrievalInput): Promise<RetrievalResult>`) and its `DefaultRerankedSearch` adapter, injecting only the `HybridSearch` and `Reranker` ports — never `VectorRetriever`, `KeywordSearch`, or either port's own concrete adapter directly
+- `search` validates the `RetrievalInput` once at its own boundary, calls `HybridSearch.search` with it first, then passes that result's `chunks` into `Reranker.rerank({ workspaceId, query, chunks })`; the returned `RetrievedChunk[]` becomes the adapter's own `RetrievalResult.chunks` in exactly the reranker's own order (never re-sorted a second time), with `query` set to the validated input query
+- Invalid `workspaceId`/`query`/`limit` input is rejected before either dependency is called; `DefaultHybridSearch`'s RRF fusion and `DefaultReranker`'s scoring are both untouched
+- Exported `RerankedSearch`/`DefaultRerankedSearch` from the `search` and top-level `app/knowledge` barrels
+- Added `runDefaultRerankedSearchValidation.ts` (port contract; call-order verification via a shared log across counting `HybridSearch`/`Reranker` test doubles; exact input-field mapping to both dependencies; a reversing fake `Reranker` proving the adapter forwards the reranker's own order without re-sorting; empty-hybrid-result handling; invalid-input rejection before either dependency is called; static source-scan confirming only the two ports are imported) + `tests/unit/defaultRerankedSearch.cases.ts`, wired into `validate:search:reranked` and the top-level `validate` chain
+- Updated `docs/modules.md`/`docs/architecture.md`/`docs/development.md` to describe `RerankedSearch`/`DefaultRerankedSearch`; no RRF algorithm change, context assembly change, prompt/LLM/citation code, external ranker provider, or composition wiring introduced
+
+**Validation**
+- `pnpm validate:search:hybrid`
+- `pnpm validate:search:reranker`
+- `pnpm validate:search:reranked`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

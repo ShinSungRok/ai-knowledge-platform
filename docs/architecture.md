@@ -418,6 +418,22 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   store to enforce that isolation against (the caller upstream owns it).
   Cross-encoder/LLM re-ranking, an external ranking service, expanding
   hybrid recall, and score calibration are out of scope for this adapter.
+- `RerankedSearch` (`app/knowledge/search`) is a port —
+  `search(input: RetrievalInput): Promise<RetrievalResult>` — a fourth,
+  interchangeable way of turning a `(workspaceId, query, limit)` request
+  into ranked, hydrated chunks, this time re-ranked. `DefaultRerankedSearch`
+  is the adapter: it depends only on the `HybridSearch` and `Reranker`
+  ports (never `VectorRetriever`, `KeywordSearch`, a concrete adapter, or
+  either port's own adapter directly). It validates the `RetrievalInput`
+  once at its own boundary, calls `HybridSearch.search` with it first,
+  then passes that result's `chunks` into
+  `Reranker.rerank({ workspaceId, query, chunks })` — the returned
+  `RetrievedChunk[]` becomes this adapter's own `RetrievalResult.chunks`,
+  in exactly the order `Reranker` returned them (never re-sorted a
+  second time); `query` on the result is the validated input query.
+  Invalid input is rejected before either dependency is called. The RRF
+  fusion inside `DefaultHybridSearch` and the scoring inside
+  `DefaultReranker` are both untouched by this adapter.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -426,5 +442,5 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   embed-document + pipeline reindex-source + embedding chunker + embedding
   provider + embedding index + retrieval:vector + search:keyword +
   search:hybrid + search:rerank-contract + search:reranker +
-  context:contract + context:assembler + application:grounding-context +
-  typecheck).
+  search:reranked + context:contract + context:assembler +
+  application:grounding-context + typecheck).

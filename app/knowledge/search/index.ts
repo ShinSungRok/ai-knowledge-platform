@@ -12,6 +12,9 @@
  * `RetrievedChunk[]` by query relevance; `DefaultReranker` (Task 35) is
  * its default adapter, scoring by query token coverage + density + the
  * candidate's original retrieved score, with no constructor dependency.
+ * `RerankedSearch` (Task 36) composes the two: `DefaultRerankedSearch`
+ * wires only `HybridSearch` and `Reranker`, running a hybrid search then
+ * re-ranking its result.
  */
 export const KNOWLEDGE_MODULE_SEARCH = "app/knowledge/search" as const;
 
@@ -22,3 +25,5 @@ export { DefaultHybridSearch } from "./DefaultHybridSearch";
 export type { RerankingInput } from "./RerankingInput";
 export type { Reranker } from "./Reranker";
 export { DefaultReranker } from "./DefaultReranker";
+export type { RerankedSearch } from "./RerankedSearch";
+export { DefaultRerankedSearch } from "./DefaultRerankedSearch";

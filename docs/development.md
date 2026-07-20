@@ -38,11 +38,12 @@ pnpm validate:search:keyword   # DefaultKeywordSearch tokenize/score/rank behavi
 pnpm validate:search:hybrid    # DefaultHybridSearch reciprocal-rank-fusion behavior over VectorRetriever + KeywordSearch
 pnpm validate:search:rerank-contract # Reranker/RerankingInput contract export + type-compatibility
 pnpm validate:search:reranker # DefaultReranker coverage/density/original-score ranking and shared tokenize extraction
+pnpm validate:search:reranked # DefaultRerankedSearch HybridSearch -> Reranker delegation and order-preservation
 pnpm validate:context:contract # ContextAssembler/ContextAssemblyInput/GroundingContext contract export + type-compatibility
 pnpm validate:context:assembler # DefaultContextAssembler provenance hydration, whole-block budget, and truncation behavior
 pnpm validate:application:grounding-context # RetrieveGroundingContextUseCase HybridSearch -> ContextAssembler delegation sequence
 pnpm typecheck                 # TypeScript strict check
-pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application (incl. grounding-context) + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + search:hybrid + search:rerank-contract + search:reranker + context:contract + context:assembler + typecheck
+pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application (incl. grounding-context) + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + search:hybrid + search:rerank-contract + search:reranker + search:reranked + context:contract + context:assembler + typecheck
 ```
 
 Formal unit/integration/e2e suites under `tests/` are reserved for later
