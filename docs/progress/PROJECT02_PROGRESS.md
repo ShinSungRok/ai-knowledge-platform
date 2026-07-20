@@ -537,3 +537,31 @@ Add workspace-scoped vector index
 
 **Status**
 Completed
+
+## Task 21
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add document chunk embedding pipeline
+
+**Summary**
+- Added `EmbedDocumentChunksPipeline` in `app/knowledge/pipeline`: constructor injects only `DocumentChunkRepository`, `EmbeddingProvider`, and `VectorIndex` (pure ports); `embedDocument({ workspaceId, documentId })` returns `{ documentId, embeddedChunkCount }`
+- Reads the document's chunks via `findByDocumentId` (already ordered); a document with no chunks succeeds with a zero-count result and never calls the provider or vector index
+- Embeds every chunk, then validates the *entire* set of provider results (dimension === `EMBEDDING_VECTOR_DIMENSION`, all entries finite) before starting any `VectorIndex.upsert` — a single malformed result rejects the whole run with no partial vector-index writes, even when earlier chunks embedded successfully
+- Each stored vector carries the originating chunk's own `workspaceId`/`id`; since `VectorIndex.upsert` always replaces by that identity, re-running against the same document replaces rather than duplicates vectors — verified with counting fakes proving zero provider/index calls for an empty-chunk document, per-chunk vector storage, workspace isolation, zero-write rejection of an invalid provider result (via a sequenced test-double provider), and re-run stability
+- Exported the new pipeline from the `pipeline` barrel; added `validate:pipeline:embed-document` runner + `tests/unit/embedDocumentChunksPipeline.cases.ts`, wired into the top-level `validate` chain; no document-existence check, whole-source processing, similarity search/retrieval/ranking, chunk generation, or batch-provider/external-embedding-API change introduced
+
+**Validation**
+- `pnpm validate:embedding:provider`
+- `pnpm validate:embedding:index`
+- `pnpm validate:pipeline:embed-document`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

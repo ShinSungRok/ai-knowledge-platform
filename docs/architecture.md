@@ -221,9 +221,23 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   `KnowledgeDocumentRepository`, or `KnowledgeSourceRepository`, and has no
   similarity search, ranking, or chunk/document existence-check
   responsibility.
+- `EmbedDocumentChunksPipeline` (`app/knowledge/pipeline`) orchestrates
+  `DocumentChunkRepository`, `EmbeddingProvider`, and `VectorIndex` — pure
+  ports, never concrete adapters — to embed one document's chunks (ordered
+  via `findByDocumentId`) and upsert one vector per chunk, each carrying
+  the chunk's own `workspaceId`/`id`. Every provider result's dimension and
+  finite values are validated across the *entire* chunk set before any
+  `VectorIndex.upsert` call, so one malformed provider result rejects the
+  whole run with no partial vector-index writes. A document with no chunks
+  succeeds with a zero-count result and no provider/vector-index call.
+  Since `upsert` always replaces by `(workspaceId, chunkId)`, re-running
+  against the same document never duplicates vectors. Document existence,
+  whole-source processing, and any similarity search/retrieval concern are
+  out of scope for this pipeline.
 - Database adapters, HTTP/server, search, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
   repository:chunk + application + pipeline connector + pipeline sync +
-  pipeline chunk-document + pipeline rechunk-source + embedding chunker +
-  embedding provider + embedding index + typecheck).
+  pipeline chunk-document + pipeline rechunk-source + pipeline
+  embed-document + embedding chunker + embedding provider + embedding
+  index + typecheck).

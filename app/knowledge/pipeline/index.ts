@@ -13,10 +13,12 @@
  * single already-stored document into chunks via the `ChunkingService`
  * port and fully replaces that document's chunk set;
  * `RechunkKnowledgeSourcePipeline` re-chunks every document belonging to
- * one source by delegating each to `ChunkKnowledgeDocumentPipeline`. Real
+ * one source by delegating each to `ChunkKnowledgeDocumentPipeline`.
+ * `EmbedDocumentChunksPipeline` embeds one document's chunks via
+ * `EmbeddingProvider` and upserts the results into `VectorIndex`. Real
  * connectors, deletion of documents/chunks that disappear from the source,
- * automatic chunking during sync, and background scheduling are out of
- * scope until a later task scopes them.
+ * automatic chunking/embedding during sync, and background scheduling are
+ * out of scope until a later task scopes them.
  */
 export const KNOWLEDGE_MODULE_PIPELINE = "app/knowledge/pipeline" as const;
 
@@ -43,3 +45,8 @@ export {
   type RechunkKnowledgeSourceInput,
   type RechunkKnowledgeSourceResult,
 } from "./RechunkKnowledgeSourcePipeline";
+export {
+  EmbedDocumentChunksPipeline,
+  type EmbedDocumentChunksInput,
+  type EmbedDocumentChunksResult,
+} from "./EmbedDocumentChunksPipeline";
