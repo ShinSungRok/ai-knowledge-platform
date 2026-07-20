@@ -565,3 +565,32 @@ Add document chunk embedding pipeline
 
 **Status**
 Completed
+
+## Task 22
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add source embedding reindex pipeline
+
+**Summary**
+- Added `ReindexKnowledgeSourceEmbeddingsPipeline` in `app/knowledge/pipeline`, mirroring `RechunkKnowledgeSourcePipeline`'s pattern exactly: constructor injects only `KnowledgeSourceRepository`, `KnowledgeDocumentRepository`, and `EmbedDocumentChunksPipeline`; `reindex({ workspaceId, sourceId })` returns `{ sourceId, processedDocumentCount, embeddedChunkCount }`
+- Looks up the source via `findById` first; if missing or belonging to a different workspace, throws without ever calling `findAll` or touching the vector index — no partial side effects
+- Filters `findAll(workspaceId)` down to documents whose `sourceId` matches the input and delegates each one to `EmbedDocumentChunksPipeline`; documents/vectors belonging to other sources are never read from or written to, and a source with no matching documents succeeds with a zero-count result
+- Since each delegated `embedDocument` call upserts by `(workspaceId, chunkId)` identity, re-running `reindex` for the same source replaces rather than duplicates vectors — verified with counting fakes proving no `findAll`/vector-index calls on a missing/cross-workspace source, cross-source vector isolation via a pre-seeded stale vector that must remain untouched, re-run stability, and the empty-source zero-count case
+- Exported the new pipeline from the `pipeline` barrel; added `validate:pipeline:reindex-source` runner + `tests/unit/reindexKnowledgeSourceEmbeddingsPipeline.cases.ts`, wired into the top-level `validate` chain; no automatic reindexing during sync/rechunk, similarity search/retriever/hybrid search, background scheduling/retry, or Source/Document/Chunk deletion introduced
+
+**Validation**
+- `pnpm validate:embedding:provider`
+- `pnpm validate:embedding:index`
+- `pnpm validate:pipeline:embed-document`
+- `pnpm validate:pipeline:reindex-source`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

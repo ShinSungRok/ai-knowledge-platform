@@ -234,10 +234,25 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   against the same document never duplicates vectors. Document existence,
   whole-source processing, and any similarity search/retrieval concern are
   out of scope for this pipeline.
+- `ReindexKnowledgeSourceEmbeddingsPipeline` (`app/knowledge/pipeline`)
+  orchestrates `KnowledgeSourceRepository`, `KnowledgeDocumentRepository`,
+  and `EmbedDocumentChunksPipeline` — pure ports/pipelines, never concrete
+  adapters — to re-embed only the documents belonging to one
+  `KnowledgeSource`, mirroring `RechunkKnowledgeSourcePipeline`'s pattern
+  exactly. The source is looked up first; if missing or in a different
+  workspace, it throws without ever listing documents or touching the
+  vector index. Otherwise it filters `findAll(workspaceId)` down to
+  documents whose `sourceId` matches and delegates each to
+  `EmbedDocumentChunksPipeline`; other sources' documents/vectors are
+  never read from or written to, and a source with no matching documents
+  succeeds with a zero-count result. Automatic reindexing during sync/
+  rechunk, similarity search/retriever/hybrid search, background
+  scheduling/retry, and Source/Document/Chunk deletion are out of scope
+  for this pipeline.
 - Database adapters, HTTP/server, search, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
   repository:chunk + application + pipeline connector + pipeline sync +
   pipeline chunk-document + pipeline rechunk-source + pipeline
-  embed-document + embedding chunker + embedding provider + embedding
-  index + typecheck).
+  embed-document + pipeline reindex-source + embedding chunker + embedding
+  provider + embedding index + typecheck).

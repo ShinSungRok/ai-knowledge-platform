@@ -15,10 +15,13 @@
  * `RechunkKnowledgeSourcePipeline` re-chunks every document belonging to
  * one source by delegating each to `ChunkKnowledgeDocumentPipeline`.
  * `EmbedDocumentChunksPipeline` embeds one document's chunks via
- * `EmbeddingProvider` and upserts the results into `VectorIndex`. Real
- * connectors, deletion of documents/chunks that disappear from the source,
- * automatic chunking/embedding during sync, and background scheduling are
- * out of scope until a later task scopes them.
+ * `EmbeddingProvider` and upserts the results into `VectorIndex`;
+ * `ReindexKnowledgeSourceEmbeddingsPipeline` re-embeds every document
+ * belonging to one source by delegating each to
+ * `EmbedDocumentChunksPipeline`. Real connectors, deletion of
+ * documents/chunks that disappear from the source, automatic
+ * chunking/embedding during sync, and background scheduling are out of
+ * scope until a later task scopes them.
  */
 export const KNOWLEDGE_MODULE_PIPELINE = "app/knowledge/pipeline" as const;
 
@@ -50,3 +53,8 @@ export {
   type EmbedDocumentChunksInput,
   type EmbedDocumentChunksResult,
 } from "./EmbedDocumentChunksPipeline";
+export {
+  ReindexKnowledgeSourceEmbeddingsPipeline,
+  type ReindexKnowledgeSourceEmbeddingsInput,
+  type ReindexKnowledgeSourceEmbeddingsResult,
+} from "./ReindexKnowledgeSourceEmbeddingsPipeline";

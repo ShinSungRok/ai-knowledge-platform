@@ -29,11 +29,12 @@ pnpm validate:pipeline:sync    # SyncKnowledgeSourcePipeline idempotent sync beh
 pnpm validate:pipeline:chunk-document # ChunkKnowledgeDocumentPipeline chunk-and-replace behavior
 pnpm validate:pipeline:rechunk-source # RechunkKnowledgeSourcePipeline source-scoped rebuild behavior
 pnpm validate:pipeline:embed-document # EmbedDocumentChunksPipeline embed-and-upsert behavior
+pnpm validate:pipeline:reindex-source # ReindexKnowledgeSourceEmbeddingsPipeline source-scoped reindex behavior
 pnpm validate:embedding:chunker # FixedSizeDocumentChunker deterministic chunking behavior
 pnpm validate:embedding:provider # FakeEmbeddingProvider deterministic embedding behavior
 pnpm validate:embedding:index  # InMemoryVectorIndex upsert/find/isolation behavior
 pnpm typecheck                 # TypeScript strict check
-pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + embedding:chunker + embedding:provider + embedding:index + typecheck
+pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + typecheck
 ```
 
 Formal unit/integration/e2e suites under `tests/` are reserved for later

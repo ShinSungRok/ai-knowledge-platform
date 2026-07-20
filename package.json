@@ -24,10 +24,11 @@
     "validate:pipeline:chunk-document": "tsx app/knowledge/pipeline/runChunkKnowledgeDocumentPipelineValidation.ts",
     "validate:pipeline:rechunk-source": "tsx app/knowledge/pipeline/runRechunkKnowledgeSourcePipelineValidation.ts",
     "validate:pipeline:embed-document": "tsx app/knowledge/pipeline/runEmbedDocumentChunksPipelineValidation.ts",
+    "validate:pipeline:reindex-source": "tsx app/knowledge/pipeline/runReindexKnowledgeSourceEmbeddingsPipelineValidation.ts",
     "validate:embedding:chunker": "tsx app/knowledge/embedding/runFixedSizeDocumentChunkerValidation.ts",
     "validate:embedding:provider": "tsx app/knowledge/embedding/runFakeEmbeddingProviderValidation.ts",
     "validate:embedding:index": "tsx app/knowledge/embedding/runInMemoryVectorIndexValidation.ts",
-    "validate": "pnpm validate:skeleton && pnpm validate:repository && pnpm validate:repository:source && pnpm validate:repository:chunk && pnpm validate:application && pnpm validate:pipeline:connector && pnpm validate:pipeline:sync && pnpm validate:pipeline:chunk-document && pnpm validate:pipeline:rechunk-source && pnpm validate:pipeline:embed-document && pnpm validate:embedding:chunker && pnpm validate:embedding:provider && pnpm validate:embedding:index && pnpm typecheck",
+    "validate": "pnpm validate:skeleton && pnpm validate:repository && pnpm validate:repository:source && pnpm validate:repository:chunk && pnpm validate:application && pnpm validate:pipeline:connector && pnpm validate:pipeline:sync && pnpm validate:pipeline:chunk-document && pnpm validate:pipeline:rechunk-source && pnpm validate:pipeline:embed-document && pnpm validate:pipeline:reindex-source && pnpm validate:embedding:chunker && pnpm validate:embedding:provider && pnpm validate:embedding:index && pnpm typecheck",
     "infra:config": "docker compose -f docker/docker-compose.yml config"
   },
   "devDependencies": {
