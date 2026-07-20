@@ -351,8 +351,27 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   `{ sourceId, documentId, chunkId, score, text }`) — turning ranked,
   retrieved chunks plus their document provenance into a bounded,
   deterministic grounding context for a downstream Prompt Builder /
-  Citation capability. Only the contract is defined so far; a default
-  adapter (`DefaultContextAssembler`) is a later task.
+  Citation capability. `DefaultContextAssembler` is the adapter: it depends
+  only on the `KnowledgeDocumentRepository` port (never
+  `DocumentChunkRepository`, `VectorIndex`, `EmbeddingProvider`,
+  `HybridSearch`/`VectorRetriever`, or a concrete adapter). It processes
+  `input.chunks` in the order given — never re-sorting — and for each
+  chunk resolves `chunk.documentId` to its `KnowledgeDocument` via
+  `KnowledgeDocumentRepository.findById(workspaceId, documentId)`,
+  silently excluding a chunk whose document no longer exists (mirroring
+  the vector retriever's stale-result skip) without counting it toward
+  `truncated`. Each included block renders as fixed text —
+  `[sourceId=<sourceId>;documentId=<documentId>;chunkId=<chunkId>]\n<chunk
+  text>` — and is included only if the whole rendered block (plus its
+  `"\n\n"` join separator, when not first) fits within the remaining
+  `maxCharacters` budget; an oversized block is skipped whole (never
+  truncated mid-text) and evaluation continues so a later, smaller block
+  can still be included. `truncated` is `true` whenever at least one
+  candidate block was excluded for exceeding the budget. An empty
+  `chunks` input, or one where every candidate is stale or oversized,
+  yields empty `blocks` and empty `content`. Prompt generation, citation
+  objects, re-ranking, score calibration, and persistence changes are out
+  of scope for this adapter.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -360,4 +379,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   pipeline chunk-document + pipeline rechunk-source + pipeline
   embed-document + pipeline reindex-source + embedding chunker + embedding
   provider + embedding index + retrieval:vector + search:keyword +
-  search:hybrid + context:contract + typecheck).
+  search:hybrid + context:contract + context:assembler + typecheck).

@@ -831,3 +831,32 @@ Define grounding context assembly contract
 
 **Status**
 Completed
+
+## Task 32
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add deterministic grounding context assembler
+
+**Summary**
+- Added `DefaultContextAssembler` (`app/knowledge/context/DefaultContextAssembler.ts`), the `ContextAssembler` adapter, injecting only the `KnowledgeDocumentRepository` port; processes `input.chunks` in the given ranking order (never re-sorts), and for each chunk resolves `chunk.documentId` to its `KnowledgeDocument` via `findById(workspaceId, documentId)` (workspace-scoped; a stale chunk whose document no longer exists is silently excluded, mirroring the vector retriever's stale-result skip, and is never counted toward `truncated`)
+- Fixed rendered block format to `[sourceId=<sourceId>;documentId=<documentId>;chunkId=<chunkId>]\n<chunk text>`, joined by `"\n\n"`; a candidate block is included only if the whole rendered block (including its join separator) fits the remaining `maxCharacters` budget — an oversized block is skipped whole (never truncated mid-text) and evaluation continues so a later, smaller block can still be included; `truncated` is `true` whenever at least one candidate was excluded by budget; an empty `chunks` input, or one where every candidate is stale or oversized, yields empty `blocks`/`content`
+- Validates `workspaceId`/`query`/`chunks`/`maxCharacters` and each `RetrievedChunk`'s required identifiers (`chunk.workspaceId`/`chunk.id`/`chunk.documentId`/`chunk.text`, `score`) at the adapter boundary before any repository call
+- Exported `DefaultContextAssembler` from the `context` and top-level `app/knowledge` barrels
+- Added `runDefaultContextAssemblerValidation.ts` (port contract; provenance hydration + ranking-order preservation; workspace isolation of document hydration; stale-document skip without setting `truncated`; fixed-format rendering; whole-block budget adherence with continued evaluation past an oversized candidate; truncation when a later block exceeds the remaining budget; empty-chunks and all-stale-or-oversized edge cases; invalid-input rejection; static source-scan confirming only port imports) + `tests/unit/defaultContextAssembler.cases.ts`, wired into `validate:context:assembler` and the top-level `validate` chain
+- Updated `docs/modules.md`/`docs/architecture.md`/`docs/development.md`: replaced outdated "hybrid retrieval/context assembly still deferred" phrasing in the `embedding`/`retrieval` module descriptions (both are now implemented) and documented `DefaultContextAssembler`'s actual hydration/rendering/budget behavior; no prompt generation, citation object, re-ranking, score calibration, persistence, or composition-root change introduced
+
+**Validation**
+- `pnpm validate:repository`
+- `pnpm validate:context:contract`
+- `pnpm validate:context:assembler`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

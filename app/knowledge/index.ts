@@ -72,6 +72,7 @@ export type {
   GroundingContext,
   ContextAssembler,
 } from "./context";
+export { DefaultContextAssembler } from "./context";
 export { KNOWLEDGE_MODULE_PROMPT } from "./prompt";
 export { KNOWLEDGE_MODULE_CITATION } from "./citation";
 export { KNOWLEDGE_MODULE_RAG } from "./rag";
