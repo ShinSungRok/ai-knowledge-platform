@@ -78,6 +78,7 @@ export type {
   DocumentChunkRepository,
 } from "./repository";
 export { KNOWLEDGE_MODULE_PERSISTENCE } from "./persistence";
+export { SqlKnowledgeDocumentRepository } from "./persistence";
 export {
   DefaultInMemoryRepository,
   DefaultInMemoryKnowledgeSourceRepository,

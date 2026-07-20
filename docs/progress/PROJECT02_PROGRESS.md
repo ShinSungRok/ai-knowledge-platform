@@ -2458,3 +2458,29 @@ Define SQL gateway contract and infra boundary
 **Status**
 Completed
 
+## Task 91
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add SQL-backed knowledge document repository
+
+**Summary**
+- Added `SqlKnowledgeDocumentRepository` implementing `KnowledgeDocumentRepository` via `SqlGateway` only
+- Documented/parameterized SQL for `knowledge_documents` upsert/select/delete (bound params only)
+- Shared SQL statement constants under `infra/knowledgeDocumentSql.ts`
+- No real Postgres connection, source/chunk SQL adapters, or composition wiring
+
+**Validation**
+- `pnpm validate:repository`
+- `pnpm validate:infra:sql-gateway-contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

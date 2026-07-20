@@ -1,10 +1,11 @@
 /**
- * Skeleton module: `app/knowledge/persistence`
+ * Module: `app/knowledge/persistence`
  *
- * Concrete repository adapters (JSON, PostgreSQL, in-memory, etc.).
+ * Concrete repository adapters (in-memory, SQL-backed via SqlGateway, etc.).
  */
 export const KNOWLEDGE_MODULE_PERSISTENCE = "app/knowledge/persistence" as const;
 
 export { DefaultInMemoryRepository } from "./DefaultInMemoryRepository";
 export { DefaultInMemoryKnowledgeSourceRepository } from "./DefaultInMemoryKnowledgeSourceRepository";
 export { DefaultInMemoryDocumentChunkRepository } from "./DefaultInMemoryDocumentChunkRepository";
+export { SqlKnowledgeDocumentRepository } from "./SqlKnowledgeDocumentRepository";
