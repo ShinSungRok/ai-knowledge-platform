@@ -2538,3 +2538,28 @@ Add SQL-backed composition path and update roadmap status
 **Status**
 Completed
 
+## Task 94
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add SQL-backed knowledge source repository
+
+**Summary**
+- Added `infra/knowledgeSourceSql.ts` parameterized SQL for `knowledge_sources`
+- Added `SqlKnowledgeSourceRepository` implementing `KnowledgeSourceRepository` via `SqlGateway` only
+- Updated barrels/docs; no InMemorySqlGateway source support, chunk SQL, or composition wiring yet
+
+**Validation**
+- `pnpm validate:repository:source`
+- `pnpm validate:repository:sql-document`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

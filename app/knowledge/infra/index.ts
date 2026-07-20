@@ -19,3 +19,7 @@ export {
   SQL_SELECT_KNOWLEDGE_DOCUMENTS_BY_WORKSPACE,
   SQL_DELETE_KNOWLEDGE_DOCUMENT,
 } from "./knowledgeDocumentSql";
+export {
+  SQL_UPSERT_KNOWLEDGE_SOURCE,
+  SQL_SELECT_KNOWLEDGE_SOURCE_BY_ID,
+} from "./knowledgeSourceSql";

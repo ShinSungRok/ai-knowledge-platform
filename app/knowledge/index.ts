@@ -79,6 +79,7 @@ export type {
 } from "./repository";
 export { KNOWLEDGE_MODULE_PERSISTENCE } from "./persistence";
 export { SqlKnowledgeDocumentRepository } from "./persistence";
+export { SqlKnowledgeSourceRepository } from "./persistence";
 export {
   DefaultInMemoryRepository,
   DefaultInMemoryKnowledgeSourceRepository,

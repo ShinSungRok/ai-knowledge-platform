@@ -9,3 +9,4 @@ export { DefaultInMemoryRepository } from "./DefaultInMemoryRepository";
 export { DefaultInMemoryKnowledgeSourceRepository } from "./DefaultInMemoryKnowledgeSourceRepository";
 export { DefaultInMemoryDocumentChunkRepository } from "./DefaultInMemoryDocumentChunkRepository";
 export { SqlKnowledgeDocumentRepository } from "./SqlKnowledgeDocumentRepository";
+export { SqlKnowledgeSourceRepository } from "./SqlKnowledgeSourceRepository";
