@@ -21,3 +21,4 @@ export type { JobProcessor } from "./JobProcessor";
 export { InMemoryJobStore } from "./InMemoryJobStore";
 export { SyncKnowledgeSourceJobHandler } from "./SyncKnowledgeSourceJobHandler";
 export { DefaultJobProcessor } from "./DefaultJobProcessor";
+export { ReindexKnowledgeSourceJobHandler } from "./ReindexKnowledgeSourceJobHandler";

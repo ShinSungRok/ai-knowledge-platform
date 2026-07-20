@@ -1862,3 +1862,33 @@ Add job processor and sync job handler
 
 **Status**
 Completed
+
+## Task 69
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add reindex job handler and job application use cases
+
+**Summary**
+- Added `ReindexKnowledgeSourceJobHandler` (`type=reindex_knowledge_source`) injecting only rechunk + reindex pipelines; maps counts; rechunk failure skips reindex
+- Added `EnqueueJobUseCase` (JobStore only) and `ProcessNextJobUseCase` (JobProcessor only)
+- Exported from jobs/application/top-level barrels; added validation runners + unit case inventories; wired into `validate:application` / top-level `validate`
+- Updated docs; no real worker/cron, composition wiring, or pipeline behavior changes introduced
+
+**Validation**
+- `pnpm validate:pipeline:rechunk-source`
+- `pnpm validate:pipeline:reindex-source`
+- `pnpm validate:jobs:processor`
+- `pnpm validate:jobs:reindex-handler`
+- `pnpm validate:application:enqueue-job`
+- `pnpm validate:application:process-next-job`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

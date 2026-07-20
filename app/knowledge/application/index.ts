@@ -94,3 +94,11 @@ export {
   type RunAgentWithMemoryInput,
   type RunAgentWithMemoryResult,
 } from "./RunAgentWithMemoryUseCase";
+export {
+  EnqueueJobUseCase,
+  type EnqueueJobInput,
+} from "./EnqueueJobUseCase";
+export {
+  ProcessNextJobUseCase,
+  type ProcessNextJobInput,
+} from "./ProcessNextJobUseCase";

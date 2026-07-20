@@ -821,7 +821,10 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   savedCount }`. `DefaultJobProcessor` injects `JobStore` + handlers,
   rejects duplicate types, processes oldest pending job
   (pending→running→completed/failed, retry while attempts < maxAttempts).
-  Reindex handler and application use cases are later tasks.
+  `ReindexKnowledgeSourceJobHandler` injects only rechunk + reindex
+  pipelines (rechunk failure short-circuits reindex). `EnqueueJobUseCase`
+  injects only `JobStore`; `ProcessNextJobUseCase` injects only
+  `JobProcessor`. Real workers/cron/composition wiring remain out of scope.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -842,4 +845,5 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   agent:step-executor + agent:reviewer + agent:orchestrator +
   application:run-agent + application:memory-append +
   application:memory-recall + application:run-agent-memory +
-  memory:contract + memory:store + jobs:contract + jobs:store + jobs:sync-handler + jobs:processor + typecheck).
+  memory:contract + memory:store + jobs:contract + jobs:store + jobs:sync-handler + jobs:processor + jobs:reindex-handler +
+  application:enqueue-job + application:process-next-job + typecheck).

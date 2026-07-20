@@ -30,6 +30,8 @@ export {
   AppendMemoryEntryUseCase,
   RecallMemoryEntriesUseCase,
   RunAgentWithMemoryUseCase,
+  EnqueueJobUseCase,
+  ProcessNextJobUseCase,
 } from "./application";
 export type {
   ListKnowledgeDocumentsInput,
@@ -60,6 +62,8 @@ export type {
   RecallMemoryEntriesInput,
   RunAgentWithMemoryInput,
   RunAgentWithMemoryResult,
+  EnqueueJobInput,
+  ProcessNextJobInput,
 } from "./application";
 export { KNOWLEDGE_MODULE_REPOSITORY } from "./repository";
 export type {
@@ -174,6 +178,7 @@ export type {
 export { InMemoryJobStore } from "./jobs";
 export { SyncKnowledgeSourceJobHandler } from "./jobs";
 export { DefaultJobProcessor } from "./jobs";
+export { ReindexKnowledgeSourceJobHandler } from "./jobs";
 export { KNOWLEDGE_MODULE_API } from "./api";
 export { KNOWLEDGE_MODULE_HTTP } from "./http";
 export { KNOWLEDGE_MODULE_SERVER } from "./server";
