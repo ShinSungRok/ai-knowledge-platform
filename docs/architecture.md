@@ -297,10 +297,28 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   is kept separate from `KnowledgeSource` — then delegates to
   `VectorRetriever.retrieve` and returns its `RetrievalResult` unchanged: no
   re-sorting, filtering, context assembly, or prompt/LLM concern here.
-- Database adapters, HTTP/server, search, and AI provider wiring are not
-  implemented yet.
+- `KeywordSearch` (`app/knowledge/search`) is a port —
+  `search(input: RetrievalInput): Promise<RetrievalResult>` — reusing the
+  retrieval module's `RetrievalInput`/`RetrievalResult` shapes so keyword
+  and vector search are interchangeable at the boundary.
+  `DefaultKeywordSearch` is the adapter: it depends only on the
+  `DocumentChunkRepository` port (never `VectorIndex`, `EmbeddingProvider`,
+  or a concrete adapter). It loads every chunk in the workspace via
+  `DocumentChunkRepository.findAll`, tokenizes both `query` and each
+  chunk's `text` into maximal runs of Unicode letters/numbers (lowercased),
+  de-duplicates the query's tokens, and scores each chunk as the sum, over
+  each unique query token, of that token's exact occurrence count in the
+  chunk. Chunks scoring 0 are excluded; results are sorted by score
+  descending, then chunk `id` ascending as a deterministic tie-break, and
+  capped at `limit`. Rejects an empty/whitespace `workspaceId`/`query` or a
+  non-positive/non-integer `limit`, consistent with `VectorRetriever`'s
+  boundary. Stemming, synonyms, fuzzy matching, an external search engine,
+  hybrid fusion, and re-ranking are out of scope for this adapter.
+- Database adapters, HTTP/server, hybrid search, and AI provider wiring
+  are not implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
   repository:chunk + application + pipeline connector + pipeline sync +
   pipeline chunk-document + pipeline rechunk-source + pipeline
   embed-document + pipeline reindex-source + embedding chunker + embedding
-  provider + embedding index + typecheck).
+  provider + embedding index + retrieval:vector + search:keyword +
+  typecheck).

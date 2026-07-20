@@ -1,9 +1,14 @@
 /**
- * Skeleton module: `app/knowledge/search`
+ * Module: `app/knowledge/search`
  *
  * Search engine abstraction (keyword, vector, hybrid).
  *
- * Feature implementation is intentionally deferred. This barrel exists so the
- * module boundary is importable and validatable from day one.
+ * `KeywordSearch` (Task 28) is a deterministic lexical ranking port over
+ * `DocumentChunkRepository`; `DefaultKeywordSearch` is its default adapter.
+ * Vector search lives in `app/knowledge/retrieval` (`VectorRetriever`);
+ * hybrid fusion of the two is a later task.
  */
 export const KNOWLEDGE_MODULE_SEARCH = "app/knowledge/search" as const;
+
+export type { KeywordSearch } from "./KeywordSearch";
+export { DefaultKeywordSearch } from "./DefaultKeywordSearch";

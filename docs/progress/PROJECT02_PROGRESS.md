@@ -727,3 +727,29 @@ Add workspace-scoped document chunk discovery
 
 **Status**
 Completed
+
+## Task 28
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add deterministic keyword search
+
+**Summary**
+- Added `app/knowledge/search/KeywordSearch.ts` (`search(input: RetrievalInput): Promise<RetrievalResult>`), reusing the retrieval module's `RetrievalInput`/`RetrievalResult` shapes so keyword and vector search are interchangeable at the boundary
+- Added `DefaultKeywordSearch`, injecting only the `DocumentChunkRepository` port (never `VectorIndex`/`EmbeddingProvider`/a concrete adapter): loads every workspace chunk via `findAll`, tokenizes `query` and each chunk's `text` into lowercased maximal runs of Unicode letters/numbers, de-duplicates query tokens, and scores each chunk as the sum of each unique query token's exact occurrence count in the chunk; chunks scoring 0 are excluded, results sort by score descending then chunk `id` ascending, capped at `limit`; validates `workspaceId`/`query`/`limit` identically to `DefaultVectorRetriever`'s boundary
+- Added `runDefaultKeywordSearchValidation.ts` (port contract, ranking-by-match-count, case-insensitivity, query-token de-duplication, zero-score exclusion, tie-break, limit, workspace isolation, invalid-input rejection, and a source-scan confirming no concrete adapter is imported) + `tests/unit/defaultKeywordSearch.cases.ts`
+- Added `validate:search:keyword` to `package.json`, wired into the top-level `validate` chain; updated `search` and top-level `app/knowledge` barrels to export `KeywordSearch`/`DefaultKeywordSearch`; no vector retrieval change, hybrid fusion, stemming/synonym/fuzzy matching, external search engine, or re-ranking/evaluation framework introduced
+
+**Validation**
+- `pnpm validate:repository:chunk`
+- `pnpm validate:search:keyword`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
