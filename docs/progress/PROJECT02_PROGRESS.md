@@ -1483,3 +1483,32 @@ Define tool calling contract and module boundary
 
 **Status**
 Completed
+
+## Task 55
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add default tool executor
+
+**Summary**
+- Added `DefaultToolExecutor` (`app/knowledge/tools`), implementing `ToolExecutor` with only `McpToolRegistry` injected
+- Validates `name`/`arguments`/`timeoutMs`; invalid → `{ ok: false, status: "invalid_request", ... }` without calling the registry
+- Maps MCP `ok: true` → `success`; `"Unknown MCP tool: "` prefix → `unknown_tool`; other `ok: false` / registry throws → `failure`; always returns non-negative `durationMs`; never throws for those cases
+- `timeoutMs` is validated but not yet enforced as a race (Task 56)
+- Exported from `tools` and top-level barrels; added `runDefaultToolExecutorValidation.ts` + unit case inventory; wired `validate:tools:executor`
+- Updated docs; no timeout enforcement, retry/backoff, Agent orchestration, multi-tool workflows, composition wiring, or answer/citation/MCP tool policy changes introduced
+
+**Validation**
+- `pnpm validate:mcp:registry`
+- `pnpm validate:tools:contract`
+- `pnpm validate:tools:executor`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

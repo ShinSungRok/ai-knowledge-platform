@@ -719,8 +719,19 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   Domain/RAG business logic and never depends on an MCP SDK, network
   transport, or Agent orchestrator. Expected validation, unknown-tool,
   timeout, and backend failures are expressed as `ok: false` results,
-  not throws. Only the contract is defined so far; a concrete executor
-  adapter, timeout enforcement, and execute use case are later tasks.
+  not throws. `DefaultToolExecutor` (`app/knowledge/tools`) is the
+  adapter: its constructor injects only the `McpToolRegistry` port —
+  never an application use case or concrete MCP tool/registry adapter.
+  It validates `name`/`arguments`/`timeoutMs`, returns
+  `status: "invalid_request"` without calling the registry on bad
+  input, maps `ok: true` MCP results to `status: "success"`, maps
+  `"Unknown MCP tool: "` errors to `status: "unknown_tool"`, maps other
+  `ok: false` results and registry throws to `status: "failure"`, and
+  always returns a non-negative `durationMs` — never throws for those
+  cases. This task validates `timeoutMs` but does not yet enforce a
+  timeout race; timeout enforcement is a later task. No retry/backoff,
+  Agent orchestration, multi-tool workflows, composition-root wiring,
+  or answer/citation/MCP tool policy changes are introduced here.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -736,4 +747,5 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   rag:answer-assembler + application:grounded-answer +
   citation:contract + citation:builder + application:cited-answer +
   mcp:contract + mcp:cited-answer-tool + mcp:registry +
-  application:mcp-invoke + tools:contract + typecheck).
+  application:mcp-invoke + tools:contract + tools:executor +
+  typecheck).
