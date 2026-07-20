@@ -88,6 +88,10 @@ class CountingVectorIndex implements VectorIndex {
     return this.inner.findByChunkId(workspaceId, chunkId);
   }
 
+  async deleteByChunkId(workspaceId: string, chunkId: string): Promise<void> {
+    return this.inner.deleteByChunkId(workspaceId, chunkId);
+  }
+
   async findNearest(
     workspaceId: string,
     queryVector: number[],

@@ -23,10 +23,12 @@
  * `SyncLifecycleStatus`, `SyncLifecycleResult`) plus the
  * `KnowledgeSourceChangeDetector` and `KnowledgeSourceReconciler` ports
  * for production sync hardening — `DefaultKnowledgeSourceChangeDetector`
- * is the deterministic change-detector adapter; reconciler adapters and
- * reconciling orchestration are later tasks. Real connectors, automatic
- * chunking/embedding during sync, and background scheduling remain out of
- * scope until scoped.
+ * is the deterministic change-detector adapter;
+ * `DefaultKnowledgeSourceReconciler` cleans removed documents'
+ * chunks/vectors via repository and `VectorIndex.deleteByChunkId`.
+ * Reconciling sync orchestration is a later task. Real connectors,
+ * automatic chunking/embedding during sync, and background scheduling
+ * remain out of scope until scoped.
  */
 export const KNOWLEDGE_MODULE_PIPELINE = "app/knowledge/pipeline" as const;
 
@@ -58,6 +60,7 @@ export type {
   KnowledgeSourceReconcileResult,
   KnowledgeSourceReconciler,
 } from "./KnowledgeSourceReconciler";
+export { DefaultKnowledgeSourceReconciler } from "./DefaultKnowledgeSourceReconciler";
 export {
   ChunkKnowledgeDocumentPipeline,
   type ChunkKnowledgeDocumentInput,

@@ -21,8 +21,9 @@ import type { VectorIndex } from "./VectorIndex";
  * and returns at most `limit` results, each a defensive copy. A zero-norm
  * query or candidate vector scores `0` against everything (cosine
  * similarity is undefined at zero norm; this adapter treats it as "no
- * similarity" rather than throwing). Depends only on the `EmbeddingVector`
- * domain-adjacent type and its own port — never imports
+ * similarity" rather than throwing). `deleteByChunkId` removes a vector for
+ * `(workspaceId, chunkId)` and is a no-op when missing. Depends only on the
+ * `EmbeddingVector` domain-adjacent type and its own port — never imports
  * `DocumentChunkRepository`, `KnowledgeDocumentRepository`, or
  * `KnowledgeSourceRepository`.
  *
@@ -50,6 +51,12 @@ export class InMemoryVectorIndex implements VectorIndex {
     this.assertNonEmptyString(chunkId, "chunkId");
     const stored = this.vectorsByWorkspace.get(workspaceId)?.get(chunkId);
     return stored ? this.clone(stored) : null;
+  }
+
+  async deleteByChunkId(workspaceId: string, chunkId: string): Promise<void> {
+    this.assertNonEmptyString(workspaceId, "workspaceId");
+    this.assertNonEmptyString(chunkId, "chunkId");
+    this.vectorsByWorkspace.get(workspaceId)?.delete(chunkId);
   }
 
   async findNearest(

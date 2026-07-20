@@ -164,6 +164,16 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   `externalId`s, and emits changes ordered by kind then `documentId`.
   Persistence, reconcile, and sync-pipeline orchestration remain later
   tasks.
+- `VectorIndex.deleteByChunkId` removes a stored vector for
+  `(workspaceId, chunkId)` and is a no-op when missing;
+  `InMemoryVectorIndex` implements it with the same workspace isolation
+  and input validation as other vector methods.
+- `DefaultKnowledgeSourceReconciler` (`app/knowledge/pipeline`) injects
+  only `KnowledgeDocumentRepository`, `DocumentChunkRepository`, and
+  `VectorIndex`: for each removed document id it deletes chunk vectors,
+  clears chunks, then deletes the document; missing documents are
+  skipped; source mismatch throws and stops further deletes without
+  rollback. Reconciling sync orchestration remains a later task.
 - `DocumentChunk` (`app/knowledge/domain`) is a traceable, orderable segment
   of a `KnowledgeDocument`'s text (`workspaceId`, `id`, `documentId`, `text`,
   `order`) — it deliberately omits `sourceId`, since provenance already

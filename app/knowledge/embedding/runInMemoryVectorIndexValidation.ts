@@ -59,6 +59,7 @@ async function assertPortContract(): Promise<void> {
   const index: VectorIndex = new InMemoryVectorIndex();
   assertTruthy(typeof index.upsert === "function", "upsert must be defined");
   assertTruthy(typeof index.findByChunkId === "function", "findByChunkId must be defined");
+  assertTruthy(typeof index.deleteByChunkId === "function", "deleteByChunkId must be defined");
   assertTruthy(typeof index.findNearest === "function", "findNearest must be defined");
 }
 
@@ -142,6 +143,46 @@ async function assertRejectsEmptyWorkspaceIdOrChunkId(): Promise<void> {
     () => index.findByChunkId(WORKSPACE_A, " "),
     "chunkId must be a non-empty string",
   );
+  await assertThrowsAsync(
+    () => index.deleteByChunkId(" ", "chunk-1"),
+    "workspaceId must be a non-empty string",
+  );
+  await assertThrowsAsync(
+    () => index.deleteByChunkId(WORKSPACE_A, " "),
+    "chunkId must be a non-empty string",
+  );
+}
+
+async function assertDeleteByChunkIdRemovesAndIsNoOpWhenMissing(): Promise<void> {
+  console.log(
+    "[embedding] deleteByChunkId removes a stored vector and is a no-op when missing...",
+  );
+  const index: VectorIndex = new InMemoryVectorIndex();
+  await index.upsert(makeVector({ chunkId: "to-delete" }));
+  await index.deleteByChunkId(WORKSPACE_A, "to-delete");
+  const afterDelete = await index.findByChunkId(WORKSPACE_A, "to-delete");
+  assertEqual(afterDelete, null, "expected vector to be removed");
+
+  await index.deleteByChunkId(WORKSPACE_A, "never-existed");
+  const stillMissing = await index.findByChunkId(WORKSPACE_A, "never-existed");
+  assertEqual(stillMissing, null, "expected missing delete to remain a no-op");
+}
+
+async function assertDeleteByChunkIdIsolatesByWorkspace(): Promise<void> {
+  console.log(
+    "[embedding] deleteByChunkId only removes the vector in the requested workspace...",
+  );
+  const index: VectorIndex = new InMemoryVectorIndex();
+  await index.upsert(makeVector({ workspaceId: WORKSPACE_A, chunkId: "shared" }));
+  await index.upsert(makeVector({ workspaceId: WORKSPACE_B, chunkId: "shared" }));
+  await index.deleteByChunkId(WORKSPACE_A, "shared");
+  assertEqual(
+    await index.findByChunkId(WORKSPACE_A, "shared"),
+    null,
+    "expected workspace-a vector removed",
+  );
+  const remaining = await index.findByChunkId(WORKSPACE_B, "shared");
+  assertTruthy(remaining !== null, "expected workspace-b vector to remain");
 }
 
 async function assertRejectsWrongDimensionOrNonFiniteVector(): Promise<void> {
@@ -303,6 +344,8 @@ async function main(): Promise<void> {
   await assertWorkspaceIsolation();
   await assertDefensiveCopyOnUpsertInputAndFindOutput();
   await assertRejectsEmptyWorkspaceIdOrChunkId();
+  await assertDeleteByChunkIdRemovesAndIsNoOpWhenMissing();
+  await assertDeleteByChunkIdIsolatesByWorkspace();
   await assertRejectsWrongDimensionOrNonFiniteVector();
   await assertFindNearestRanksByCosineSimilarityDescending();
   await assertFindNearestIsolatesByWorkspace();

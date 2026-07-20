@@ -28,13 +28,14 @@ pnpm validate:pipeline:connector # FakeKnowledgeSourceConnector port contract
 pnpm validate:pipeline:sync    # SyncKnowledgeSourcePipeline idempotent sync behavior
 pnpm validate:pipeline:sync-change-contract # Sync change-set/lifecycle/detector/reconciler contract
 pnpm validate:pipeline:change-detector # DefaultKnowledgeSourceChangeDetector classification behavior
+pnpm validate:pipeline:reconciler # DefaultKnowledgeSourceReconciler document/chunk/vector cleanup
 pnpm validate:pipeline:chunk-document # ChunkKnowledgeDocumentPipeline chunk-and-replace behavior
 pnpm validate:pipeline:rechunk-source # RechunkKnowledgeSourcePipeline source-scoped rebuild behavior
 pnpm validate:pipeline:embed-document # EmbedDocumentChunksPipeline embed-and-upsert behavior
 pnpm validate:pipeline:reindex-source # ReindexKnowledgeSourceEmbeddingsPipeline source-scoped reindex behavior
 pnpm validate:embedding:chunker # FixedSizeDocumentChunker deterministic chunking behavior
 pnpm validate:embedding:provider # FakeEmbeddingProvider deterministic embedding behavior
-pnpm validate:embedding:index  # InMemoryVectorIndex upsert/find/findNearest cosine-ranking behavior
+pnpm validate:embedding:index  # InMemoryVectorIndex upsert/find/delete/findNearest cosine-ranking behavior
 pnpm validate:retrieval:vector # DefaultVectorRetriever embed-query/find-nearest/hydrate-chunk behavior
 pnpm validate:search:keyword   # DefaultKeywordSearch tokenize/score/rank behavior over DocumentChunkRepository.findAll
 pnpm validate:search:hybrid    # DefaultHybridSearch reciprocal-rank-fusion behavior over VectorRetriever + KeywordSearch

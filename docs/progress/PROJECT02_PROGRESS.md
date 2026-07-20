@@ -1946,3 +1946,31 @@ Add deterministic knowledge source change detector
 
 **Status**
 Completed
+
+## Task 72
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add vector delete and knowledge source reconciler
+
+**Summary**
+- Added `VectorIndex.deleteByChunkId` (missing = no-op) and implemented it on `InMemoryVectorIndex`; extended embedding index validation
+- Added `DefaultKnowledgeSourceReconciler` (document/chunk/vector ports only): ordered cleanup, missing skip, source mismatch stop
+- Exported from barrels; updated docs; wired `validate:pipeline:reconciler` into top-level `validate`
+- No reconciling sync orchestration or job handler changes
+
+**Validation**
+- `pnpm validate:embedding:index`
+- `pnpm validate:repository:chunk`
+- `pnpm validate:pipeline:change-detector`
+- `pnpm validate:pipeline:reconciler`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
