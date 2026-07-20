@@ -753,3 +753,30 @@ Add deterministic keyword search
 
 **Status**
 Completed
+
+## Task 29
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add reciprocal-rank-fusion hybrid search
+
+**Summary**
+- Added `app/knowledge/search/HybridSearch.ts` (`search(input: RetrievalInput): Promise<RetrievalResult>`), reusing the same `RetrievalInput`/`RetrievalResult` shapes as `VectorRetriever` and `KeywordSearch`
+- Added `DefaultHybridSearch`, injecting only the `VectorRetriever` and `KeywordSearch` ports (never a concrete adapter): runs both with the same input, unions results by chunk `id`, and sums `1 / (60 + rank)` (1-based rank, `k = 60`) per source a chunk was returned by; a chunk found by both sources merges into one entry with both contributions summed. Results sort by fused score descending, then chunk `id` ascending, capped at `limit`. Input is validated (identical rules to `VectorRetriever`/`KeywordSearch`) before either dependency is called, so invalid input never reaches them
+- Added `runDefaultHybridSearchValidation.ts` (port contract, vector-only fusion, keyword-only fusion, overlapping-result merge/sum, combined-score ranking, deterministic tie-break, workspace pass-through/isolation, limit, invalid-input rejection without calling either dependency, and a source-scan confirming no concrete adapter is imported) + `tests/unit/defaultHybridSearch.cases.ts`; vector-only/tie-break cases exploit `FakeEmbeddingProvider`'s bucket-average behavior, where any two same-length, same-repeated-character strings produce all-equal-valued vectors with cosine similarity exactly 1.0 despite sharing no keyword tokens
+- Added `validate:search:hybrid` to `package.json`, wired into the top-level `validate` chain; updated `search` and top-level `app/knowledge` barrels to export `HybridSearch`/`DefaultHybridSearch`; `DefaultVectorRetriever`'s vector-only retrieval path is unchanged; no cross-encoder/LLM re-ranking, score calibration/weighted fusion, or persistence change to `VectorIndex`/`DocumentChunkRepository` introduced
+
+**Validation**
+- `pnpm validate:retrieval:vector`
+- `pnpm validate:search:keyword`
+- `pnpm validate:search:hybrid`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

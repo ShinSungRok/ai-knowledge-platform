@@ -35,8 +35,9 @@ pnpm validate:embedding:provider # FakeEmbeddingProvider deterministic embedding
 pnpm validate:embedding:index  # InMemoryVectorIndex upsert/find/findNearest cosine-ranking behavior
 pnpm validate:retrieval:vector # DefaultVectorRetriever embed-query/find-nearest/hydrate-chunk behavior
 pnpm validate:search:keyword   # DefaultKeywordSearch tokenize/score/rank behavior over DocumentChunkRepository.findAll
+pnpm validate:search:hybrid    # DefaultHybridSearch reciprocal-rank-fusion behavior over VectorRetriever + KeywordSearch
 pnpm typecheck                 # TypeScript strict check
-pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + typecheck
+pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + search:hybrid + typecheck
 ```
 
 Formal unit/integration/e2e suites under `tests/` are reserved for later

@@ -314,11 +314,29 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   non-positive/non-integer `limit`, consistent with `VectorRetriever`'s
   boundary. Stemming, synonyms, fuzzy matching, an external search engine,
   hybrid fusion, and re-ranking are out of scope for this adapter.
-- Database adapters, HTTP/server, hybrid search, and AI provider wiring
-  are not implemented yet.
+- `HybridSearch` (`app/knowledge/search`) is a port —
+  `search(input: RetrievalInput): Promise<RetrievalResult>` — combining
+  vector and keyword retrieval into one deterministic ranking via
+  reciprocal-rank fusion (RRF). `DefaultHybridSearch` is the adapter: it
+  depends only on the `VectorRetriever` and `KeywordSearch` ports (never a
+  concrete adapter). It runs both searches with the same input, unions
+  their results by chunk `id`, and computes each chunk's fused score as
+  the sum, over every source that returned it, of `1 / (60 + rank)` for
+  that source's 1-based rank (the standard RRF formula, `k = 60`); a chunk
+  found by both sources sums both contributions into one merged entry
+  using the chunk data already returned by a source (no re-hydration).
+  Results sort by fused score descending, then chunk `id` ascending as a
+  deterministic tie-break, capped at `limit`. Input is validated —
+  identically to `VectorRetriever`/`KeywordSearch`'s boundary — before
+  either dependency is called, so invalid input never reaches them.
+  Cross-encoder/LLM re-ranking, score calibration/weighted fusion, and
+  persistence changes to the vector index or chunk repository are out of
+  scope for this adapter.
+- Database adapters, HTTP/server, and AI provider wiring are not
+  implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
   repository:chunk + application + pipeline connector + pipeline sync +
   pipeline chunk-document + pipeline rechunk-source + pipeline
   embed-document + pipeline reindex-source + embedding chunker + embedding
   provider + embedding index + retrieval:vector + search:keyword +
-  typecheck).
+  search:hybrid + typecheck).
