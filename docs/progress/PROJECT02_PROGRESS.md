@@ -1809,3 +1809,28 @@ Define job contract and module boundary
 
 **Status**
 Completed
+
+## Task 67
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add in-memory job store
+
+**Summary**
+- Added `InMemoryJobStore` implementing `JobStore` with validated enqueue, deterministic `id`/`sequence`, pending status, getById, sequence-ascending listByWorkspace, save-replace (unknown id throws), workspace isolation, and defensive copies
+- Exported from jobs and top-level barrels; added `runInMemoryJobStoreValidation.ts` + unit case inventory; wired `validate:jobs:store` into top-level `validate`
+- Updated docs; no processor/handler, retry execution, or application use case introduced
+
+**Validation**
+- `pnpm validate:jobs:contract`
+- `pnpm validate:jobs:store`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

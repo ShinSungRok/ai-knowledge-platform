@@ -8,6 +8,7 @@
  * existing pipelines. `JobType`, `JobStatus`, `JobRecord`, and the
  * `JobStore` / `JobHandler` / `JobProcessor` ports (Task 66) define the
  * contract; concrete adapters and application use cases are later tasks.
+ * `InMemoryJobStore` (Task 67) is the first concrete store adapter.
  */
 export const KNOWLEDGE_MODULE_JOBS = "app/knowledge/jobs" as const;
 
@@ -17,3 +18,4 @@ export type { JobRecord } from "./JobRecord";
 export type { JobStore, JobEnqueueInput } from "./JobStore";
 export type { JobHandler } from "./JobHandler";
 export type { JobProcessor } from "./JobProcessor";
+export { InMemoryJobStore } from "./InMemoryJobStore";

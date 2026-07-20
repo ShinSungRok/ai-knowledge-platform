@@ -171,6 +171,7 @@ export type {
   JobHandler,
   JobProcessor,
 } from "./jobs";
+export { InMemoryJobStore } from "./jobs";
 export { KNOWLEDGE_MODULE_API } from "./api";
 export { KNOWLEDGE_MODULE_HTTP } from "./http";
 export { KNOWLEDGE_MODULE_SERVER } from "./server";
