@@ -1316,3 +1316,34 @@ Add deterministic citation builder
 
 **Status**
 Completed
+
+## Task 49
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add generate cited grounded answer use case
+
+**Summary**
+- Added `GenerateCitedGroundedAnswerUseCase` + its own `GenerateCitedGroundedAnswerInput` (`workspaceId`, `query`, `retrievalLimit`, `maxCharacters`) to `application`
+- Constructor injects only `GenerateGroundedAnswerUseCase` and the `CitationBuilder` port — never a concrete adapter, and never the lower-level retrieval/prompt/provider/assembler ports those dependencies already own
+- `execute` validates `workspaceId`/`query`/`retrievalLimit`/`maxCharacters` at the application boundary, then calls `GenerateGroundedAnswerUseCase.execute` and passes the returned `GroundedAnswer` straight into `CitationBuilder.build`, returning `{ answer, citations }` as a `CitedGroundedAnswer` unchanged
+- The citation builder is **always** called — including for an insufficient-evidence answer — so an empty-evidence answer yields an empty citation list via the citation module's own evidence-only policy
+- The existing `GenerateGroundedAnswerUseCase` behavior is unaffected
+- Exported the use case + input type from the `application` and top-level `app/knowledge` barrels
+- Added `runGenerateCitedGroundedAnswerUseCaseValidation.ts` (a static source-scan confirming the use case only imports its two declared dependencies; a real-harness test with a `CountingGenerateGroundedAnswerUseCase` — subclassing `GenerateGroundedAnswerUseCase` since its private fields make it non-structurally-typed — plus a `CountingCitationBuilder`, proving call order, exact input mapping, answer-to-citation mapping, and an unchanged `CitedGroundedAnswer` result matching a direct call sequence; a second case proving the insufficient-evidence path still calls the citation builder and returns empty citations; invalid input rejected before either dependency is called) + `tests/unit/generateCitedGroundedAnswerUseCase.cases.ts`, wired into `validate:application:cited-answer`, `validate:application` (and therefore the top-level `validate` chain)
+- Updated `docs/architecture.md`/`docs/modules.md`/`docs/development.md` to describe the new use case; no citation marker injection, real LLM provider, streaming, HTTP/API, MCP, composition-root wiring, or evaluation dataset introduced
+
+**Validation**
+- `pnpm validate:application:grounded-answer`
+- `pnpm validate:citation:builder`
+- `pnpm validate:application:cited-answer`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

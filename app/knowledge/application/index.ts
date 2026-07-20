@@ -65,3 +65,7 @@ export {
   GenerateGroundedAnswerUseCase,
   type GenerateGroundedAnswerInput,
 } from "./GenerateGroundedAnswerUseCase";
+export {
+  GenerateCitedGroundedAnswerUseCase,
+  type GenerateCitedGroundedAnswerInput,
+} from "./GenerateCitedGroundedAnswerUseCase";

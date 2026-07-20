@@ -631,6 +631,29 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   citation markers, document-title/source-name hydration, LLM citation
   extraction, and any grounded-answer policy change are out of scope
   for this adapter.
+- `GenerateCitedGroundedAnswerUseCase` (`app/knowledge/application`)
+  combines grounded-answer generation and citation building behind one
+  application-boundary entry point: its constructor injects only
+  `GenerateGroundedAnswerUseCase` and the `CitationBuilder` port —
+  never a concrete adapter, and never the lower-level
+  retrieval/prompt/provider/assembler ports those dependencies already
+  own. It validates its own `GenerateCitedGroundedAnswerInput`
+  (`workspaceId`/`query`/`retrievalLimit`/`maxCharacters`) at the
+  application boundary, then calls
+  `GenerateGroundedAnswerUseCase.execute({ workspaceId, query,
+  retrievalLimit, maxCharacters })` and passes the returned
+  `GroundedAnswer` straight into `CitationBuilder.build(answer)`,
+  returning `{ answer, citations }` as a `CitedGroundedAnswer`
+  unchanged. The citation builder is **always** called — including for
+  an insufficient-evidence answer — so an empty-evidence answer yields
+  an empty citation list via the citation module's own evidence-only
+  policy. The existing `GenerateGroundedAnswerUseCase` (and its own
+  evidence-gated retrieval/prompt/generation/assembly flow) is
+  unaffected by this use case; this is another use case that depends on
+  a prior use case rather than only on ports. Answer-text citation
+  markers, a real LLM provider, streaming, HTTP/API, MCP tool exposure,
+  composition-root wiring, and evaluation datasets are all out of scope
+  for this use case.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -644,4 +667,5 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   application:prompt + ai:provider-contract + ai:fake-provider +
   application:generate-text + rag:answer-contract +
   rag:answer-assembler + application:grounded-answer +
-  citation:contract + citation:builder + typecheck).
+  citation:contract + citation:builder + application:cited-answer +
+  typecheck).
