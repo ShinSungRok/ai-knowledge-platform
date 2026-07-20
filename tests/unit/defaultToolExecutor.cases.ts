@@ -14,6 +14,9 @@
  * - ok=false with "Unknown MCP tool: " prefix maps to status=unknown_tool
  * - other ok=false MCP results map to status=failure
  * - a registry throw maps to status=failure without rethrowing
+ * - a never-resolving registry + short timeoutMs maps to status=timeout
+ * - a fast-resolving success under a generous timeoutMs stays
+ *   status=success (not contaminated by timeout)
  */
 export const DEFAULT_TOOL_EXECUTOR_UNIT_CASES = [
   "depends_only_on_mcp_tool_registry_port",
@@ -22,4 +25,6 @@ export const DEFAULT_TOOL_EXECUTOR_UNIT_CASES = [
   "unknown_tool_mapping",
   "failure_mapping",
   "registry_throw_mapping",
+  "timeout_path",
+  "fast_success_not_contaminated_by_timeout",
 ] as const;

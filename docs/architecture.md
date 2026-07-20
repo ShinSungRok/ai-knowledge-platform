@@ -728,10 +728,14 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   `"Unknown MCP tool: "` errors to `status: "unknown_tool"`, maps other
   `ok: false` results and registry throws to `status: "failure"`, and
   always returns a non-negative `durationMs` — never throws for those
-  cases. This task validates `timeoutMs` but does not yet enforce a
-  timeout race; timeout enforcement is a later task. No retry/backoff,
-  Agent orchestration, multi-tool workflows, composition-root wiring,
-  or answer/citation/MCP tool policy changes are introduced here.
+  cases. Valid requests race the registry invoke against `timeoutMs`:
+  when the timeout wins, it returns `status: "timeout"` with
+  `error: "Tool call timed out after <timeoutMs>ms"` and ignores a
+  later registry result; when the registry wins first, the existing
+  success/unknown_tool/failure mapping is unchanged. No retry/backoff,
+  circuit breaker, Agent-level deadline aggregation, `reliability`
+  module implementation, or composition-root wiring are introduced
+  here.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +

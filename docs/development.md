@@ -59,7 +59,7 @@ pnpm validate:mcp:cited-answer-tool # GenerateCitedGroundedAnswerMcpTool use-cas
 pnpm validate:mcp:registry # DefaultMcpToolRegistry list ordering, duplicate rejection, known/unknown invoke
 pnpm validate:application:mcp-invoke # InvokeMcpToolUseCase McpToolRegistry.invoke delegation
 pnpm validate:tools:contract # ToolExecutor/ToolCallRequest/ToolCallResult/ToolCallStatus contract export + type-compatibility
-pnpm validate:tools:executor # DefaultToolExecutor MCP-registry delegation and status mapping
+pnpm validate:tools:executor # DefaultToolExecutor MCP-registry delegation, status mapping, and timeout race
 pnpm typecheck                 # TypeScript strict check
 pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application (incl. grounding-context + prompt + generate-text + grounded-answer + cited-answer + mcp-invoke) + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + search:hybrid + search:rerank-contract + search:reranker + search:reranked + context:contract + context:assembler + prompt:contract + prompt:builder + ai:provider-contract + ai:fake-provider + rag:answer-contract + rag:answer-assembler + citation:contract + citation:builder + mcp:contract + mcp:cited-answer-tool + mcp:registry + tools:contract + tools:executor + typecheck
 ```

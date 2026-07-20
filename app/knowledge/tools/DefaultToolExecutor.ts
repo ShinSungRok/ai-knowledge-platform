@@ -1,4 +1,5 @@
 import type { McpToolRegistry } from "../mcp/McpToolRegistry";
+import type { McpToolInvokeResult } from "../mcp/McpToolInvokeResult";
 import type { ToolCallRequest } from "./ToolCallRequest";
 import type { ToolCallResult } from "./ToolCallResult";
 import type { ToolExecutor } from "./ToolExecutor";
@@ -7,16 +8,15 @@ const UNKNOWN_TOOL_ERROR_PREFIX = "Unknown MCP tool: ";
 
 /**
  * Default {@link ToolExecutor} adapter: validates a
- * {@link ToolCallRequest}, delegates to an {@link McpToolRegistry}
- * port, and maps the MCP invoke result onto a structured
- * {@link ToolCallResult} status — never throws for expected
- * validation, unknown-tool, or backend failures.
+ * {@link ToolCallRequest}, races an {@link McpToolRegistry} invoke
+ * against `timeoutMs`, and maps the MCP invoke result onto a
+ * structured {@link ToolCallResult} status — never throws for expected
+ * validation, unknown-tool, timeout, or backend failures.
  *
  * Depends only on the `McpToolRegistry` port — never on an application
  * use case, concrete MCP tool/registry adapter, MCP SDK, or network
- * transport. This task validates `timeoutMs` as a positive integer but
- * does **not** enforce a timeout race; timeout enforcement is a later
- * task.
+ * transport. When the timeout wins the race, returns
+ * `status: "timeout"` immediately and ignores a later registry result.
  */
 export class DefaultToolExecutor implements ToolExecutor {
   constructor(private readonly mcpToolRegistry: McpToolRegistry) {}
@@ -34,50 +34,88 @@ export class DefaultToolExecutor implements ToolExecutor {
       };
     }
 
-    try {
-      const mcpResult = await this.mcpToolRegistry.invoke({
+    const mappedPromise = this.mcpToolRegistry
+      .invoke({
         name: validated.request.name,
         arguments: validated.request.arguments,
-      });
+      })
+      .then(
+        (mcpResult) => this.mapMcpResult(mcpResult, startedAt),
+        (error: unknown) =>
+          this.mapThrownError(error, validated.request.name, startedAt),
+      );
 
-      if (mcpResult.ok) {
-        return {
-          ok: true,
-          status: "success",
-          toolName: mcpResult.toolName,
-          result: mcpResult.result,
-          durationMs: this.elapsedMs(startedAt),
-        };
-      }
-
-      const error = mcpResult.error ?? "MCP tool invoke failed";
-      if (error.startsWith(UNKNOWN_TOOL_ERROR_PREFIX)) {
-        return {
+    let timeoutHandle: ReturnType<typeof setTimeout> | undefined;
+    const timeoutPromise = new Promise<ToolCallResult>((resolve) => {
+      timeoutHandle = setTimeout(() => {
+        resolve({
           ok: false,
-          status: "unknown_tool",
-          toolName: mcpResult.toolName,
-          error,
+          status: "timeout",
+          toolName: validated.request.name,
+          error: `Tool call timed out after ${validated.request.timeoutMs}ms`,
           durationMs: this.elapsedMs(startedAt),
-        };
-      }
+        });
+      }, validated.request.timeoutMs);
+    });
 
+    try {
+      return await Promise.race([mappedPromise, timeoutPromise]);
+    } finally {
+      if (timeoutHandle !== undefined) {
+        clearTimeout(timeoutHandle);
+      }
+      // Prevent an unhandled rejection if the registry settles after a timeout win.
+      mappedPromise.catch(() => undefined);
+    }
+  }
+
+  private mapMcpResult(
+    mcpResult: McpToolInvokeResult,
+    startedAt: number,
+  ): ToolCallResult {
+    if (mcpResult.ok) {
+      return {
+        ok: true,
+        status: "success",
+        toolName: mcpResult.toolName,
+        result: mcpResult.result,
+        durationMs: this.elapsedMs(startedAt),
+      };
+    }
+
+    const error = mcpResult.error ?? "MCP tool invoke failed";
+    if (error.startsWith(UNKNOWN_TOOL_ERROR_PREFIX)) {
       return {
         ok: false,
-        status: "failure",
+        status: "unknown_tool",
         toolName: mcpResult.toolName,
         error,
         durationMs: this.elapsedMs(startedAt),
       };
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      return {
-        ok: false,
-        status: "failure",
-        toolName: validated.request.name,
-        error: message,
-        durationMs: this.elapsedMs(startedAt),
-      };
     }
+
+    return {
+      ok: false,
+      status: "failure",
+      toolName: mcpResult.toolName,
+      error,
+      durationMs: this.elapsedMs(startedAt),
+    };
+  }
+
+  private mapThrownError(
+    error: unknown,
+    toolName: string,
+    startedAt: number,
+  ): ToolCallResult {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      ok: false,
+      status: "failure",
+      toolName,
+      error: message,
+      durationMs: this.elapsedMs(startedAt),
+    };
   }
 
   private toRequest(

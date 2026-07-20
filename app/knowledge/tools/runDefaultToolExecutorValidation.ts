@@ -33,6 +33,8 @@ class CountingMcpToolRegistry implements McpToolRegistry {
     },
   };
   public nextError: Error | null = null;
+  public neverResolve = false;
+  public resolveDelayMs = 0;
 
   async listTools(): Promise<McpToolDefinition[]> {
     return [];
@@ -41,6 +43,14 @@ class CountingMcpToolRegistry implements McpToolRegistry {
   async invoke(input: McpToolInvokeInput): Promise<McpToolInvokeResult> {
     this.invokeCalls += 1;
     this.lastInput = input;
+    if (this.neverResolve) {
+      return new Promise<McpToolInvokeResult>(() => {
+        // Intentionally never resolves — used to prove the timeout race.
+      });
+    }
+    if (this.resolveDelayMs > 0) {
+      await new Promise((resolve) => setTimeout(resolve, this.resolveDelayMs));
+    }
     if (this.nextError) {
       const error = this.nextError;
       this.nextError = null;
@@ -240,6 +250,63 @@ async function assertRegistryThrowMapping(): Promise<void> {
   assertEqual(result.error, "registry exploded", "expected the thrown message");
 }
 
+async function assertTimeoutPath(): Promise<void> {
+  console.log("[tools] execute returns status=timeout when the registry never resolves within timeoutMs...");
+  const registry = new CountingMcpToolRegistry();
+  registry.neverResolve = true;
+  const executor = new DefaultToolExecutor(registry);
+
+  const result = await executor.execute({
+    name: "generate_cited_grounded_answer",
+    arguments: { workspaceId: "ws" },
+    timeoutMs: 25,
+  });
+
+  assertEqual(registry.invokeCalls, 1, "expected the registry to still be called once");
+  assertEqual(result.ok, false, "expected ok=false on timeout");
+  assertEqual(result.status, "timeout", "expected status=timeout");
+  assertEqual(result.toolName, "generate_cited_grounded_answer", "expected toolName from the request");
+  assertEqual(
+    result.error,
+    "Tool call timed out after 25ms",
+    "expected the fixed timeout error message",
+  );
+  assertTruthy(
+    Number.isInteger(result.durationMs) && result.durationMs >= 25,
+    `expected durationMs >= 25, got ${result.durationMs}`,
+  );
+}
+
+async function assertFastSuccessIsNotContaminatedByTimeout(): Promise<void> {
+  console.log("[tools] execute keeps status=success for a fast-resolving tool under a generous timeoutMs...");
+  const registry = new CountingMcpToolRegistry();
+  registry.resolveDelayMs = 5;
+  registry.nextResult = {
+    ok: true,
+    toolName: "generate_cited_grounded_answer",
+    result: {
+      answer: { text: "fast", evidence: [], insufficientEvidence: true },
+      citations: [],
+    },
+  };
+  const executor = new DefaultToolExecutor(registry);
+
+  const result = await executor.execute({
+    name: "generate_cited_grounded_answer",
+    arguments: {},
+    timeoutMs: 1_000,
+  });
+
+  assertEqual(result.ok, true, "expected ok=true for a fast success under a generous timeout");
+  assertEqual(result.status, "success", "expected status=success, not timeout");
+  assertEqual(result.toolName, "generate_cited_grounded_answer", "expected toolName from MCP result");
+  assertEqual(
+    (result.result as { answer: { text: string } } | undefined)?.answer.text,
+    "fast",
+    "expected the fast MCP payload",
+  );
+}
+
 async function main(): Promise<void> {
   assertDependsOnlyOnMcpToolRegistryPort();
   await assertInvalidRequestShortCircuits();
@@ -247,6 +314,8 @@ async function main(): Promise<void> {
   await assertUnknownToolMapping();
   await assertFailureMapping();
   await assertRegistryThrowMapping();
+  await assertTimeoutPath();
+  await assertFastSuccessIsNotContaminatedByTimeout();
   console.log("DefaultToolExecutor validation succeeded.");
 }
 

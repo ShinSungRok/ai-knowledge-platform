@@ -1512,3 +1512,30 @@ Add default tool executor
 
 **Status**
 Completed
+
+## Task 56
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Enforce tool call timeout boundary
+
+**Summary**
+- Updated `DefaultToolExecutor.execute` to race registry invoke against `timeoutMs` (dependency-free `setTimeout` + `Promise.race`)
+- When timeout wins: returns `{ ok: false, status: "timeout", toolName: <requested>, error: "Tool call timed out after <timeoutMs>ms", durationMs }` without throwing, ignoring a later registry result
+- When registry wins first: existing success/unknown_tool/failure mapping is unchanged
+- Extended `runDefaultToolExecutorValidation.ts` with a never-resolving fake + short timeout path, and a fast-resolving success under a generous timeout proving success is not contaminated
+- Updated docs; no retry/backoff/circuit breaker, cancel-token API, Agent-level deadline aggregation, `reliability` module implementation, or composition wiring introduced
+
+**Validation**
+- `pnpm validate:tools:contract`
+- `pnpm validate:tools:executor`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
