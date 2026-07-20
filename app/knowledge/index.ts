@@ -147,7 +147,11 @@ export type {
   LlmHttpResponse,
   LlmHttpTransport,
 } from "./ai";
-export { FakeLanguageModelProvider, loadLlmHttpProviderConfig } from "./ai";
+export {
+  FakeLanguageModelProvider,
+  HttpLanguageModelProvider,
+  loadLlmHttpProviderConfig,
+} from "./ai";
 export { KNOWLEDGE_MODULE_MCP } from "./mcp";
 export type {
   McpToolName,

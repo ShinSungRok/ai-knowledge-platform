@@ -3083,3 +3083,27 @@ Define LLM HTTP provider config and transport contract
 **Status**
 Completed
 
+## Task 115
+
+**Date**
+2026-07-21
+
+**Commit**
+e4351a7
+
+**Title**
+Add OpenAI-compatible HttpLanguageModelProvider
+
+**Summary**
+- Added `HttpLanguageModelProvider` over `LlmHttpTransport` (chat/completions, Bearer, no SDK/`fetch`)
+- Prompt fields mapped to messages unchanged; non-2xx / invalid JSON error mapping
+
+**Validation**
+- `pnpm validate:ai:fake-provider`
+- `pnpm validate:ai:http-provider-contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
