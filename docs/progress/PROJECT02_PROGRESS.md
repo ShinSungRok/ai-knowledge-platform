@@ -676,3 +676,29 @@ Add default vector retriever
 
 **Status**
 Completed
+
+## Task 26
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add retrieve knowledge chunks use case
+
+**Summary**
+- Added `RetrieveKnowledgeChunksUseCase` + its own `RetrieveKnowledgeChunksInput` (`workspaceId`, `query`, `limit`) to `application`, mirroring how `CreateKnowledgeSourceInput` is kept separate from its domain type rather than reusing the retrieval module's `RetrievalInput` directly
+- Constructor injects only the `VectorRetriever` port — never `EmbeddingProvider`, `VectorIndex`, `DocumentChunkRepository`, or a concrete adapter; `execute` validates `workspaceId`/`query`/`limit` at the application boundary, then delegates to `VectorRetriever.retrieve` and returns its `RetrievalResult` unchanged (no re-sorting/filtering/context assembly)
+- Exported the use case + input type from the `application` and top-level `app/knowledge` barrels
+- Added `validate:application:retrieve` runner (a static source-scan confirming the use case only imports the `VectorRetriever` port, plus a counting `VectorRetriever` test double proving invalid input is rejected before any `retrieve` call and valid input passes through with the result unchanged) + `tests/unit/retrieveKnowledgeChunksUseCase.cases.ts`, wired into `validate:application` (and therefore the top-level `validate` chain); no HTTP/API controller, Composition Root wiring, context assembly, prompt/LLM, keyword/hybrid retrieval, re-ranking, or additional source filtering introduced
+
+**Validation**
+- `pnpm validate:retrieval:vector`
+- `pnpm validate:application:retrieve`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

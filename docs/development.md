@@ -23,7 +23,7 @@ pnpm validate:skeleton         # directory + barrel + docs integrity
 pnpm validate:repository       # DefaultInMemoryRepository port contract
 pnpm validate:repository:source # DefaultInMemoryKnowledgeSourceRepository port contract
 pnpm validate:repository:chunk # DefaultInMemoryDocumentChunkRepository port contract (findById + workspace-global id conflict rejection)
-pnpm validate:application      # List + Page + Create + Update + Delete + Search + Export + Source use cases
+pnpm validate:application      # List + Page + Create + Update + Delete + Search + Export + Source + Retrieve use cases
 pnpm validate:pipeline:connector # FakeKnowledgeSourceConnector port contract
 pnpm validate:pipeline:sync    # SyncKnowledgeSourcePipeline idempotent sync behavior
 pnpm validate:pipeline:chunk-document # ChunkKnowledgeDocumentPipeline chunk-and-replace behavior

@@ -283,6 +283,15 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   non-positive/non-integer `limit`. Keyword/hybrid retrieval, re-ranking,
   context assembly, and stale-vector cleanup are out of scope for this
   adapter.
+- `RetrieveKnowledgeChunksUseCase` (`app/knowledge/application`) is the
+  application-boundary entry point for retrieval: its constructor injects
+  only the `VectorRetriever` port (never `EmbeddingProvider`, `VectorIndex`,
+  `DocumentChunkRepository`, or a concrete adapter). It validates
+  `workspaceId`/`query`/`limit` — its own `RetrieveKnowledgeChunksInput`,
+  kept separate from `RetrievalInput` the same way `CreateKnowledgeSourceInput`
+  is kept separate from `KnowledgeSource` — then delegates to
+  `VectorRetriever.retrieve` and returns its `RetrievalResult` unchanged: no
+  re-sorting, filtering, context assembly, or prompt/LLM concern here.
 - Database adapters, HTTP/server, search, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +

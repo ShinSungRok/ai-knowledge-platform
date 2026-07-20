@@ -41,3 +41,7 @@ export {
   CreateKnowledgeSourceUseCase,
   type CreateKnowledgeSourceInput,
 } from "./CreateKnowledgeSourceUseCase";
+export {
+  RetrieveKnowledgeChunksUseCase,
+  type RetrieveKnowledgeChunksInput,
+} from "./RetrieveKnowledgeChunksUseCase";
