@@ -68,9 +68,9 @@ This in-process runtime path is the Project 2 closeout local runtime entry
 ## 5. Knowledge schema (SqlGateway)
 
 DDL for `knowledge_sources`, `knowledge_documents`, `document_chunks`, and
-`embedding_vectors` (rebuildable search-index persistence; OpenSearch still
-deferred) lives in `app/knowledge/infra/knowledgeSchemaSql.ts`. Apply via any
-`SqlGateway`:
+`embedding_vectors` (rebuildable search-index persistence used by
+`SqlVectorIndex`; OpenSearch still deferred) lives in
+`app/knowledge/infra/knowledgeSchemaSql.ts`. Apply via any `SqlGateway`:
 
 ```ts
 import { applyKnowledgeSchema, InMemorySqlGateway } from "./app/knowledge";

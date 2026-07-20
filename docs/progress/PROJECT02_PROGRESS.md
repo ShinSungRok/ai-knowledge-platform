@@ -2808,7 +2808,7 @@ Completed
 2026-07-20
 
 **Commit**
-Pending
+8c7eefb
 
 **Title**
 Extend InMemorySqlGateway for embedding vector SQL and validate
@@ -2822,6 +2822,33 @@ Extend InMemorySqlGateway for embedding vector SQL and validate
 - `pnpm validate:embedding:index`
 - `pnpm validate:embedding:sql-index`
 - `pnpm validate:infra:knowledge-schema`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
+## Task 105
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Wire SqlVectorIndex into SQL/Postgres composition and update roadmap
+
+**Summary**
+- `createSqlKnowledgeComposition` / `createPostgresKnowledgeComposition` now share SqlVectorIndex on the same SqlGateway
+- Default in-memory/operations composition keeps InMemoryVectorIndex
+- Updated composition validations + roadmap OpenSearch row to Partial (SqlVectorIndex validated; OpenSearch deferred)
+
+**Validation**
+- `pnpm validate:embedding:sql-index`
+- `pnpm validate:composition:sql-knowledge`
+- `pnpm validate:composition:postgres-knowledge`
+- `pnpm validate:project:closeout`
 - `pnpm typecheck`
 - `pnpm validate`
 

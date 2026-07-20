@@ -2,7 +2,7 @@
 
 > Status of AI Knowledge Platform Charter capabilities at Project 2
 > Platform Baseline closeout (Sprint 20), plus post-baseline persistence
-> progress (Sprints 21–23).
+> progress (Sprints 21–24).
 
 ## Charter capability → Completed
 
@@ -24,7 +24,7 @@
 | Item | Status | Notes |
 |---|---|---|
 | Postgres source-of-truth adapter | Partial | `PostgresSqlGateway` + schema/composition validated with Fake pool; live DB optional via `DATABASE_URL`; default validate still `InMemorySqlGateway`/Fake |
-| OpenSearch / real vector index adapter | Deferred | `InMemoryVectorIndex` only |
+| OpenSearch / real vector index adapter | Partial | `SqlVectorIndex` on SqlGateway validated (rebuildable search-index persistence); OpenSearch client still deferred |
 | Real LLM provider SDK | Deferred | `FakeLanguageModelProvider` only |
 | MCP network transport | Deferred | In-process MCP ports only |
 | `node:http` / Express TCP listen | Deferred | In-process `dispatch` only |
@@ -40,3 +40,4 @@
 | Sprint 21 (Task 90–93) | Post-baseline Source-of-Truth Persistence (`SqlGateway`, SQL document repository, InMemorySqlGateway, SQL composition path) |
 | Sprint 22 (Task 94–97) | Extend SoT Persistence to Source and Chunk (SQL source/chunk adapters, gateway support, full SQL knowledge composition) |
 | Sprint 23 (Task 98–101) | Establish Postgres SqlGateway Driver (schema helper, `PostgresSqlGateway`, Fake pool validation, postgres composition factory) |
+| Sprint 24 (Task 102–105) | Establish SQL Vector Index Persistence (`embedding_vectors`, `SqlVectorIndex`, gateway support, SQL/Postgres composition wiring) |

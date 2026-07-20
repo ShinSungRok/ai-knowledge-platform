@@ -9,7 +9,7 @@ import {
 import type { KnowledgeRuntimeConfig } from "../config/KnowledgeRuntimeConfig";
 import { DefaultContextAssembler } from "../context/DefaultContextAssembler";
 import { FakeEmbeddingProvider } from "../embedding/FakeEmbeddingProvider";
-import { InMemoryVectorIndex } from "../embedding/InMemoryVectorIndex";
+import { SqlVectorIndex } from "../embedding/SqlVectorIndex";
 import { applyKnowledgeSchema } from "../infra/applyKnowledgeSchema";
 import type { PostgresPool } from "../infra/PostgresPool";
 import { PostgresSqlGateway } from "../infra/PostgresSqlGateway";
@@ -34,11 +34,11 @@ export type CreatePostgresKnowledgeCompositionOptions = {
 };
 
 /**
- * Composition root with SQL-backed document/source/chunk repositories over
- * {@link PostgresSqlGateway}. Vector/cited-answer stack reuses in-memory/fake
+ * Composition root with SQL-backed document/source/chunk/vector index over
+ * {@link PostgresSqlGateway}. Cited-answer stack reuses in-memory/fake
  * adapters. Caller owns the pool lifecycle.
  *
- * Default in-memory and InMemorySqlGateway SQL paths remain unchanged.
+ * Default in-memory and InMemorySqlGateway SQL paths remain available.
  */
 export async function createPostgresKnowledgeComposition(
   options: CreatePostgresKnowledgeCompositionOptions,
@@ -56,7 +56,7 @@ export async function createPostgresKnowledgeComposition(
     sqlGateway,
   );
   const documentChunkRepository = new SqlDocumentChunkRepository(sqlGateway);
-  const vectorIndex = new InMemoryVectorIndex();
+  const vectorIndex = new SqlVectorIndex(sqlGateway);
   const embeddingProvider = new FakeEmbeddingProvider();
 
   const vectorRetriever = new DefaultVectorRetriever(

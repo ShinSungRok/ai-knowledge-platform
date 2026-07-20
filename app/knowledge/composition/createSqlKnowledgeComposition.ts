@@ -9,7 +9,7 @@ import {
 import type { KnowledgeRuntimeConfig } from "../config/KnowledgeRuntimeConfig";
 import { DefaultContextAssembler } from "../context/DefaultContextAssembler";
 import { FakeEmbeddingProvider } from "../embedding/FakeEmbeddingProvider";
-import { InMemoryVectorIndex } from "../embedding/InMemoryVectorIndex";
+import { SqlVectorIndex } from "../embedding/SqlVectorIndex";
 import { InMemorySqlGateway } from "../infra/InMemorySqlGateway";
 import { SqlDocumentChunkRepository } from "../persistence/SqlDocumentChunkRepository";
 import { SqlKnowledgeDocumentRepository } from "../persistence/SqlKnowledgeDocumentRepository";
@@ -25,9 +25,9 @@ import type { KnowledgeRuntime } from "./KnowledgeRuntime";
 import type { SqlKnowledgeComposition } from "./SqlKnowledgeComposition";
 
 /**
- * Composition root with SQL-backed document, source, and chunk repositories
- * sharing one {@link InMemorySqlGateway}. Vector/embedding/search/cited-answer
- * stack reuses the same in-memory/fake adapters as
+ * Composition root with SQL-backed document, source, chunk, and vector index
+ * sharing one {@link InMemorySqlGateway}. Embedding/search/cited-answer
+ * stack reuses the same fake adapters as
  * {@link createInMemoryKnowledgeComposition}.
  *
  * Document-only SQL path remains {@link createSqlDocumentKnowledgeComposition}.
@@ -43,7 +43,7 @@ export function createSqlKnowledgeComposition(
     sqlGateway,
   );
   const documentChunkRepository = new SqlDocumentChunkRepository(sqlGateway);
-  const vectorIndex = new InMemoryVectorIndex();
+  const vectorIndex = new SqlVectorIndex(sqlGateway);
   const embeddingProvider = new FakeEmbeddingProvider();
 
   const vectorRetriever = new DefaultVectorRetriever(

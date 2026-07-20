@@ -95,6 +95,10 @@ async function assertEndToEndSqlPath(): Promise<void> {
       "SqlDocumentChunkRepository",
     "SQL chunk repository",
   );
+  assertTruthy(
+    composition.vectorIndex.constructor.name === "SqlVectorIndex",
+    "SQL vector index",
+  );
   assertEqual(
     composition.sqlGateway.constructor.name,
     "InMemorySqlGateway",

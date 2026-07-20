@@ -958,9 +958,9 @@ The following remain intentionally out of Project 2 scope:
 - Real MCP network transport
 - `node:http` / Express TCP listen
 
-Project 2 Platform Baseline remains closed. Sprints 21–23 continue
-post-baseline Source-of-Truth persistence (`SqlGateway`, document/source/chunk
-SQL repositories, `InMemorySqlGateway`, `PostgresSqlGateway` + schema/
-`createPostgresKnowledgeComposition`). Default `pnpm validate` stays on
-InMemory/Fake paths without requiring a live database. Default
-composition/operations paths stay in-memory.
+Project 2 Platform Baseline remains closed. Sprints 21–24 continue
+post-baseline persistence (`SqlGateway`, document/source/chunk SQL
+repositories, `PostgresSqlGateway`, and rebuildable `SqlVectorIndex` on
+`embedding_vectors`). OpenSearch client remains deferred. Default
+`pnpm validate` stays on InMemory/Fake paths without requiring a live
+database. Default composition/operations paths stay in-memory.

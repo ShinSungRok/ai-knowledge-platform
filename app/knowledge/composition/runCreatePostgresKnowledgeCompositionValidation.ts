@@ -89,6 +89,11 @@ async function assertEndToEndViaFakePool(): Promise<void> {
     "PostgresSqlGateway",
   );
   assertEqual(
+    composition.vectorIndex.constructor.name,
+    "SqlVectorIndex",
+    "SqlVectorIndex",
+  );
+  assertEqual(
     (await composition.knowledgeSourceRepository.findById(
       WORKSPACE_A,
       "source-1",
