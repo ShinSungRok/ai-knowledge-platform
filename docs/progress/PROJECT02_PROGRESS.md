@@ -1109,3 +1109,32 @@ Define language model provider contract
 
 **Status**
 Completed
+
+## Task 42
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add deterministic fake language model provider
+
+**Summary**
+- Added `FakeLanguageModelProvider` (`app/knowledge/ai/FakeLanguageModelProvider.ts`), the `LanguageModelProvider` adapter, with **no external dependency at all** — no network, API key, model SDK, repository, or retrieval/search/context/prompt-builder adapter
+- `generate` validates the given `GroundedPrompt` (`systemInstruction` as a non-empty string, `userMessage` as a string) and echoes `userMessage` back as `GeneratedText.text` unchanged; it never constructs, rewrites, or re-derives a prompt of its own — prompt construction stays `PromptBuilder`'s responsibility, never the provider's
+- Input `GroundedPrompt` (and its fields) are never mutated; the returned `GeneratedText` is always a fresh object; repeated calls with the same input return byte-identical output
+- Exported `FakeLanguageModelProvider` from the `ai` and top-level `app/knowledge` barrels
+- Added `runFakeLanguageModelProviderValidation.ts` (port contract; exact `userMessage`-to-`text` mapping; empty-`userMessage` handling; deterministic repeated-call output; input immutability + fresh-object output; invalid-prompt rejection; static source-scan confirming no real provider/model SDK/network call or lower-level adapter import) + `tests/unit/fakeLanguageModelProvider.cases.ts`, wired into `validate:ai:fake-provider` and the top-level `validate` chain
+- Updated `docs/modules.md`/`docs/architecture.md`/`docs/development.md` to describe the fake provider's validation-only role and the principle that a provider must never construct prompts; no real LLM provider, streaming, token usage, model configuration, answer parsing, grounding sufficiency judgment, citation, Prompt Builder, or retrieval/context/re-ranking change introduced
+
+**Validation**
+- `pnpm validate:ai:provider-contract`
+- `pnpm validate:ai:fake-provider`
+- `pnpm validate:prompt:builder`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

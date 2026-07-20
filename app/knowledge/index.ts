@@ -84,6 +84,7 @@ export { KNOWLEDGE_MODULE_CITATION } from "./citation";
 export { KNOWLEDGE_MODULE_RAG } from "./rag";
 export { KNOWLEDGE_MODULE_AI } from "./ai";
 export type { GeneratedText, LanguageModelProvider } from "./ai";
+export { FakeLanguageModelProvider } from "./ai";
 export { KNOWLEDGE_MODULE_API } from "./api";
 export { KNOWLEDGE_MODULE_HTTP } from "./http";
 export { KNOWLEDGE_MODULE_SERVER } from "./server";

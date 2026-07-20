@@ -495,9 +495,24 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   generated text, **not yet** a grounded answer or citation — judging
   grounding sufficiency, structuring an answer, and attaching citations
   are all later, out-of-scope concerns. Only the contract is defined so
-  far; a fake adapter (`FakeLanguageModelProvider`) is a later task, and
-  no real provider, model SDK, network, or API key dependency is
-  implied.
+  far.
+- `FakeLanguageModelProvider` (`app/knowledge/ai`) is the
+  `LanguageModelProvider` adapter for validating the contract and
+  downstream application flow: it has **no external dependency at
+  all** — no network, API key, model SDK, repository, or
+  retrieval/search/context/prompt-builder adapter. `generate` validates
+  the given `GroundedPrompt` (`systemInstruction` a non-empty string,
+  `userMessage` a string) and echoes `userMessage` back as
+  `GeneratedText.text`, unchanged; it never constructs, rewrites, or
+  re-derives a prompt of its own — prompt construction stays
+  `PromptBuilder`'s responsibility. Neither the input prompt nor its
+  fields are mutated, the returned `GeneratedText` is always a fresh
+  object, and repeated calls with the same input return byte-identical
+  output. This is a deterministic **validation-only** double, never a
+  real answer generator — a real provider is a later task. Streaming,
+  token usage, model configuration, answer parsing, grounding
+  sufficiency judgment, and citation are all out of scope for this
+  adapter.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -508,4 +523,5 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   search:hybrid + search:rerank-contract + search:reranker +
   search:reranked + context:contract + context:assembler +
   prompt:contract + prompt:builder + application:grounding-context +
-  application:prompt + ai:provider-contract + typecheck).
+  application:prompt + ai:provider-contract + ai:fake-provider +
+  typecheck).

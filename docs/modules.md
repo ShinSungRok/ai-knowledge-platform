@@ -125,8 +125,14 @@ citation concern here. Task 41 adds the `ai` module's LLM generation
 contract — `GeneratedText` (`text: string`) and the
 `LanguageModelProvider` port (`generate(prompt: GroundedPrompt):
 Promise<GeneratedText>`) — defining how a `GroundedPrompt` is turned
-into plain generated text (not yet a grounded answer or citation); no
-adapter yet.
+into plain generated text (not yet a grounded answer or citation). Task
+42 adds `FakeLanguageModelProvider`, a `LanguageModelProvider` adapter
+with no external dependency at all (no network, API key, or model SDK):
+it validates the given `GroundedPrompt` (`systemInstruction` non-empty,
+`userMessage` a string) and echoes `userMessage` back as
+`GeneratedText.text` unchanged — a deterministic double for validating
+the contract and downstream application flow, never for producing a
+real answer.
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules
@@ -145,7 +151,7 @@ Other modules remain skeleton boundaries until scoped.
 | `prompt` | Prompt construction from a `GroundingContext`. `GroundedPrompt` (`systemInstruction`, `userMessage`, both plain strings) + the `PromptBuilder` port (`build(context: GroundingContext): Promise<GroundedPrompt>`) define an LLM-independent prompt representation. `DefaultPromptBuilder` (no constructor dependency) renders a fixed `systemInstruction` and a fixed `Question:\n<query>\n\nGrounding context status: <complete\|truncated>\n\nGrounding context:\n<content\|[none]>` `userMessage`, using `content` verbatim and never calling or constructing an LLM provider. |
 | `citation` | Citation building from retrieved sources. |
 | `rag` | RAG answer assembly (answer + citations). |
-| `ai` | AI provider abstraction (fake + real providers). `GeneratedText` (`text: string`, not yet a grounded answer or citation) + the `LanguageModelProvider` port (`generate(prompt: GroundedPrompt): Promise<GeneratedText>`) define a provider-independent LLM generation contract; `GroundedPrompt` is its only prompt input. A default (fake) adapter is still deferred. |
+| `ai` | AI provider abstraction (fake + real providers). `GeneratedText` (`text: string`, not yet a grounded answer or citation) + the `LanguageModelProvider` port (`generate(prompt: GroundedPrompt): Promise<GeneratedText>`) define a provider-independent LLM generation contract; `GroundedPrompt` is its only prompt input. `FakeLanguageModelProvider` (no external dependency) validates the prompt and echoes `userMessage` back as `text`, for contract/flow validation only — never a real answer. A real provider is still deferred. |
 | `api` | Controllers and request/response DTOs. |
 | `http` | Framework-independent HTTP abstraction. |
 | `server` | Production server runtime and lifecycle. |
