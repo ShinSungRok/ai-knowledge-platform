@@ -110,3 +110,8 @@ export {
   RunGroundingEvaluationUseCase,
   type RunGroundingEvaluationInput,
 } from "./RunGroundingEvaluationUseCase";
+export {
+  RunCitationEvaluationUseCase,
+  type RunCitationEvaluationInput,
+} from "./RunCitationEvaluationUseCase";
+

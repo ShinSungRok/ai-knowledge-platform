@@ -2087,3 +2087,30 @@ Add grounding evaluator and run use case
 **Status**
 Completed
 
+## Task 77
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add citation evaluator and run use case
+
+**Summary**
+- Added `DefaultCitationEvaluator` (evidence-bound citation correctness; empty dataset rejected)
+- Added `RunCitationEvaluationUseCase` (GenerateCitedGroundedAnswerUseCase + CitationEvaluator only)
+- Wired `validate:evaluation:citation` and `validate:application:eval-citation`; updated barrels/docs
+- No combined report use case, corpus loader, or composition wiring
+
+**Validation**
+- `pnpm validate:application:cited-answer`
+- `pnpm validate:evaluation:citation`
+- `pnpm validate:application:eval-citation`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

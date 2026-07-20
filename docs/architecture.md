@@ -872,8 +872,10 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   (`insufficientEvidence` + empty evidence only).
   `RunRetrievalEvaluationUseCase` / `RunGroundingEvaluationUseCase`
   inject only their application use case + evaluator port.
-  Citation adapters, real corpus loaders, and LLM-as-judge remain later
-  tasks.
+  `DefaultCitationEvaluator` scores evidence-bound citation correctness;
+  `RunCitationEvaluationUseCase` injects only
+  `GenerateCitedGroundedAnswerUseCase` and `CitationEvaluator`.
+  Real corpus loaders and LLM-as-judge remain later tasks.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +

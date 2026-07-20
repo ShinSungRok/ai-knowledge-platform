@@ -13,7 +13,7 @@
  * pre-fetched retrieval results. `DefaultGroundingEvaluator` scores
  * insufficient-evidence compliance. Application run use cases execute
  * hybrid retrieval or grounded-answer generation per case then delegate
- * to evaluator ports. Citation evaluator adapters remain later.
+ * to evaluator ports. `DefaultCitationEvaluator` scores evidence-bound citation correctness.
  */
 export const KNOWLEDGE_MODULE_EVALUATION = "app/knowledge/evaluation" as const;
 
@@ -40,3 +40,4 @@ export type {
 } from "./CitationEvaluator";
 export { DefaultRetrievalEvaluator } from "./DefaultRetrievalEvaluator";
 export { DefaultGroundingEvaluator } from "./DefaultGroundingEvaluator";
+export { DefaultCitationEvaluator } from "./DefaultCitationEvaluator";
