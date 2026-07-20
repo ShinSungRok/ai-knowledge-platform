@@ -86,6 +86,7 @@ export type { GroundedPrompt, PromptBuilder } from "./prompt";
 export { DefaultPromptBuilder } from "./prompt";
 export { KNOWLEDGE_MODULE_CITATION } from "./citation";
 export type { Citation, CitedGroundedAnswer, CitationBuilder } from "./citation";
+export { DefaultCitationBuilder } from "./citation";
 export { KNOWLEDGE_MODULE_RAG } from "./rag";
 export type {
   GroundedAnswer,

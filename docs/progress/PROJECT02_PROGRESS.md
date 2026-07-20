@@ -1285,3 +1285,34 @@ Define citation contract
 
 **Status**
 Completed
+
+## Task 48
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add deterministic citation builder
+
+**Summary**
+- Added `DefaultCitationBuilder` (`app/knowledge/citation/DefaultCitationBuilder.ts`), the `CitationBuilder` adapter, with **no constructor dependency at all** — no framework, repository, provider, or search/context/prompt adapter
+- Walks `answer.evidence` in the given order (never re-sorts) and emits exactly one `Citation` per block; `Citation.id` is `cite:${encodeURIComponent(sourceId)}:${encodeURIComponent(documentId)}:${encodeURIComponent(chunkId)}`; `sourceId`/`documentId`/`chunkId`/`score` are copied from the block; `excerpt` is the block's own `text`, never truncated
+- An empty evidence list yields an empty `Citation[]` — **never a fabricated citation**
+- Neither the input answer nor its evidence array/entries are mutated; every returned citation is a fresh object
+- Validates `answer.text`/`insufficientEvidence`/`evidence` (each block's provenance/text/score shape) at the adapter boundary
+- Exported `DefaultCitationBuilder` from the `citation` and top-level `app/knowledge` barrels
+- Added `runDefaultCitationBuilderValidation.ts` (port contract; one-citation-per-evidence with deterministic id including URI-encoded special characters; empty-evidence empty-citations; order preservation; input/evidence immutability with fresh-object citations; invalid-answer rejection; static source-scan confirming no concrete-adapter/provider/repository import) + `tests/unit/defaultCitationBuilder.cases.ts`, wired into `validate:citation:builder` and the top-level `validate` chain
+- Updated `docs/architecture.md`/`docs/modules.md`/`docs/development.md` to describe the evidence-only citation policy; no citation numbering in answer text, document-title lookup, LLM citation extraction, grounded-answer policy change, or HTTP/composition wiring introduced
+
+**Validation**
+- `pnpm validate:citation:contract`
+- `pnpm validate:citation:builder`
+- `pnpm validate:rag:answer-assembler`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

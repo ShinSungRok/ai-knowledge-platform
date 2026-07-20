@@ -612,9 +612,25 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   LLM extraction. It reuses the rag module's own `GroundedAnswer` shape
   as-is — citation construction never re-retrieves, re-ranks,
   re-assembles context, or rewrites answer text. Only the contract is
-  defined so far; a default adapter (`DefaultCitationBuilder`) is a
-  later task. Answer-text citation markers, document-title hydration,
-  and LLM citation extraction remain out of scope.
+  Answer-text citation markers, document-title hydration, and LLM
+  citation extraction remain out of scope.
+- `DefaultCitationBuilder` (`app/knowledge/citation`) is the
+  `CitationBuilder` adapter applying the evidence-only citation policy
+  deterministically: it has **no constructor dependency at all** — no
+  framework, repository, provider, or search/context/prompt adapter.
+  It walks `answer.evidence` in the given order (never re-sorts) and
+  emits exactly one `Citation` per block. `Citation.id` is
+  `cite:${encodeURIComponent(sourceId)}:${encodeURIComponent(documentId)}:${encodeURIComponent(chunkId)}`;
+  `sourceId`/`documentId`/`chunkId`/`score` are copied from the block;
+  `excerpt` is the block's own `text`, never truncated. An empty
+  evidence list yields an empty `Citation[]` — **never a fabricated
+  citation**. Neither the input answer nor its evidence array/entries
+  are mutated; every returned citation is a fresh object. Input is
+  validated — `answer.text`/`insufficientEvidence`/`evidence` (each
+  block's provenance/text/score shape) — before building. Answer-text
+  citation markers, document-title/source-name hydration, LLM citation
+  extraction, and any grounded-answer policy change are out of scope
+  for this adapter.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -628,4 +644,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   application:prompt + ai:provider-contract + ai:fake-provider +
   application:generate-text + rag:answer-contract +
   rag:answer-assembler + application:grounded-answer +
-  citation:contract + typecheck).
+  citation:contract + citation:builder + typecheck).
