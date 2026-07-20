@@ -373,20 +373,24 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   objects, re-ranking, score calibration, and persistence changes are out
   of scope for this adapter.
 - `RetrieveGroundingContextUseCase` (`app/knowledge/application`) combines
-  hybrid retrieval and context assembly behind one application-boundary
-  entry point: its constructor injects only the `HybridSearch` and
-  `ContextAssembler` ports (never `VectorRetriever`, `KeywordSearch`,
-  `EmbeddingProvider`, `VectorIndex`, `DocumentChunkRepository`,
-  `KnowledgeDocumentRepository`, or a concrete adapter). It validates its
-  own `RetrieveGroundingContextInput`
+  reranked retrieval and context assembly behind one application-boundary
+  entry point: its constructor injects only the `RerankedSearch` and
+  `ContextAssembler` ports (never `HybridSearch`, `VectorRetriever`,
+  `KeywordSearch`, `Reranker`, `EmbeddingProvider`, `VectorIndex`,
+  `DocumentChunkRepository`, `KnowledgeDocumentRepository`, or a concrete
+  adapter). It validates its own `RetrieveGroundingContextInput`
   (`workspaceId`/`query`/`retrievalLimit`/`maxCharacters`) at the
   application boundary, then calls
-  `HybridSearch.search({ workspaceId, query, limit: retrievalLimit })`
-  and passes the returned `RetrievalResult.chunks` straight into
-  `ContextAssembler.assemble({ workspaceId, query, chunks, maxCharacters
-  })`, returning its `GroundingContext` unchanged — no re-ranking, prompt
-  building, or citation concern here. `RetrieveHybridKnowledgeChunksUseCase`
-  and `RetrieveKnowledgeChunksUseCase` are unaffected by this use case.
+  `RerankedSearch.search({ workspaceId, query, limit: retrievalLimit })`
+  and passes the returned `RetrievalResult.chunks` (already re-ranked)
+  straight into `ContextAssembler.assemble({ workspaceId, query, chunks,
+  maxCharacters })`, returning its `GroundingContext` unchanged — no
+  prompt building or citation concern here. This use case previously
+  depended on `HybridSearch` directly (Task 33); Task 37 swapped that for
+  `RerankedSearch` without changing the use case's own input contract or
+  its delegation shape into `ContextAssembler`.
+  `RetrieveHybridKnowledgeChunksUseCase` and `RetrieveKnowledgeChunksUseCase`
+  are unaffected by this use case.
 - `Reranker` (`app/knowledge/search`) is a port —
   `rerank(input: RerankingInput): Promise<RetrievedChunk[]>`, where
   `RerankingInput` is `{ workspaceId, query, chunks: RetrievedChunk[] }`

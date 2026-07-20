@@ -972,3 +972,31 @@ Add reranked hybrid search
 
 **Status**
 Completed
+
+## Task 37
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Integrate reranked search into grounding context
+
+**Summary**
+- Changed `RetrieveGroundingContextUseCase`'s injected search dependency from `HybridSearch` to `RerankedSearch` — its own input contract (`workspaceId`/`query`/`retrievalLimit`/`maxCharacters`) and its delegation shape into `ContextAssembler` are unchanged
+- `execute` now calls `RerankedSearch.search({ workspaceId, query, limit: retrievalLimit })` first, then passes the returned (already re-ranked) `RetrievalResult.chunks` straight into `ContextAssembler.assemble({ workspaceId, query, chunks, maxCharacters })`, returning the resulting `GroundingContext` unchanged
+- Updated `runRetrieveGroundingContextUseCaseValidation.ts` and `tests/unit/retrieveGroundingContextUseCase.cases.ts`: static source-scan now requires a `RerankedSearch` import and forbids `HybridSearch`/`Reranker`/`DefaultRerankedSearch`/`DefaultHybridSearch`/`DefaultReranker` and other concrete-adapter references; the call-order/input-mapping/unchanged-result test now builds its harness from `DefaultRerankedSearch(DefaultHybridSearch, DefaultReranker)` behind a `CountingRerankedSearch` test double; the invalid-input test confirms `RerankedSearch.search` (not `HybridSearch.search`) is never called
+- `RetrieveHybridKnowledgeChunksUseCase` and `RetrieveKnowledgeChunksUseCase` are unaffected; application and top-level `app/knowledge` barrel exports are unchanged (same exported names)
+- Updated `docs/architecture.md`/`docs/modules.md`/`docs/development.md` to describe the `RerankedSearch` → `ContextAssembler` grounding-context flow; no HTTP/API, composition wiring, prompt/LLM/citation, or re-ranking algorithm change introduced
+
+**Validation**
+- `pnpm validate:search:reranked`
+- `pnpm validate:context:assembler`
+- `pnpm validate:application:grounding-context`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

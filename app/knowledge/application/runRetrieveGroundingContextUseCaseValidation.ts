@@ -5,15 +5,17 @@ import {
   RetrieveGroundingContextUseCase,
   type RetrieveGroundingContextInput,
 } from "./RetrieveGroundingContextUseCase";
+import { DefaultRerankedSearch } from "../search/DefaultRerankedSearch";
 import { DefaultHybridSearch } from "../search/DefaultHybridSearch";
 import { DefaultKeywordSearch } from "../search/DefaultKeywordSearch";
+import { DefaultReranker } from "../search/DefaultReranker";
 import { DefaultVectorRetriever } from "../retrieval/DefaultVectorRetriever";
 import { FakeEmbeddingProvider } from "../embedding/FakeEmbeddingProvider";
 import { InMemoryVectorIndex } from "../embedding/InMemoryVectorIndex";
 import { DefaultInMemoryDocumentChunkRepository } from "../persistence/DefaultInMemoryDocumentChunkRepository";
 import { DefaultInMemoryRepository } from "../persistence/DefaultInMemoryRepository";
 import { DefaultContextAssembler } from "../context/DefaultContextAssembler";
-import type { HybridSearch } from "../search/HybridSearch";
+import type { RerankedSearch } from "../search/RerankedSearch";
 import type { ContextAssembler } from "../context/ContextAssembler";
 import type { ContextAssemblyInput } from "../context/ContextAssemblyInput";
 import type { GroundingContext } from "../context/GroundingContext";
@@ -56,20 +58,20 @@ function assertRejects(
   );
 }
 
-/** Counts calls, records the last input, and appends to a shared call-order log, delegating to a real hybrid search. */
-class CountingHybridSearch implements HybridSearch {
+/** Counts calls, records the last input, and appends to a shared call-order log, delegating to a real reranked search. */
+class CountingRerankedSearch implements RerankedSearch {
   public searchCalls = 0;
   public lastInput: RetrievalInput | null = null;
 
   constructor(
-    private readonly inner: HybridSearch,
+    private readonly inner: RerankedSearch,
     private readonly callOrder: string[],
   ) {}
 
   async search(input: RetrievalInput): Promise<RetrievalResult> {
     this.searchCalls += 1;
     this.lastInput = input;
-    this.callOrder.push("hybridSearch");
+    this.callOrder.push("rerankedSearch");
     return this.inner.search(input);
   }
 }
@@ -92,8 +94,8 @@ class CountingContextAssembler implements ContextAssembler {
   }
 }
 
-function assertDependsOnlyOnHybridSearchAndContextAssemblerPorts(): void {
-  console.log("[application] RetrieveGroundingContextUseCase depends only on the HybridSearch and ContextAssembler ports...");
+function assertDependsOnlyOnRerankedSearchAndContextAssemblerPorts(): void {
+  console.log("[application] RetrieveGroundingContextUseCase depends only on the RerankedSearch and ContextAssembler ports...");
   const useCasePath = path.resolve(
     process.cwd(),
     "app/knowledge/application/RetrieveGroundingContextUseCase.ts",
@@ -101,15 +103,17 @@ function assertDependsOnlyOnHybridSearchAndContextAssemblerPorts(): void {
   const source = readFileSync(useCasePath, "utf8");
 
   assertTruthy(
-    source.includes('from "../search/HybridSearch"'),
-    "Use case must import the HybridSearch port",
+    source.includes('from "../search/RerankedSearch"'),
+    "Use case must import the RerankedSearch port",
   );
   assertTruthy(
     source.includes('from "../context/ContextAssembler"'),
     "Use case must import the ContextAssembler port",
   );
   const forbiddenReferences = [
+    "DefaultRerankedSearch",
     "DefaultHybridSearch",
+    "DefaultReranker",
     "DefaultVectorRetriever",
     "DefaultKeywordSearch",
     "DefaultContextAssembler",
@@ -121,6 +125,9 @@ function assertDependsOnlyOnHybridSearchAndContextAssemblerPorts(): void {
     "../persistence/",
     "../repository/",
     "../search/DefaultHybridSearch",
+    "../search/DefaultRerankedSearch",
+    "../search/HybridSearch",
+    "../search/Reranker",
     "../search/KeywordSearch",
     "../retrieval/VectorRetriever",
     "../retrieval/RetrievalInput",
@@ -134,7 +141,7 @@ function assertDependsOnlyOnHybridSearchAndContextAssemblerPorts(): void {
 }
 
 interface Harness {
-  hybridSearch: DefaultHybridSearch;
+  rerankedSearch: DefaultRerankedSearch;
   contextAssembler: DefaultContextAssembler;
   chunkRepository: DefaultInMemoryDocumentChunkRepository;
   vectorIndex: InMemoryVectorIndex;
@@ -153,10 +160,12 @@ function buildHarness(): Harness {
   );
   const keywordSearch = new DefaultKeywordSearch(chunkRepository);
   const hybridSearch = new DefaultHybridSearch(vectorRetriever, keywordSearch);
+  const reranker = new DefaultReranker();
+  const rerankedSearch = new DefaultRerankedSearch(hybridSearch, reranker);
   const documentRepository = new DefaultInMemoryRepository();
   const contextAssembler = new DefaultContextAssembler(documentRepository);
   return {
-    hybridSearch,
+    rerankedSearch,
     contextAssembler,
     chunkRepository,
     vectorIndex,
@@ -203,13 +212,13 @@ async function seedDocumentAndChunk(
 }
 
 async function assertExecuteDelegatesInSequenceWithMappedInputsAndUnchangedResult(): Promise<void> {
-  console.log("[application] execute calls HybridSearch before ContextAssembler, maps inputs correctly, and returns the assembler's GroundingContext unchanged...");
+  console.log("[application] execute calls RerankedSearch before ContextAssembler, maps inputs correctly, and returns the assembler's GroundingContext unchanged...");
   const harness = buildHarness();
   const callOrder: string[] = [];
-  const countingHybridSearch = new CountingHybridSearch(harness.hybridSearch, callOrder);
+  const countingRerankedSearch = new CountingRerankedSearch(harness.rerankedSearch, callOrder);
   const countingContextAssembler = new CountingContextAssembler(harness.contextAssembler, callOrder);
   const useCase = new RetrieveGroundingContextUseCase(
-    countingHybridSearch,
+    countingRerankedSearch,
     countingContextAssembler,
   );
 
@@ -221,7 +230,7 @@ async function assertExecuteDelegatesInSequenceWithMappedInputsAndUnchangedResul
     retrievalLimit: 5,
     maxCharacters: 10_000,
   };
-  const directRetrieval = await harness.hybridSearch.search({
+  const directRetrieval = await harness.rerankedSearch.search({
     workspaceId: input.workspaceId,
     query: input.query,
     limit: input.retrievalLimit,
@@ -235,19 +244,19 @@ async function assertExecuteDelegatesInSequenceWithMappedInputsAndUnchangedResul
 
   const result = await useCase.execute(input);
 
-  assertEqual(countingHybridSearch.searchCalls, 1, "expected HybridSearch.search to be called exactly once");
+  assertEqual(countingRerankedSearch.searchCalls, 1, "expected RerankedSearch.search to be called exactly once");
   assertEqual(countingContextAssembler.assembleCalls, 1, "expected ContextAssembler.assemble to be called exactly once");
-  assertEqual(callOrder.join(","), "hybridSearch,contextAssembler", "expected HybridSearch to be called before ContextAssembler");
+  assertEqual(callOrder.join(","), "rerankedSearch,contextAssembler", "expected RerankedSearch to be called before ContextAssembler");
 
-  assertEqual(countingHybridSearch.lastInput?.workspaceId, WORKSPACE_A, "expected HybridSearch.search input.workspaceId to be mapped from RetrieveGroundingContextInput.workspaceId");
-  assertEqual(countingHybridSearch.lastInput?.query, "aaaaaaaa", "expected HybridSearch.search input.query to be mapped from RetrieveGroundingContextInput.query");
-  assertEqual(countingHybridSearch.lastInput?.limit, 5, "expected HybridSearch.search input.limit to be mapped from RetrieveGroundingContextInput.retrievalLimit");
+  assertEqual(countingRerankedSearch.lastInput?.workspaceId, WORKSPACE_A, "expected RerankedSearch.search input.workspaceId to be mapped from RetrieveGroundingContextInput.workspaceId");
+  assertEqual(countingRerankedSearch.lastInput?.query, "aaaaaaaa", "expected RerankedSearch.search input.query to be mapped from RetrieveGroundingContextInput.query");
+  assertEqual(countingRerankedSearch.lastInput?.limit, 5, "expected RerankedSearch.search input.limit to be mapped from RetrieveGroundingContextInput.retrievalLimit");
 
   assertEqual(countingContextAssembler.lastInput?.workspaceId, WORKSPACE_A, "expected ContextAssembler.assemble input.workspaceId to be mapped from RetrieveGroundingContextInput.workspaceId");
   assertEqual(countingContextAssembler.lastInput?.query, "aaaaaaaa", "expected ContextAssembler.assemble input.query to be mapped from RetrieveGroundingContextInput.query");
   assertEqual(countingContextAssembler.lastInput?.maxCharacters, 10_000, "expected ContextAssembler.assemble input.maxCharacters to be mapped from RetrieveGroundingContextInput.maxCharacters");
-  assertEqual(countingContextAssembler.lastInput?.chunks.length, directRetrieval.chunks.length, "expected ContextAssembler.assemble to receive the HybridSearch RetrievalResult's own chunks");
-  assertEqual(countingContextAssembler.lastInput?.chunks[0]?.chunk.id, directRetrieval.chunks[0]?.chunk.id, "expected the same chunks (in the same order) passed from HybridSearch's result into ContextAssembler's input");
+  assertEqual(countingContextAssembler.lastInput?.chunks.length, directRetrieval.chunks.length, "expected ContextAssembler.assemble to receive the RerankedSearch RetrievalResult's own chunks");
+  assertEqual(countingContextAssembler.lastInput?.chunks[0]?.chunk.id, directRetrieval.chunks[0]?.chunk.id, "expected the same chunks (in the same order) passed from RerankedSearch's result into ContextAssembler's input");
 
   assertEqual(result.query, directResult.query, "expected the use case's result.query to match a direct call sequence");
   assertEqual(result.content, directResult.content, "expected the use case's result.content to match a direct call sequence");
@@ -257,13 +266,13 @@ async function assertExecuteDelegatesInSequenceWithMappedInputsAndUnchangedResul
 }
 
 async function assertRejectsInvalidInputWithoutCallingEitherDependency(): Promise<void> {
-  console.log("[application] execute rejects invalid workspaceId/query/retrievalLimit/maxCharacters input without calling HybridSearch or ContextAssembler...");
+  console.log("[application] execute rejects invalid workspaceId/query/retrievalLimit/maxCharacters input without calling RerankedSearch or ContextAssembler...");
   const harness = buildHarness();
   const callOrder: string[] = [];
-  const countingHybridSearch = new CountingHybridSearch(harness.hybridSearch, callOrder);
+  const countingRerankedSearch = new CountingRerankedSearch(harness.rerankedSearch, callOrder);
   const countingContextAssembler = new CountingContextAssembler(harness.contextAssembler, callOrder);
   const useCase = new RetrieveGroundingContextUseCase(
-    countingHybridSearch,
+    countingRerankedSearch,
     countingContextAssembler,
   );
 
@@ -297,12 +306,12 @@ async function assertRejectsInvalidInputWithoutCallingEitherDependency(): Promis
     "RetrieveGroundingContextInput must be an object",
   );
 
-  assertEqual(countingHybridSearch.searchCalls, 0, "expected HybridSearch.search to never be called for invalid input");
+  assertEqual(countingRerankedSearch.searchCalls, 0, "expected RerankedSearch.search to never be called for invalid input");
   assertEqual(countingContextAssembler.assembleCalls, 0, "expected ContextAssembler.assemble to never be called for invalid input");
 }
 
 async function main(): Promise<void> {
-  assertDependsOnlyOnHybridSearchAndContextAssemblerPorts();
+  assertDependsOnlyOnRerankedSearchAndContextAssemblerPorts();
   await assertExecuteDelegatesInSequenceWithMappedInputsAndUnchangedResult();
   await assertRejectsInvalidInputWithoutCallingEitherDependency();
   console.log("RetrieveGroundingContextUseCase validation succeeded.");

@@ -1,4 +1,4 @@
-import type { HybridSearch } from "../search/HybridSearch";
+import type { RerankedSearch } from "../search/RerankedSearch";
 import type { ContextAssembler } from "../context/ContextAssembler";
 import type { GroundingContext } from "../context/GroundingContext";
 
@@ -21,26 +21,26 @@ export interface RetrieveGroundingContextInput {
 
 /**
  * Retrieve-grounding-context use case: resolve a `workspace`-scoped,
- * bounded grounding context for a query by combining hybrid retrieval
+ * bounded grounding context for a query by combining reranked retrieval
  * with provenance-preserving context assembly.
  *
- * Depends only on `HybridSearch` and `ContextAssembler` — never on
- * `VectorRetriever`, `KeywordSearch`, `EmbeddingProvider`, `VectorIndex`,
- * `DocumentChunkRepository`, `KnowledgeDocumentRepository`, or any
- * concrete adapter. Validates
+ * Depends only on `RerankedSearch` and `ContextAssembler` — never on
+ * `HybridSearch`, `VectorRetriever`, `KeywordSearch`, `Reranker`,
+ * `EmbeddingProvider`, `VectorIndex`, `DocumentChunkRepository`,
+ * `KnowledgeDocumentRepository`, or any concrete adapter. Validates
  * `workspaceId`/`query`/`retrievalLimit`/`maxCharacters` at the
  * application boundary, then calls
- * `HybridSearch.search({ workspaceId, query, limit: retrievalLimit })`
+ * `RerankedSearch.search({ workspaceId, query, limit: retrievalLimit })`
  * and passes its `RetrievalResult.chunks` straight into
  * `ContextAssembler.assemble({ workspaceId, query, chunks, maxCharacters
- * })`, returning the resulting `GroundingContext` unchanged — no
- * re-ranking, prompt building, or citation concern here. The existing
+ * })`, returning the resulting `GroundingContext` unchanged — no prompt
+ * building or citation concern here. The existing
  * `RetrieveHybridKnowledgeChunksUseCase` and `RetrieveKnowledgeChunksUseCase`
  * are unaffected by this use case.
  */
 export class RetrieveGroundingContextUseCase {
   constructor(
-    private readonly hybridSearch: HybridSearch,
+    private readonly rerankedSearch: RerankedSearch,
     private readonly contextAssembler: ContextAssembler,
   ) {}
 
@@ -49,7 +49,7 @@ export class RetrieveGroundingContextUseCase {
   ): Promise<GroundingContext> {
     const validated = this.toInput(input);
 
-    const retrievalResult = await this.hybridSearch.search({
+    const retrievalResult = await this.rerankedSearch.search({
       workspaceId: validated.workspaceId,
       query: validated.query,
       limit: validated.retrievalLimit,
