@@ -2380,3 +2380,29 @@ Document architecture limits and roadmap completion
 **Status**
 Completed
 
+## Task 88
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add project closeout validation runner
+
+**Summary**
+- Added `scripts/validate-project-closeout.ts` (docs, portfolio keywords, roadmap Completed/Deferred, scripts, barrel exports, Task 85 progress marker)
+- Wired `validate:project:closeout` into top-level `validate` (before typecheck)
+- Documented closeout validator in `docs/development.md`
+- No business logic or container build changes
+
+**Validation**
+- `pnpm validate:deployment:readiness`
+- `pnpm validate:project:closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
