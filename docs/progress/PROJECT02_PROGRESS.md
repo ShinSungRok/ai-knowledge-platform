@@ -1455,3 +1455,31 @@ Add invoke MCP tool use case
 
 **Status**
 Completed
+
+## Task 54
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Define tool calling contract and module boundary
+
+**Summary**
+- Added `app/knowledge/tools` module with `KNOWLEDGE_MODULE_TOOLS = "app/knowledge/tools"`
+- Added `ToolCallStatus` (`"success" | "invalid_request" | "unknown_tool" | "timeout" | "failure"`), `ToolCallRequest` (`name`, `arguments`, `timeoutMs`), `ToolCallResult` (`ok`, `status`, `toolName`, optional `result`/`error`, `durationMs`), and the `ToolExecutor` port (`execute(request): Promise<ToolCallResult>`)
+- Registered `KNOWLEDGE_MODULE_TOOLS` in `scripts/validate-skeleton.ts` `REQUIRED_MODULES` immediately after `KNOWLEDGE_MODULE_MCP`; exported contract types from the `tools` and top-level `app/knowledge` barrels
+- Added `runToolCallingContractValidation.ts` (module-constant check, in-file `FakeToolExecutor` proving port implementability and success/error result shapes, top-level barrel type-assignability) + `tests/unit/toolCallingContract.cases.ts`
+- Added `validate:tools:contract` to `package.json`, wired into the top-level `validate` chain; updated `docs/architecture.md`/`docs/modules.md`/`docs/development.md`
+- Contract only — no executor adapter, timeout/retry, Agent orchestrator, real MCP SDK/transport, composition wiring, or `reliability` feature implementation introduced
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:tools:contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

@@ -708,6 +708,19 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   planner/executor, multi-tool orchestration beyond a single invoke,
   HTTP/API/composition-root wiring, and auth middleware remain out of
   scope.
+- `ToolExecutor` (`app/knowledge/tools`) is a port —
+  `execute(request: ToolCallRequest): Promise<ToolCallResult>` — where
+  `ToolCallStatus` is the string-literal union
+  `"success" | "invalid_request" | "unknown_tool" | "timeout" |
+  "failure"`, `ToolCallRequest` is `{ name, arguments, timeoutMs }`,
+  and `ToolCallResult` is `{ ok, status, toolName, result?, error?,
+  durationMs }`. This is a **transport-independent Tool Calling
+  boundary** sitting above MCP capability exposure: it never duplicates
+  Domain/RAG business logic and never depends on an MCP SDK, network
+  transport, or Agent orchestrator. Expected validation, unknown-tool,
+  timeout, and backend failures are expressed as `ok: false` results,
+  not throws. Only the contract is defined so far; a concrete executor
+  adapter, timeout enforcement, and execute use case are later tasks.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -723,4 +736,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   rag:answer-assembler + application:grounded-answer +
   citation:contract + citation:builder + application:cited-answer +
   mcp:contract + mcp:cited-answer-tool + mcp:registry +
-  application:mcp-invoke + typecheck).
+  application:mcp-invoke + tools:contract + typecheck).

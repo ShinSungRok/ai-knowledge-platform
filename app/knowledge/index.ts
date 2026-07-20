@@ -114,6 +114,13 @@ export {
   GenerateCitedGroundedAnswerMcpTool,
   DefaultMcpToolRegistry,
 } from "./mcp";
+export { KNOWLEDGE_MODULE_TOOLS } from "./tools";
+export type {
+  ToolCallStatus,
+  ToolCallRequest,
+  ToolCallResult,
+  ToolExecutor,
+} from "./tools";
 export { KNOWLEDGE_MODULE_API } from "./api";
 export { KNOWLEDGE_MODULE_HTTP } from "./http";
 export { KNOWLEDGE_MODULE_SERVER } from "./server";

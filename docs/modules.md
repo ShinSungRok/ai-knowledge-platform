@@ -201,7 +201,13 @@ errors (with `name`/`toolName` widened to plain `string`). Task 53 adds
 `InvokeMcpToolUseCase` to `application`, injecting only the
 `McpToolRegistry` port: it validates `{ name, arguments }` at the
 application boundary, delegates to `McpToolRegistry.invoke`, and
-returns the result unchanged.
+returns the result unchanged. Task 54 adds the `tools` module as a
+transport-independent Tool Calling boundary — `ToolCallStatus`,
+`ToolCallRequest`, `ToolCallResult`, and the `ToolExecutor` port —
+sitting above MCP capability exposure so validated tool calls
+(including timeout and failure statuses) can be expressed without
+Domain/RAG business-logic duplication and without an MCP SDK or Agent
+orchestrator; no executor adapter yet.
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules
@@ -222,6 +228,7 @@ Other modules remain skeleton boundaries until scoped.
 | `rag` | RAG answer assembly (answer + citations). `GroundedAnswer` (`text`, `evidence: GroundingContextBlock[]`, `insufficientEvidence`) + `GroundedAnswerAssemblyInput` (`context: GroundingContext`, `generatedText: GeneratedText`) + the `GroundedAnswerAssembler` port (`assemble(input): Promise<GroundedAnswer>`) define an explicit contract for combining generated text with grounding evidence — this is where insufficient-evidence policy lives, never in `PromptBuilder`/`LanguageModelProvider`. `DefaultGroundedAnswerAssembler` (no constructor dependency) discards generated text and returns a fixed insufficient-evidence message when `context.blocks` is empty, otherwise returns `generatedText.text` plus a defensive copy of `context.blocks` as evidence — truncation alone is never treated as evidence absence. |
 | `ai` | AI provider abstraction (fake + real providers). `GeneratedText` (`text: string`, not yet a grounded answer or citation) + the `LanguageModelProvider` port (`generate(prompt: GroundedPrompt): Promise<GeneratedText>`) define a provider-independent LLM generation contract; `GroundedPrompt` is its only prompt input. `FakeLanguageModelProvider` (no external dependency) validates the prompt and echoes `userMessage` back as `text`, for contract/flow validation only — never a real answer. A real provider is still deferred. |
 | `mcp` | Transport-independent MCP tool capability exposure. `McpToolName` (`"generate_cited_grounded_answer"`), `McpToolDefinition` (`name`, `description`, `inputKeys: readonly string[]`), `McpToolInvokeInput` (`name: string`, `arguments`), `McpToolInvokeResult` (`ok`, `toolName: string`, optional `result: CitedGroundedAnswer` / `error`), the `McpTool` port (`definition` + `invoke(args)`), and the `McpToolRegistry` port (`listTools` / `invoke`) define how application capabilities are exposed as MCP tools without Domain/RAG business-logic duplication and without an MCP SDK or network transport. `GenerateCitedGroundedAnswerMcpTool` injects only `GenerateCitedGroundedAnswerUseCase` and converts failures into non-throwing `ok: false` results. `DefaultMcpToolRegistry` holds a readonly `McpTool[]`, rejects duplicate names, lists definitions name-ascending, and returns structured unknown-tool errors. |
+| `tools` | Transport-independent Tool Calling boundary above MCP capability exposure. `ToolCallStatus` (`"success" \| "invalid_request" \| "unknown_tool" \| "timeout" \| "failure"`), `ToolCallRequest` (`name`, `arguments`, `timeoutMs`), `ToolCallResult` (`ok`, `status`, `toolName`, optional `result`/`error`, `durationMs`), and the `ToolExecutor` port (`execute(request): Promise<ToolCallResult>`) define validated tool-call request/result contracts without an MCP SDK, network transport, or Agent orchestrator. A concrete executor adapter is still deferred. |
 | `api` | Controllers and request/response DTOs. |
 | `http` | Framework-independent HTTP abstraction. |
 | `server` | Production server runtime and lifecycle. |
@@ -246,7 +253,7 @@ app/knowledge/
   repository/ persistence/ pipeline/
   embedding/ search/ retrieval/
   context/ prompt/ citation/ rag/
-  ai/ mcp/ application/
+  ai/ mcp/ tools/ application/
   api/ http/ server/
   composition/ config/
   evaluation/ observability/ reliability/ security/
