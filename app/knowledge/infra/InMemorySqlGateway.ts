@@ -20,6 +20,12 @@ import {
   SQL_UPSERT_KNOWLEDGE_SOURCE,
 } from "./knowledgeSourceSql";
 import {
+  SQL_DELETE_EMBEDDING_VECTOR,
+  SQL_SELECT_EMBEDDING_VECTOR_BY_CHUNK,
+  SQL_SELECT_EMBEDDING_VECTORS_BY_WORKSPACE,
+  SQL_UPSERT_EMBEDDING_VECTOR,
+} from "./embeddingVectorSql";
+import {
   SQL_CREATE_DOCUMENT_CHUNKS,
   SQL_CREATE_EMBEDDING_VECTORS,
   SQL_CREATE_KNOWLEDGE_DOCUMENTS,
@@ -49,16 +55,24 @@ type ChunkRow = {
   text: string;
 };
 
+type EmbeddingRow = {
+  workspace_id: string;
+  chunk_id: string;
+  vector_json: string;
+};
+
 /**
  * In-memory {@link SqlGateway} supporting knowledge_documents,
- * knowledge_sources, and document_chunks SQL constants used by SQL
- * repository adapters. Schema DDL from {@link knowledgeSchemaSql} is a
- * no-op. Unsupported SQL throws `"Unsupported SQL for InMemorySqlGateway"`.
+ * knowledge_sources, document_chunks, and embedding_vectors SQL constants
+ * used by SQL repository / vector index adapters. Schema DDL from
+ * {@link knowledgeSchemaSql} is a no-op. Unsupported SQL throws
+ * `"Unsupported SQL for InMemorySqlGateway"`.
  */
 export class InMemorySqlGateway implements SqlGateway {
   private readonly documents = new Map<string, DocumentRow>();
   private readonly sources = new Map<string, SourceRow>();
   private readonly chunks = new Map<string, ChunkRow>();
+  private readonly embeddings = new Map<string, EmbeddingRow>();
 
   async execute(
     sql: string,
@@ -114,6 +128,19 @@ export class InMemorySqlGateway implements SqlGateway {
     }
     if (normalized === normalizeSql(SQL_SELECT_CHUNK_OWNER_DOCUMENT_ID)) {
       return this.selectChunkOwner(params);
+    }
+
+    if (normalized === normalizeSql(SQL_UPSERT_EMBEDDING_VECTOR)) {
+      return this.upsertEmbedding(params);
+    }
+    if (normalized === normalizeSql(SQL_SELECT_EMBEDDING_VECTOR_BY_CHUNK)) {
+      return this.selectEmbeddingByChunk(params);
+    }
+    if (normalized === normalizeSql(SQL_DELETE_EMBEDDING_VECTOR)) {
+      return this.deleteEmbedding(params);
+    }
+    if (normalized === normalizeSql(SQL_SELECT_EMBEDDING_VECTORS_BY_WORKSPACE)) {
+      return this.selectEmbeddingsByWorkspace(params);
     }
 
     throw new Error("Unsupported SQL for InMemorySqlGateway");
@@ -293,6 +320,51 @@ export class InMemorySqlGateway implements SqlGateway {
       rows: [{ document_id: row.document_id }],
       rowCount: 1,
     };
+  }
+
+  private upsertEmbedding(params: readonly SqlParameter[]): SqlQueryResult {
+    this.assertParamCount(params, 3);
+    const workspaceId = this.requireStringParam(params[0], "$1");
+    const chunkId = this.requireStringParam(params[1], "$2");
+    const vectorJson = this.requireStringParam(params[2], "$3");
+    this.embeddings.set(this.key(workspaceId, chunkId), {
+      workspace_id: workspaceId,
+      chunk_id: chunkId,
+      vector_json: vectorJson,
+    });
+    return { rows: [], rowCount: 1 };
+  }
+
+  private selectEmbeddingByChunk(
+    params: readonly SqlParameter[],
+  ): SqlQueryResult {
+    this.assertParamCount(params, 2);
+    const workspaceId = this.requireStringParam(params[0], "$1");
+    const chunkId = this.requireStringParam(params[1], "$2");
+    const row = this.embeddings.get(this.key(workspaceId, chunkId));
+    if (!row) {
+      return { rows: [], rowCount: 0 };
+    }
+    return { rows: [{ ...row }], rowCount: 1 };
+  }
+
+  private deleteEmbedding(params: readonly SqlParameter[]): SqlQueryResult {
+    this.assertParamCount(params, 2);
+    const workspaceId = this.requireStringParam(params[0], "$1");
+    const chunkId = this.requireStringParam(params[1], "$2");
+    const existed = this.embeddings.delete(this.key(workspaceId, chunkId));
+    return { rows: [], rowCount: existed ? 1 : 0 };
+  }
+
+  private selectEmbeddingsByWorkspace(
+    params: readonly SqlParameter[],
+  ): SqlQueryResult {
+    this.assertParamCount(params, 1);
+    const workspaceId = this.requireStringParam(params[0], "$1");
+    const rows = [...this.embeddings.values()]
+      .filter((row) => row.workspace_id === workspaceId)
+      .map((row) => ({ ...row }));
+    return { rows, rowCount: rows.length };
   }
 
   private key(workspaceId: string, id: string): string {

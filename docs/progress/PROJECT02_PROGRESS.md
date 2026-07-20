@@ -2783,7 +2783,7 @@ Completed
 2026-07-20
 
 **Commit**
-Pending
+018e311
 
 **Title**
 Add SqlVectorIndex adapter
@@ -2795,6 +2795,32 @@ Add SqlVectorIndex adapter
 
 **Validation**
 - `pnpm validate:embedding:index`
+- `pnpm validate:infra:knowledge-schema`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
+## Task 104
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Extend InMemorySqlGateway for embedding vector SQL and validate
+
+**Summary**
+- Extended InMemorySqlGateway with embedding_vectors store and SQL constant support
+- Added `runSqlVectorIndexValidation` mirroring InMemoryVectorIndex contracts
+- Wired `validate:embedding:sql-index` into top-level validate
+
+**Validation**
+- `pnpm validate:embedding:index`
+- `pnpm validate:embedding:sql-index`
 - `pnpm validate:infra:knowledge-schema`
 - `pnpm typecheck`
 - `pnpm validate`
