@@ -3107,3 +3107,27 @@ Add OpenAI-compatible HttpLanguageModelProvider
 **Status**
 Completed
 
+## Task 116
+
+**Date**
+2026-07-21
+
+**Commit**
+191224f
+
+**Title**
+Add Fake transport validation and optional live-skip runner
+
+**Summary**
+- Added `validate:ai:http-provider` with FakeLlmHttpTransport (request shape + error mapping)
+- Added optional `validate:ai:http-provider-live` (skip without LLM_API_KEY; not in top-level validate)
+
+**Validation**
+- `pnpm validate:ai:http-provider`
+- `pnpm validate:ai:fake-provider`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
