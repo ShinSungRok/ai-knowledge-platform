@@ -139,8 +139,15 @@ export type {
 } from "./rag";
 export { DefaultGroundedAnswerAssembler } from "./rag";
 export { KNOWLEDGE_MODULE_AI } from "./ai";
-export type { GeneratedText, LanguageModelProvider } from "./ai";
-export { FakeLanguageModelProvider } from "./ai";
+export type {
+  GeneratedText,
+  LanguageModelProvider,
+  LlmHttpProviderConfig,
+  LlmHttpRequest,
+  LlmHttpResponse,
+  LlmHttpTransport,
+} from "./ai";
+export { FakeLanguageModelProvider, loadLlmHttpProviderConfig } from "./ai";
 export { KNOWLEDGE_MODULE_MCP } from "./mcp";
 export type {
   McpToolName,

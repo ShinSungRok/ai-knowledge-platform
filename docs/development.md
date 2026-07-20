@@ -53,6 +53,7 @@ pnpm validate:application:prompt # BuildGroundedPromptUseCase RetrieveGroundingC
 pnpm validate:application:generate-text # GenerateGroundedTextUseCase BuildGroundedPromptUseCase -> LanguageModelProvider delegation sequence
 pnpm validate:ai:provider-contract # LanguageModelProvider/GeneratedText contract export + type-compatibility
 pnpm validate:ai:fake-provider # FakeLanguageModelProvider dependency-free, deterministic prompt-echo behavior
+pnpm validate:ai:http-provider-contract # LlmHttpProviderConfig loader + LlmHttpTransport Fake contract
 pnpm validate:rag:answer-contract # GroundedAnswerAssembler/GroundedAnswer/GroundedAnswerAssemblyInput contract export + type-compatibility
 pnpm validate:rag:answer-assembler # DefaultGroundedAnswerAssembler insufficient-evidence policy and evidence-preserving assembly
 pnpm validate:application:grounded-answer # GenerateGroundedAnswerUseCase evidence-gated orchestration of retrieval, prompt, generation, and answer assembly

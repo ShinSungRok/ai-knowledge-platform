@@ -3058,3 +3058,28 @@ Wire auth into listening operations factory and update roadmap
 
 **Status**
 Completed
+
+## Task 114
+
+**Date**
+2026-07-21
+
+**Commit**
+507d2cd
+
+**Title**
+Define LLM HTTP provider config and transport contract
+
+**Summary**
+- Added `LlmHttpProviderConfig` / `loadLlmHttpProviderConfig` and `LlmHttpTransport` request/response types
+- Added `validate:ai:http-provider-contract` with Fake transport; no official LLM SDK
+
+**Validation**
+- `pnpm validate:ai:provider-contract`
+- `pnpm validate:ai:http-provider-contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

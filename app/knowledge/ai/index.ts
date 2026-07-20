@@ -3,16 +3,20 @@
  *
  * AI provider abstraction (fake + real providers).
  *
- * `GeneratedText` (Task 41) is the plain output of an LLM generation
- * call (`text: string`, not yet a grounded answer or citation);
+ * `GeneratedText` is the plain output of an LLM generation call;
  * `LanguageModelProvider` is the port that produces one from a
- * `GroundedPrompt` — its only prompt input. `FakeLanguageModelProvider`
- * (Task 42) is a deterministic, dependency-free adapter for validating
- * the contract and downstream flow without network, an API key, or a
- * model SDK; a real provider is a later task.
+ * `GroundedPrompt`. `FakeLanguageModelProvider` is a deterministic,
+ * dependency-free adapter. `LlmHttpProviderConfig` / `LlmHttpTransport`
+ * define an OpenAI-compatible HTTP path without an official SDK;
+ * concrete HTTP adapters are separate tasks.
  */
 export const KNOWLEDGE_MODULE_AI = "app/knowledge/ai" as const;
 
 export type { GeneratedText } from "./GeneratedText";
 export type { LanguageModelProvider } from "./LanguageModelProvider";
 export { FakeLanguageModelProvider } from "./FakeLanguageModelProvider";
+export type { LlmHttpProviderConfig } from "./LlmHttpProviderConfig";
+export { loadLlmHttpProviderConfig } from "./loadLlmHttpProviderConfig";
+export type { LlmHttpRequest } from "./LlmHttpRequest";
+export type { LlmHttpResponse } from "./LlmHttpResponse";
+export type { LlmHttpTransport } from "./LlmHttpTransport";
