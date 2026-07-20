@@ -50,8 +50,9 @@ pnpm validate:ai:provider-contract # LanguageModelProvider/GeneratedText contrac
 pnpm validate:ai:fake-provider # FakeLanguageModelProvider dependency-free, deterministic prompt-echo behavior
 pnpm validate:rag:answer-contract # GroundedAnswerAssembler/GroundedAnswer/GroundedAnswerAssemblyInput contract export + type-compatibility
 pnpm validate:rag:answer-assembler # DefaultGroundedAnswerAssembler insufficient-evidence policy and evidence-preserving assembly
+pnpm validate:application:grounded-answer # GenerateGroundedAnswerUseCase evidence-gated orchestration of retrieval, prompt, generation, and answer assembly
 pnpm typecheck                 # TypeScript strict check
-pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application (incl. grounding-context + prompt + generate-text) + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + search:hybrid + search:rerank-contract + search:reranker + search:reranked + context:contract + context:assembler + prompt:contract + prompt:builder + ai:provider-contract + ai:fake-provider + rag:answer-contract + rag:answer-assembler + typecheck
+pnpm validate                  # skeleton + repository + repository:source + repository:chunk + application (incl. grounding-context + prompt + generate-text + grounded-answer) + pipeline:connector + pipeline:sync + pipeline:chunk-document + pipeline:rechunk-source + pipeline:embed-document + pipeline:reindex-source + embedding:chunker + embedding:provider + embedding:index + retrieval:vector + search:keyword + search:hybrid + search:rerank-contract + search:reranker + search:reranked + context:contract + context:assembler + prompt:contract + prompt:builder + ai:provider-contract + ai:fake-provider + rag:answer-contract + rag:answer-assembler + typecheck
 ```
 
 Formal unit/integration/e2e suites under `tests/` are reserved for later

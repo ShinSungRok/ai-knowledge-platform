@@ -568,6 +568,39 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   Citation formatting/identifiers, generated-text factuality
   evaluation, and any provider/prompt/retrieval change are out of scope
   for this adapter.
+- `GenerateGroundedAnswerUseCase` (`app/knowledge/application`)
+  combines grounding-context retrieval, prompt construction, LLM
+  generation, and evidence-bound answer assembly behind one
+  application-boundary entry point: its constructor injects only
+  `RetrieveGroundingContextUseCase`, the `PromptBuilder` port, the
+  `LanguageModelProvider` port, and the `GroundedAnswerAssembler` port
+  — never a concrete adapter, and never the standalone
+  `BuildGroundedPromptUseCase`/`GenerateGroundedTextUseCase` use cases
+  (this use case orchestrates the same retrieval-context/generated-text
+  flow directly instead, so it can bind the exact same context and
+  generated text together as one answer's evidence — reusing those
+  other use cases would retrieve/generate twice and risk mismatched
+  evidence). It validates its own `GenerateGroundedAnswerInput`
+  (`workspaceId`/`query`/`retrievalLimit`/`maxCharacters`) at the
+  application boundary, then always calls
+  `RetrieveGroundingContextUseCase.execute` first. When the returned
+  `GroundingContext.blocks` is empty, `PromptBuilder.build` and
+  `LanguageModelProvider.generate` are **never called** — it calls
+  `GroundedAnswerAssembler.assemble({ context, generatedText: { text:
+  "" } })` directly, so no generation happens and no generated text can
+  be smuggled into an answer for a query with no evidence. When
+  `GroundingContext.blocks` has at least one entry, it calls
+  `PromptBuilder.build(context)` → `LanguageModelProvider.generate(prompt)`
+  → `GroundedAnswerAssembler.assemble({ context, generatedText })` in
+  that order, and returns the resulting `GroundedAnswer` unchanged. The
+  existing `BuildGroundedPromptUseCase` and `GenerateGroundedTextUseCase`
+  (and their own retrieval-then-prompt-building /
+  prompt-then-generation flows) are unaffected by this use case; this
+  is the third use case in this codebase to depend on another use case
+  (`RetrieveGroundingContextUseCase`) rather than only on ports.
+  Citation generation/display, a real LLM provider, streaming, token
+  usage, factuality scoring, evaluation datasets, and HTTP/API/
+  composition-root wiring are all out of scope for this use case.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -580,4 +613,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   prompt:contract + prompt:builder + application:grounding-context +
   application:prompt + ai:provider-contract + ai:fake-provider +
   application:generate-text + rag:answer-contract +
-  rag:answer-assembler + typecheck).
+  rag:answer-assembler + application:grounded-answer + typecheck).

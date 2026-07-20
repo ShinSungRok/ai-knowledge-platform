@@ -22,6 +22,7 @@ export {
   RetrieveGroundingContextUseCase,
   BuildGroundedPromptUseCase,
   GenerateGroundedTextUseCase,
+  GenerateGroundedAnswerUseCase,
 } from "./application";
 export type {
   ListKnowledgeDocumentsInput,
@@ -43,6 +44,7 @@ export type {
   RetrieveGroundingContextInput,
   BuildGroundedPromptInput,
   GenerateGroundedTextInput,
+  GenerateGroundedAnswerInput,
 } from "./application";
 export { KNOWLEDGE_MODULE_REPOSITORY } from "./repository";
 export type {

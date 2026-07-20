@@ -1225,3 +1225,37 @@ Add deterministic grounded answer assembler
 
 **Status**
 Completed
+
+## Task 46
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add generate grounded answer use case
+
+**Summary**
+- Added `GenerateGroundedAnswerUseCase` + its own `GenerateGroundedAnswerInput` (`workspaceId`, `query`, `retrievalLimit`, `maxCharacters`) to `application`
+- Constructor injects only `RetrieveGroundingContextUseCase`, `PromptBuilder`, `LanguageModelProvider`, and `GroundedAnswerAssembler` — never a concrete adapter, and never the standalone `BuildGroundedPromptUseCase`/`GenerateGroundedTextUseCase` use cases, since this use case must orchestrate the same retrieval-context/generated-text flow directly to bind the exact same context and generated text together as one answer's evidence
+- `execute` validates `workspaceId`/`query`/`retrievalLimit`/`maxCharacters` at the application boundary, then always calls `RetrieveGroundingContextUseCase.execute` first
+- When the returned `GroundingContext.blocks` is empty, `PromptBuilder.build` and `LanguageModelProvider.generate` are **never called** — `GroundedAnswerAssembler.assemble({ context, generatedText: { text: "" } })` is called directly, so no generation happens and no generated text can be smuggled into an answer for a query with no evidence
+- When `GroundingContext.blocks` has at least one entry, `PromptBuilder.build(context)` → `LanguageModelProvider.generate(prompt)` → `GroundedAnswerAssembler.assemble({ context, generatedText })` are called in that order, and the resulting `GroundedAnswer` is returned unchanged
+- This is the third use case in this codebase to depend on another use case (`RetrieveGroundingContextUseCase`) rather than only on ports; the existing `BuildGroundedPromptUseCase` and `GenerateGroundedTextUseCase` are unaffected
+- Exported the use case + input type from the `application` and top-level `app/knowledge` barrels
+- Added `runGenerateGroundedAnswerUseCaseValidation.ts` (a static source-scan confirming the use case only imports its four declared dependencies and never a concrete adapter or the standalone prompt/text use cases; a real-harness test with a `CountingRetrieveGroundingContextUseCase` — subclassing `RetrieveGroundingContextUseCase` since its private fields make it non-structurally-typed, built with dummy port stubs passed to `super()` and fully overriding `execute` to delegate to a real inner instance — plus counting wrappers for `PromptBuilder`/`LanguageModelProvider`/`GroundedAnswerAssembler`, proving the evidence-present call order across all four dependencies, exact input mapping at each step, and an unchanged `GroundedAnswer` result matching a direct call sequence; a second case proving the evidence-absent short-circuit never calls the prompt builder or provider and passes an empty generated text to the assembler; invalid input rejected before any dependency is called) + `tests/unit/generateGroundedAnswerUseCase.cases.ts`, wired into `validate:application:grounded-answer`, `validate:application` (and therefore the top-level `validate` chain)
+- Updated `docs/architecture.md`/`docs/modules.md`/`docs/development.md` to describe the new use case; no citation generation/display, real LLM provider, streaming, token usage, factuality scoring, evaluation dataset, HTTP/API/composition-root wiring, or existing standalone prompt/text use case behavior change introduced
+
+**Validation**
+- `pnpm validate:application:grounding-context`
+- `pnpm validate:prompt:builder`
+- `pnpm validate:ai:fake-provider`
+- `pnpm validate:rag:answer-assembler`
+- `pnpm validate:application:grounded-answer`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

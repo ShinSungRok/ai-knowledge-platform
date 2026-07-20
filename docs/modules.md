@@ -155,7 +155,17 @@ message "The available knowledge does not contain enough information."
 with empty `evidence` and `insufficientEvidence: true`; when
 `context.blocks` has at least one entry (even a truncated context) it
 returns `generatedText.text` unchanged plus a defensive copy of
-`context.blocks` as `evidence`, with `insufficientEvidence: false`.
+`context.blocks` as `evidence`, with `insufficientEvidence: false`. Task
+46 adds `GenerateGroundedAnswerUseCase` to `application`, injecting the
+grounding-context retrieval use case plus the prompt builder, LLM
+provider, and grounded-answer assembler ports: it always resolves the
+grounding context first, then — only if that context carries at least
+one evidence block — builds a prompt and generates text from it before
+handing both the context and the generated text to the assembler;
+when the context has no evidence, the prompt builder and LLM provider
+are never called, and the assembler is called with an empty generated
+text so its insufficient-evidence policy is what decides the final
+answer.
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules

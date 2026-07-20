@@ -61,3 +61,7 @@ export {
   GenerateGroundedTextUseCase,
   type GenerateGroundedTextInput,
 } from "./GenerateGroundedTextUseCase";
+export {
+  GenerateGroundedAnswerUseCase,
+  type GenerateGroundedAnswerInput,
+} from "./GenerateGroundedAnswerUseCase";
