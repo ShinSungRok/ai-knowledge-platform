@@ -2059,3 +2059,31 @@ Add retrieval evaluator and run use case
 
 **Status**
 Completed
+
+## Task 76
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add grounding evaluator and run use case
+
+**Summary**
+- Added `DefaultGroundingEvaluator` (insufficient-evidence compliance; only `expectInsufficientEvidence=true` cases)
+- Added `RunGroundingEvaluationUseCase` (GenerateGroundedAnswerUseCase + GroundingEvaluator only)
+- Wired `validate:evaluation:grounding` and `validate:application:eval-grounding`; updated barrels/docs
+- No citation evaluator or composition wiring
+
+**Validation**
+- `pnpm validate:application:grounded-answer`
+- `pnpm validate:evaluation:grounding`
+- `pnpm validate:application:eval-grounding`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

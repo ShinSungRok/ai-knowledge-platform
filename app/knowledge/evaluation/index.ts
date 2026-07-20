@@ -10,9 +10,10 @@
  * corpus loaders, network, and LLM-as-judge are out of scope.
  *
  * `DefaultRetrievalEvaluator` scores Hit@K / MRR deterministically from
- * pre-fetched retrieval results. `RunRetrievalEvaluationUseCase`
- * (application) runs hybrid retrieval per case then delegates to the
- * evaluator port.
+ * pre-fetched retrieval results. `DefaultGroundingEvaluator` scores
+ * insufficient-evidence compliance. Application run use cases execute
+ * hybrid retrieval or grounded-answer generation per case then delegate
+ * to evaluator ports. Citation evaluator adapters remain later.
  */
 export const KNOWLEDGE_MODULE_EVALUATION = "app/knowledge/evaluation" as const;
 
@@ -38,3 +39,4 @@ export type {
   CitationEvaluator,
 } from "./CitationEvaluator";
 export { DefaultRetrievalEvaluator } from "./DefaultRetrievalEvaluator";
+export { DefaultGroundingEvaluator } from "./DefaultGroundingEvaluator";

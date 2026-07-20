@@ -868,10 +868,12 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   pre-fetched `RetrievalResult` / `GroundedAnswer` / `CitedGroundedAnswer`
   artifacts without duplicating Domain/RAG logic. `DefaultRetrievalEvaluator`
   computes Hit@K and MRR with no constructor dependencies;
-  `RunRetrievalEvaluationUseCase` injects only
-  `RetrieveHybridKnowledgeChunksUseCase` and `RetrievalEvaluator`.
-  Grounding/citation adapters, real corpus loaders, and LLM-as-judge remain
-  later tasks.
+  `DefaultGroundingEvaluator` scores insufficient-evidence compliance
+  (`insufficientEvidence` + empty evidence only).
+  `RunRetrievalEvaluationUseCase` / `RunGroundingEvaluationUseCase`
+  inject only their application use case + evaluator port.
+  Citation adapters, real corpus loaders, and LLM-as-judge remain later
+  tasks.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +

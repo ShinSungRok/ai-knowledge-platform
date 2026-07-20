@@ -106,3 +106,7 @@ export {
   RunRetrievalEvaluationUseCase,
   type RunRetrievalEvaluationInput,
 } from "./RunRetrievalEvaluationUseCase";
+export {
+  RunGroundingEvaluationUseCase,
+  type RunGroundingEvaluationInput,
+} from "./RunGroundingEvaluationUseCase";
