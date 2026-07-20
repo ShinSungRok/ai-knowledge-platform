@@ -25,15 +25,25 @@ pnpm validate:project:closeout
 
 ## Local runtime
 
-In-process operations entry (dispatch only, no TCP):
+In-process operations entry (dispatch only, no TCP). Cited-answer requires
+`Authorization: Bearer <api-key>`; `/health` stays public:
 
 ```ts
 import { createOperationsKnowledgeServer } from "./app/knowledge";
 
 const { server, composition, logger, metrics } =
-  createOperationsKnowledgeServer();
+  createOperationsKnowledgeServer({
+    apiKeys: {
+      "demo-key": { subject: "demo-user", workspaceId: "workspace-a" },
+    },
+  });
 await server.start();
-// server.dispatch({ method, path, headers, body })
+await server.dispatch({
+  method: "POST",
+  path: "/workspaces/workspace-a/cited-answers",
+  headers: { Authorization: "Bearer demo-key" },
+  body: { query: "example" },
+});
 await server.stop();
 ```
 
@@ -42,9 +52,14 @@ TCP listen via built-in `node:http` (default validate uses `127.0.0.1:0`):
 ```ts
 import { createListeningOperationsServer } from "./app/knowledge";
 
-const listening = createListeningOperationsServer();
+const listening = createListeningOperationsServer({
+  apiKeys: {
+    "demo-key": { subject: "demo-user", workspaceId: "workspace-a" },
+  },
+});
 const { host, port } = await listening.start();
-// GET http://127.0.0.1:<port>/health
+// GET http://127.0.0.1:<port>/health  (no auth)
+// POST .../cited-answers with Authorization: Bearer demo-key
 await listening.stop();
 ```
 
@@ -57,7 +72,8 @@ local/production use. Baseline without observability wrapping:
 - Real Postgres / OpenSearch adapters (SQL/Fake paths validated; real `pg`
   live optional; OpenSearch client deferred)
 - Real LLM SDK and MCP network transport
-- Express/Fastify, AuthN / OTel exporters (`NodeHttpListener` is available)
+- Express/Fastify, JWT/OIDC AuthN, OTel exporters
+  (`NodeHttpListener` + API Key/Bearer AuthN are available)
 
 ## Layout
 

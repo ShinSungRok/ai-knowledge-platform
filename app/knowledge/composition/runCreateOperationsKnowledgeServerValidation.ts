@@ -1,11 +1,15 @@
 import type { DocumentChunk } from "../domain/DocumentChunk";
 import type { KnowledgeDocument } from "../domain/KnowledgeDocument";
 import { FakeEmbeddingProvider } from "../embedding/FakeEmbeddingProvider";
-import { IN_MEMORY_SERVER_TEST_API_KEY } from "./createInMemoryKnowledgeServer";
 import { createOperationsKnowledgeServer } from "./createOperationsKnowledgeServer";
 import { KNOWLEDGE_MODULE_COMPOSITION } from "./index";
 
 const WORKSPACE_A = "workspace-a";
+const TEST_API_KEY = "test-api-key";
+
+const TEST_API_KEYS = {
+  [TEST_API_KEY]: { subject: "test-user", workspaceId: WORKSPACE_A },
+} as const;
 
 function assertTruthy(value: unknown, message: string): void {
   if (!value) {
@@ -69,7 +73,7 @@ async function assertOperationsServerDispatch(): Promise<void> {
     "[composition] createOperationsKnowledgeServer dispatches health/cited-answer with logs and metrics...",
   );
   const { server, composition, logger, metrics } =
-    createOperationsKnowledgeServer();
+    createOperationsKnowledgeServer({ apiKeys: TEST_API_KEYS });
   await seed(composition);
   await server.start();
 
@@ -83,7 +87,7 @@ async function assertOperationsServerDispatch(): Promise<void> {
   const cited = await server.dispatch({
     method: "POST",
     path: `/workspaces/${WORKSPACE_A}/cited-answers`,
-    headers: { Authorization: `Bearer ${IN_MEMORY_SERVER_TEST_API_KEY}` },
+    headers: { Authorization: `Bearer ${TEST_API_KEY}` },
     body: { query: "aaaaaaaa", retrievalLimit: 5, maxCharacters: 10_000 },
   });
   assertEqual(cited.status, 200, "cited-answer");
@@ -106,7 +110,9 @@ async function assertUnauthorizedWithoutBearer(): Promise<void> {
   console.log(
     "[composition] operations server enforces Bearer AuthN on cited-answer...",
   );
-  const { server } = createOperationsKnowledgeServer();
+  const { server } = createOperationsKnowledgeServer({
+    apiKeys: TEST_API_KEYS,
+  });
   await server.start();
   const response = await server.dispatch({
     method: "POST",

@@ -11,11 +11,11 @@ import type { HttpListenConfig } from "../server/HttpListenConfig";
 import type { HttpListener } from "../server/HttpListener";
 import { NodeHttpListener } from "../server/NodeHttpListener";
 import { ApiKeyAuthenticator } from "../security/ApiKeyAuthenticator";
+import type { ApiKeyPrincipalEntry } from "../security/ApiKeyAuthenticator";
 import { DefaultWorkspaceAuthorizer } from "../security/DefaultWorkspaceAuthorizer";
 import { HttpBearerGuard } from "../security/HttpBearerGuard";
 import { createInMemoryKnowledgeComposition } from "./createInMemoryKnowledgeComposition";
 import type { InMemoryKnowledgeComposition } from "./InMemoryKnowledgeComposition";
-import { IN_MEMORY_SERVER_TEST_API_KEY } from "./createInMemoryKnowledgeServer";
 
 const DEFAULT_LISTEN: HttpListenConfig = {
   host: "127.0.0.1",
@@ -23,6 +23,7 @@ const DEFAULT_LISTEN: HttpListenConfig = {
 };
 
 export type CreateListeningOperationsServerOptions = {
+  apiKeys: Readonly<Record<string, ApiKeyPrincipalEntry>>;
   config?: KnowledgeRuntimeConfig;
   listen?: HttpListenConfig;
 };
@@ -39,22 +40,17 @@ export type ListeningOperationsServer = {
 /**
  * Operations wiring with {@link NodeHttpListener} for TCP listen.
  * Cited-answer requires Bearer API key AuthN.
- * Default listen is `{ host: "127.0.0.1", port: 0 }`.
+ * `apiKeys` is required. Default listen is `{ host: "127.0.0.1", port: 0 }`.
  */
 export function createListeningOperationsServer(
-  options: CreateListeningOperationsServerOptions = {},
+  options: CreateListeningOperationsServerOptions,
 ): ListeningOperationsServer {
   const config = options.config ?? DEFAULT_KNOWLEDGE_RUNTIME_CONFIG;
   const listenConfig = options.listen ?? DEFAULT_LISTEN;
   const composition = createInMemoryKnowledgeComposition(config);
   const logger = new InMemoryLogger();
   const metrics = new InMemoryMetrics();
-  const authenticator = new ApiKeyAuthenticator({
-    [IN_MEMORY_SERVER_TEST_API_KEY]: {
-      subject: "test-user",
-      workspaceId: "workspace-a",
-    },
-  });
+  const authenticator = new ApiKeyAuthenticator(options.apiKeys);
   const bearerGuard = new HttpBearerGuard(authenticator);
   const workspaceAuthorizer = new DefaultWorkspaceAuthorizer();
   const innerRouter = createKnowledgeHttpRouter(

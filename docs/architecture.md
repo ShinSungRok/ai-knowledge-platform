@@ -901,8 +901,9 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   `ApiKeyAuthenticator`, `HttpBearerGuard`, `DefaultWorkspaceAuthorizer`, and
   `HttpWorkspaceGuard`; cited-answer HTTP requires
   `Authorization: Bearer <api-key>` then workspace AuthZ against the principal.
-- `ObservingHttpRouter` and `createOperationsKnowledgeServer` wire
-  logging/metrics/AuthN+AuthZ for operations-ready in-process dispatch.
+- `ObservingHttpRouter` and `createOperationsKnowledgeServer` /
+  `createListeningOperationsServer` wire logging/metrics/AuthN+AuthZ;
+  both factories require `apiKeys` for Bearer API key AuthN.
   `validate:deployment:readiness` checks Docker/docs/scripts statically
   without a Docker daemon.
 - Real TCP listen / Express/Fastify and real AI provider wiring are not

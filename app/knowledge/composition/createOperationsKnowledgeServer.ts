@@ -9,34 +9,36 @@ import { InMemoryMetrics } from "../observability/InMemoryMetrics";
 import { DefaultKnowledgeServer } from "../server/DefaultKnowledgeServer";
 import type { KnowledgeServer } from "../server/KnowledgeServer";
 import { ApiKeyAuthenticator } from "../security/ApiKeyAuthenticator";
+import type { ApiKeyPrincipalEntry } from "../security/ApiKeyAuthenticator";
 import { DefaultWorkspaceAuthorizer } from "../security/DefaultWorkspaceAuthorizer";
 import { HttpBearerGuard } from "../security/HttpBearerGuard";
 import { createInMemoryKnowledgeComposition } from "./createInMemoryKnowledgeComposition";
 import type { InMemoryKnowledgeComposition } from "./InMemoryKnowledgeComposition";
-import { IN_MEMORY_SERVER_TEST_API_KEY } from "./createInMemoryKnowledgeServer";
+
+export type CreateOperationsKnowledgeServerOptions = {
+  apiKeys: Readonly<Record<string, ApiKeyPrincipalEntry>>;
+  config?: KnowledgeRuntimeConfig;
+};
 
 /**
  * Operations-ready in-memory server: composition + Bearer AuthN +
  * workspace AuthZ + observing HTTP router + {@link DefaultKnowledgeServer}.
  * Baseline without observability remains {@link createInMemoryKnowledgeServer}.
+ * `apiKeys` is required (empty map → all cited-answer calls 401).
  */
 export function createOperationsKnowledgeServer(
-  config: KnowledgeRuntimeConfig = DEFAULT_KNOWLEDGE_RUNTIME_CONFIG,
+  options: CreateOperationsKnowledgeServerOptions,
 ): {
   server: KnowledgeServer;
   composition: InMemoryKnowledgeComposition;
   logger: InMemoryLogger;
   metrics: InMemoryMetrics;
 } {
+  const config = options.config ?? DEFAULT_KNOWLEDGE_RUNTIME_CONFIG;
   const composition = createInMemoryKnowledgeComposition(config);
   const logger = new InMemoryLogger();
   const metrics = new InMemoryMetrics();
-  const authenticator = new ApiKeyAuthenticator({
-    [IN_MEMORY_SERVER_TEST_API_KEY]: {
-      subject: "test-user",
-      workspaceId: "workspace-a",
-    },
-  });
+  const authenticator = new ApiKeyAuthenticator(options.apiKeys);
   const bearerGuard = new HttpBearerGuard(authenticator);
   const workspaceAuthorizer = new DefaultWorkspaceAuthorizer();
   const innerRouter = createKnowledgeHttpRouter(

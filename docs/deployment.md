@@ -49,16 +49,25 @@ For local Operations exercises without TCP listen:
 import { createOperationsKnowledgeServer } from "./app/knowledge";
 
 const { server, composition, logger, metrics } =
-  createOperationsKnowledgeServer();
+  createOperationsKnowledgeServer({
+    apiKeys: {
+      "demo-key": { subject: "demo-user", workspaceId: "workspace-a" },
+    },
+  });
 await server.start();
-// dispatch HttpRequest values in-process; inspect logger/metrics
+await server.dispatch({
+  method: "POST",
+  path: "/workspaces/workspace-a/cited-answers",
+  headers: { Authorization: "Bearer demo-key" },
+  body: { query: "example" },
+});
 await server.stop();
 ```
 
 `createOperationsKnowledgeServer` wires in-memory composition, Bearer
 AuthN (`Authorization: Bearer <api-key>`) plus workspace AuthZ,
 `ObservingHttpRouter` (request logs +
-`http.requests` metrics), and `DefaultKnowledgeServer`.
+`http.requests` metrics), and `DefaultKnowledgeServer`. `apiKeys` is required.
 
 Baseline without observability wrapping remains
 `createInMemoryKnowledgeServer`.
@@ -72,11 +81,16 @@ For TCP listen use `createListeningOperationsServer` (below).
 import { createListeningOperationsServer } from "./app/knowledge";
 
 const listening = createListeningOperationsServer({
+  apiKeys: {
+    "demo-key": { subject: "demo-user", workspaceId: "workspace-a" },
+  },
   // default: { host: "127.0.0.1", port: 0 } — ephemeral; specify port in prod
   listen: { host: "127.0.0.1", port: 0 },
 });
 const address = await listening.start();
-// GET http://127.0.0.1:<address.port>/health
+// GET http://127.0.0.1:<address.port>/health  (public)
+// POST /workspaces/workspace-a/cited-answers
+//   Authorization: Bearer demo-key
 await listening.stop();
 ```
 
@@ -128,4 +142,5 @@ const composition = await createPostgresKnowledgeComposition({ pool });
 - No production host, CI deploy pipeline, or secrets management yet.
 - Compose services are placeholders aligned with Project1's infra shape.
 - Express/Fastify not used; TCP listen is `NodeHttpListener` (`node:http`).
+- API Key/Bearer AuthN is wired for cited-answer; JWT/OIDC remain deferred.
 - OpenTelemetry/Prometheus exporters are not included.

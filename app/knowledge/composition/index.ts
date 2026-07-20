@@ -27,6 +27,9 @@ export type { SqlDocumentKnowledgeComposition } from "./SqlDocumentKnowledgeComp
 export type { SqlKnowledgeComposition } from "./SqlKnowledgeComposition";
 export type { CreatePostgresKnowledgeCompositionOptions } from "./createPostgresKnowledgeComposition";
 export type {
+  CreateOperationsKnowledgeServerOptions,
+} from "./createOperationsKnowledgeServer";
+export type {
   CreateListeningOperationsServerOptions,
   ListeningOperationsServer,
 } from "./createListeningOperationsServer";

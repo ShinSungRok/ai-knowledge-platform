@@ -231,13 +231,17 @@ export { DefaultKnowledgeServer, NodeHttpListener } from "./server";
 export { KNOWLEDGE_MODULE_COMPOSITION } from "./composition";
 export type { KnowledgeRuntime, InMemoryKnowledgeComposition } from "./composition";
 export { createInMemoryKnowledgeComposition } from "./composition";
-export { createInMemoryKnowledgeServer } from "./composition";
 export { createOperationsKnowledgeServer } from "./composition";
 export type {
+  CreateOperationsKnowledgeServerOptions,
   CreateListeningOperationsServerOptions,
   ListeningOperationsServer,
 } from "./composition";
 export { createListeningOperationsServer } from "./composition";
+export {
+  createInMemoryKnowledgeServer,
+  IN_MEMORY_SERVER_TEST_API_KEY,
+} from "./composition";
 export type { SqlDocumentKnowledgeComposition } from "./composition";
 export { createSqlDocumentKnowledgeComposition } from "./composition";
 export type { SqlKnowledgeComposition } from "./composition";

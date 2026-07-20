@@ -3012,7 +3012,7 @@ Completed
 2026-07-20
 
 **Commit**
-13857ca
+1d5a4de
 
 **Title**
 Wire AuthN into cited-answer HTTP path
@@ -3032,3 +3032,29 @@ Wire AuthN into cited-answer HTTP path
 **Status**
 Completed
 
+## Task 113
+
+**Date**
+2026-07-20
+
+**Commit**
+edc05a5
+
+**Title**
+Wire auth into listening operations factory and update roadmap
+
+**Summary**
+- `createOperationsKnowledgeServer` / `createListeningOperationsServer` require `apiKeys`
+- README/deployment Bearer examples; roadmap AuthN → Partial (JWT/OIDC deferred)
+- Sprint 26 task range recorded
+
+**Validation**
+- `pnpm validate:api:cited-answer`
+- `pnpm validate:composition:operations`
+- `pnpm validate:composition:listening-operations`
+- `pnpm validate:project:closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
