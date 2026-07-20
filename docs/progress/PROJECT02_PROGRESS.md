@@ -2652,7 +2652,7 @@ Completed
 2026-07-20
 
 **Commit**
-Pending
+f644987
 
 **Title**
 Define knowledge schema SQL and apply helper
@@ -2667,6 +2667,31 @@ Define knowledge schema SQL and apply helper
 - `pnpm validate:repository:sql-document`
 - `pnpm validate:repository:sql-source`
 - `pnpm validate:repository:sql-chunk`
+- `pnpm validate:infra:knowledge-schema`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
+## Task 99
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add PostgresSqlGateway with pg driver
+
+**Summary**
+- Added runtime `pg` and `@types/pg`; defined `PostgresPool` structural interface
+- Added `PostgresSqlGateway` implementing `SqlGateway` via bound `pool.query`
+- Exported from infra/top-level barrels; no live DB validation in this task
+
+**Validation**
+- `pnpm validate:infra:sql-gateway-contract`
 - `pnpm validate:infra:knowledge-schema`
 - `pnpm typecheck`
 - `pnpm validate`

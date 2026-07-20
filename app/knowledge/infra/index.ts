@@ -5,15 +5,18 @@
  * scaffolding. Defines the {@link SqlGateway} contract (`execute` with
  * bound {@link SqlParameter}s returning {@link SqlQueryResult}) used by
  * SQL-backed repository adapters. Schema DDL lives in
- * `knowledgeSchemaSql` / `applyKnowledgeSchema`. Real `pg` drivers remain
- * deferred; validation uses an in-memory gateway (Sprint 21+).
+ * `knowledgeSchemaSql` / `applyKnowledgeSchema`. `PostgresSqlGateway`
+ * adapts a {@link PostgresPool} (`pg.Pool`-compatible). Default validate
+ * stays on `InMemorySqlGateway` without a live database.
  */
 export const KNOWLEDGE_MODULE_INFRA = "app/knowledge/infra" as const;
 
 export type { SqlParameter } from "./SqlParameter";
 export type { SqlQueryResult } from "./SqlQueryResult";
 export type { SqlGateway } from "./SqlGateway";
+export type { PostgresPool } from "./PostgresPool";
 export { InMemorySqlGateway } from "./InMemorySqlGateway";
+export { PostgresSqlGateway } from "./PostgresSqlGateway";
 export { applyKnowledgeSchema } from "./applyKnowledgeSchema";
 export {
   SQL_CREATE_KNOWLEDGE_SOURCES,

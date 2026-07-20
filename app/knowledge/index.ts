@@ -276,8 +276,17 @@ export { KNOWLEDGE_MODULE_SECURITY } from "./security";
 export type { WorkspaceAuthorizer } from "./security";
 export { DefaultWorkspaceAuthorizer, HttpWorkspaceGuard } from "./security";
 export { KNOWLEDGE_MODULE_INFRA } from "./infra";
-export type { SqlParameter, SqlQueryResult, SqlGateway } from "./infra";
-export { InMemorySqlGateway, applyKnowledgeSchema } from "./infra";
+export type {
+  SqlParameter,
+  SqlQueryResult,
+  SqlGateway,
+  PostgresPool,
+} from "./infra";
+export {
+  InMemorySqlGateway,
+  PostgresSqlGateway,
+  applyKnowledgeSchema,
+} from "./infra";
 export {
   SQL_CREATE_KNOWLEDGE_SOURCES,
   SQL_CREATE_KNOWLEDGE_DOCUMENTS,

@@ -79,8 +79,9 @@ await applyKnowledgeSchema(gateway);
 ```
 
 `CREATE TABLE IF NOT EXISTS` makes re-apply safe. Default `pnpm validate`
-uses `InMemorySqlGateway` (DDL no-op + repository SQL); real Postgres
-connection remains optional / deferred.
+uses `InMemorySqlGateway` (DDL no-op + repository SQL) and does not open
+a live Postgres connection. `PostgresSqlGateway` accepts an injected
+`PostgresPool` (`pg.Pool`) for optional real-driver use.
 
 ## 6. Current limitations
 
