@@ -1194,3 +1194,34 @@ Define grounded answer assembly contract
 
 **Status**
 Completed
+
+## Task 45
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add deterministic grounded answer assembler
+
+**Summary**
+- Added `DefaultGroundedAnswerAssembler` (`app/knowledge/rag/DefaultGroundedAnswerAssembler.ts`), the `GroundedAnswerAssembler` adapter, with **no constructor dependency at all** — no framework, repository, provider, or search/context/prompt adapter
+- When `context.blocks` is empty, the given `generatedText` is **discarded** and never returned as an answer: `text` is always the fixed message "The available knowledge does not contain enough information.", `evidence` is `[]`, `insufficientEvidence` is `true`
+- When `context.blocks` has at least one entry, the answer is `text: generatedText.text` (unchanged), `evidence` is a fresh copy of `context.blocks`, `insufficientEvidence` is `false` — this holds even when `context.truncated` is `true`; **truncation alone is never treated as evidence absence**
+- Neither the input `context`/`generatedText` nor `context.blocks` are mutated; `evidence` is always a fresh array of fresh objects
+- Validates `context.query`/`content`/`truncated`/`blocks` (each block's provenance/text shape) and `generatedText.text` at the adapter boundary
+- Exported `DefaultGroundedAnswerAssembler` from the `rag` and top-level `app/knowledge` barrels
+- Added `runDefaultGroundedAnswerAssemblerValidation.ts` (port contract; empty-evidence short-circuit discarding generated text; evidence-present result with generated text and copied blocks; truncated-with-evidence still returns generated text; input/blocks immutability with fresh-object evidence; deterministic repeated-call output; invalid-input rejection; static source-scan confirming no concrete-adapter/provider/repository import) + `tests/unit/defaultGroundedAnswerAssembler.cases.ts`, wired into `validate:rag:answer-assembler` and the top-level `validate` chain
+- Updated `docs/architecture.md`/`docs/modules.md`/`docs/development.md` to describe the insufficient-evidence policy and answer/evidence contract; no citation formatting/identifiers, generated-text factuality evaluation, real LLM provider, streaming, model configuration, context retrieval, prompt construction, or re-ranking change introduced
+
+**Validation**
+- `pnpm validate:rag:answer-contract`
+- `pnpm validate:rag:answer-assembler`
+- `pnpm validate:context:assembler`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

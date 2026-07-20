@@ -546,9 +546,28 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   (generation). It reuses the context and ai modules' own
   `GroundingContext`/`GeneratedText` shapes as-is — assembly never
   re-retrieves, re-ranks, re-assembles context, or re-invokes a
-  provider. Only the contract is defined so far; a default adapter
-  (`DefaultGroundedAnswerAssembler`) is a later task. Citation
-  formatting/identifiers remain out of scope.
+  provider. Citation formatting/identifiers remain out of scope.
+- `DefaultGroundedAnswerAssembler` (`app/knowledge/rag`) is the
+  `GroundedAnswerAssembler` adapter applying the insufficient-evidence
+  policy deterministically: it has **no constructor dependency at
+  all** — no framework, repository, provider, or
+  search/context/prompt adapter. When `context.blocks` is empty, the
+  given `generatedText` is **discarded** and never returned as an
+  answer — `text` is always the fixed message "The available knowledge
+  does not contain enough information.", `evidence` is `[]`, and
+  `insufficientEvidence` is `true`. When `context.blocks` has at least
+  one entry, the answer is `text: generatedText.text` (unchanged),
+  `evidence` is a fresh copy of `context.blocks`, and
+  `insufficientEvidence` is `false` — this holds even when
+  `context.truncated` is `true`; **truncation alone is never treated as
+  evidence absence**. Neither the input `context`/`generatedText` nor
+  `context.blocks` are mutated; `evidence` is always a fresh array of
+  fresh objects. Input is validated —
+  `context.query`/`content`/`truncated`/`blocks` (each block's
+  provenance/text shape) and `generatedText.text` — before assembling.
+  Citation formatting/identifiers, generated-text factuality
+  evaluation, and any provider/prompt/retrieval change are out of scope
+  for this adapter.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -560,4 +579,5 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   search:reranked + context:contract + context:assembler +
   prompt:contract + prompt:builder + application:grounding-context +
   application:prompt + ai:provider-contract + ai:fake-provider +
-  application:generate-text + rag:answer-contract + typecheck).
+  application:generate-text + rag:answer-contract +
+  rag:answer-assembler + typecheck).

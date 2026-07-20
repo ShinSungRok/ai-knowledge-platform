@@ -89,6 +89,7 @@ export type {
   GroundedAnswerAssemblyInput,
   GroundedAnswerAssembler,
 } from "./rag";
+export { DefaultGroundedAnswerAssembler } from "./rag";
 export { KNOWLEDGE_MODULE_AI } from "./ai";
 export type { GeneratedText, LanguageModelProvider } from "./ai";
 export { FakeLanguageModelProvider } from "./ai";
