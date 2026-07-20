@@ -96,6 +96,7 @@ pnpm validate:composition:in-memory # createInMemoryKnowledgeComposition cited-a
 pnpm validate:http:router # DefaultHttpRouter exact match + 404
 pnpm validate:api:cited-answer # Health + CitedGroundedAnswerController + router wiring
 pnpm validate:server:lifecycle # DefaultKnowledgeServer start/stop/dispatch
+pnpm validate:server:listener-contract # HttpListener port via FakeHttpListener
 pnpm validate:observability:contract # InMemoryLogger/InMemoryMetrics contract
 pnpm validate:reliability:retry # DefaultRetryPolicy no-delay retries
 pnpm validate:reliability:timeout # DefaultTimeoutPolicy Promise.race timeout

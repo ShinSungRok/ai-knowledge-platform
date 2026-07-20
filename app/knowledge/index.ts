@@ -222,6 +222,11 @@ export type {
 export { DefaultHttpRouter, ObservingHttpRouter } from "./http";
 export { KNOWLEDGE_MODULE_SERVER } from "./server";
 export type { KnowledgeServer } from "./server";
+export type {
+  HttpListenConfig,
+  HttpListenAddress,
+  HttpListener,
+} from "./server";
 export { DefaultKnowledgeServer } from "./server";
 export { KNOWLEDGE_MODULE_COMPOSITION } from "./composition";
 export type { KnowledgeRuntime, InMemoryKnowledgeComposition } from "./composition";

@@ -2834,7 +2834,7 @@ Completed
 2026-07-20
 
 **Commit**
-Pending
+ce68c49
 
 **Title**
 Wire SqlVectorIndex into SQL/Postgres composition and update roadmap
@@ -2849,6 +2849,31 @@ Wire SqlVectorIndex into SQL/Postgres composition and update roadmap
 - `pnpm validate:composition:sql-knowledge`
 - `pnpm validate:composition:postgres-knowledge`
 - `pnpm validate:project:closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
+## Task 106
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Define HTTP listen config and listener contract
+
+**Summary**
+- Added `HttpListenConfig`, `HttpListenAddress`, and `HttpListener` port (listen/close/isListening)
+- KnowledgeServer remains dispatch-only; listener is a separate router-front adapter
+- Added `validate:server:listener-contract` with FakeHttpListener; no node:http yet
+
+**Validation**
+- `pnpm validate:server:lifecycle`
+- `pnpm validate:server:listener-contract`
 - `pnpm typecheck`
 - `pnpm validate`
 

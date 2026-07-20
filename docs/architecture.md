@@ -890,7 +890,8 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   exposes health + cited-answer controllers that depend only on
   `KnowledgeRuntime`, plus `createKnowledgeHttpRouter`.
 - The `server` module provides `DefaultKnowledgeServer` (start/stop/dispatch
-  over `HttpRouter` only; no TCP). `createInMemoryKnowledgeServer` in
+  over `HttpRouter` only; no TCP) and an `HttpListener` contract for a
+  separate TCP listen adapter in front of a router. `createInMemoryKnowledgeServer` in
   composition wires the full in-memory runtime entrypath.
 - The `observability` module provides dependency-free `Logger`/`Metrics`
   ports with `InMemoryLogger`/`InMemoryMetrics` adapters.
