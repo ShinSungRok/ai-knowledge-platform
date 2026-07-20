@@ -2300,3 +2300,32 @@ Add workspace authorization and HTTP security guard
 **Status**
 Completed
 
+## Task 85
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add deployment readiness validation and operations wiring
+
+**Summary**
+- Added `ObservingHttpRouter` (start/finish/error logs + `http.requests` metrics)
+- Added `createOperationsKnowledgeServer` (composition + guard + observing router + server)
+- Added `scripts/validate-deployment-readiness.ts` (Docker daemon-free static checks)
+- Added `validate:http:observing`, `validate:composition:operations`, `validate:deployment:readiness`; updated deployment docs
+
+**Validation**
+- `pnpm validate:observability:contract`
+- `pnpm validate:security:http-guard`
+- `pnpm validate:server:lifecycle`
+- `pnpm validate:deployment:readiness`
+- `pnpm validate:composition:operations`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

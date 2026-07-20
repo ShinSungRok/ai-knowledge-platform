@@ -897,6 +897,10 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   (no delay) and `DefaultTimeoutPolicy` (`Promise.race` + timer).
 - The `security` module provides `DefaultWorkspaceAuthorizer` and
   `HttpWorkspaceGuard`; cited-answer HTTP requires `x-workspace-id`.
+- `ObservingHttpRouter` and `createOperationsKnowledgeServer` wire
+  logging/metrics/guard for operations-ready in-process dispatch.
+  `validate:deployment:readiness` checks Docker/docs/scripts statically
+  without a Docker daemon.
 - Real TCP listen / Express/Fastify and real AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
