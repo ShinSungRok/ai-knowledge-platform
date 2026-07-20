@@ -1403,3 +1403,29 @@ Add cited grounded answer MCP tool
 
 **Status**
 Completed
+
+## Task 52
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add MCP tool registry
+
+**Summary**
+- Added `McpToolRegistry` port (`listTools`, `invoke`) and `DefaultMcpToolRegistry` (constructor takes `readonly McpTool[]`, rejects duplicate names, lists definitions name-ascending, delegates known invokes, returns `{ ok: false, toolName: <requested>, error: "Unknown MCP tool: <name>" }` for unknown names)
+- Widened `McpToolInvokeInput.name` and `McpToolInvokeResult.toolName` from `McpToolName` to `string` so unknown names can be echoed without normalizing
+- Exported from `mcp` and top-level barrels; added `runDefaultMcpToolRegistryValidation.ts` + unit case inventory; wired `validate:mcp:registry`
+- Updated docs; no real MCP host/SDK, auth beyond existing workspace validation, multi-tool workflows, or composition wiring introduced
+
+**Validation**
+- `pnpm validate:mcp:cited-answer-tool`
+- `pnpm validate:mcp:registry`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

@@ -106,8 +106,12 @@ export type {
   McpToolInvokeInput,
   McpToolInvokeResult,
   McpTool,
+  McpToolRegistry,
 } from "./mcp";
-export { GenerateCitedGroundedAnswerMcpTool } from "./mcp";
+export {
+  GenerateCitedGroundedAnswerMcpTool,
+  DefaultMcpToolRegistry,
+} from "./mcp";
 export { KNOWLEDGE_MODULE_API } from "./api";
 export { KNOWLEDGE_MODULE_HTTP } from "./http";
 export { KNOWLEDGE_MODULE_SERVER } from "./server";

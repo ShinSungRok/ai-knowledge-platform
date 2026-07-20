@@ -667,11 +667,9 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   exposure boundary**: it reuses the citation module's
   `CitedGroundedAnswer` as the success payload and never duplicates
   Domain/RAG business logic. Expected validation and use-case failures
-  are expressed as `ok: false` results, not throws. Only the contract
-  is defined so far; a concrete tool adapter, registry, and invoke use
-  case are later tasks. Real MCP SDK, network transport, JSON-RPC
-  server, auth framework, Agent orchestration, and composition-root
-  wiring remain out of scope.
+  are expressed as `ok: false` results, not throws. (Task 52 widens
+  `McpToolInvokeInput.name` and `McpToolInvokeResult.toolName` to plain
+  `string` so a registry can echo unknown requested names.)
 - `GenerateCitedGroundedAnswerMcpTool` (`app/knowledge/mcp`) is the
   `McpTool` adapter that exposes
   `GenerateCitedGroundedAnswerUseCase` as the fixed
@@ -685,6 +683,20 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   use-case failure — **never throws** across this boundary for those
   cases. No additional tools, registry, real MCP transport/SDK, or
   composition-root wiring are introduced here.
+- `McpToolRegistry` (`app/knowledge/mcp`) is a port —
+  `listTools(): Promise<McpToolDefinition[]>` and
+  `invoke(input: McpToolInvokeInput): Promise<McpToolInvokeResult>` —
+  where `McpToolInvokeInput.name` and `McpToolInvokeResult.toolName`
+  are plain `string`s so unknown tool names can be rejected as
+  structured `ok: false` results. `DefaultMcpToolRegistry` is the
+  adapter: its constructor takes a readonly `McpTool[]`, rejects
+  duplicate tool names, returns definitions in name-ascending order
+  from `listTools`, delegates known invokes with arguments unchanged,
+  and returns `{ ok: false, toolName: <requested name>, error:
+  "Unknown MCP tool: <name>" }` for unknown names — never throws for
+  unknown tools. Real MCP host/SDK, auth beyond existing workspace
+  validation inside the tool, multi-tool business workflows, and
+  composition-root wiring remain out of scope.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -699,4 +711,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   application:generate-text + rag:answer-contract +
   rag:answer-assembler + application:grounded-answer +
   citation:contract + citation:builder + application:cited-answer +
-  mcp:contract + mcp:cited-answer-tool + typecheck).
+  mcp:contract + mcp:cited-answer-tool + mcp:registry + typecheck).
