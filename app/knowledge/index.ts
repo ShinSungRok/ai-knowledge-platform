@@ -286,7 +286,13 @@ export type {
 export { DefaultRetryPolicy, DefaultTimeoutPolicy } from "./reliability";
 export { KNOWLEDGE_MODULE_SECURITY } from "./security";
 export type { AuthPrincipal, Authenticator, WorkspaceAuthorizer } from "./security";
-export { DefaultWorkspaceAuthorizer, HttpWorkspaceGuard } from "./security";
+export type { ApiKeyPrincipalEntry } from "./security";
+export {
+  ApiKeyAuthenticator,
+  DefaultWorkspaceAuthorizer,
+  HttpBearerGuard,
+  HttpWorkspaceGuard,
+} from "./security";
 export { KNOWLEDGE_MODULE_INFRA } from "./infra";
 export type {
   SqlParameter,

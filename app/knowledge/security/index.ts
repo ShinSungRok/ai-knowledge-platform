@@ -13,6 +13,9 @@ export const KNOWLEDGE_MODULE_SECURITY = "app/knowledge/security" as const;
 
 export type { AuthPrincipal } from "./AuthPrincipal";
 export type { Authenticator } from "./Authenticator";
+export type { ApiKeyPrincipalEntry } from "./ApiKeyAuthenticator";
 export type { WorkspaceAuthorizer } from "./WorkspaceAuthorizer";
+export { ApiKeyAuthenticator } from "./ApiKeyAuthenticator";
 export { DefaultWorkspaceAuthorizer } from "./DefaultWorkspaceAuthorizer";
+export { HttpBearerGuard } from "./HttpBearerGuard";
 export { HttpWorkspaceGuard } from "./HttpWorkspaceGuard";

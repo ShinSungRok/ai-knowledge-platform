@@ -2962,7 +2962,7 @@ Completed
 2026-07-20
 
 **Commit**
-Pending
+e03721e
 
 **Title**
 Define authentication contract and principal
@@ -2974,6 +2974,32 @@ Define authentication contract and principal
 **Validation**
 - `pnpm validate:security:workspace`
 - `pnpm validate:security:auth-contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
+## Task 111
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add API key authenticator and Bearer HTTP guard
+
+**Summary**
+- Added `ApiKeyAuthenticator` (static key map, defensive principal copy)
+- Added `HttpBearerGuard` parsing `Authorization: Bearer <token>`
+- Wired `validate:security:api-key` and `validate:security:bearer-guard`
+
+**Validation**
+- `pnpm validate:security:auth-contract`
+- `pnpm validate:security:api-key`
+- `pnpm validate:security:bearer-guard`
 - `pnpm typecheck`
 - `pnpm validate`
 
