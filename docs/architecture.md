@@ -785,9 +785,15 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   boundary (throwing without calling the orchestrator on invalid
   input), and returns `AgentRunResult` unchanged. Existing
   `ExecuteToolCallUseCase` / `InvokeMcpToolUseCase` are retained.
-  Memory, LLM replanning, multi-agent collaboration beyond the three
-  roles, background jobs, and composition-root wiring remain out of
-  scope.
+  LLM replanning, multi-agent collaboration beyond the three roles,
+  background jobs, and composition-root wiring remain out of scope.
+- The `memory` module (`app/knowledge/memory`) is the workspace/
+  session-scoped Agent Memory boundary, separated from Knowledge
+  document/chunk/vector search. Task 62 defines `MemoryEntryRole`,
+  `MemoryEntry`, and the `MemoryStore` port (`append` /
+  `listBySession`) so conversational turns can be stored and recalled
+  without replacing Knowledge retrieval. Concrete store adapters and
+  application use cases are later tasks.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -806,4 +812,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   application:mcp-invoke + tools:contract + tools:executor +
   application:tool-call + agent:contract + agent:planner +
   agent:step-executor + agent:reviewer + agent:orchestrator +
-  application:run-agent + typecheck).
+  application:run-agent + memory:contract + typecheck).

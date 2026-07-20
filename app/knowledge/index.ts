@@ -146,6 +146,13 @@ export { DeterministicKnowledgeAgentPlanner } from "./agent";
 export { DefaultAgentStepExecutor } from "./agent";
 export { DefaultAgentReviewer } from "./agent";
 export { DefaultAgentOrchestrator } from "./agent";
+export { KNOWLEDGE_MODULE_MEMORY } from "./memory";
+export type {
+  MemoryEntryRole,
+  MemoryEntry,
+  MemoryStore,
+  MemoryAppendInput,
+} from "./memory";
 export { KNOWLEDGE_MODULE_API } from "./api";
 export { KNOWLEDGE_MODULE_HTTP } from "./http";
 export { KNOWLEDGE_MODULE_SERVER } from "./server";

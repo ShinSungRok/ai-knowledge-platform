@@ -1674,3 +1674,30 @@ Add agent orchestrator and run use case
 
 **Status**
 Completed
+
+## Task 62
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Define memory contract and module boundary
+
+**Summary**
+- Added `app/knowledge/memory` module with `KNOWLEDGE_MODULE_MEMORY`, `MemoryEntryRole`, `MemoryEntry`, and `MemoryStore` port (`append` / `listBySession`)
+- Module docs state Memory does not replace Knowledge document/chunk/vector search
+- Registered in skeleton `REQUIRED_MODULES` after `agent`; re-exported from top-level barrel; updated docs
+- Added `runMemoryContractValidation.ts` + unit case inventory; wired `validate:memory:contract` into top-level `validate`
+- No in-memory adapter, application use case, Agent orchestrator change, or composition wiring introduced
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:memory:contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
