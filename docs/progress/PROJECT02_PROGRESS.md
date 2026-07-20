@@ -2935,7 +2935,7 @@ Completed
 2026-07-20
 
 **Commit**
-Pending
+6779930
 
 **Title**
 Add listening operations factory and update roadmap
@@ -2950,6 +2950,30 @@ Add listening operations factory and update roadmap
 - `pnpm validate:composition:operations`
 - `pnpm validate:composition:listening-operations`
 - `pnpm validate:project:closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
+## Task 110
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Define authentication contract and principal
+
+**Summary**
+- Added `AuthPrincipal` and `Authenticator` port (AuthN separate from WorkspaceAuthorizer AuthZ)
+- Added `validate:security:auth-contract` with FakeAuthenticator; no JWT/OIDC SDK
+
+**Validation**
+- `pnpm validate:security:workspace`
+- `pnpm validate:security:auth-contract`
 - `pnpm typecheck`
 - `pnpm validate`
 

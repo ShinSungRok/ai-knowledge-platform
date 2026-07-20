@@ -1,15 +1,18 @@
 /**
  * Module: `app/knowledge/security`
  *
- * Workspace authorization and HTTP request guards for Operations.
+ * Authentication and workspace authorization for Operations.
  *
+ * `Authenticator` / `AuthPrincipal` define AuthN (credentials → principal).
  * `WorkspaceAuthorizer` / `DefaultWorkspaceAuthorizer` enforce principal
- * workspace equality. `HttpWorkspaceGuard` reads `x-workspace-id` and
- * delegates to the authorizer. AuthN (JWT/OIDC), rate limiting, and CORS
- * remain out of scope.
+ * workspace equality (AuthZ). `HttpWorkspaceGuard` reads `x-workspace-id`
+ * for legacy header AuthZ. JWT/OIDC SDKs, rate limiting, and CORS remain
+ * deferred.
  */
 export const KNOWLEDGE_MODULE_SECURITY = "app/knowledge/security" as const;
 
+export type { AuthPrincipal } from "./AuthPrincipal";
+export type { Authenticator } from "./Authenticator";
 export type { WorkspaceAuthorizer } from "./WorkspaceAuthorizer";
 export { DefaultWorkspaceAuthorizer } from "./DefaultWorkspaceAuthorizer";
 export { HttpWorkspaceGuard } from "./HttpWorkspaceGuard";

@@ -102,6 +102,7 @@ pnpm validate:observability:contract # InMemoryLogger/InMemoryMetrics contract
 pnpm validate:reliability:retry # DefaultRetryPolicy no-delay retries
 pnpm validate:reliability:timeout # DefaultTimeoutPolicy Promise.race timeout
 pnpm validate:security:workspace # DefaultWorkspaceAuthorizer
+pnpm validate:security:auth-contract # Authenticator port via FakeAuthenticator
 pnpm validate:security:http-guard # HttpWorkspaceGuard x-workspace-id
 pnpm validate:http:observing # ObservingHttpRouter logs/metrics
 pnpm validate:composition:operations # createOperationsKnowledgeServer wiring
