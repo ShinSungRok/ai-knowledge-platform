@@ -19,3 +19,5 @@ export type { JobStore, JobEnqueueInput } from "./JobStore";
 export type { JobHandler } from "./JobHandler";
 export type { JobProcessor } from "./JobProcessor";
 export { InMemoryJobStore } from "./InMemoryJobStore";
+export { SyncKnowledgeSourceJobHandler } from "./SyncKnowledgeSourceJobHandler";
+export { DefaultJobProcessor } from "./DefaultJobProcessor";

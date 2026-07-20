@@ -816,8 +816,12 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   real workers, cron, network brokers, or Domain business-logic
   duplication. `InMemoryJobStore` implements `JobStore` with validated enqueue,
   deterministic `id`/`sequence`, sequence-ascending lists, getById,
-  save-replace, and workspace isolation. Processor/handler adapters
-  are later tasks.
+  save-replace, and workspace isolation. `SyncKnowledgeSourceJobHandler` injects only
+  `SyncKnowledgeSourcePipeline` and returns `{ sourceId, fetchedCount,
+  savedCount }`. `DefaultJobProcessor` injects `JobStore` + handlers,
+  rejects duplicate types, processes oldest pending job
+  (pending→running→completed/failed, retry while attempts < maxAttempts).
+  Reindex handler and application use cases are later tasks.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -838,4 +842,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   agent:step-executor + agent:reviewer + agent:orchestrator +
   application:run-agent + application:memory-append +
   application:memory-recall + application:run-agent-memory +
-  memory:contract + memory:store + jobs:contract + jobs:store + typecheck).
+  memory:contract + memory:store + jobs:contract + jobs:store + jobs:sync-handler + jobs:processor + typecheck).

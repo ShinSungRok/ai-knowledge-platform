@@ -1834,3 +1834,31 @@ Add in-memory job store
 
 **Status**
 Completed
+
+## Task 68
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add job processor and sync job handler
+
+**Summary**
+- Added `SyncKnowledgeSourceJobHandler` (`type=sync_knowledge_source`) injecting only `SyncKnowledgeSourcePipeline`; returns `{ sourceId, fetchedCount, savedCount }`
+- Added `DefaultJobProcessor` injecting `JobStore` + handlers; rejects duplicate types; processes oldest pending job with running/completed/failed/retry transitions; missing handler → failed with typed error
+- Exported from jobs/top-level barrels; added sync-handler and processor validation runners + unit case inventories; wired into top-level `validate`
+- Updated docs; no reindex handler, application use case, or real worker introduced
+
+**Validation**
+- `pnpm validate:pipeline:sync`
+- `pnpm validate:jobs:store`
+- `pnpm validate:jobs:sync-handler`
+- `pnpm validate:jobs:processor`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
