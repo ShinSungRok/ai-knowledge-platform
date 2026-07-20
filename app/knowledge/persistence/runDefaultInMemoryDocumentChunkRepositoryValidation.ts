@@ -1,6 +1,8 @@
 import { DefaultInMemoryDocumentChunkRepository } from "./DefaultInMemoryDocumentChunkRepository";
+import { FixedSizeDocumentChunker } from "../embedding/FixedSizeDocumentChunker";
 import type { DocumentChunkRepository } from "../repository/DocumentChunkRepository";
 import type { DocumentChunk } from "../domain/DocumentChunk";
+import type { KnowledgeDocument } from "../domain/KnowledgeDocument";
 
 const WORKSPACE_A = "workspace-a";
 const WORKSPACE_B = "workspace-b";
@@ -61,6 +63,10 @@ async function assertPortContract(): Promise<void> {
     typeof repository.findByDocumentId === "function",
     "findByDocumentId must be defined",
   );
+  assertTruthy(
+    typeof repository.findById === "function",
+    "findById must be defined",
+  );
 }
 
 async function assertFindReturnsOrderAscending(): Promise<void> {
@@ -109,11 +115,13 @@ async function assertEmptyReplaceClearsChunks(): Promise<void> {
 async function assertIsolatedAcrossDocumentsInSameWorkspace(): Promise<void> {
   console.log("[repository] chunks are isolated per documentId within the same workspace...");
   const repository: DocumentChunkRepository = new DefaultInMemoryDocumentChunkRepository();
+  // Distinct ids: `id` is a workspace-global identity (Task 23), so two
+  // different documents in the same workspace cannot share a chunk id.
   await repository.replaceForDocument(WORKSPACE_A, DOCUMENT_1, [
-    chunk({ id: "c-1", documentId: DOCUMENT_1, text: "doc1 body" }),
+    chunk({ id: "doc1-c-1", documentId: DOCUMENT_1, text: "doc1 body" }),
   ]);
   await repository.replaceForDocument(WORKSPACE_A, DOCUMENT_2, [
-    chunk({ id: "c-1", documentId: DOCUMENT_2, text: "doc2 body" }),
+    chunk({ id: "doc2-c-1", documentId: DOCUMENT_2, text: "doc2 body" }),
   ]);
 
   const doc1 = await repository.findByDocumentId(WORKSPACE_A, DOCUMENT_1);
@@ -169,6 +177,120 @@ async function assertDefensiveCopy(): Promise<void> {
   const second = await repository.findByDocumentId(WORKSPACE_A, DOCUMENT_1);
   assertEqual(second.length, 1, "stored chunks must not reflect a mutated output array");
   assertEqual(second[0]?.text, "original", "stored chunk must not reflect a mutated output object");
+}
+
+async function assertFindByIdResolvesWorkspaceGlobalChunk(): Promise<void> {
+  console.log("[repository] findById resolves a chunk by its workspace-global id...");
+  const repository: DocumentChunkRepository = new DefaultInMemoryDocumentChunkRepository();
+  await repository.replaceForDocument(WORKSPACE_A, DOCUMENT_1, [
+    chunk({ id: "chunk-x", order: 0, text: "body x" }),
+  ]);
+
+  const found = await repository.findById(WORKSPACE_A, "chunk-x");
+  assertTruthy(found !== null, "expected findById to resolve a stored chunk");
+  assertEqual(found?.id, "chunk-x", "found.id mismatch");
+  assertEqual(found?.documentId, DOCUMENT_1, "found.documentId mismatch");
+  assertEqual(found?.text, "body x", "found.text mismatch");
+}
+
+async function assertFindByIdReturnsNullForMissingOrCrossWorkspaceChunk(): Promise<void> {
+  console.log("[repository] findById returns null for a missing chunk id or a chunk id owned in a different workspace...");
+  const repository: DocumentChunkRepository = new DefaultInMemoryDocumentChunkRepository();
+  await repository.replaceForDocument(WORKSPACE_A, DOCUMENT_1, [
+    chunk({ id: "chunk-y", order: 0 }),
+  ]);
+
+  const missing = await repository.findById(WORKSPACE_A, "missing-chunk");
+  assertEqual(missing, null, "expected null for a missing chunk id");
+
+  const crossWorkspace = await repository.findById(WORKSPACE_B, "chunk-y");
+  assertEqual(crossWorkspace, null, "expected null for a chunk id that only exists in a different workspace");
+}
+
+async function assertReplaceAllowsSameDocumentToReuseItsOwnChunkIds(): Promise<void> {
+  console.log("[repository] replaceForDocument allows a document to reuse its own previously-owned chunk ids...");
+  const repository: DocumentChunkRepository = new DefaultInMemoryDocumentChunkRepository();
+  await repository.replaceForDocument(WORKSPACE_A, DOCUMENT_1, [
+    chunk({ id: "stable-chunk-0", order: 0, text: "version 1" }),
+  ]);
+  await repository.replaceForDocument(WORKSPACE_A, DOCUMENT_1, [
+    chunk({ id: "stable-chunk-0", order: 0, text: "version 2" }),
+  ]);
+
+  const found = await repository.findById(WORKSPACE_A, "stable-chunk-0");
+  assertEqual(found?.text, "version 2", "expected the same document's re-use of its own chunk id to succeed and update the text");
+}
+
+async function assertReplaceRejectsChunkIdOwnedByDifferentDocumentWithoutPartialWrite(): Promise<void> {
+  console.log(
+    "[repository] replaceForDocument rejects a chunk id already owned by a different document in the same workspace, without a partial write...",
+  );
+  const repository: DocumentChunkRepository = new DefaultInMemoryDocumentChunkRepository();
+  await repository.replaceForDocument(WORKSPACE_A, DOCUMENT_1, [
+    chunk({ id: "shared-id", documentId: DOCUMENT_1, order: 0, text: "owned by doc-1" }),
+  ]);
+
+  await assertRejects(
+    repository.replaceForDocument(WORKSPACE_A, DOCUMENT_2, [
+      chunk({ id: "shared-id", documentId: DOCUMENT_2, order: 0, text: "attempted takeover" }),
+      chunk({ id: "doc-2-own-chunk", documentId: DOCUMENT_2, order: 1, text: "unaffected" }),
+    ]),
+    "is already owned by a different document",
+  );
+
+  const doc1Chunks = await repository.findByDocumentId(WORKSPACE_A, DOCUMENT_1);
+  assertEqual(doc1Chunks.length, 1, "doc-1's chunk set must be unaffected by the rejected conflicting batch");
+  assertEqual(doc1Chunks[0]?.text, "owned by doc-1", "doc-1's chunk must remain unchanged");
+
+  const doc2Chunks = await repository.findByDocumentId(WORKSPACE_A, DOCUMENT_2);
+  assertEqual(doc2Chunks.length, 0, "doc-2 must have no chunks saved from the rejected batch (no partial write)");
+
+  const owner = await repository.findById(WORKSPACE_A, "shared-id");
+  assertEqual(owner?.documentId, DOCUMENT_1, "the shared-id chunk must still resolve to its original owner, doc-1");
+}
+
+async function assertFixedSizeDocumentChunkerIdsAreWorkspaceGlobalCompatible(): Promise<void> {
+  console.log(
+    "[repository] FixedSizeDocumentChunker-generated ids from different documents are workspace-global-identity compatible...",
+  );
+  const repository: DocumentChunkRepository = new DefaultInMemoryDocumentChunkRepository();
+  const chunker = new FixedSizeDocumentChunker(4);
+
+  const documentOne: KnowledgeDocument = {
+    workspaceId: WORKSPACE_A,
+    id: "doc-alpha",
+    sourceId: "source-1",
+    title: "Alpha",
+    text: "abcdefgh",
+  };
+  const documentTwo: KnowledgeDocument = {
+    workspaceId: WORKSPACE_A,
+    id: "doc-beta",
+    sourceId: "source-1",
+    title: "Beta",
+    text: "ijklmnop",
+  };
+
+  await repository.replaceForDocument(
+    WORKSPACE_A,
+    documentOne.id,
+    chunker.chunk(documentOne),
+  );
+  await repository.replaceForDocument(
+    WORKSPACE_A,
+    documentTwo.id,
+    chunker.chunk(documentTwo),
+  );
+
+  const oneChunks = await repository.findByDocumentId(WORKSPACE_A, documentOne.id);
+  const twoChunks = await repository.findByDocumentId(WORKSPACE_A, documentTwo.id);
+  assertEqual(oneChunks.length, 2, "expected 2 chunks for doc-alpha");
+  assertEqual(twoChunks.length, 2, "expected 2 chunks for doc-beta");
+
+  const resolvedFromOne = await repository.findById(WORKSPACE_A, oneChunks[0]?.id ?? "");
+  const resolvedFromTwo = await repository.findById(WORKSPACE_A, twoChunks[0]?.id ?? "");
+  assertEqual(resolvedFromOne?.documentId, documentOne.id, "expected doc-alpha's first chunk id to resolve back to doc-alpha");
+  assertEqual(resolvedFromTwo?.documentId, documentTwo.id, "expected doc-beta's first chunk id to resolve back to doc-beta");
 }
 
 async function assertRejectsScopeMismatch(): Promise<void> {
@@ -254,6 +376,14 @@ async function assertRejectsInvalidFields(): Promise<void> {
     repository.findByDocumentId(WORKSPACE_A, " "),
     "DocumentChunk.documentId must be a non-empty string",
   );
+  await assertRejects(
+    repository.findById(" ", "chunk-1"),
+    "DocumentChunk.workspaceId must be a non-empty string",
+  );
+  await assertRejects(
+    repository.findById(WORKSPACE_A, " "),
+    "DocumentChunk.id must be a non-empty string",
+  );
 }
 
 async function main(): Promise<void> {
@@ -264,6 +394,11 @@ async function main(): Promise<void> {
   await assertIsolatedAcrossDocumentsInSameWorkspace();
   await assertIsolatedAcrossWorkspacesForSameDocumentId();
   await assertDefensiveCopy();
+  await assertFindByIdResolvesWorkspaceGlobalChunk();
+  await assertFindByIdReturnsNullForMissingOrCrossWorkspaceChunk();
+  await assertReplaceAllowsSameDocumentToReuseItsOwnChunkIds();
+  await assertReplaceRejectsChunkIdOwnedByDifferentDocumentWithoutPartialWrite();
+  await assertFixedSizeDocumentChunkerIdsAreWorkspaceGlobalCompatible();
   await assertRejectsScopeMismatch();
   await assertRejectsDuplicateIdAndOrder();
   await assertRejectsInvalidOrder();

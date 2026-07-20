@@ -8,12 +8,18 @@ import type { DocumentChunkRepository } from "../repository/DocumentChunkReposit
  * within that partition — so the same `documentId` can exist independently
  * in different workspaces, different documents in the same workspace never
  * share chunk storage, and every read/write is scoped to exactly one
- * `(workspaceId, documentId)` pair.
+ * `(workspaceId, documentId)` pair. A second per-workspace index tracks
+ * which `documentId` currently owns each chunk `id`, so `id` is enforced as
+ * a workspace-global identity and `findById` can resolve a chunk from just
+ * `(workspaceId, chunkId)`.
  *
- * `replaceForDocument` validates the entire incoming chunk set — including
+ * `replaceForDocument` validates the entire incoming chunk set — shape,
  * that every chunk's `workspaceId`/`documentId` matches the method
- * arguments, and that ids/orders are well-formed and unique — before
- * mutating storage, so an invalid batch never leaves a partial write.
+ * arguments, that ids/orders are well-formed and unique within the batch,
+ * and that no `id` in the batch is already owned by a *different* document
+ * in the same workspace — before mutating storage or the ownership index,
+ * so an invalid or conflicting batch never leaves a partial write. Reusing
+ * an `id` the *same* document already owns is always allowed.
  *
  * Suitable for validation and early composition wiring. Replaceable by a
  * database adapter behind the same port with no domain/application changes.
@@ -27,6 +33,7 @@ export class DefaultInMemoryDocumentChunkRepository
     string,
     Map<string, DocumentChunk[]>
   >();
+  private readonly chunkOwnerByWorkspace = new Map<string, Map<string, string>>();
 
   async replaceForDocument(
     workspaceId: string,
@@ -37,7 +44,20 @@ export class DefaultInMemoryDocumentChunkRepository
     this.assertNonEmptyString(documentId, "documentId");
     const validated = this.assertAndCloneChunks(workspaceId, documentId, chunks);
 
+    const chunkOwners = this.getOrCreateChunkOwners(workspaceId);
+    this.assertNoCrossDocumentChunkIdConflict(chunkOwners, documentId, validated);
+
     const workspace = this.getOrCreateWorkspace(workspaceId);
+    const previousChunks = workspace.get(documentId);
+    if (previousChunks) {
+      for (const previous of previousChunks) {
+        chunkOwners.delete(previous.id);
+      }
+    }
+    for (const chunk of validated) {
+      chunkOwners.set(chunk.id, documentId);
+    }
+
     if (validated.length === 0) {
       workspace.delete(documentId);
       return;
@@ -58,6 +78,22 @@ export class DefaultInMemoryDocumentChunkRepository
     return stored.map((chunk) => this.clone(chunk));
   }
 
+  async findById(
+    workspaceId: string,
+    chunkId: string,
+  ): Promise<DocumentChunk | null> {
+    this.assertNonEmptyString(workspaceId, "workspaceId");
+    this.assertNonEmptyString(chunkId, "id");
+
+    const documentId = this.chunkOwnerByWorkspace.get(workspaceId)?.get(chunkId);
+    if (!documentId) {
+      return null;
+    }
+    const stored = this.chunksByWorkspace.get(workspaceId)?.get(documentId);
+    const found = stored?.find((chunk) => chunk.id === chunkId);
+    return found ? this.clone(found) : null;
+  }
+
   private getOrCreateWorkspace(
     workspaceId: string,
   ): Map<string, DocumentChunk[]> {
@@ -67,6 +103,36 @@ export class DefaultInMemoryDocumentChunkRepository
       this.chunksByWorkspace.set(workspaceId, workspace);
     }
     return workspace;
+  }
+
+  private getOrCreateChunkOwners(workspaceId: string): Map<string, string> {
+    let owners = this.chunkOwnerByWorkspace.get(workspaceId);
+    if (!owners) {
+      owners = new Map<string, string>();
+      this.chunkOwnerByWorkspace.set(workspaceId, owners);
+    }
+    return owners;
+  }
+
+  /**
+   * Rejects the batch if any chunk `id` is already owned by a document
+   * other than `documentId` — enforcing `id` as a workspace-global
+   * identity. Performs no mutation; reusing an `id` `documentId` itself
+   * already owns is always allowed.
+   */
+  private assertNoCrossDocumentChunkIdConflict(
+    chunkOwners: Map<string, string>,
+    documentId: string,
+    chunks: DocumentChunk[],
+  ): void {
+    for (const chunk of chunks) {
+      const owner = chunkOwners.get(chunk.id);
+      if (owner && owner !== documentId) {
+        throw new Error(
+          `DocumentChunk.id (${chunk.id}) is already owned by a different document (${owner}) in this workspace`,
+        );
+      }
+    }
   }
 
   /**

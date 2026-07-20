@@ -2,10 +2,12 @@
  * Canonical document chunk — framework-independent domain type.
  * Zero outward dependencies (Clean Architecture / DDD).
  *
- * A traceable, orderable segment of a `KnowledgeDocument`'s text. `id` is
- * only unique within `(workspaceId, documentId)` — the storage boundary
- * this type is scoped to. `order` is the chunk's position within its
- * document (0-based, ascending, unique per document).
+ * A traceable, orderable segment of a `KnowledgeDocument`'s text. `id` is a
+ * workspace-global identity — unique across every document within
+ * `workspaceId`, not just within `documentId` — so it can double as the
+ * `chunkId` a `VectorIndex` vector is keyed by. `order` is the chunk's
+ * position within its own document (0-based, ascending, unique per
+ * document).
  *
  * Deliberately excludes `sourceId`: provenance already flows through
  * `documentId` → `KnowledgeDocument.sourceId`, so a chunk never duplicates

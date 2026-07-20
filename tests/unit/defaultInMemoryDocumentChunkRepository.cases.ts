@@ -17,12 +17,22 @@
  * - chunks are isolated per workspace for the same documentId
  * - defensive copy on both replaceForDocument input and findByDocumentId
  *   output
+ * - findById resolves a chunk by its workspace-global id, returns null for
+ *   a missing id, and returns null for an id that only exists in a
+ *   different workspace
+ * - replaceForDocument allows a document to reuse an id it already owns
+ *   (e.g. re-chunking with a deterministic id scheme)
+ * - replaceForDocument rejects a chunk id already owned by a *different*
+ *   document in the same workspace, with no partial write to either
+ *   document's chunk set or the ownership index
+ * - FixedSizeDocumentChunker-generated ids from two different documents
+ *   never collide and each resolves back to its own document via findById
  * - replaceForDocument rejects a chunk whose workspaceId/documentId does
  *   not match the method arguments
  * - replaceForDocument rejects duplicate chunk id or duplicate order
  *   within the same batch, saving nothing
  * - replaceForDocument rejects negative or non-integer order
- * - rejects empty workspaceId/documentId/id/text on both methods
+ * - rejects empty workspaceId/documentId/id/text on all methods
  */
 export const DEFAULT_IN_MEMORY_DOCUMENT_CHUNK_REPOSITORY_UNIT_CASES = [
   "implements_DocumentChunkRepository_port",
@@ -32,6 +42,11 @@ export const DEFAULT_IN_MEMORY_DOCUMENT_CHUNK_REPOSITORY_UNIT_CASES = [
   "isolated_across_documents_in_same_workspace",
   "isolated_across_workspaces_for_same_documentId",
   "defensive_copy_on_replace_input_and_find_output",
+  "findById_resolves_workspace_global_chunk",
+  "findById_returns_null_for_missing_or_cross_workspace_chunk",
+  "replaceForDocument_allows_same_document_to_reuse_its_own_chunk_ids",
+  "replaceForDocument_rejects_chunk_id_owned_by_different_document_without_partial_write",
+  "fixed_size_document_chunker_ids_are_workspace_global_compatible",
   "rejects_workspaceId_and_documentId_scope_mismatch",
   "rejects_duplicate_id_and_duplicate_order",
   "rejects_negative_or_non_integer_order",

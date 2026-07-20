@@ -151,16 +151,25 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
 - `DocumentChunk` (`app/knowledge/domain`) is a traceable, orderable segment
   of a `KnowledgeDocument`'s text (`workspaceId`, `id`, `documentId`, `text`,
   `order`) — it deliberately omits `sourceId`, since provenance already
-  flows through `documentId` → `KnowledgeDocument.sourceId`.
+  flows through `documentId` → `KnowledgeDocument.sourceId`. `id` is a
+  **workspace-global identity** (Task 23) — unique across every document in
+  a workspace, not just within one document's own chunk set — so it can
+  double as the `chunkId` a `VectorIndex` vector is keyed by.
   `DocumentChunkRepository` / `DefaultInMemoryDocumentChunkRepository`
   follow the same workspace-scoped, port/in-memory-adapter pattern as the
-  document and source repositories, partitioned by `(workspaceId,
-  documentId)`. The only write method, `replaceForDocument`, swaps a
-  document's entire chunk set in one call (an empty array clears it) after
-  validating the whole batch — scope match, non-empty fields, and
-  unique/non-negative-integer `order` — so no partial write is possible.
-  `findByDocumentId` returns chunks sorted by `order` ascending. This
-  repository does not verify that the referenced document exists.
+  document and source repositories: reads/writes of a document's own chunk
+  set are still partitioned by `(workspaceId, documentId)`, while a second
+  per-workspace ownership index enforces `id` uniqueness workspace-wide and
+  backs `findById(workspaceId, chunkId)`. The only write method,
+  `replaceForDocument`, swaps a document's entire chunk set in one call (an
+  empty array clears it) after validating the whole batch — scope match,
+  non-empty fields, unique/non-negative-integer `order` within the batch,
+  and that no `id` in the batch is already owned by a *different* document
+  in the same workspace (reusing an `id` the *same* document already owns
+  is always allowed) — so no partial write is possible, either to storage
+  or to the ownership index. `findByDocumentId` returns chunks sorted by
+  `order` ascending. This repository does not verify that the referenced
+  document exists.
 - `ChunkingService` (`app/knowledge/embedding`) is a pure, synchronous port —
   `chunk(document: KnowledgeDocument): DocumentChunk[]` — with no I/O and no
   knowledge of storage, embeddings, or provenance. `FixedSizeDocumentChunker`

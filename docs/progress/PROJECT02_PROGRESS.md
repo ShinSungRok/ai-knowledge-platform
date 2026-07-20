@@ -594,3 +594,30 @@ Add source embedding reindex pipeline
 
 **Status**
 Completed
+
+## Task 23
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Establish workspace-global chunk identity lookup
+
+**Summary**
+- Made `DocumentChunk.id` a workspace-global identity (updated the domain doc comment): unique across every document in a workspace, not just within one document's own chunk set, so it can double as the `chunkId` a `VectorIndex` vector is keyed by
+- Added `findById(workspaceId, chunkId): Promise<DocumentChunk | null>` to `DocumentChunkRepository` and implemented it in `DefaultInMemoryDocumentChunkRepository` via a new per-workspace `chunkId → documentId` ownership index, with defensive copies on read
+- `replaceForDocument` now rejects (before any mutation of storage or the ownership index) a batch that reuses an `id` already owned by a *different* document in the same workspace; reusing an `id` the *same* document already owns (e.g. re-chunking with `FixedSizeDocumentChunker`'s deterministic id scheme) remains allowed and updates the ownership index correctly
+- Updated the two existing `CountingDocumentChunkRepository` test doubles (`runChunkKnowledgeDocumentPipelineValidation.ts`, `runRechunkKnowledgeSourcePipelineValidation.ts`) with a pass-through `findById`, and fixed one pre-existing repository test that relied on reusing the same chunk id across two documents in the same workspace — a scenario the new invariant now correctly rejects
+- Extended `runDefaultInMemoryDocumentChunkRepositoryValidation.ts` + `tests/unit/defaultInMemoryDocumentChunkRepository.cases.ts` with cases for `findById` resolution/isolation, same-document id reuse, cross-document conflict rejection with no partial write, and `FixedSizeDocumentChunker`-generated id compatibility across two different documents; no chunk text/order/algorithm change, similarity search, Retriever, Application Use Case, or external database/index adapter introduced
+
+**Validation**
+- `pnpm validate:repository:chunk`
+- `pnpm validate:embedding:chunker`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

@@ -41,7 +41,12 @@ provider, and vector index ports into a single-document embed-and-upsert
 pipeline that validates every provider result before any vector-index
 write. Task 22 adds `ReindexKnowledgeSourceEmbeddingsPipeline`, which
 re-embeds every document of one source by filtering `findAll` and
-delegating each match to `EmbedDocumentChunksPipeline`.
+delegating each match to `EmbedDocumentChunksPipeline`. Task 23 makes
+`DocumentChunk.id` a workspace-global identity: `DocumentChunkRepository`
+gains `findById(workspaceId, chunkId)`, and `replaceForDocument` rejects a
+batch that reuses an `id` already owned by a *different* document in the
+same workspace, so `id` can double as the `chunkId` a `VectorIndex` vector
+is keyed by.
 Other modules remain skeleton boundaries until scoped.
 
 ## 2. Core modules
@@ -50,7 +55,7 @@ Other modules remain skeleton boundaries until scoped.
 |---|---|
 | `domain` | Canonical types (`KnowledgeDocument`, `KnowledgeSource`, `DocumentChunk`), all workspace-scoped via `workspaceId`. Zero outward dependencies. |
 | `application` | Use cases (list/page/create/update/delete/search/export for documents; create for sources), each scoped to a `workspaceId`, over domain types and ports. |
-| `repository` | Persistence-agnostic ports (`KnowledgeDocumentRepository`, `KnowledgeSourceRepository`, `DocumentChunkRepository`); methods take `workspaceId` (chunk methods also take `documentId`). |
+| `repository` | Persistence-agnostic ports (`KnowledgeDocumentRepository`, `KnowledgeSourceRepository`, `DocumentChunkRepository`); methods take `workspaceId` (chunk methods also take `documentId`, and `findById` resolves by `id` alone, a workspace-global identity). |
 | `persistence` | Concrete adapters (`DefaultInMemoryRepository`, `DefaultInMemoryKnowledgeSourceRepository`, `DefaultInMemoryDocumentChunkRepository`; DB adapters later). |
 | `pipeline` | Ingestion pipelines from external knowledge sources. `KnowledgeSourceConnector` port + `FakeKnowledgeSourceConnector` fixture adapter fetch normalized documents (`externalId`/`title`/`text`) for a `KnowledgeSource`; `SyncKnowledgeSourcePipeline` turns those into idempotent, deterministically-keyed `KnowledgeDocument` writes via the repository ports. `ChunkKnowledgeDocumentPipeline` chunks a single stored document via `ChunkingService` and fully replaces its chunk set via `DocumentChunkRepository`; `RechunkKnowledgeSourcePipeline` re-chunks every document of one source by delegating each to `ChunkKnowledgeDocumentPipeline`. `EmbedDocumentChunksPipeline` embeds one document's chunks via `EmbeddingProvider` and upserts one vector per chunk into `VectorIndex`, validating the whole result set before any write; `ReindexKnowledgeSourceEmbeddingsPipeline` re-embeds every document of one source by delegating each to `EmbedDocumentChunksPipeline`. No document/chunk deletion, automatic chunking/embedding during sync, background scheduling, or real connector yet. |
 | `embedding` | Chunking, embedding, and vector indexing ports/adapters. `ChunkingService` port + `FixedSizeDocumentChunker` deterministic, fixed-size adapter split a `KnowledgeDocument` into ordered `DocumentChunk`s. `EmbeddingProvider` port + `FakeEmbeddingProvider` deterministic adapter turn text into a fixed-`EMBEDDING_VECTOR_DIMENSION` (8) vector. `VectorIndex` port + `InMemoryVectorIndex` adapter upsert/find an `EmbeddingVector` by `(workspaceId, chunkId)`; no similarity search/ranking or pipeline wiring yet. |
