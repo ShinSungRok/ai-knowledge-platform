@@ -99,6 +99,14 @@ export { DefaultGroundedAnswerAssembler } from "./rag";
 export { KNOWLEDGE_MODULE_AI } from "./ai";
 export type { GeneratedText, LanguageModelProvider } from "./ai";
 export { FakeLanguageModelProvider } from "./ai";
+export { KNOWLEDGE_MODULE_MCP } from "./mcp";
+export type {
+  McpToolName,
+  McpToolDefinition,
+  McpToolInvokeInput,
+  McpToolInvokeResult,
+  McpTool,
+} from "./mcp";
 export { KNOWLEDGE_MODULE_API } from "./api";
 export { KNOWLEDGE_MODULE_HTTP } from "./http";
 export { KNOWLEDGE_MODULE_SERVER } from "./server";

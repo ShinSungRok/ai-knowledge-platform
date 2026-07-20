@@ -1347,3 +1347,31 @@ Add generate cited grounded answer use case
 
 **Status**
 Completed
+
+## Task 50
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Define MCP tool contract and module boundary
+
+**Summary**
+- Added `app/knowledge/mcp` module with `KNOWLEDGE_MODULE_MCP = "app/knowledge/mcp"`
+- Added `McpToolName` (`"generate_cited_grounded_answer"`), `McpToolDefinition` (`name`, `description`, `inputKeys: readonly string[]`), `McpToolInvokeInput` (`name: McpToolName`, `arguments: Record<string, unknown>`), `McpToolInvokeResult` (`ok`, `toolName: McpToolName`, optional `result: CitedGroundedAnswer` / `error`), and the `McpTool` port (`definition` + `invoke(args): Promise<McpToolInvokeResult>`)
+- Registered `KNOWLEDGE_MODULE_MCP` in `scripts/validate-skeleton.ts` `REQUIRED_MODULES` and exported contract types from the `mcp` and top-level `app/knowledge` barrels
+- Added `runMcpToolContractValidation.ts` (module-constant check, in-file `FakeMcpTool` proving port implementability/callable success and ok=false error shape, top-level barrel type-assignability) + `tests/unit/mcpToolContract.cases.ts`
+- Added `validate:mcp:contract` to `package.json`, wired into the top-level `validate` chain; updated `docs/architecture.md`/`docs/modules.md`/`docs/development.md`
+- Contract only — no tool adapter, real MCP SDK, network transport, JSON-RPC server, registry, or composition wiring introduced
+
+**Validation**
+- `pnpm validate:skeleton`
+- `pnpm validate:mcp:contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

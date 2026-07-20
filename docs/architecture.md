@@ -654,6 +654,24 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   markers, a real LLM provider, streaming, HTTP/API, MCP tool exposure,
   composition-root wiring, and evaluation datasets are all out of scope
   for this use case.
+- `McpTool` (`app/knowledge/mcp`) is a port —
+  `definition: McpToolDefinition` plus
+  `invoke(args: Record<string, unknown>): Promise<McpToolInvokeResult>` —
+  where `McpToolName` is currently the string-literal union
+  `"generate_cited_grounded_answer"`, `McpToolDefinition` is
+  `{ name, description, inputKeys: readonly string[] }`,
+  `McpToolInvokeInput` is `{ name: McpToolName, arguments:
+  Record<string, unknown> }`, and `McpToolInvokeResult` is
+  `{ ok, toolName: McpToolName, result?: CitedGroundedAnswer,
+  error?: string }`. This is a **transport-independent MCP capability
+  exposure boundary**: it reuses the citation module's
+  `CitedGroundedAnswer` as the success payload and never duplicates
+  Domain/RAG business logic. Expected validation and use-case failures
+  are expressed as `ok: false` results, not throws. Only the contract
+  is defined so far; a concrete tool adapter, registry, and invoke use
+  case are later tasks. Real MCP SDK, network transport, JSON-RPC
+  server, auth framework, Agent orchestration, and composition-root
+  wiring remain out of scope.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
@@ -668,4 +686,4 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   application:generate-text + rag:answer-contract +
   rag:answer-assembler + application:grounded-answer +
   citation:contract + citation:builder + application:cited-answer +
-  typecheck).
+  mcp:contract + typecheck).
