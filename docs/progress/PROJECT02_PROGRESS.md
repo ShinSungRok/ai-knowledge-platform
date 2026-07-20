@@ -780,3 +780,29 @@ Add reciprocal-rank-fusion hybrid search
 
 **Status**
 Completed
+
+## Task 30
+
+**Date**
+2026-07-20
+
+**Commit**
+Pending
+
+**Title**
+Add retrieve hybrid knowledge chunks use case
+
+**Summary**
+- Added `RetrieveHybridKnowledgeChunksUseCase` + its own `RetrieveHybridKnowledgeChunksInput` (`workspaceId`, `query`, `limit`) to `application`, mirroring how `RetrieveKnowledgeChunksInput` is kept separate from `RetrievalInput` rather than reusing the search module's input type directly
+- Constructor injects only the `HybridSearch` port — never `VectorRetriever`, `KeywordSearch`, `EmbeddingProvider`, `VectorIndex`, `DocumentChunkRepository`, or a concrete adapter; `execute` validates `workspaceId`/`query`/`limit` at the application boundary, then delegates to `HybridSearch.search` and returns its `RetrievalResult` unchanged (no re-sorting/filtering/context assembly); the existing `RetrieveKnowledgeChunksUseCase` and `VectorRetriever` contract are unchanged
+- Exported the use case + input type from the `application` and top-level `app/knowledge` barrels
+- Added `runRetrieveHybridKnowledgeChunksUseCaseValidation.ts` (a static source-scan confirming the use case only imports the `HybridSearch` port, plus a counting `HybridSearch` test double proving invalid input is rejected before any `search` call and valid input passes through with the result unchanged) + `tests/unit/retrieveHybridKnowledgeChunksUseCase.cases.ts`, wired into `validate:application:retrieve-hybrid`, `validate:application` (and therefore the top-level `validate` chain); no HTTP/API controller, Composition Root wiring, context assembly, prompt/LLM, cross-encoder re-ranking, or vector retrieval use case change introduced
+
+**Validation**
+- `pnpm validate:search:hybrid`
+- `pnpm validate:application:retrieve-hybrid`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed

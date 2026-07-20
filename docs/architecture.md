@@ -332,6 +332,17 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   Cross-encoder/LLM re-ranking, score calibration/weighted fusion, and
   persistence changes to the vector index or chunk repository are out of
   scope for this adapter.
+- `RetrieveHybridKnowledgeChunksUseCase` (`app/knowledge/application`) is
+  the hybrid counterpart to `RetrieveKnowledgeChunksUseCase`: its
+  constructor injects only the `HybridSearch` port (never
+  `VectorRetriever`, `KeywordSearch`, `EmbeddingProvider`, `VectorIndex`,
+  `DocumentChunkRepository`, or a concrete adapter). It validates
+  `workspaceId`/`query`/`limit` — its own
+  `RetrieveHybridKnowledgeChunksInput`, kept separate from `RetrievalInput`
+  the same way `RetrieveKnowledgeChunksInput` is — then delegates to
+  `HybridSearch.search` and returns its `RetrievalResult` unchanged.
+  `RetrieveKnowledgeChunksUseCase` and the `VectorRetriever` contract are
+  untouched by this use case.
 - Database adapters, HTTP/server, and AI provider wiring are not
   implemented yet.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +

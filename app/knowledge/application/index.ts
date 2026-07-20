@@ -45,3 +45,7 @@ export {
   RetrieveKnowledgeChunksUseCase,
   type RetrieveKnowledgeChunksInput,
 } from "./RetrieveKnowledgeChunksUseCase";
+export {
+  RetrieveHybridKnowledgeChunksUseCase,
+  type RetrieveHybridKnowledgeChunksInput,
+} from "./RetrieveHybridKnowledgeChunksUseCase";
