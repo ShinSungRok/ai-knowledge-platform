@@ -32,3 +32,6 @@ OPENSEARCH_URL=http://localhost:9200 \
 
 Optional Basic auth env vars for the app (when security is enabled on the
 cluster): `OPENSEARCH_USERNAME`, `OPENSEARCH_PASSWORD`.
+
+Postgres in compose is for optional live SoT checks (`DATABASE_URL`);
+default `pnpm validate` does not require it.

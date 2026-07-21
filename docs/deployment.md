@@ -11,6 +11,21 @@ available; production host/CI deploy pipelines are not yet wired.
 (static, Docker-daemon-free). Together with `pnpm validate`, these define the
 Platform Baseline deployment readiness bar for Project 2.
 
+**Default `pnpm validate` remains dependency-free** (Fake / in-memory adapters;
+no live Postgres, OpenSearch, LLM, or OTLP collector required). Optional live
+runners skip when env is unset and are not in top-level validate.
+
+### Post-baseline optional env (summary)
+
+| Env | Role |
+|---|---|
+| `DATABASE_URL` | Optional live Postgres (`PostgresSqlGateway` / `validate:infra:postgres-live`) |
+| `OPENSEARCH_URL` / `OPENSEARCH_INDEX` | Optional live OpenSearch VectorIndex |
+| `OPENSEARCH_USERNAME` / `OPENSEARCH_PASSWORD` | Optional Basic auth for OpenSearch |
+| `LLM_API_KEY` (and related `LLM_*`) | Optional HTTP LLM (`HttpLanguageModelProvider`) |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | Optional OTLP/HTTP log+metrics export |
+| API keys / Bearer | Required for operations/listening cited-answer and `POST /mcp` (`apiKeys` map) |
+
 ## 2. Local infrastructure (skeleton)
 
 Compose and image definitions live under `docker/`:
@@ -207,7 +222,7 @@ OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 \
 
 Official `@opentelemetry/*` SDK, Prometheus scrape, and tracing remain deferred.
 
-## 5b. OpenSearch VectorIndex (optional)
+## 5d. OpenSearch VectorIndex (optional)
 
 `OpenSearchVectorIndex` implements `VectorIndex` over a dependency-free HTTP
 transport (no official OpenSearch JS SDK). Documents/chunks stay on SQL SoT;

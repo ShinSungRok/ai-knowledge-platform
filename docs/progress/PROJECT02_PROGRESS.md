@@ -3476,3 +3476,26 @@ Update portfolio for post-baseline Partial evidence
 **Status**
 Completed
 
+## Task 131
+
+**Date**
+2026-07-21
+
+**Commit**
+e2b7947
+
+**Title**
+Align README, deployment, and modules docs
+
+**Summary**
+- Aligned README/deployment/modules/architecture/docker docs with post-baseline Partial evidence
+- Added optional env summary; clarified dependency-free default validate
+
+**Validation**
+- `pnpm validate:project:closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

@@ -17,6 +17,11 @@ Charter capabilities through Operations are implemented and documented. See
 [`docs/portfolio.md`](docs/portfolio.md) and
 [`docs/progress/PROJECT02_ROADMAP_STATUS.md`](docs/progress/PROJECT02_ROADMAP_STATUS.md).
 
+Post-baseline Sprints 21–30 add **Partial** infrastructure adapters (Fake-
+validated; live optional via env). Default `pnpm validate` remains
+**dependency-free** (Fake / in-memory / SqlVectorIndex — no Docker, network,
+or API keys required).
+
 ```bash
 pnpm install
 pnpm validate
@@ -149,15 +154,18 @@ OPENSEARCH_URL=http://localhost:9200 \
   pnpm validate:embedding:opensearch-live
 ```
 
-## Deferred infrastructure
+## Still deferred by design (nested)
 
-- Real Postgres as default validate path (SQL/Fake validated; live `pg` optional)
-- Official OpenSearch JS SDK (`OpenSearchVectorIndex` + Fake transport validated;
-  live optional via `OPENSEARCH_URL`; default remains InMemory/`SqlVectorIndex`)
-- Official LLM SDKs and official MCP SDK / stdio (HTTP LLM + JSON-RPC
-  `POST /mcp` optional; default composition remains Fake)
-- Express/Fastify, JWT/OIDC AuthN, official OTel SDK / Prometheus scrape /
-  tracing (OTLP/HTTP log+metrics export optional via env)
+Partial adapters above are Fake-validated. These remain out of scope by design:
+
+- Official SDKs (`@opentelemetry/*`, OpenSearch JS, LLM vendor SDKs, MCP SDK)
+- MCP stdio; Express / Fastify
+- JWT / OIDC AuthN; Prometheus scrape; distributed tracing
+- Live Postgres/OpenSearch/LLM/OTLP as the **default** validate path
+  (optional live runners skip when env is unset)
+
+See [`docs/portfolio.md`](docs/portfolio.md) § Post-baseline infrastructure
+(Partial) and intentional non-goals.
 
 ## Layout
 
@@ -202,5 +210,8 @@ Minimized for the platform baseline:
 
 ## Next
 
-Infrastructure adapters and productization belong to later phases. Project 2
-closeout does not start Project 3. See [`docs/development.md`](docs/development.md).
+Nested deferrals (official SDKs, JWT/OIDC, Prometheus, tracing, Express,
+MCP stdio) belong to later productization. Project 2 Charter baseline and
+post-baseline Partial adapters are documented in
+[`docs/portfolio.md`](docs/portfolio.md). See
+[`docs/development.md`](docs/development.md).

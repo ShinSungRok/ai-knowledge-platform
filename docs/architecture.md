@@ -908,10 +908,11 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   activates only when `OTEL_EXPORTER_OTLP_ENDPOINT` is set.
   `validate:deployment:readiness` checks Docker/docs/scripts statically
   without a Docker daemon.
-- Real TCP listen / Express/Fastify and real AI provider wiring are not
-  implemented as Express/Fastify. Post-baseline Sprint 25 adds
+- Express/Fastify are not used. Post-baseline Sprint 25 adds
   `NodeHttpListener` (`node:http`) and `createListeningOperationsServer`;
-  Express remains unused and dispatch-only servers are retained.
+  dispatch-only servers are retained. Optional HTTP LLM
+  (`HttpLanguageModelProvider`) is Fake-validated; default composition
+  remains Fake.
 - Validate with `pnpm validate` (skeleton + repository + repository:source +
   repository:chunk + application + pipeline connector + pipeline sync +
   pipeline chunk-document + pipeline rechunk-source + pipeline
