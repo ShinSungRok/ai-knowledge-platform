@@ -125,6 +125,7 @@ pnpm validate:composition:operations # createOperationsKnowledgeServer wiring
 pnpm validate:composition:listening-operations # createListeningOperationsServer ephemeral /health
 pnpm validate:deployment:readiness # static Docker/docs/export readiness
 pnpm validate:project:closeout # Project 2 baseline docs/scripts/exports closeout
+pnpm validate:project:post-baseline-closeout # Sprints 21–30 Partial infra evidence (static)
 pnpm validate:infra:sql-gateway-contract # SqlGateway port contract
 pnpm validate:infra:in-memory-sql # InMemorySqlGateway document/source/chunk SQL
 pnpm validate:infra:knowledge-schema # applyKnowledgeSchema + SQL repos smoke
@@ -160,10 +161,15 @@ After all Sprint Tasks: run `pnpm validate`, write the Sprint Report, and stop.
 
 ```bash
 pnpm validate:project:closeout
+pnpm validate:project:post-baseline-closeout
 ```
 
-This statically checks portfolio/roadmap docs, required scripts, and baseline
-barrel exports without Docker daemon or network.
+`validate:project:closeout` statically checks portfolio/roadmap docs, required
+scripts, and baseline barrel exports without Docker daemon or network.
+`validate:project:post-baseline-closeout` statically checks Sprints 21–30
+Partial infrastructure evidence (portfolio keywords, roadmap Sprint rows,
+representative validators, and adapter source files). Both run inside
+top-level `pnpm validate` and stay dependency-free.
 
 ## 4. Commit strategy
 

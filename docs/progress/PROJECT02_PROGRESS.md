@@ -3499,3 +3499,27 @@ Align README, deployment, and modules docs
 **Status**
 Completed
 
+## Task 132
+
+**Date**
+2026-07-21
+
+**Commit**
+66535e1
+
+**Title**
+Add post-baseline closeout validation runner
+
+**Summary**
+- Added `scripts/validate-post-baseline-closeout.ts` for Sprints 21–30 Partial evidence
+- Wired `validate:project:post-baseline-closeout` into top-level `pnpm validate`
+
+**Validation**
+- `pnpm validate:project:closeout`
+- `pnpm validate:project:post-baseline-closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
