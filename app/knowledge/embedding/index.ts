@@ -27,3 +27,7 @@ export type { OpenSearchHttpResponse } from "./OpenSearchHttpResponse";
 export type { OpenSearchHttpTransport } from "./OpenSearchHttpTransport";
 export type { OpenSearchClientConfig } from "./OpenSearchClientConfig";
 export { loadOpenSearchClientConfig } from "./loadOpenSearchClientConfig";
+export {
+  OpenSearchVectorIndex,
+  OPENSEARCH_VECTOR_COSINE_SCRIPT_SOURCE,
+} from "./OpenSearchVectorIndex";

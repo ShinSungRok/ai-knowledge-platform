@@ -116,7 +116,13 @@ export type {
   OpenSearchHttpTransport,
   OpenSearchClientConfig,
 } from "./embedding";
-export { InMemoryVectorIndex, SqlVectorIndex, loadOpenSearchClientConfig } from "./embedding";
+export {
+  InMemoryVectorIndex,
+  SqlVectorIndex,
+  loadOpenSearchClientConfig,
+  OpenSearchVectorIndex,
+  OPENSEARCH_VECTOR_COSINE_SCRIPT_SOURCE,
+} from "./embedding";
 export { KNOWLEDGE_MODULE_SEARCH } from "./search";
 export type { KeywordSearch, HybridSearch, RerankingInput, Reranker, RerankedSearch } from "./search";
 export { DefaultKeywordSearch, DefaultHybridSearch, DefaultReranker, DefaultRerankedSearch } from "./search";

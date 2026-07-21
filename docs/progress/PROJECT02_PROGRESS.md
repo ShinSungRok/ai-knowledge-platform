@@ -3381,3 +3381,25 @@ Define OpenSearch HTTP transport and config contract
 **Status**
 Completed
 
+## Task 127
+
+**Date**
+2026-07-21
+
+**Commit**
+5665368
+
+**Title**
+Add OpenSearchVectorIndex over HTTP transport
+
+**Summary**
+- Added `OpenSearchVectorIndex` implementing `VectorIndex` via `OpenSearchHttpTransport`
+- Index ensure + script_score cosine nearest; no official OpenSearch JS SDK
+
+**Validation**
+- `pnpm validate:embedding:opensearch-contract`
+- `pnpm typecheck`
+
+**Status**
+Completed
+
