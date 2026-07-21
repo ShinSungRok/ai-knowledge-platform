@@ -63,6 +63,7 @@ pnpm validate:citation:contract # CitationBuilder/Citation/CitedGroundedAnswer c
 pnpm validate:citation:builder # DefaultCitationBuilder evidence-only, order-preserving citation construction
 pnpm validate:application:cited-answer # GenerateCitedGroundedAnswerUseCase GenerateGroundedAnswerUseCase -> CitationBuilder delegation sequence
 pnpm validate:mcp:contract # McpTool/McpToolDefinition/McpToolInvokeInput/McpToolInvokeResult contract export + type-compatibility
+pnpm validate:mcp:jsonrpc-contract # McpJsonRpcHandler / request-response Fake contract
 pnpm validate:mcp:cited-answer-tool # GenerateCitedGroundedAnswerMcpTool use-case exposure and non-throwing error mapping
 pnpm validate:mcp:registry # DefaultMcpToolRegistry list ordering, duplicate rejection, known/unknown invoke
 pnpm validate:application:mcp-invoke # InvokeMcpToolUseCase McpToolRegistry.invoke delegation

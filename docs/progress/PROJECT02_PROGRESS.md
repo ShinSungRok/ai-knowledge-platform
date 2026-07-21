@@ -3157,3 +3157,27 @@ Add optional LLM provider composition wiring and update roadmap
 **Status**
 Completed
 
+## Task 118
+
+**Date**
+2026-07-21
+
+**Commit**
+3dbb672
+
+**Title**
+Define MCP JSON-RPC contract and handler port
+
+**Summary**
+- Added `McpJsonRpcRequest`/`Response`/`Handler` and `tools/list`·`tools/call` constants
+- Added `validate:mcp:jsonrpc-contract` with Fake handler; no official MCP SDK
+
+**Validation**
+- `pnpm validate:mcp:contract`
+- `pnpm validate:mcp:jsonrpc-contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

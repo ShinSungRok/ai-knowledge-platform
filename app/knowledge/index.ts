@@ -161,10 +161,17 @@ export type {
   McpToolInvokeResult,
   McpTool,
   McpToolRegistry,
+  McpJsonRpcId,
+  McpJsonRpcRequest,
+  McpJsonRpcError,
+  McpJsonRpcResponse,
+  McpJsonRpcHandler,
 } from "./mcp";
 export {
   GenerateCitedGroundedAnswerMcpTool,
   DefaultMcpToolRegistry,
+  MCP_METHOD_TOOLS_CALL,
+  MCP_METHOD_TOOLS_LIST,
 } from "./mcp";
 export { KNOWLEDGE_MODULE_TOOLS } from "./tools";
 export type {
