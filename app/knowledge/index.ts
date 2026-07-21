@@ -355,7 +355,14 @@ export type {
 export { DefaultRetryPolicy, DefaultTimeoutPolicy } from "./reliability";
 export { KNOWLEDGE_MODULE_SECURITY } from "./security";
 export type { AuthPrincipal, Authenticator, WorkspaceAuthorizer } from "./security";
-export type { ApiKeyPrincipalEntry } from "./security";
+export type {
+  ApiKeyPrincipalEntry,
+  JwtClaims,
+  VerifiedJwt,
+  JwtVerifier,
+  JwtAuthConfig,
+} from "./security";
+export { JWT_CLAIM_WORKSPACE_ID, loadJwtAuthConfig } from "./security";
 export {
   ApiKeyAuthenticator,
   DefaultWorkspaceAuthorizer,

@@ -3549,3 +3549,27 @@ Finalize roadmap track closeout and Progress Log
 **Status**
 Completed
 
+## Task 134
+
+**Date**
+2026-07-21
+
+**Commit**
+1f35a28
+
+**Title**
+Define JWT claims contract and verifier port
+
+**Summary**
+- Added `JwtClaims`, `JwtVerifier`, `JwtAuthConfig`, `loadJwtAuthConfig`
+- Added `validate:security:jwt-contract`; no jsonwebtoken/jose/passport SDK
+
+**Validation**
+- `pnpm validate:security:auth-contract`
+- `pnpm validate:security:jwt-contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
