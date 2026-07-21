@@ -3453,3 +3453,26 @@ Optional composition wiring and roadmap update
 **Status**
 Completed
 
+## Task 130
+
+**Date**
+2026-07-21
+
+**Commit**
+92f42c6
+
+**Title**
+Update portfolio for post-baseline Partial evidence
+
+**Summary**
+- Added Post-baseline infrastructure (Partial) section for Sprints 21–30
+- Refreshed intentional non-goals to nested deferrals only; fixed Runtime TCP wording
+
+**Validation**
+- `pnpm validate:project:closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
