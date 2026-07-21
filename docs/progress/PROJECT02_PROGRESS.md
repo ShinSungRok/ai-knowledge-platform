@@ -3387,7 +3387,7 @@ Completed
 2026-07-21
 
 **Commit**
-5665368
+6543b27
 
 **Title**
 Add OpenSearchVectorIndex over HTTP transport
@@ -3399,6 +3399,30 @@ Add OpenSearchVectorIndex over HTTP transport
 **Validation**
 - `pnpm validate:embedding:opensearch-contract`
 - `pnpm typecheck`
+
+**Status**
+Completed
+
+## Task 128
+
+**Date**
+2026-07-21
+
+**Commit**
+a9a47f5
+
+**Title**
+Add Fake OpenSearch transport validation
+
+**Summary**
+- Added `FakeOpenSearchHttpTransport` / `FetchOpenSearchHttpTransport`
+- Added `validate:embedding:opensearch-index` (Fake) and optional `opensearch-live`
+
+**Validation**
+- `pnpm validate:embedding:sql-index`
+- `pnpm validate:embedding:opensearch-index`
+- `pnpm typecheck`
+- `pnpm validate`
 
 **Status**
 Completed

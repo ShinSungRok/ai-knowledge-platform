@@ -31,3 +31,5 @@ export {
   OpenSearchVectorIndex,
   OPENSEARCH_VECTOR_COSINE_SCRIPT_SOURCE,
 } from "./OpenSearchVectorIndex";
+export { FakeOpenSearchHttpTransport } from "./FakeOpenSearchHttpTransport";
+export { FetchOpenSearchHttpTransport } from "./FetchOpenSearchHttpTransport";

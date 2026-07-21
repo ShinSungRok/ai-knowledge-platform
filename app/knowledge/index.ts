@@ -122,6 +122,8 @@ export {
   loadOpenSearchClientConfig,
   OpenSearchVectorIndex,
   OPENSEARCH_VECTOR_COSINE_SCRIPT_SOURCE,
+  FakeOpenSearchHttpTransport,
+  FetchOpenSearchHttpTransport,
 } from "./embedding";
 export { KNOWLEDGE_MODULE_SEARCH } from "./search";
 export type { KeywordSearch, HybridSearch, RerankingInput, Reranker, RerankedSearch } from "./search";
