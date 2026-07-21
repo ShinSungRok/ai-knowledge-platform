@@ -893,7 +893,9 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   separate TCP listen adapter in front of a router. `createInMemoryKnowledgeServer` in
   composition wires the full in-memory runtime entrypath.
 - The `observability` module provides dependency-free `Logger`/`Metrics`
-  ports with `InMemoryLogger`/`InMemoryMetrics` adapters.
+  ports with `InMemoryLogger`/`InMemoryMetrics` adapters, plus optional
+  OTLP/HTTP exporters (`ExportingLogger`/`ExportingMetrics`) without an
+  official OpenTelemetry SDK.
 - The `reliability` module provides deterministic `DefaultRetryPolicy`
   (no delay) and `DefaultTimeoutPolicy` (`Promise.race` + timer).
 - The `security` module provides `Authenticator`/`AuthPrincipal`,
@@ -902,7 +904,8 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   `Authorization: Bearer <api-key>` then workspace AuthZ against the principal.
 - `ObservingHttpRouter` and `createOperationsKnowledgeServer` /
   `createListeningOperationsServer` wire logging/metrics/AuthN+AuthZ;
-  both factories require `apiKeys` for Bearer API key AuthN.
+  both factories require `apiKeys` for Bearer API key AuthN. OTLP export
+  activates only when `OTEL_EXPORTER_OTLP_ENDPOINT` is set.
   `validate:deployment:readiness` checks Docker/docs/scripts statically
   without a Docker daemon.
 - Real TCP listen / Express/Fastify and real AI provider wiring are not

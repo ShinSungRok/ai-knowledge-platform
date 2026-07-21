@@ -4,8 +4,8 @@ import {
 } from "../config/DEFAULT_KNOWLEDGE_RUNTIME_CONFIG";
 import type { KnowledgeRuntimeConfig } from "../config/KnowledgeRuntimeConfig";
 import { ObservingHttpRouter } from "../http/ObservingHttpRouter";
-import { InMemoryLogger } from "../observability/InMemoryLogger";
-import { InMemoryMetrics } from "../observability/InMemoryMetrics";
+import type { InMemoryLogger } from "../observability/InMemoryLogger";
+import type { InMemoryMetrics } from "../observability/InMemoryMetrics";
 import type { HttpListenAddress } from "../server/HttpListenAddress";
 import type { HttpListenConfig } from "../server/HttpListenConfig";
 import type { HttpListener } from "../server/HttpListener";
@@ -16,6 +16,7 @@ import { DefaultWorkspaceAuthorizer } from "../security/DefaultWorkspaceAuthoriz
 import { HttpBearerGuard } from "../security/HttpBearerGuard";
 import { createInMemoryKnowledgeComposition } from "./createInMemoryKnowledgeComposition";
 import type { LlmProviderOption } from "./createLanguageModelProvider";
+import { createOperationsObservability } from "./createOperationsObservability";
 import type { InMemoryKnowledgeComposition } from "./InMemoryKnowledgeComposition";
 
 const DEFAULT_LISTEN: HttpListenConfig = {
@@ -36,14 +37,15 @@ export type ListeningOperationsServer = {
   composition: InMemoryKnowledgeComposition;
   logger: InMemoryLogger;
   metrics: InMemoryMetrics;
+  flushObservability?: () => Promise<void>;
   start(): Promise<HttpListenAddress>;
   stop(): Promise<void>;
 };
 
 /**
  * Operations wiring with {@link NodeHttpListener} for TCP listen.
- * Cited-answer requires Bearer API key AuthN.
- * `apiKeys` is required. Default listen is `{ host: "127.0.0.1", port: 0 }`.
+ * Optional OTLP export when `OTEL_EXPORTER_OTLP_ENDPOINT` is set
+ * (default observability remains InMemory).
  */
 export function createListeningOperationsServer(
   options: CreateListeningOperationsServerOptions,
@@ -53,8 +55,7 @@ export function createListeningOperationsServer(
   const composition = createInMemoryKnowledgeComposition(config, {
     llm: options.llm,
   });
-  const logger = new InMemoryLogger();
-  const metrics = new InMemoryMetrics();
+  const observability = createOperationsObservability();
   const authenticator = new ApiKeyAuthenticator(options.apiKeys);
   const bearerGuard = new HttpBearerGuard(authenticator);
   const workspaceAuthorizer = new DefaultWorkspaceAuthorizer();
@@ -64,14 +65,21 @@ export function createListeningOperationsServer(
     workspaceAuthorizer,
     composition.mcpJsonRpcHandler,
   );
-  const router = new ObservingHttpRouter(innerRouter, logger, metrics);
+  const router = new ObservingHttpRouter(
+    innerRouter,
+    observability.routerLogger,
+    observability.routerMetrics,
+  );
   const listener = new NodeHttpListener(router);
 
   return {
     listener,
     composition,
-    logger,
-    metrics,
+    logger: observability.logger,
+    metrics: observability.metrics,
+    ...(observability.flushObservability
+      ? { flushObservability: observability.flushObservability }
+      : {}),
     start: () => listener.listen(listenConfig),
     stop: () => listener.close(),
   };

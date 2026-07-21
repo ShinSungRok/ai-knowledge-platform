@@ -3330,3 +3330,29 @@ Add exporting Logger/Metrics adapters and Fake validation
 **Status**
 Completed
 
+## Task 125
+
+**Date**
+2026-07-21
+
+**Commit**
+1e313c5
+
+**Title**
+Optional composition wiring and roadmap update
+
+**Summary**
+- Added `createOperationsObservability`; operations/listening enable OTLP when `OTEL_EXPORTER_OTLP_ENDPOINT` is set (default InMemory)
+- README/deployment OTEL docs; roadmap OpenTelemetry → Partial
+
+**Validation**
+- `pnpm validate:observability:exporting`
+- `pnpm validate:composition:operations`
+- `pnpm validate:composition:listening-operations`
+- `pnpm validate:project:closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

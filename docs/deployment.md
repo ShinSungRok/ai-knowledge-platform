@@ -182,6 +182,30 @@ pnpm validate:ai:http-provider-live
 LLM_API_KEY=sk-... pnpm validate:ai:http-provider-live
 ```
 
+## 5c. Optional OTLP/HTTP observability export
+
+Default operations/listening servers use `InMemoryLogger` / `InMemoryMetrics`
+only. When `OTEL_EXPORTER_OTLP_ENDPOINT` is set, the same sinks are wrapped
+with `ExportingLogger` / `ExportingMetrics` for the observing router.
+Call `flushObservability()` to push buffered logs and metric snapshots.
+
+| Env | Role |
+|---|---|
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | Collector base URL (required to enable) |
+| `OTEL_SERVICE_NAME` | Defaults to `ai-knowledge-platform` |
+| `OTEL_EXPORTER_OTLP_HEADERS` | Optional `key=value,key2=value2` |
+
+```bash
+# skip (exit 0) when unset; not in top-level pnpm validate
+pnpm validate:observability:otlp-live
+
+OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 \
+  OTEL_SERVICE_NAME=ai-knowledge-platform \
+  pnpm validate:observability:otlp-live
+```
+
+Official `@opentelemetry/*` SDK, Prometheus scrape, and tracing remain deferred.
+
 ## 6. Current limitations
 
 - No production host, CI deploy pipeline, or secrets management yet.
@@ -189,4 +213,5 @@ LLM_API_KEY=sk-... pnpm validate:ai:http-provider-live
 - Express/Fastify not used; TCP listen is `NodeHttpListener` (`node:http`).
 - API Key/Bearer AuthN is wired for cited-answer; JWT/OIDC remain deferred.
 - HTTP LLM is optional; default composition remains Fake (no official LLM SDK).
-- OpenTelemetry/Prometheus exporters are not included.
+- OTLP/HTTP log+metrics export is optional via env; official OTel SDK /
+  Prometheus scrape / tracing are not included.

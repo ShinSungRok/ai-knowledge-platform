@@ -103,14 +103,27 @@ pnpm validate:ai:http-provider-live
 LLM_API_KEY=sk-... pnpm validate:ai:http-provider-live
 ```
 
+Default operations observability is `InMemoryLogger` / `InMemoryMetrics`.
+When `OTEL_EXPORTER_OTLP_ENDPOINT` is set, the HTTP router wraps those sinks
+with OTLP/HTTP exporters (`flushObservability()` after work). Official
+OpenTelemetry SDK remains unused.
+
+```bash
+# optional live OTLP smoke (skipped when endpoint unset; not in pnpm validate)
+pnpm validate:observability:otlp-live
+OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 \
+  OTEL_SERVICE_NAME=ai-knowledge-platform \
+  pnpm validate:observability:otlp-live
+```
+
 ## Deferred infrastructure
 
 - Real Postgres / OpenSearch adapters (SQL/Fake paths validated; real `pg`
   live optional; OpenSearch client deferred)
 - Official LLM SDKs and official MCP SDK / stdio (HTTP LLM + JSON-RPC
   `POST /mcp` optional; default composition remains Fake)
-- Express/Fastify, JWT/OIDC AuthN, OTel exporters
-  (`NodeHttpListener` + API Key/Bearer AuthN are available)
+- Express/Fastify, JWT/OIDC AuthN, official OTel SDK / Prometheus scrape /
+  tracing (OTLP/HTTP log+metrics export optional via env)
 
 ## Layout
 
