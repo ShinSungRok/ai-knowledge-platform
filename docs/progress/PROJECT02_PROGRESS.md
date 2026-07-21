@@ -3672,3 +3672,25 @@ Define Prometheus text exposition formatter (contract)
 
 **Status**
 Completed
+
+## Task 139
+
+**Date**
+2026-07-21
+
+**Commit**
+Pending
+
+**Title**
+Add GET `/metrics` handling in `ObservingHttpRouter`
+
+**Summary**
+- Added `GET /metrics` fast-path: bypasses inner router and returns Prometheus text via `toPrometheusText(this.metrics.getPoints())`
+- Ensured self-reference safety by snapshotting metric points before incrementing `http.requests`
+
+**Validation**
+- `pnpm validate:http:observing`
+- `pnpm typecheck`
+
+**Status**
+Completed
