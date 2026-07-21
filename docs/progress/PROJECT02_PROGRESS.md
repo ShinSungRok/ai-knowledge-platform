@@ -3573,3 +3573,27 @@ Define JWT claims contract and verifier port
 **Status**
 Completed
 
+## Task 135
+
+**Date**
+2026-07-21
+
+**Commit**
+08f1ba1
+
+**Title**
+Add Hs256JwtAuthenticator over Node crypto
+
+**Summary**
+- Added `Hs256JwtVerifier` / `Hs256JwtAuthenticator` (Node crypto HS256)
+- Added `validate:security:jwt-hs256`
+
+**Validation**
+- `pnpm validate:security:jwt-contract`
+- `pnpm validate:security:jwt-hs256`
+- `pnpm validate:security:bearer-guard`
+- `pnpm typecheck`
+
+**Status**
+Completed
+

@@ -118,6 +118,7 @@ pnpm validate:reliability:timeout # DefaultTimeoutPolicy Promise.race timeout
 pnpm validate:security:workspace # DefaultWorkspaceAuthorizer
 pnpm validate:security:auth-contract # Authenticator port via FakeAuthenticator
 pnpm validate:security:jwt-contract # JwtVerifier + loadJwtAuthConfig
+pnpm validate:security:jwt-hs256 # Hs256JwtVerifier + Hs256JwtAuthenticator
 pnpm validate:security:api-key # ApiKeyAuthenticator static key map
 pnpm validate:security:bearer-guard # HttpBearerGuard Authorization Bearer parsing
 pnpm validate:security:http-guard # HttpWorkspaceGuard x-workspace-id

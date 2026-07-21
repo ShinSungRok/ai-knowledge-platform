@@ -365,6 +365,8 @@ export type {
 export { JWT_CLAIM_WORKSPACE_ID, loadJwtAuthConfig } from "./security";
 export {
   ApiKeyAuthenticator,
+  Hs256JwtVerifier,
+  Hs256JwtAuthenticator,
   DefaultWorkspaceAuthorizer,
   HttpBearerGuard,
   HttpWorkspaceGuard,

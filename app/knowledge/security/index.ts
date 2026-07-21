@@ -23,6 +23,8 @@ export type { VerifiedJwt } from "./VerifiedJwt";
 export type { JwtVerifier } from "./JwtVerifier";
 export type { JwtAuthConfig } from "./JwtAuthConfig";
 export { loadJwtAuthConfig } from "./loadJwtAuthConfig";
+export { Hs256JwtVerifier } from "./Hs256JwtVerifier";
+export { Hs256JwtAuthenticator } from "./Hs256JwtAuthenticator";
 export { ApiKeyAuthenticator } from "./ApiKeyAuthenticator";
 export { DefaultWorkspaceAuthorizer } from "./DefaultWorkspaceAuthorizer";
 export { HttpBearerGuard } from "./HttpBearerGuard";
