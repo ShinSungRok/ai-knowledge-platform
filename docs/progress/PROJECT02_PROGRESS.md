@@ -3258,3 +3258,27 @@ Wire listening MCP endpoint and update roadmap
 **Status**
 Completed
 
+## Task 122
+
+**Date**
+2026-07-21
+
+**Commit**
+c0664e1
+
+**Title**
+Define OTLP HTTP transport and exporter config contract
+
+**Summary**
+- Added `OtlpHttpTransport` / request-response types and `loadOtlpExporterConfig`
+- Added `validate:observability:otlp-contract`; no official OpenTelemetry SDK
+
+**Validation**
+- `pnpm validate:observability:contract`
+- `pnpm validate:observability:otlp-contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

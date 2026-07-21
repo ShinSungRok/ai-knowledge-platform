@@ -308,8 +308,16 @@ export type {
   Logger,
   MetricPoint,
   Metrics,
+  OtlpHttpRequest,
+  OtlpHttpResponse,
+  OtlpHttpTransport,
+  OtlpExporterConfig,
 } from "./observability";
-export { InMemoryLogger, InMemoryMetrics } from "./observability";
+export {
+  InMemoryLogger,
+  InMemoryMetrics,
+  loadOtlpExporterConfig,
+} from "./observability";
 export { KNOWLEDGE_MODULE_RELIABILITY } from "./reliability";
 export type {
   RetryDecision,

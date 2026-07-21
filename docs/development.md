@@ -106,6 +106,7 @@ pnpm validate:server:lifecycle # DefaultKnowledgeServer start/stop/dispatch
 pnpm validate:server:listener-contract # HttpListener port via FakeHttpListener
 pnpm validate:server:node-listener # NodeHttpListener loopback ephemeral /health
 pnpm validate:observability:contract # InMemoryLogger/InMemoryMetrics contract
+pnpm validate:observability:otlp-contract # OtlpHttpTransport + loadOtlpExporterConfig Fake contract
 pnpm validate:reliability:retry # DefaultRetryPolicy no-delay retries
 pnpm validate:reliability:timeout # DefaultTimeoutPolicy Promise.race timeout
 pnpm validate:security:workspace # DefaultWorkspaceAuthorizer
