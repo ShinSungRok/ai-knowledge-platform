@@ -119,6 +119,8 @@ pnpm validate:security:workspace # DefaultWorkspaceAuthorizer
 pnpm validate:security:auth-contract # Authenticator port via FakeAuthenticator
 pnpm validate:security:jwt-contract # JwtVerifier + loadJwtAuthConfig
 pnpm validate:security:jwt-hs256 # Hs256JwtVerifier + Hs256JwtAuthenticator
+pnpm validate:security:jwt-jwks # Rs256JwtVerifier + FakeJwksHttpTransport
+pnpm validate:security:jwt-live # optional live JWKS (skipped without JWT_JWKS_URL)
 pnpm validate:security:api-key # ApiKeyAuthenticator static key map
 pnpm validate:security:bearer-guard # HttpBearerGuard Authorization Bearer parsing
 pnpm validate:security:http-guard # HttpWorkspaceGuard x-workspace-id

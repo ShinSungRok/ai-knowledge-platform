@@ -3597,3 +3597,26 @@ Add Hs256JwtAuthenticator over Node crypto
 **Status**
 Completed
 
+## Task 136
+
+**Date**
+2026-07-21
+
+**Commit**
+a7c1f1c
+
+**Title**
+Add JWKS HTTP transport and Rs256JwtAuthenticator
+
+**Summary**
+- Added JWKS HTTP transport, `Rs256JwtVerifier`/`Rs256JwtAuthenticator`
+- Added `validate:security:jwt-jwks` and optional `jwt-live`
+
+**Validation**
+- `pnpm validate:security:jwt-hs256`
+- `pnpm validate:security:jwt-jwks`
+- `pnpm typecheck`
+
+**Status**
+Completed
+

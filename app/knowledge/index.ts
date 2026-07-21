@@ -361,12 +361,21 @@ export type {
   VerifiedJwt,
   JwtVerifier,
   JwtAuthConfig,
+  JwksHttpRequest,
+  JwksHttpResponse,
+  JwksHttpTransport,
+  JwkRsaPublicKey,
+  JwksDocument,
 } from "./security";
 export { JWT_CLAIM_WORKSPACE_ID, loadJwtAuthConfig } from "./security";
 export {
   ApiKeyAuthenticator,
   Hs256JwtVerifier,
   Hs256JwtAuthenticator,
+  FakeJwksHttpTransport,
+  FetchJwksHttpTransport,
+  Rs256JwtVerifier,
+  Rs256JwtAuthenticator,
   DefaultWorkspaceAuthorizer,
   HttpBearerGuard,
   HttpWorkspaceGuard,
