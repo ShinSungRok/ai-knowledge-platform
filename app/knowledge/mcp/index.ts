@@ -20,6 +20,7 @@ export type { McpTool } from "./McpTool";
 export type { McpToolRegistry } from "./McpToolRegistry";
 export { GenerateCitedGroundedAnswerMcpTool } from "./GenerateCitedGroundedAnswerMcpTool";
 export { DefaultMcpToolRegistry } from "./DefaultMcpToolRegistry";
+export { DefaultMcpJsonRpcHandler } from "./DefaultMcpJsonRpcHandler";
 export type { McpJsonRpcId } from "./McpJsonRpcId";
 export type { McpJsonRpcRequest } from "./McpJsonRpcRequest";
 export type { McpJsonRpcError } from "./McpJsonRpcError";

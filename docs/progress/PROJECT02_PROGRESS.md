@@ -3181,3 +3181,28 @@ Define MCP JSON-RPC contract and handler port
 **Status**
 Completed
 
+## Task 119
+
+**Date**
+2026-07-21
+
+**Commit**
+6c63b66
+
+**Title**
+Add DefaultMcpJsonRpcHandler over McpToolRegistry
+
+**Summary**
+- Added `DefaultMcpJsonRpcHandler` for tools/list·tools/call (registry-only; tool failures as result.isError)
+- Added `validate:mcp:jsonrpc-handler`
+
+**Validation**
+- `pnpm validate:mcp:registry`
+- `pnpm validate:mcp:jsonrpc-contract`
+- `pnpm validate:mcp:jsonrpc-handler`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

@@ -170,6 +170,7 @@ export type {
 export {
   GenerateCitedGroundedAnswerMcpTool,
   DefaultMcpToolRegistry,
+  DefaultMcpJsonRpcHandler,
   MCP_METHOD_TOOLS_CALL,
   MCP_METHOD_TOOLS_LIST,
 } from "./mcp";
