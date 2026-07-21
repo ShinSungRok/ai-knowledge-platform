@@ -3651,3 +3651,24 @@ Optional composition JWT wiring and roadmap update
 **Status**
 Completed
 
+## Task 138
+
+**Date**
+2026-07-21
+
+**Commit**
+Pending
+
+**Title**
+Define Prometheus text exposition formatter (contract)
+
+**Summary**
+- Added dependency-free `toPrometheusText(points)` serializer for `MetricPoint[]`
+- Added `validate:observability:prometheus-format` runner with deterministic output
+
+**Validation**
+- `pnpm validate:observability:prometheus-format`
+- `pnpm typecheck`
+
+**Status**
+Completed

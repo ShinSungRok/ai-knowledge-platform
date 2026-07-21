@@ -19,6 +19,7 @@ export { InMemoryLogger } from "./InMemoryLogger";
 export type { MetricPoint } from "./MetricPoint";
 export type { Metrics } from "./Metrics";
 export { InMemoryMetrics } from "./InMemoryMetrics";
+export { toPrometheusText } from "./prometheusText";
 export type { OtlpHttpRequest } from "./OtlpHttpRequest";
 export type { OtlpHttpResponse } from "./OtlpHttpResponse";
 export type { OtlpHttpTransport } from "./OtlpHttpTransport";

@@ -106,6 +106,7 @@
     "validate:observability:otlp-contract": "tsx app/knowledge/observability/runOtlpExporterContractValidation.ts",
     "validate:observability:otlp-exporters": "tsx app/knowledge/observability/runOtlpExportersValidation.ts",
     "validate:observability:exporting": "tsx app/knowledge/observability/runExportingObservabilityValidation.ts",
+    "validate:observability:prometheus-format": "tsx app/knowledge/observability/runPrometheusTextValidation.ts",
     "validate:observability:otlp-live": "tsx app/knowledge/observability/runOtlpExporterLiveValidation.ts",
     "validate:reliability:retry": "tsx app/knowledge/reliability/runDefaultRetryPolicyValidation.ts",
     "validate:reliability:timeout": "tsx app/knowledge/reliability/runDefaultTimeoutPolicyValidation.ts",
