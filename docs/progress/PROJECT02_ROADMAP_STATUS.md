@@ -5,6 +5,20 @@
 > listen, AuthN, LLM, MCP transport, OTLP export, and OpenSearch vector
 > adapter progress (Sprints 21–30).
 
+## Post-baseline Infrastructure Track: CLOSED (Partial)
+
+Sprints 21–30 delivered Fake-/in-memory-validated **Partial** adapters for
+Postgres SoT, OpenSearch VectorIndex, HTTP LLM, MCP JSON-RPC HTTP, TCP listen,
+API Key/Bearer AuthN, and OTLP/HTTP export. Default `pnpm validate` stays
+dependency-free.
+
+**Remaining nested deferrals (by design):** official SDKs (`@opentelemetry/*`,
+OpenSearch JS, LLM vendor SDKs, MCP SDK), MCP stdio, Express/Fastify, JWT/OIDC,
+Prometheus scrape, distributed tracing.
+
+**Charter Platform Baseline remains CLOSED** (Sprint 20). This track closeout
+does not reopen baseline capabilities or mark Partial adapters as Completed.
+
 ## Charter capability → Completed
 
 | Charter capability | Status | Evidence (representative) |
@@ -48,3 +62,4 @@
 | Sprint 28 (Task 118–121) | Establish MCP Network Transport (JSON-RPC contract/handler, HTTP `/mcp`, listening/operations wiring; SDK/stdio deferred) |
 | Sprint 29 (Task 122–125) | Establish OpenTelemetry Export (OTLP/HTTP contract/exporters, ExportingLogger/Metrics, optional env composition; official SDK deferred) |
 | Sprint 30 (Task 126–129) | Establish OpenSearch Vector Index Adapter (HTTP contract, `OpenSearchVectorIndex`, Fake validation, optional composition; official SDK deferred; default InMemory/`SqlVectorIndex`) |
+| Sprint 31 (Task 130–133) | Close Out Post-baseline Infrastructure Track (portfolio/README/deployment alignment, `validate:project:post-baseline-closeout`, roadmap track CLOSED Partial) |

@@ -168,8 +168,10 @@ pnpm validate:project:post-baseline-closeout
 scripts, and baseline barrel exports without Docker daemon or network.
 `validate:project:post-baseline-closeout` statically checks Sprints 21–30
 Partial infrastructure evidence (portfolio keywords, roadmap Sprint rows,
-representative validators, and adapter source files). Both run inside
-top-level `pnpm validate` and stay dependency-free.
+representative validators, and adapter source files). **Post-baseline Infrastructure Track closeout** (Sprint 31) additionally
+requires `pnpm validate:project:post-baseline-closeout` (included in
+top-level `pnpm validate`). See
+[`docs/progress/PROJECT02_ROADMAP_STATUS.md`](progress/PROJECT02_ROADMAP_STATUS.md).
 
 ## 4. Commit strategy
 

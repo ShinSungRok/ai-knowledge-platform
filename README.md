@@ -18,14 +18,15 @@ Charter capabilities through Operations are implemented and documented. See
 [`docs/progress/PROJECT02_ROADMAP_STATUS.md`](docs/progress/PROJECT02_ROADMAP_STATUS.md).
 
 Post-baseline Sprints 21–30 add **Partial** infrastructure adapters (Fake-
-validated; live optional via env). Default `pnpm validate` remains
-**dependency-free** (Fake / in-memory / SqlVectorIndex — no Docker, network,
-or API keys required).
+validated; live optional via env). **Post-baseline Infrastructure Track:
+CLOSED (Partial).** Default `pnpm validate` remains **dependency-free**
+(Fake / in-memory / SqlVectorIndex — no Docker, network, or API keys required).
 
 ```bash
 pnpm install
 pnpm validate
 pnpm validate:project:closeout
+pnpm validate:project:post-baseline-closeout
 ```
 
 ## Local runtime
@@ -196,6 +197,7 @@ See [`docs/architecture.md`](docs/architecture.md) and
 |---|---|
 | `pnpm validate` | Full dependency-free platform validation chain + typecheck |
 | `pnpm validate:project:closeout` | Static Project 2 baseline docs/scripts/exports closeout |
+| `pnpm validate:project:post-baseline-closeout` | Static Sprints 21–30 Partial infra evidence closeout |
 | `pnpm validate:skeleton` | Directory, barrel, docs, and script integrity |
 | `pnpm typecheck` | TypeScript strict check (`tsc --noEmit`) |
 | `pnpm validate:deployment:readiness` | Static Docker/docs/export readiness (no daemon) |

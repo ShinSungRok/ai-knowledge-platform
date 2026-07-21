@@ -63,6 +63,12 @@ function main(): void {
     path.join(root, "docs/progress/PROJECT02_ROADMAP_STATUS.md"),
     "utf8",
   );
+  assertContains(
+    roadmap,
+    "Post-baseline Infrastructure Track: CLOSED (Partial)",
+    "roadmap must declare post-baseline track CLOSED (Partial)",
+  );
+  assertContains(roadmap, "Sprint 31", "roadmap must include Sprint 31");
   for (const sprint of [
     "Sprint 21",
     "Sprint 22",
