@@ -269,12 +269,16 @@ export type {
   CreateInMemoryKnowledgeCompositionOptions,
   CreateSqlKnowledgeCompositionOptions,
   LlmProviderOption,
+  AuthProviderOption,
 } from "./composition";
 export {
   createInMemoryKnowledgeComposition,
   createLanguageModelProvider,
+  createAuthenticatorFromOption,
+  createAuthenticatorFromEnv,
 } from "./composition";
 export { createOperationsKnowledgeServer } from "./composition";
+export { createOperationsKnowledgeServerFromEnv } from "./composition";
 export type {
   CreateOperationsKnowledgeServerOptions,
   CreateListeningOperationsServerOptions,

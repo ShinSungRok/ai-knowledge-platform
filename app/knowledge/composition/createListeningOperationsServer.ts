@@ -10,10 +10,13 @@ import type { HttpListenAddress } from "../server/HttpListenAddress";
 import type { HttpListenConfig } from "../server/HttpListenConfig";
 import type { HttpListener } from "../server/HttpListener";
 import { NodeHttpListener } from "../server/NodeHttpListener";
-import { ApiKeyAuthenticator } from "../security/ApiKeyAuthenticator";
 import type { ApiKeyPrincipalEntry } from "../security/ApiKeyAuthenticator";
 import { DefaultWorkspaceAuthorizer } from "../security/DefaultWorkspaceAuthorizer";
 import { HttpBearerGuard } from "../security/HttpBearerGuard";
+import {
+  createAuthenticatorFromOption,
+  type AuthProviderOption,
+} from "./createAuthenticator";
 import { createInMemoryKnowledgeComposition } from "./createInMemoryKnowledgeComposition";
 import type { LlmProviderOption } from "./createLanguageModelProvider";
 import { createOperationsObservability } from "./createOperationsObservability";
@@ -25,12 +28,32 @@ const DEFAULT_LISTEN: HttpListenConfig = {
 };
 
 export type CreateListeningOperationsServerOptions = {
-  apiKeys: Readonly<Record<string, ApiKeyPrincipalEntry>>;
   config?: KnowledgeRuntimeConfig;
   listen?: HttpListenConfig;
   /** Defaults to Fake LLM. */
   llm?: LlmProviderOption;
+  /** Explicit AuthN provider. When set, `apiKeys` is ignored. */
+  auth?: AuthProviderOption;
+  /** Default ApiKey AuthN when `auth` is omitted. */
+  apiKeys?: Readonly<Record<string, ApiKeyPrincipalEntry>>;
 };
+
+function resolveAuthenticator(
+  options: CreateListeningOperationsServerOptions,
+) {
+  if (options.auth !== undefined) {
+    return createAuthenticatorFromOption(options.auth);
+  }
+  if (options.apiKeys !== undefined) {
+    return createAuthenticatorFromOption({
+      type: "apiKey",
+      apiKeys: options.apiKeys,
+    });
+  }
+  throw new Error(
+    "createListeningOperationsServer requires apiKeys or auth",
+  );
+}
 
 export type ListeningOperationsServer = {
   listener: HttpListener;
@@ -56,7 +79,7 @@ export function createListeningOperationsServer(
     llm: options.llm,
   });
   const observability = createOperationsObservability();
-  const authenticator = new ApiKeyAuthenticator(options.apiKeys);
+  const authenticator = resolveAuthenticator(options);
   const bearerGuard = new HttpBearerGuard(authenticator);
   const workspaceAuthorizer = new DefaultWorkspaceAuthorizer();
   const innerRouter = createKnowledgeHttpRouter(

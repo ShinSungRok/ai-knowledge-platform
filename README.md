@@ -161,7 +161,8 @@ Partial adapters above are Fake-validated. These remain out of scope by design:
 
 - Official SDKs (`@opentelemetry/*`, OpenSearch JS, LLM vendor SDKs, MCP SDK)
 - MCP stdio; Express / Fastify
-- JWT / OIDC AuthN; Prometheus scrape; distributed tracing
+- Full OIDC authorization-code login flows and JWT/OIDC SDKs (`jsonwebtoken`, `jose`, `passport`)
+- Prometheus scrape; distributed tracing
 - Live Postgres/OpenSearch/LLM/OTLP as the **default** validate path
   (optional live runners skip when env is unset)
 
@@ -212,8 +213,8 @@ Minimized for the platform baseline:
 
 ## Next
 
-Nested deferrals (official SDKs, JWT/OIDC, Prometheus, tracing, Express,
-MCP stdio) belong to later productization. Project 2 Charter baseline and
+Nested deferrals (official SDKs, full OIDC login flows, Prometheus, tracing,
+Express, MCP stdio) belong to later productization. Project 2 Charter baseline and
 post-baseline Partial adapters are documented in
 [`docs/portfolio.md`](docs/portfolio.md). See
 [`docs/development.md`](docs/development.md).

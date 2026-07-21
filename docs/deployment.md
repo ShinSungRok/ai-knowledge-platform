@@ -24,7 +24,9 @@ runners skip when env is unset and are not in top-level validate.
 | `OPENSEARCH_USERNAME` / `OPENSEARCH_PASSWORD` | Optional Basic auth for OpenSearch |
 | `LLM_API_KEY` (and related `LLM_*`) | Optional HTTP LLM (`HttpLanguageModelProvider`) |
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | Optional OTLP/HTTP log+metrics export |
-| API keys / Bearer | Required for operations/listening cited-answer and `POST /mcp` (`apiKeys` map) |
+| `JWT_SECRET` / `JWT_JWKS_URL` | Optional JWT AuthN (`auth` option or `createOperationsKnowledgeServerFromEnv`) |
+| `JWT_ISSUER` / `JWT_AUDIENCE` | Optional JWT claim validation |
+| API keys / Bearer | Default operations/listening AuthN (`apiKeys` map) |
 
 ## 2. Local infrastructure (skeleton)
 
@@ -247,12 +249,49 @@ pnpm validate:embedding:opensearch-live
 OPENSEARCH_URL=http://localhost:9200 pnpm validate:embedding:opensearch-live
 ```
 
+## 5e. Optional JWT AuthN
+
+Default operations/listening use static API keys (`apiKeys`). Optional JWT
+uses dependency-free Node `crypto` verifiers (no `jsonwebtoken`/`jose` SDK).
+
+| Variable | Meaning |
+|---|---|
+| `JWT_SECRET` | HS256 shared secret (enables JWT when using env factory) |
+| `JWT_JWKS_URL` | JWKS endpoint for RS256 (used when `JWT_SECRET` unset) |
+| `JWT_ISSUER` / `JWT_AUDIENCE` | Optional claim validation |
+| `workspace_id` claim | Required custom claim mapping to `AuthPrincipal.workspaceId` |
+
+Explicit composition:
+
+```ts
+import { createOperationsKnowledgeServer } from "./app/knowledge";
+
+createOperationsKnowledgeServer({
+  auth: { type: "jwt", config: { type: "hs256", secret: process.env.JWT_SECRET! } },
+});
+```
+
+Or env-driven factory (JWT when `JWT_SECRET` or `JWT_JWKS_URL` is set):
+
+```ts
+import { createOperationsKnowledgeServerFromEnv } from "./app/knowledge";
+
+createOperationsKnowledgeServerFromEnv({ apiKeys: { /* fallback when no JWT env */ } });
+```
+
+```bash
+pnpm validate:composition:jwt-auth
+```
+
 ## 6. Current limitations
 
 - No production host, CI deploy pipeline, or secrets management yet.
 - Compose services are placeholders aligned with Project1's infra shape.
 - Express/Fastify not used; TCP listen is `NodeHttpListener` (`node:http`).
-- API Key/Bearer AuthN is wired for cited-answer; JWT/OIDC remain deferred.
+- API Key/Bearer AuthN is default for cited-answer; optional JWT via
+  `auth: { type: "jwt", config }` or `createOperationsKnowledgeServerFromEnv`
+  when `JWT_SECRET`/`JWT_JWKS_URL` is set. JWT must include `workspace_id`
+  claim. Full OIDC login flows and official JWT SDKs remain deferred.
 - HTTP LLM is optional; default composition remains Fake (no official LLM SDK).
 - OTLP/HTTP log+metrics export is optional via env; official OTel SDK /
   Prometheus scrape / tracing are not included.

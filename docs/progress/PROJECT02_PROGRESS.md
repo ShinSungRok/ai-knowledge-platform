@@ -3620,3 +3620,34 @@ Add JWKS HTTP transport and Rs256JwtAuthenticator
 **Status**
 Completed
 
+## Task 137
+
+**Date**
+2026-07-21
+
+**Commit**
+41bf875
+
+**Title**
+Optional composition JWT wiring and roadmap update
+
+**Summary**
+- Added dependency-free `AuthProviderOption` + factories (`createAuthenticatorFromOption` / `createAuthenticatorFromEnv`)
+- Extended operations/listening composition to support optional JWT AuthN via `auth` (default remains ApiKey)
+- Added `createOperationsKnowledgeServerFromEnv` helper (activates JWT only when explicitly requested)
+- Added `validate:composition:jwt-auth` smoke for HS256 JWT → 401/200 behavior
+- Updated roadmap/portfolio/deployment/README/docs to reflect JWT HS256 + JWKS RS256 OIDC-lite (official SDKs remain deferred)
+
+**Validation**
+- `pnpm validate:security:jwt-hs256`
+- `pnpm validate:security:jwt-jwks`
+- `pnpm validate:composition:operations`
+- `pnpm validate:composition:listening-operations`
+- `pnpm validate:composition:jwt-auth`
+- `pnpm validate:project:post-baseline-closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

@@ -43,7 +43,7 @@ Sprints 21–30 delivered Fake-/in-memory-validated Partial adapters. Default
 | Real LLM HTTP | `HttpLanguageModelProvider` + Fake transport; live `LLM_API_KEY` optional; default Fake |
 | MCP network | JSON-RPC HTTP `POST /mcp` (`tools/list`·`tools/call`); official MCP SDK / stdio deferred |
 | TCP listen | `NodeHttpListener` + listening operations (`createListeningOperationsServer`); Express unused |
-| AuthN | API Key / Bearer (`ApiKeyAuthenticator`, `HttpBearerGuard`); JWT/OIDC deferred |
+| AuthN | API Key / Bearer; optional JWT HS256 + JWKS/RS256 OIDC-lite (`Hs256JwtAuthenticator`, `Rs256JwtAuthenticator`); default operations ApiKey; full OIDC login/SDK deferred |
 | OTLP export | OTLP/HTTP log+metrics via Fake transport; optional `OTEL_EXPORTER_OTLP_ENDPOINT`; official OTel SDK deferred |
 
 ## 4. Validation strategy
@@ -62,7 +62,7 @@ Partial”):
 - Official SDKs: `@opentelemetry/*`, OpenSearch JS (`@opensearch-project/opensearch`), LLM vendor SDKs, official MCP SDK
 - MCP stdio transport
 - Express / Fastify HTTP frameworks
-- JWT / OIDC AuthN
+- Full OIDC authorization-code login flows and JWT/OIDC SDKs (`jsonwebtoken`, `jose`, `passport`)
 - Prometheus scrape endpoints
 - Distributed tracing
 

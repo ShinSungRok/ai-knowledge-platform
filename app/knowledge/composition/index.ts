@@ -19,8 +19,8 @@
  * PostgresSqlGateway (optional schema apply).
  * `createOpenSearchKnowledgeComposition` keeps SQL SoT and swaps VectorIndex
  * to OpenSearch (Fake/Fetch transport; official SDK deferred).
- * `createListeningOperationsServer` adds NodeHttpListener TCP listen on top
- * of operations wiring (default 127.0.0.1:0).
+ * Operations/listening support optional JWT AuthN via `auth` option (default
+ * ApiKey). `createListeningOperationsServer` adds NodeHttpListener TCP listen.
  */
 export const KNOWLEDGE_MODULE_COMPOSITION = "app/knowledge/composition" as const;
 
@@ -37,7 +37,12 @@ export type {
   ListeningOperationsServer,
 } from "./createListeningOperationsServer";
 export type { LlmProviderOption } from "./createLanguageModelProvider";
+export type { AuthProviderOption } from "./createAuthenticator";
 export { createLanguageModelProvider } from "./createLanguageModelProvider";
+export {
+  createAuthenticatorFromOption,
+  createAuthenticatorFromEnv,
+} from "./createAuthenticator";
 export type { CreateInMemoryKnowledgeCompositionOptions } from "./createInMemoryKnowledgeComposition";
 export type { CreateSqlKnowledgeCompositionOptions } from "./createSqlKnowledgeComposition";
 export type { CreateOpenSearchKnowledgeCompositionOptions } from "./createOpenSearchKnowledgeComposition";
@@ -48,6 +53,7 @@ export {
   IN_MEMORY_SERVER_TEST_API_KEY,
 } from "./createInMemoryKnowledgeServer";
 export { createOperationsKnowledgeServer } from "./createOperationsKnowledgeServer";
+export { createOperationsKnowledgeServerFromEnv } from "./createOperationsKnowledgeServerFromEnv";
 export { createListeningOperationsServer } from "./createListeningOperationsServer";
 export type { OperationsObservability } from "./createOperationsObservability";
 export { createOperationsObservability } from "./createOperationsObservability";
