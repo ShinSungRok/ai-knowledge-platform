@@ -9,6 +9,9 @@ import type { KnowledgeRuntimeConfig } from "../config/KnowledgeRuntimeConfig";
 import { DefaultContextAssembler } from "../context/DefaultContextAssembler";
 import { FakeEmbeddingProvider } from "../embedding/FakeEmbeddingProvider";
 import { InMemoryVectorIndex } from "../embedding/InMemoryVectorIndex";
+import { DefaultMcpJsonRpcHandler } from "../mcp/DefaultMcpJsonRpcHandler";
+import { DefaultMcpToolRegistry } from "../mcp/DefaultMcpToolRegistry";
+import { GenerateCitedGroundedAnswerMcpTool } from "../mcp/GenerateCitedGroundedAnswerMcpTool";
 import { DefaultInMemoryDocumentChunkRepository } from "../persistence/DefaultInMemoryDocumentChunkRepository";
 import { DefaultInMemoryRepository } from "../persistence/DefaultInMemoryRepository";
 import { DefaultPromptBuilder } from "../prompt/DefaultPromptBuilder";
@@ -76,6 +79,11 @@ export function createInMemoryKnowledgeComposition(
       generateGroundedAnswerUseCase,
       citationBuilder,
     );
+  const mcpTool = new GenerateCitedGroundedAnswerMcpTool(
+    generateCitedGroundedAnswerUseCase,
+  );
+  const mcpRegistry = new DefaultMcpToolRegistry([mcpTool]);
+  const mcpJsonRpcHandler = new DefaultMcpJsonRpcHandler(mcpRegistry);
 
   const runtime: KnowledgeRuntime = {
     config,
@@ -91,6 +99,7 @@ export function createInMemoryKnowledgeComposition(
 
   return {
     runtime,
+    mcpJsonRpcHandler,
     knowledgeDocumentRepository,
     documentChunkRepository,
     vectorIndex,

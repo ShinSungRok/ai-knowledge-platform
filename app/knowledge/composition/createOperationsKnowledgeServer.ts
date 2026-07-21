@@ -50,6 +50,7 @@ export function createOperationsKnowledgeServer(
     composition.runtime,
     bearerGuard,
     workspaceAuthorizer,
+    composition.mcpJsonRpcHandler,
   );
   const router = new ObservingHttpRouter(innerRouter, logger, metrics);
   const server = new DefaultKnowledgeServer(router);

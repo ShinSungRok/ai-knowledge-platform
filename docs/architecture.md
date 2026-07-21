@@ -961,7 +961,7 @@ The following remain intentionally out of Project 2 scope:
 - OpenSearch (or other) real vector index adapter
 - Official LLM provider SDKs (optional `HttpLanguageModelProvider` exists;
   default composition remains Fake)
-- Real MCP network transport
+- Official MCP SDK / stdio (JSON-RPC HTTP `POST /mcp` validated)
 - Express TCP listen
   (`NodeHttpListener` validated post-baseline; Express unused)
 

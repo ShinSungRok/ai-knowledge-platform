@@ -91,8 +91,20 @@ const address = await listening.start();
 // GET http://127.0.0.1:<address.port>/health  (public)
 // POST /workspaces/workspace-a/cited-answers
 //   Authorization: Bearer demo-key
+await fetch(`http://127.0.0.1:${address.port}/mcp`, {
+  method: "POST",
+  headers: {
+    "content-type": "application/json",
+    Authorization: "Bearer demo-key",
+  },
+  body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }),
+});
 await listening.stop();
 ```
+
+`POST /mcp` accepts JSON-RPC `tools/list` and `tools/call` (Bearer required;
+`tools/call` enforces `arguments.workspaceId` vs principal). Official MCP
+SDK / stdio remain deferred.
 
 Default `pnpm validate` uses loopback ephemeral ports only (no Docker /
 external network). Express/Fastify are not used.

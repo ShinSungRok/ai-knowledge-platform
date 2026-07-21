@@ -62,6 +62,7 @@ export function createListeningOperationsServer(
     composition.runtime,
     bearerGuard,
     workspaceAuthorizer,
+    composition.mcpJsonRpcHandler,
   );
   const router = new ObservingHttpRouter(innerRouter, logger, metrics);
   const listener = new NodeHttpListener(router);

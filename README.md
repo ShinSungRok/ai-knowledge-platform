@@ -60,6 +60,14 @@ const listening = createListeningOperationsServer({
 const { host, port } = await listening.start();
 // GET http://127.0.0.1:<port>/health  (no auth)
 // POST .../cited-answers with Authorization: Bearer demo-key
+await fetch(`http://127.0.0.1:${port}/mcp`, {
+  method: "POST",
+  headers: {
+    "content-type": "application/json",
+    Authorization: "Bearer demo-key",
+  },
+  body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }),
+});
 await listening.stop();
 ```
 
@@ -99,8 +107,8 @@ LLM_API_KEY=sk-... pnpm validate:ai:http-provider-live
 
 - Real Postgres / OpenSearch adapters (SQL/Fake paths validated; real `pg`
   live optional; OpenSearch client deferred)
-- Official LLM SDKs and MCP network transport (HTTP LLM adapter optional;
-  default composition remains Fake)
+- Official LLM SDKs and official MCP SDK / stdio (HTTP LLM + JSON-RPC
+  `POST /mcp` optional; default composition remains Fake)
 - Express/Fastify, JWT/OIDC AuthN, OTel exporters
   (`NodeHttpListener` + API Key/Bearer AuthN are available)
 

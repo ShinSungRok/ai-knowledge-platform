@@ -2,7 +2,7 @@
 
 > Status of AI Knowledge Platform Charter capabilities at Project 2
 > Platform Baseline closeout (Sprint 20), plus post-baseline persistence,
-> listen, AuthN, and LLM progress (Sprints 21–27).
+> listen, AuthN, LLM, and MCP transport progress (Sprints 21–28).
 
 ## Charter capability → Completed
 
@@ -26,7 +26,7 @@
 | Postgres source-of-truth adapter | Partial | `PostgresSqlGateway` + schema/composition validated with Fake pool; live DB optional via `DATABASE_URL`; default validate still `InMemorySqlGateway`/Fake |
 | OpenSearch / real vector index adapter | Partial | `SqlVectorIndex` on SqlGateway validated (rebuildable search-index persistence); OpenSearch client still deferred |
 | Real LLM provider SDK | Partial | `HttpLanguageModelProvider` + Fake transport validated; live optional via `LLM_API_KEY`; default composition remains Fake; official SDKs still deferred |
-| MCP network transport | Deferred | In-process MCP ports only |
+| MCP network transport | Partial | JSON-RPC HTTP `POST /mcp` (`tools/list`·`tools/call`) validated with Bearer AuthN; official MCP SDK / stdio still deferred |
 | `node:http` / Express TCP listen | Partial | `NodeHttpListener` + `createListeningOperationsServer` validated on 127.0.0.1 ephemeral; Express still not used; dispatch-only path retained |
 | AuthN (JWT / OIDC) | Partial | API Key/`HttpBearerGuard` AuthN validated on cited-answer; JWT/OIDC still deferred |
 | OpenTelemetry / Prometheus exporters | Deferred | `InMemoryLogger` / `InMemoryMetrics` only |
@@ -44,3 +44,4 @@
 | Sprint 25 (Task 106–109) | Establish HTTP TCP Listen (`HttpListener`, `NodeHttpListener`, ephemeral validation, listening operations factory) |
 | Sprint 26 (Task 110–113) | Establish HTTP Authentication (AuthN contract, API Key + Bearer guard, cited-answer wiring, listening/operations `apiKeys`) |
 | Sprint 27 (Task 114–117) | Establish Real LLM Provider (HTTP contract, HttpLanguageModelProvider, Fake/live validation, optional composition wiring; default Fake) |
+| Sprint 28 (Task 118–121) | Establish MCP Network Transport (JSON-RPC contract/handler, HTTP `/mcp`, listening/operations wiring; SDK/stdio deferred) |

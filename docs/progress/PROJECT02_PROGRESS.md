@@ -3231,3 +3231,30 @@ Add HTTP MCP transport adapter and validation
 **Status**
 Completed
 
+## Task 121
+
+**Date**
+2026-07-21
+
+**Commit**
+4103255
+
+**Title**
+Wire listening MCP endpoint and update roadmap
+
+**Summary**
+- Wired MCP registry/handler into composition; `POST /mcp` on knowledge HTTP router
+- Operations/listening validations cover tools/list·tools/call; roadmap MCP transport → Partial
+
+**Validation**
+- `pnpm validate:mcp:jsonrpc-handler`
+- `pnpm validate:api:mcp-jsonrpc`
+- `pnpm validate:composition:operations`
+- `pnpm validate:composition:listening-operations`
+- `pnpm validate:project:closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

@@ -3,26 +3,34 @@ import { DefaultHttpRouter } from "../http/DefaultHttpRouter";
 import type { HttpRequest } from "../http/HttpRequest";
 import type { HttpResponse } from "../http/HttpResponse";
 import type { HttpRouter } from "../http/HttpRouter";
+import type { McpJsonRpcHandler } from "../mcp/McpJsonRpcHandler";
 import type { HttpBearerGuard } from "../security/HttpBearerGuard";
 import type { WorkspaceAuthorizer } from "../security/WorkspaceAuthorizer";
 import { CitedGroundedAnswerController } from "./CitedGroundedAnswerController";
 import { HealthController } from "./HealthController";
+import { McpJsonRpcController } from "./McpJsonRpcController";
 
 const CITED_ANSWER_PATH = /^\/workspaces\/[^/]+\/cited-answers$/;
 
 /**
- * Registers health + cited-answer routes against a {@link KnowledgeRuntime}.
- * Cited-answer requires Bearer AuthN then workspace AuthZ.
+ * Registers health + cited-answer + MCP JSON-RPC routes.
+ * Cited-answer and `/mcp` require Bearer AuthN then workspace AuthZ.
  * Health does not require authentication.
  */
 export function createKnowledgeHttpRouter(
   runtime: KnowledgeRuntime,
   bearerGuard: HttpBearerGuard,
   workspaceAuthorizer: WorkspaceAuthorizer,
+  mcpHandler: McpJsonRpcHandler,
 ): HttpRouter {
   const health = new HealthController();
   const citedAnswers = new CitedGroundedAnswerController(
     runtime,
+    bearerGuard,
+    workspaceAuthorizer,
+  );
+  const mcp = new McpJsonRpcController(
+    mcpHandler,
     bearerGuard,
     workspaceAuthorizer,
   );
@@ -31,6 +39,11 @@ export function createKnowledgeHttpRouter(
       method: "GET",
       path: "/health",
       handler: (request) => health.check(request),
+    },
+    {
+      method: "POST",
+      path: "/mcp",
+      handler: (request) => mcp.handle(request),
     },
   ]);
 

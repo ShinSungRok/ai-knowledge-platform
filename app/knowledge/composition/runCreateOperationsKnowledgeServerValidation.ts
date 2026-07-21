@@ -92,6 +92,51 @@ async function assertOperationsServerDispatch(): Promise<void> {
   });
   assertEqual(cited.status, 200, "cited-answer");
 
+  const toolsList = await server.dispatch({
+    method: "POST",
+    path: "/mcp",
+    headers: { Authorization: `Bearer ${TEST_API_KEY}` },
+    body: { jsonrpc: "2.0", id: 1, method: "tools/list" },
+  });
+  assertEqual(toolsList.status, 200, "mcp tools/list");
+  const listBody = toolsList.body as {
+    result?: { tools?: Array<{ name: string }> };
+  };
+  assertTruthy(
+    Array.isArray(listBody.result?.tools) &&
+      listBody.result!.tools!.some(
+        (tool) => tool.name === "generate_cited_grounded_answer",
+      ),
+    "listed cited-answer tool",
+  );
+
+  const toolsCall = await server.dispatch({
+    method: "POST",
+    path: "/mcp",
+    headers: { Authorization: `Bearer ${TEST_API_KEY}` },
+    body: {
+      jsonrpc: "2.0",
+      id: 2,
+      method: "tools/call",
+      params: {
+        name: "generate_cited_grounded_answer",
+        arguments: {
+          workspaceId: WORKSPACE_A,
+          query: "aaaaaaaa",
+          retrievalLimit: 5,
+          maxCharacters: 10_000,
+        },
+      },
+    },
+  });
+  assertEqual(toolsCall.status, 200, "mcp tools/call");
+  const callBody = toolsCall.body as {
+    result?: { isError?: boolean };
+    error?: unknown;
+  };
+  assertEqual(callBody.error, undefined, "no json-rpc error");
+  assertEqual(callBody.result?.isError, false, "tool success");
+
   const events = logger.getEvents();
   assertTruthy(
     events.some((event) => event.message === "http.request.start"),
@@ -108,7 +153,7 @@ async function assertOperationsServerDispatch(): Promise<void> {
 
 async function assertUnauthorizedWithoutBearer(): Promise<void> {
   console.log(
-    "[composition] operations server enforces Bearer AuthN on cited-answer...",
+    "[composition] operations server enforces Bearer AuthN on cited-answer and /mcp...",
   );
   const { server } = createOperationsKnowledgeServer({
     apiKeys: TEST_API_KEYS,
@@ -120,7 +165,14 @@ async function assertUnauthorizedWithoutBearer(): Promise<void> {
     headers: {},
     body: { query: "aaaaaaaa" },
   });
-  assertEqual(response.status, 401, "unauthorized");
+  assertEqual(response.status, 401, "unauthorized cited-answer");
+  const mcp = await server.dispatch({
+    method: "POST",
+    path: "/mcp",
+    headers: {},
+    body: { jsonrpc: "2.0", id: 1, method: "tools/list" },
+  });
+  assertEqual(mcp.status, 401, "unauthorized mcp");
   await server.stop();
 }
 

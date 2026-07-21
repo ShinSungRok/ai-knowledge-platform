@@ -267,14 +267,15 @@ async function assertRuntimeThrow500(): Promise<void> {
 
 async function assertRouterWiresHealthAndCitedAnswer(): Promise<void> {
   console.log(
-    "[api] createKnowledgeHttpRouter wires health (no auth) and cited-answer (Bearer AuthN)...",
+    "[api] createKnowledgeHttpRouter wires health (no auth), cited-answer, and /mcp...",
   );
-  const { runtime } = await seedRuntime();
+  const { runtime, composition } = await seedRuntime();
   const { bearerGuard, workspaceAuthorizer } = buildAuth();
   const router = createKnowledgeHttpRouter(
     runtime,
     bearerGuard,
     workspaceAuthorizer,
+    composition.mcpJsonRpcHandler,
   );
 
   const health = await router.handle({
@@ -291,6 +292,14 @@ async function assertRouterWiresHealthAndCitedAnswer(): Promise<void> {
     body: { query: "aaaaaaaa", retrievalLimit: 5, maxCharacters: 10_000 },
   });
   assertEqual(cited.status, 200, "cited-answer");
+
+  const mcp = await router.handle({
+    method: "POST",
+    path: "/mcp",
+    headers: bearerHeaders(),
+    body: { jsonrpc: "2.0", id: 1, method: "tools/list" },
+  });
+  assertEqual(mcp.status, 200, "mcp tools/list");
 }
 
 function assertControllerDependsOnlyOnPorts(): void {

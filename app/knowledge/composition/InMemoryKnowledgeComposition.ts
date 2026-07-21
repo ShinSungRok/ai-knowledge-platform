@@ -1,4 +1,5 @@
 import type { InMemoryVectorIndex } from "../embedding/InMemoryVectorIndex";
+import type { McpJsonRpcHandler } from "../mcp/McpJsonRpcHandler";
 import type { DefaultInMemoryDocumentChunkRepository } from "../persistence/DefaultInMemoryDocumentChunkRepository";
 import type { DefaultInMemoryRepository } from "../persistence/DefaultInMemoryRepository";
 import type { KnowledgeRuntime } from "./KnowledgeRuntime";
@@ -9,6 +10,7 @@ import type { KnowledgeRuntime } from "./KnowledgeRuntime";
  */
 export interface InMemoryKnowledgeComposition {
   runtime: KnowledgeRuntime;
+  mcpJsonRpcHandler: McpJsonRpcHandler;
   knowledgeDocumentRepository: DefaultInMemoryRepository;
   documentChunkRepository: DefaultInMemoryDocumentChunkRepository;
   vectorIndex: InMemoryVectorIndex;

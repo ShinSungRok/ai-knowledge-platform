@@ -37,6 +37,7 @@ export function createInMemoryKnowledgeServer(
     composition.runtime,
     bearerGuard,
     workspaceAuthorizer,
+    composition.mcpJsonRpcHandler,
   );
   const server = new DefaultKnowledgeServer(router);
   return { server, composition };
