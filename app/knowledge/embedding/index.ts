@@ -1,18 +1,14 @@
 /**
  * Module: `app/knowledge/embedding`
  *
- * Chunking, embedding, and vector indexing ports/adapters.
+ * Chunking, embedding, and vector indexing ports/adapters, plus an
+ * OpenSearch HTTP boundary for VectorIndex (official OpenSearch JS SDK
+ * deferred).
  *
- * `ChunkingService` is the port for splitting a `KnowledgeDocument` into
- * ordered `DocumentChunk`s; `FixedSizeDocumentChunker` is a dependency-free,
- * deterministic fixed-size adapter. `EmbeddingProvider` is the port for
- * turning text into a fixed-`EMBEDDING_VECTOR_DIMENSION` vector;
- * `FakeEmbeddingProvider` is a dependency-free, deterministic adapter.
- * `VectorIndex` is the port for storing/retrieving an `EmbeddingVector` by
- * `(workspaceId, chunkId)` and for `findNearest` cosine-similarity ranking
- * within a workspace (returning `ScoredEmbeddingVector[]`);
- * `InMemoryVectorIndex` and `SqlVectorIndex` (SqlGateway) are adapters.
- * Chunk hydration, retrieval, hybrid search, and re-ranking live elsewhere.
+ * `ChunkingService` / `FixedSizeDocumentChunker`, `EmbeddingProvider` /
+ * `FakeEmbeddingProvider`, and `VectorIndex` with `InMemoryVectorIndex` /
+ * `SqlVectorIndex` remain the default paths. `OpenSearchHttpTransport` /
+ * `OpenSearchClientConfig` define optional OpenSearch REST access.
  */
 export const KNOWLEDGE_MODULE_EMBEDDING = "app/knowledge/embedding" as const;
 
@@ -26,3 +22,8 @@ export type { ScoredEmbeddingVector } from "./ScoredEmbeddingVector";
 export type { VectorIndex } from "./VectorIndex";
 export { InMemoryVectorIndex } from "./InMemoryVectorIndex";
 export { SqlVectorIndex } from "./SqlVectorIndex";
+export type { OpenSearchHttpRequest } from "./OpenSearchHttpRequest";
+export type { OpenSearchHttpResponse } from "./OpenSearchHttpResponse";
+export type { OpenSearchHttpTransport } from "./OpenSearchHttpTransport";
+export type { OpenSearchClientConfig } from "./OpenSearchClientConfig";
+export { loadOpenSearchClientConfig } from "./loadOpenSearchClientConfig";

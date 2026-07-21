@@ -38,6 +38,7 @@ pnpm validate:embedding:chunker # FixedSizeDocumentChunker deterministic chunkin
 pnpm validate:embedding:provider # FakeEmbeddingProvider deterministic embedding behavior
 pnpm validate:embedding:index  # InMemoryVectorIndex upsert/find/delete/findNearest cosine-ranking behavior
 pnpm validate:embedding:sql-index # SqlVectorIndex via InMemorySqlGateway
+pnpm validate:embedding:opensearch-contract # OpenSearchHttpTransport + loadOpenSearchClientConfig
 pnpm validate:retrieval:vector # DefaultVectorRetriever embed-query/find-nearest/hydrate-chunk behavior
 pnpm validate:search:keyword   # DefaultKeywordSearch tokenize/score/rank behavior over DocumentChunkRepository.findAll
 pnpm validate:search:hybrid    # DefaultHybridSearch reciprocal-rank-fusion behavior over VectorRetriever + KeywordSearch

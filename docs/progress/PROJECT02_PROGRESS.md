@@ -3356,3 +3356,28 @@ Optional composition wiring and roadmap update
 **Status**
 Completed
 
+## Task 126
+
+**Date**
+2026-07-21
+
+**Commit**
+7f25f3c
+
+**Title**
+Define OpenSearch HTTP transport and config contract
+
+**Summary**
+- Added `OpenSearchHttpTransport` / request-response types and `loadOpenSearchClientConfig`
+- Added `validate:embedding:opensearch-contract`; no official OpenSearch JS SDK
+
+**Validation**
+- `pnpm validate:embedding:index`
+- `pnpm validate:embedding:sql-index`
+- `pnpm validate:embedding:opensearch-contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
