@@ -3282,3 +3282,27 @@ Define OTLP HTTP transport and exporter config contract
 **Status**
 Completed
 
+## Task 123
+
+**Date**
+2026-07-21
+
+**Commit**
+0cbd7ed
+
+**Title**
+Add OTLP log and metrics exporters
+
+**Summary**
+- Added `OtlpLogsExporter` / `OtlpMetricsExporter` (deterministic OTLP JSON subset over transport)
+- Added `validate:observability:otlp-exporters`
+
+**Validation**
+- `pnpm validate:observability:otlp-contract`
+- `pnpm validate:observability:otlp-exporters`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

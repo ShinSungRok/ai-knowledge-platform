@@ -24,3 +24,8 @@ export type { OtlpHttpResponse } from "./OtlpHttpResponse";
 export type { OtlpHttpTransport } from "./OtlpHttpTransport";
 export type { OtlpExporterConfig } from "./OtlpExporterConfig";
 export { loadOtlpExporterConfig } from "./loadOtlpExporterConfig";
+export { OtlpLogsExporter } from "./OtlpLogsExporter";
+export { OtlpMetricsExporter } from "./OtlpMetricsExporter";
+export { ExportingLogger } from "./ExportingLogger";
+export { ExportingMetrics } from "./ExportingMetrics";
+export { FetchOtlpHttpTransport } from "./FetchOtlpHttpTransport";

@@ -317,6 +317,11 @@ export {
   InMemoryLogger,
   InMemoryMetrics,
   loadOtlpExporterConfig,
+  OtlpLogsExporter,
+  OtlpMetricsExporter,
+  ExportingLogger,
+  ExportingMetrics,
+  FetchOtlpHttpTransport,
 } from "./observability";
 export { KNOWLEDGE_MODULE_RELIABILITY } from "./reliability";
 export type {
