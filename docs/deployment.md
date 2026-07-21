@@ -113,7 +113,8 @@ external network). Express/Fastify are not used.
 
 DDL for `knowledge_sources`, `knowledge_documents`, `document_chunks`, and
 `embedding_vectors` (rebuildable search-index persistence used by
-`SqlVectorIndex`; OpenSearch still deferred) lives in
+`SqlVectorIndex`; optional `OpenSearchVectorIndex` is a separate HTTP adapter)
+lives in
 `app/knowledge/infra/knowledgeSchemaSql.ts`. Apply via any `SqlGateway`:
 
 ```ts
@@ -206,6 +207,31 @@ OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 \
 
 Official `@opentelemetry/*` SDK, Prometheus scrape, and tracing remain deferred.
 
+## 5b. OpenSearch VectorIndex (optional)
+
+`OpenSearchVectorIndex` implements `VectorIndex` over a dependency-free HTTP
+transport (no official OpenSearch JS SDK). Documents/chunks stay on SQL SoT;
+OpenSearch holds only the rebuildable vector search index.
+
+| Variable | Meaning |
+|---|---|
+| `OPENSEARCH_URL` | Cluster base URL (required to enable) |
+| `OPENSEARCH_INDEX` | Index name (default `knowledge-embeddings`) |
+| `OPENSEARCH_USERNAME` / `OPENSEARCH_PASSWORD` | Optional Basic auth |
+
+Default `pnpm validate` uses Fake transport / `SqlVectorIndex` and does not
+require a live cluster. Optional composition:
+`createOpenSearchKnowledgeComposition` (inject Fake or Fetch transport).
+
+```bash
+pnpm validate:embedding:opensearch-index
+pnpm validate:composition:opensearch-knowledge
+
+# skip (exit 0) when OPENSEARCH_URL unset; not in top-level validate
+pnpm validate:embedding:opensearch-live
+OPENSEARCH_URL=http://localhost:9200 pnpm validate:embedding:opensearch-live
+```
+
 ## 6. Current limitations
 
 - No production host, CI deploy pipeline, or secrets management yet.
@@ -215,3 +241,5 @@ Official `@opentelemetry/*` SDK, Prometheus scrape, and tracing remain deferred.
 - HTTP LLM is optional; default composition remains Fake (no official LLM SDK).
 - OTLP/HTTP log+metrics export is optional via env; official OTel SDK /
   Prometheus scrape / tracing are not included.
+- OpenSearch VectorIndex is optional via env/Fake; official OpenSearch SDK
+  remains deferred; default composition stays InMemory/`SqlVectorIndex`.

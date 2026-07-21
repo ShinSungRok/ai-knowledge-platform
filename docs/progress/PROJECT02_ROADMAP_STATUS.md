@@ -2,7 +2,8 @@
 
 > Status of AI Knowledge Platform Charter capabilities at Project 2
 > Platform Baseline closeout (Sprint 20), plus post-baseline persistence,
-> listen, AuthN, LLM, MCP transport, and OTLP export progress (Sprints 21–29).
+> listen, AuthN, LLM, MCP transport, OTLP export, and OpenSearch vector
+> adapter progress (Sprints 21–30).
 
 ## Charter capability → Completed
 
@@ -24,7 +25,7 @@
 | Item | Status | Notes |
 |---|---|---|
 | Postgres source-of-truth adapter | Partial | `PostgresSqlGateway` + schema/composition validated with Fake pool; live DB optional via `DATABASE_URL`; default validate still `InMemorySqlGateway`/Fake |
-| OpenSearch / real vector index adapter | Partial | `SqlVectorIndex` on SqlGateway validated (rebuildable search-index persistence); OpenSearch client still deferred |
+| OpenSearch / real vector index adapter | Partial | `OpenSearchVectorIndex` + Fake HTTP transport validated; live optional via `OPENSEARCH_URL`; official OpenSearch SDK still deferred; default composition remains InMemory/`SqlVectorIndex` |
 | Real LLM provider SDK | Partial | `HttpLanguageModelProvider` + Fake transport validated; live optional via `LLM_API_KEY`; default composition remains Fake; official SDKs still deferred |
 | MCP network transport | Partial | JSON-RPC HTTP `POST /mcp` (`tools/list`·`tools/call`) validated with Bearer AuthN; official MCP SDK / stdio still deferred |
 | `node:http` / Express TCP listen | Partial | `NodeHttpListener` + `createListeningOperationsServer` validated on 127.0.0.1 ephemeral; Express still not used; dispatch-only path retained |
@@ -46,3 +47,4 @@
 | Sprint 27 (Task 114–117) | Establish Real LLM Provider (HTTP contract, HttpLanguageModelProvider, Fake/live validation, optional composition wiring; default Fake) |
 | Sprint 28 (Task 118–121) | Establish MCP Network Transport (JSON-RPC contract/handler, HTTP `/mcp`, listening/operations wiring; SDK/stdio deferred) |
 | Sprint 29 (Task 122–125) | Establish OpenTelemetry Export (OTLP/HTTP contract/exporters, ExportingLogger/Metrics, optional env composition; official SDK deferred) |
+| Sprint 30 (Task 126–129) | Establish OpenSearch Vector Index Adapter (HTTP contract, `OpenSearchVectorIndex`, Fake validation, optional composition; official SDK deferred; default InMemory/`SqlVectorIndex`) |

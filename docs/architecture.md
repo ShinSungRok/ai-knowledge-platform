@@ -958,19 +958,23 @@ abstractions — never on Postgres, OpenSearch, or real LLM SDKs.
 
 ### Deferred infrastructure
 
-The following remain intentionally out of Project 2 scope:
+The following remain intentionally out of Project 2 Platform Baseline scope
+(post-baseline Sprints add optional adapters without changing the closed
+baseline):
 
-- Postgres source-of-truth adapter
-- OpenSearch (or other) real vector index adapter
+- Live Postgres as the default validate path (Fake/`InMemorySqlGateway` remain default)
+- Official OpenSearch JS SDK (optional `OpenSearchVectorIndex` + Fake HTTP
+  transport validated; default composition remains InMemory/`SqlVectorIndex`)
 - Official LLM provider SDKs (optional `HttpLanguageModelProvider` exists;
   default composition remains Fake)
 - Official MCP SDK / stdio (JSON-RPC HTTP `POST /mcp` validated)
 - Express TCP listen
   (`NodeHttpListener` validated post-baseline; Express unused)
 
-Project 2 Platform Baseline remains closed. Sprints 21–24 continue
-post-baseline persistence (`SqlGateway`, document/source/chunk SQL
-repositories, `PostgresSqlGateway`, and rebuildable `SqlVectorIndex` on
-`embedding_vectors`). OpenSearch client remains deferred. Default
-`pnpm validate` stays on InMemory/Fake paths without requiring a live
-database. Default composition/operations paths stay in-memory.
+Project 2 Platform Baseline remains closed. Sprints 21–30 continue
+post-baseline persistence and optional adapters (`SqlGateway`, SQL
+repositories, `PostgresSqlGateway`, `SqlVectorIndex`, and
+`OpenSearchVectorIndex` over Fake/Fetch HTTP). Default `pnpm validate`
+stays on InMemory/Fake/`SqlVectorIndex` paths without requiring a live
+database or OpenSearch cluster. Default composition/operations paths stay
+in-memory or SQL-backed vectors unless an optional factory is chosen.

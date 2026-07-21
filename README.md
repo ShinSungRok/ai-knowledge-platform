@@ -116,10 +116,44 @@ OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 \
   pnpm validate:observability:otlp-live
 ```
 
+Optional OpenSearch VectorIndex (SQL documents/chunks remain Source of Truth;
+OpenSearch is a rebuildable search index only). Default `pnpm validate` uses
+Fake transport / `SqlVectorIndex` — no live cluster required.
+
+```ts
+import {
+  createOpenSearchKnowledgeComposition,
+  createOpenSearchVectorIndexFromEnv,
+  createFakeOpenSearchOption,
+  loadOpenSearchClientConfig,
+} from "./app/knowledge";
+
+// dependency-free composition smoke
+const composition = createOpenSearchKnowledgeComposition(undefined, {
+  openSearch: createFakeOpenSearchOption(),
+});
+
+// live when OPENSEARCH_URL is set
+const liveIndex = createOpenSearchVectorIndexFromEnv(process.env);
+```
+
+```bash
+# Fake transport (in pnpm validate)
+pnpm validate:embedding:opensearch-index
+pnpm validate:composition:opensearch-knowledge
+
+# optional live cluster (skipped without OPENSEARCH_URL; not in pnpm validate)
+pnpm validate:embedding:opensearch-live
+OPENSEARCH_URL=http://localhost:9200 \
+  OPENSEARCH_INDEX=knowledge-embeddings \
+  pnpm validate:embedding:opensearch-live
+```
+
 ## Deferred infrastructure
 
-- Real Postgres / OpenSearch adapters (SQL/Fake paths validated; real `pg`
-  live optional; OpenSearch client deferred)
+- Real Postgres as default validate path (SQL/Fake validated; live `pg` optional)
+- Official OpenSearch JS SDK (`OpenSearchVectorIndex` + Fake transport validated;
+  live optional via `OPENSEARCH_URL`; default remains InMemory/`SqlVectorIndex`)
 - Official LLM SDKs and official MCP SDK / stdio (HTTP LLM + JSON-RPC
   `POST /mcp` optional; default composition remains Fake)
 - Express/Fastify, JWT/OIDC AuthN, official OTel SDK / Prometheus scrape /

@@ -291,6 +291,15 @@ export type { SqlKnowledgeComposition } from "./composition";
 export { createSqlKnowledgeComposition } from "./composition";
 export type { CreatePostgresKnowledgeCompositionOptions } from "./composition";
 export { createPostgresKnowledgeComposition } from "./composition";
+export type {
+  CreateOpenSearchKnowledgeCompositionOptions,
+  CreateOpenSearchKnowledgeCompositionOpenSearchOption,
+} from "./composition";
+export {
+  createOpenSearchKnowledgeComposition,
+  createOpenSearchVectorIndexFromEnv,
+  createFakeOpenSearchOption,
+} from "./composition";
 export { KNOWLEDGE_MODULE_CONFIG } from "./config";
 export type { KnowledgeRuntimeConfig } from "./config";
 export { DEFAULT_KNOWLEDGE_RUNTIME_CONFIG, loadKnowledgeRuntimeConfig } from "./config";

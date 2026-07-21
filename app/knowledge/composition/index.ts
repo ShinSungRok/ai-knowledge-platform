@@ -17,6 +17,8 @@
  * shared InMemorySqlGateway (vector/cited-answer still in-memory/fake).
  * `createPostgresKnowledgeComposition` injects a PostgresPool into
  * PostgresSqlGateway (optional schema apply).
+ * `createOpenSearchKnowledgeComposition` keeps SQL SoT and swaps VectorIndex
+ * to OpenSearch (Fake/Fetch transport; official SDK deferred).
  * `createListeningOperationsServer` adds NodeHttpListener TCP listen on top
  * of operations wiring (default 127.0.0.1:0).
  */
@@ -38,6 +40,8 @@ export type { LlmProviderOption } from "./createLanguageModelProvider";
 export { createLanguageModelProvider } from "./createLanguageModelProvider";
 export type { CreateInMemoryKnowledgeCompositionOptions } from "./createInMemoryKnowledgeComposition";
 export type { CreateSqlKnowledgeCompositionOptions } from "./createSqlKnowledgeComposition";
+export type { CreateOpenSearchKnowledgeCompositionOptions } from "./createOpenSearchKnowledgeComposition";
+export type { CreateOpenSearchKnowledgeCompositionOpenSearchOption } from "./createOpenSearchVectorIndexFromEnv";
 export { createInMemoryKnowledgeComposition } from "./createInMemoryKnowledgeComposition";
 export {
   createInMemoryKnowledgeServer,
@@ -50,3 +54,8 @@ export { createOperationsObservability } from "./createOperationsObservability";
 export { createSqlDocumentKnowledgeComposition } from "./createSqlDocumentKnowledgeComposition";
 export { createSqlKnowledgeComposition } from "./createSqlKnowledgeComposition";
 export { createPostgresKnowledgeComposition } from "./createPostgresKnowledgeComposition";
+export { createOpenSearchKnowledgeComposition } from "./createOpenSearchKnowledgeComposition";
+export {
+  createOpenSearchVectorIndexFromEnv,
+  createFakeOpenSearchOption,
+} from "./createOpenSearchVectorIndexFromEnv";

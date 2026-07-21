@@ -3362,7 +3362,7 @@ Completed
 2026-07-21
 
 **Commit**
-7f25f3c
+ca4e186
 
 **Title**
 Define OpenSearch HTTP transport and config contract
@@ -3409,7 +3409,7 @@ Completed
 2026-07-21
 
 **Commit**
-a9a47f5
+b8f0e6c
 
 **Title**
 Add Fake OpenSearch transport validation
@@ -3421,6 +3421,32 @@ Add Fake OpenSearch transport validation
 **Validation**
 - `pnpm validate:embedding:sql-index`
 - `pnpm validate:embedding:opensearch-index`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
+## Task 129
+
+**Date**
+2026-07-21
+
+**Commit**
+1d0f989
+
+**Title**
+Optional composition wiring and roadmap update
+
+**Summary**
+- Added `createOpenSearchKnowledgeComposition` / `createOpenSearchVectorIndexFromEnv` (SQL SoT + OpenSearch VectorIndex)
+- Documented OPENSEARCH_* env; roadmap OpenSearch notes + Sprint 30 range
+
+**Validation**
+- `pnpm validate:embedding:opensearch-index`
+- `pnpm validate:composition:opensearch-knowledge`
+- `pnpm validate:composition:sql-knowledge`
+- `pnpm validate:project:closeout`
 - `pnpm typecheck`
 - `pnpm validate`
 
