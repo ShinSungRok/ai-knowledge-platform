@@ -3694,3 +3694,26 @@ Add GET `/metrics` handling in `ObservingHttpRouter`
 
 **Status**
 Completed
+
+## Task 140
+
+**Date**
+2026-07-21
+
+**Commit**
+Pending
+
+**Title**
+Add dependency-free validation runner for `/metrics`
+
+**Summary**
+- Added `runObservingHttpRouterPrometheusValidation.ts` to verify `/metrics` Prometheus text response, router logs, and `http.requests` increment
+- Added `validate:http:prometheus-scrape` script
+
+**Validation**
+- `pnpm validate:http:observing`
+- `pnpm validate:http:prometheus-scrape`
+- `pnpm typecheck`
+
+**Status**
+Completed

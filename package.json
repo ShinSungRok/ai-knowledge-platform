@@ -113,6 +113,7 @@
     "validate:security:workspace": "tsx app/knowledge/security/runDefaultWorkspaceAuthorizerValidation.ts",
     "validate:security:http-guard": "tsx app/knowledge/security/runHttpWorkspaceGuardValidation.ts",
     "validate:http:observing": "tsx app/knowledge/http/runObservingHttpRouterValidation.ts",
+    "validate:http:prometheus-scrape": "tsx app/knowledge/http/runObservingHttpRouterPrometheusValidation.ts",
     "validate:composition:operations": "tsx app/knowledge/composition/runCreateOperationsKnowledgeServerValidation.ts",
     "validate:deployment:readiness": "tsx scripts/validate-deployment-readiness.ts",
     "validate:project:closeout": "tsx scripts/validate-project-closeout.ts",
