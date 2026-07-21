@@ -228,6 +228,7 @@ export { KNOWLEDGE_MODULE_API } from "./api";
 export {
   HealthController,
   CitedGroundedAnswerController,
+  McpJsonRpcController,
   createKnowledgeHttpRouter,
 } from "./api";
 export { KNOWLEDGE_MODULE_HTTP } from "./http";

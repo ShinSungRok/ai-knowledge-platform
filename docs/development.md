@@ -101,6 +101,7 @@ pnpm validate:composition:in-memory # createInMemoryKnowledgeComposition cited-a
 pnpm validate:composition:http-llm # optional HTTP LLM composition path via Fake transport
 pnpm validate:http:router # DefaultHttpRouter exact match + 404
 pnpm validate:api:cited-answer # Health + CitedGroundedAnswerController + router wiring
+pnpm validate:api:mcp-jsonrpc # McpJsonRpcController POST /mcp Bearer + JSON-RPC
 pnpm validate:server:lifecycle # DefaultKnowledgeServer start/stop/dispatch
 pnpm validate:server:listener-contract # HttpListener port via FakeHttpListener
 pnpm validate:server:node-listener # NodeHttpListener loopback ephemeral /health

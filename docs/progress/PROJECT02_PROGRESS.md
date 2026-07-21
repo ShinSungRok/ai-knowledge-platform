@@ -3206,3 +3206,28 @@ Add DefaultMcpJsonRpcHandler over McpToolRegistry
 **Status**
 Completed
 
+## Task 120
+
+**Date**
+2026-07-21
+
+**Commit**
+d7f4677
+
+**Title**
+Add HTTP MCP transport adapter and validation
+
+**Summary**
+- Added `McpJsonRpcController` for `POST /mcp` (Bearer AuthN; tools/call workspace AuthZ via -32001)
+- Added `validate:api:mcp-jsonrpc`
+
+**Validation**
+- `pnpm validate:mcp:jsonrpc-handler`
+- `pnpm validate:api:cited-answer`
+- `pnpm validate:api:mcp-jsonrpc`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

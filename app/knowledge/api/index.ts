@@ -7,11 +7,14 @@
  * `CitedGroundedAnswerController` serves
  * `POST /workspaces/{workspaceId}/cited-answers` with Bearer AuthN
  * ({@link HttpBearerGuard}) then workspace AuthZ ({@link WorkspaceAuthorizer}).
- * `createKnowledgeHttpRouter(runtime, bearerGuard, workspaceAuthorizer)` wires
- * both onto a framework-independent {@link HttpRouter}.
+ * `McpJsonRpcController` serves `POST /mcp` JSON-RPC (`tools/list` /
+ * `tools/call`) with Bearer AuthN and workspace AuthZ on tools/call.
+ * `createKnowledgeHttpRouter` wires routes onto a framework-independent
+ * {@link HttpRouter}.
  */
 export const KNOWLEDGE_MODULE_API = "app/knowledge/api" as const;
 
 export { HealthController } from "./HealthController";
 export { CitedGroundedAnswerController } from "./CitedGroundedAnswerController";
+export { McpJsonRpcController } from "./McpJsonRpcController";
 export { createKnowledgeHttpRouter } from "./createKnowledgeHttpRouter";
