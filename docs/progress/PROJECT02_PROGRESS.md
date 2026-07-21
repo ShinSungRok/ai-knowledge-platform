@@ -3306,3 +3306,27 @@ Add OTLP log and metrics exporters
 **Status**
 Completed
 
+## Task 124
+
+**Date**
+2026-07-21
+
+**Commit**
+6c04bf6
+
+**Title**
+Add exporting Logger/Metrics adapters and Fake validation
+
+**Summary**
+- Added `ExportingLogger`/`ExportingMetrics` (sync log + async flush; buffer retained on export failure)
+- Added `FetchOtlpHttpTransport`, `validate:observability:exporting`, optional `otlp-live` skip runner
+
+**Validation**
+- `pnpm validate:observability:otlp-exporters`
+- `pnpm validate:observability:exporting`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

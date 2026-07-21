@@ -108,6 +108,8 @@ pnpm validate:server:node-listener # NodeHttpListener loopback ephemeral /health
 pnpm validate:observability:contract # InMemoryLogger/InMemoryMetrics contract
 pnpm validate:observability:otlp-contract # OtlpHttpTransport + loadOtlpExporterConfig Fake contract
 pnpm validate:observability:otlp-exporters # OtlpLogsExporter / OtlpMetricsExporter Fake transport
+pnpm validate:observability:exporting # ExportingLogger/Metrics + Fake OTLP flush
+pnpm validate:observability:otlp-live # optional live OTLP (requires OTEL_EXPORTER_OTLP_ENDPOINT; not in validate)
 pnpm validate:reliability:retry # DefaultRetryPolicy no-delay retries
 pnpm validate:reliability:timeout # DefaultTimeoutPolicy Promise.race timeout
 pnpm validate:security:workspace # DefaultWorkspaceAuthorizer
