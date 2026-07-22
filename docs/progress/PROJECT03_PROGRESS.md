@@ -314,3 +314,25 @@ Define WorkflowHandoff contract
 
 **Status**
 Completed
+
+## Task 171
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add WorkflowHandoffBuilder and DefaultWorkflowHandoffBuilder
+
+**Summary**
+- Added WorkflowHandoffBuilder port and DefaultWorkflowHandoffBuilder
+- Kind: delegation when coordinator→non-coordinator; else sequential
+- Rejects empty payload, incomplete previous, and same-agent handoff
+
+**Validation**
+- `pnpm typecheck`
+
+**Status**
+Completed

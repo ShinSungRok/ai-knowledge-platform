@@ -238,6 +238,8 @@ export type {
   WorkflowAgentInvoker,
   WorkflowHandoffKind,
   WorkflowHandoff,
+  WorkflowHandoffBuildInput,
+  WorkflowHandoffBuilder,
 } from "./workflow";
 export {
   asWorkflowAgentId,
@@ -247,6 +249,7 @@ export {
   FakeWorkflowAgentInvoker,
   DeterministicWorkflowPlanner,
   DefaultWorkflowOrchestrator,
+  DefaultWorkflowHandoffBuilder,
 } from "./workflow";
 export { KNOWLEDGE_MODULE_MEMORY } from "./memory";
 export type {

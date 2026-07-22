@@ -46,3 +46,8 @@ export { DeterministicWorkflowPlanner } from "./DeterministicWorkflowPlanner";
 export { DefaultWorkflowOrchestrator } from "./DefaultWorkflowOrchestrator";
 export type { WorkflowHandoffKind } from "./WorkflowHandoffKind";
 export type { WorkflowHandoff } from "./WorkflowHandoff";
+export type {
+  WorkflowHandoffBuildInput,
+  WorkflowHandoffBuilder,
+} from "./WorkflowHandoffBuilder";
+export { DefaultWorkflowHandoffBuilder } from "./DefaultWorkflowHandoffBuilder";
