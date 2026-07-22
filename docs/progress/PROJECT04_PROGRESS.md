@@ -357,3 +357,33 @@ Add DefaultEvaluationGateEvaluator and DefaultRegressionHarness
 
 **Status**
 Completed
+
+## Task 200
+
+**Date**
+2026-07-22
+
+**Commit**
+8d32e39
+
+**Title**
+Add gate and regression validation runners
+
+**Summary**
+- Added runEvaluationGateValidation and runRegressionHarnessValidation
+- Wired validate:llmops:evaluation-gate and validate:llmops:regression-harness into pnpm validate
+- Covers pass/fail, comparators, tolerance, missing keys, invalid input
+
+**Validation**
+- `pnpm validate:llmops:evaluation-gate`
+- `pnpm validate:llmops:regression-harness`
+- `pnpm validate:llmops:run-store`
+- `pnpm validate:llmops:prompt-registry`
+- `pnpm validate:llmops:model-registry`
+- `pnpm validate:project04:charter-skeleton`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed
