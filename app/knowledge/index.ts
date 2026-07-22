@@ -263,6 +263,7 @@ export {
   DefaultWorkflowOrchestrator,
   DefaultWorkflowHandoffBuilder,
   InMemoryWorkflowMemoryStore,
+  DefaultWorkflowRunEvaluator,
 } from "./workflow";
 export { KNOWLEDGE_MODULE_MEMORY } from "./memory";
 export type {

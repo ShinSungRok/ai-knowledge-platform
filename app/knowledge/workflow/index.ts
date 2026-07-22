@@ -69,3 +69,4 @@ export type {
   WorkflowRunEvaluatorInput,
   WorkflowRunEvaluator,
 } from "./WorkflowRunEvaluator";
+export { DefaultWorkflowRunEvaluator } from "./DefaultWorkflowRunEvaluator";

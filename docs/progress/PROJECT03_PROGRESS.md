@@ -506,3 +506,25 @@ Define Workflow evaluation contract
 
 **Status**
 Completed
+
+## Task 179
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add DefaultWorkflowRunEvaluator
+
+**Summary**
+- Pure DefaultWorkflowRunEvaluator for status/steps/roles/handoff/memory expectations
+- Empty dataset throws; missing-run / missing-memory deterministic reasons
+- No orchestrator/registry imports
+
+**Validation**
+- `pnpm typecheck`
+
+**Status**
+Completed
