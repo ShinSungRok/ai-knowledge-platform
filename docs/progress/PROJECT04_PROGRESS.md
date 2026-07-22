@@ -152,3 +152,30 @@ Add InMemoryExperimentRunStore
 
 **Status**
 Completed
+
+## Task 192
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add contract and store validation runners
+
+**Summary**
+- Added runExperimentRunContractValidation and runInMemoryExperimentRunStoreValidation
+- Wired validate:llmops:contract and validate:llmops:run-store into pnpm validate
+- Covers happy path, duplicate id, invalid transition, isolation, defensive copies
+
+**Validation**
+- `pnpm validate:llmops:contract`
+- `pnpm validate:llmops:run-store`
+- `pnpm validate:project04:charter-skeleton`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed
