@@ -528,3 +528,29 @@ Add DefaultWorkflowRunEvaluator
 
 **Status**
 Completed
+
+## Task 180
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add RunWorkflowEvaluationUseCase and Fake validation
+
+**Summary**
+- Added RunWorkflowEvaluationUseCase (orchestrator → memory list → evaluator)
+- Added validate:workflow:evaluation and validate:application:eval-workflow
+- Included both in top-level pnpm validate
+
+**Validation**
+- `pnpm validate:workflow:evaluation`
+- `pnpm validate:application:eval-workflow`
+- `pnpm validate:workflow:orchestrator`
+- `pnpm validate:workflow:memory`
+- `pnpm typecheck`
+
+**Status**
+Completed

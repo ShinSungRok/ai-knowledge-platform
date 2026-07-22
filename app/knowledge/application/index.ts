@@ -114,4 +114,8 @@ export {
   RunCitationEvaluationUseCase,
   type RunCitationEvaluationInput,
 } from "./RunCitationEvaluationUseCase";
+export {
+  RunWorkflowEvaluationUseCase,
+  type RunWorkflowEvaluationInput,
+} from "./RunWorkflowEvaluationUseCase";
 
