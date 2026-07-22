@@ -17,7 +17,8 @@ validated; live optional via env). Nested deferral expansion Sprints 32–35
 add further **Partial** evidence (JWT/OIDC-lite, Prometheus scrape, OTLP
 tracing, MCP stdio) without reopening Charter Platform Baseline closeout
 (Sprint 20) or Post-baseline Infrastructure Track CLOSED (Partial)
-(Sprint 31).
+(Sprint 31). Nested Deferral Expansion Track is **CLOSED (Partial)**
+(Sprint 36).
 
 ## 2. Capabilities Project 2 proves (Charter order)
 

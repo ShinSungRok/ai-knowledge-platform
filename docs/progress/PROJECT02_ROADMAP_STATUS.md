@@ -3,7 +3,25 @@
 > Status of AI Knowledge Platform Charter capabilities at Project 2
 > Platform Baseline closeout (Sprint 20), plus post-baseline persistence,
 > listen, AuthN, LLM, MCP transport, OTLP export, and OpenSearch vector
-> adapter progress (Sprints 21–30).
+> adapter progress (Sprints 21–30), and nested deferral expansion
+> (Sprints 32–35).
+
+## Nested Deferral Expansion Track: CLOSED (Partial)
+
+Sprints 32–35 delivered Fake-/in-memory-validated **Partial** paths for
+JWT/OIDC-lite AuthN, Prometheus `GET /metrics` scrape, OTLP/HTTP tracing
+spans, and MCP stdio newline JSON-RPC. Default `pnpm validate` stays
+dependency-free; HTTP `/mcp` remains the default network path; default
+operations AuthN remains ApiKey.
+
+**Remaining by design:** official SDKs (`@opentelemetry/*`, OpenSearch JS,
+LLM vendor SDKs, MCP SDK), Express/Fastify, full OIDC login flows /
+JWT-OIDC SDKs, full W3C propagator suite / `prom-client`.
+
+**Charter Platform Baseline remains CLOSED** (Sprint 20).
+**Post-baseline Infrastructure Track remains CLOSED (Partial)** (Sprint 31).
+This track closeout does not reopen those tracks or mark Partial adapters
+as Completed.
 
 ## Post-baseline Infrastructure Track: CLOSED (Partial)
 
@@ -67,3 +85,4 @@ does not reopen baseline capabilities or mark Partial adapters as Completed.
 | Sprint 33 (Task 138–141) | Establish Prometheus `/metrics` Scrape Endpoint (`toPrometheusText`, `ObservingHttpRouter` GET `/metrics`, scrape validation; `prom-client` / tracing deferred) |
 | Sprint 34 (Task 142–145) | Establish Distributed Tracing (OTLP Spans) (`Tracer`/`Span`, `InMemoryTracer`, `OtlpTracesExporter`, ObservingHttpRouter instrumentation, optional OTEL composition; official SDK / full propagator suite deferred) |
 | Sprint 35 (Task 146–149) | Establish MCP Stdio Transport (stdio IO contract, `StdioMcpJsonRpcSession`, Fake streams validation, optional `createInMemoryStdioMcpSession`; HTTP `/mcp` remains default network path; official MCP SDK deferred) |
+| Sprint 36 (Task 150–153) | Close Out Nested Deferral Expansion Track (portfolio/ops docs alignment, `validate:project:nested-expansion-closeout`, roadmap track CLOSED Partial) |

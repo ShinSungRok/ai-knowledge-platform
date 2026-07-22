@@ -92,6 +92,12 @@ function main(): void {
     roadmap.includes("stdio") || roadmap.includes("StdioMcpJsonRpcSession"),
     "roadmap must mention MCP stdio",
   );
+  assertContains(
+    roadmap,
+    "Nested Deferral Expansion Track: CLOSED (Partial)",
+    "roadmap must declare nested deferral expansion track CLOSED (Partial)",
+  );
+  assertContains(roadmap, "Sprint 36", "roadmap must include Sprint 36");
 
   console.log("[nested-expansion] Checking package.json scripts...");
   const packageJson = JSON.parse(

@@ -4024,3 +4024,31 @@ Add nested-expansion closeout validation runner
 **Status**
 Completed
 
+## Task 153
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Finalize roadmap track closeout and Progress Log
+
+**Summary**
+- Declared Nested Deferral Expansion Track: CLOSED (Partial) on roadmap; added Sprint 36 task-range
+- Strengthened nested-expansion closeout validator with track CLOSED + Sprint 36 asserts
+- README/development/portfolio record nested-expansion closeout and `validate:project:nested-expansion-closeout`
+
+**Validation**
+- `pnpm validate:project:closeout`
+- `pnpm validate:project:post-baseline-closeout`
+- `pnpm validate:project:nested-expansion-closeout`
+- `pnpm validate:composition:operations`
+- `pnpm validate:composition:mcp-stdio`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

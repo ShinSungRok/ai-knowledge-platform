@@ -181,7 +181,8 @@ top-level `pnpm validate`).
 `validate:project:nested-expansion-closeout` statically checks Sprints 32–35
 nested expansion Partial evidence (JWT OIDC-lite, Prometheus `/metrics`,
 OTLP tracing, MCP stdio — docs, roadmap Sprint rows, validators, and source
-files). See
+files). **Nested Deferral Expansion Track closeout** (Sprint 36) additionally
+requires this command (included in top-level `pnpm validate`). See
 [`docs/progress/PROJECT02_ROADMAP_STATUS.md`](progress/PROJECT02_ROADMAP_STATUS.md).
 
 ## 4. Commit strategy
