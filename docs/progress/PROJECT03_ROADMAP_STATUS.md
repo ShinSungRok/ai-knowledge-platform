@@ -17,7 +17,8 @@ Project 2 stay Partial — not Completed. Do not reopen Project 2 tracks.
 
 **Next:** Project 4 — Enterprise LLMOps Platform (out of active Project 3
 charter). Reuses Project 2 Knowledge/MCP/Agent platform and Project 3
-Multi-Agent workflow boundaries.
+Multi-Agent workflow boundaries. Project 4 active docs: `PROJECT04_*`
+(`docs/agent/PROJECT04_INSTRUCTIONS.md`, `docs/progress/PROJECT04_*`).
 
 ## Reuse from Project 2
 
