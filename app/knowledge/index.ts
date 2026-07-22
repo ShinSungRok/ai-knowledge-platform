@@ -243,6 +243,8 @@ export {
   InMemoryWorkflowAgentRegistry,
   DefaultWorkflowAgentRegistry,
   FakeWorkflowAgentInvoker,
+  DeterministicWorkflowPlanner,
+  DefaultWorkflowOrchestrator,
 } from "./workflow";
 export { KNOWLEDGE_MODULE_MEMORY } from "./memory";
 export type {

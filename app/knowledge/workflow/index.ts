@@ -42,3 +42,5 @@ export type {
   FakeWorkflowAgentInvokerHandler,
   FakeWorkflowAgentInvokerOptions,
 } from "./FakeWorkflowAgentInvoker";
+export { DeterministicWorkflowPlanner } from "./DeterministicWorkflowPlanner";
+export { DefaultWorkflowOrchestrator } from "./DefaultWorkflowOrchestrator";

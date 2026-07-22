@@ -242,3 +242,25 @@ Add WorkflowAgentInvoker port and Fake invoker
 
 **Status**
 Completed
+
+## Task 168
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add DeterministicWorkflowPlanner and DefaultWorkflowOrchestrator
+
+**Summary**
+- DeterministicWorkflowPlanner: fixed role priority; all steps get goal.objective
+- DefaultWorkflowOrchestrator: plan→resolve→invoke; stop on failure; v1 status failed
+- No Shared Memory / Handoff types
+
+**Validation**
+- `pnpm typecheck`
+
+**Status**
+Completed
