@@ -298,7 +298,7 @@ Completed
 2026-07-22
 
 **Commit**
-Pending
+d1545e4
 
 **Title**
 Define WorkflowHandoff contract
