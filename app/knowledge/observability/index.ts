@@ -2,12 +2,14 @@
  * Module: `app/knowledge/observability`
  *
  * Structured logging and metrics foundations for Operations, plus an
- * OTLP/HTTP export boundary (official OpenTelemetry SDK deferred).
+ * OTLP/HTTP export boundary including OTLP/HTTP spans. Official OpenTelemetry
+ * SDK / W3C propagator full suite remain deferred.
  *
  * `Logger` / `LogEvent` / `LogLevel` and `Metrics` / `MetricPoint` are
- * dependency-free ports. `InMemoryLogger` and `InMemoryMetrics` are the
- * default in-process adapters. `OtlpHttpTransport` / `OtlpExporterConfig`
- * define optional collector export without `@opentelemetry/*`.
+ * dependency-free ports. `Tracer` / `Span` define the tracing port.
+ * `InMemoryLogger` and `InMemoryMetrics` are the default in-process adapters.
+ * `OtlpHttpTransport` / `OtlpExporterConfig` define optional collector export
+ * without `@opentelemetry/*`.
  */
 export const KNOWLEDGE_MODULE_OBSERVABILITY =
   "app/knowledge/observability" as const;
@@ -19,6 +21,12 @@ export { InMemoryLogger } from "./InMemoryLogger";
 export type { MetricPoint } from "./MetricPoint";
 export type { Metrics } from "./Metrics";
 export { InMemoryMetrics } from "./InMemoryMetrics";
+export type { TraceId } from "./TraceId";
+export type { SpanId } from "./SpanId";
+export type { SpanStatus } from "./SpanStatus";
+export type { SpanAttributes } from "./SpanAttributes";
+export type { Span } from "./Span";
+export type { Tracer } from "./Tracer";
 export { toPrometheusText } from "./prometheusText";
 export type { OtlpHttpRequest } from "./OtlpHttpRequest";
 export type { OtlpHttpResponse } from "./OtlpHttpResponse";

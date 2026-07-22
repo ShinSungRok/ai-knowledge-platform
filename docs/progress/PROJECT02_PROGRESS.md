@@ -3742,3 +3742,28 @@ Update roadmap/portfolio for Prometheus scrape progress
 
 **Status**
 Completed
+
+## Task 142
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Define Trace/Span contract and Tracer port
+
+**Summary**
+- Added dependency-free `TraceId`/`SpanId`/`SpanStatus`/`Span`/`Tracer` contract types
+- Documented OTLP/HTTP spans with official SDK / W3C propagator suite deferred
+- Added `validate:observability:tracer-contract` (Fake Tracer) and wired into `pnpm validate`
+
+**Validation**
+- `pnpm validate:observability:contract`
+- `pnpm validate:observability:tracer-contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
