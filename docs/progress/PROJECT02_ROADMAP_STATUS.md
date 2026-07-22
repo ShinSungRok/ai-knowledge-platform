@@ -1,10 +1,27 @@
 # Project 2 Roadmap Status
 
-> Status of AI Knowledge Platform Charter capabilities at Project 2.
-> **Project 2 overall status: CLOSED** (portfolio Sprint 37; formal roadmap
-> header finalized in Sprint 37 Task 157). Tracks: Platform Baseline closeout
-> (Sprint 20), post-baseline persistence / listen / AuthN / LLM / MCP / OTLP /
-> OpenSearch (Sprints 21–30), nested deferral expansion (Sprints 32–35).
+## Project 2: CLOSED
+
+**Project 2: CLOSED.** Active Project 2 charter work in this repository is
+complete. Handoff is to **Project 3 — Enterprise AI Workflow — Multi-Agent**.
+
+| Milestone | Status | Sprint |
+|---|---|---|
+| Charter Platform Baseline | CLOSED (capabilities Completed) | Sprint 20 |
+| Post-baseline Infrastructure Track | CLOSED (Partial) | Sprint 31 |
+| Nested Deferral Expansion Track | CLOSED (Partial) | Sprint 36 |
+| Project 2 final closeout / Project 3 handoff | CLOSED | Sprint 37 |
+
+**Remaining by design (once):** official SDKs (`@opentelemetry/*`, OpenSearch JS,
+LLM vendor SDKs, MCP SDK), Express/Fastify, full OIDC login flows / JWT-OIDC
+SDKs, full W3C propagator suite / `prom-client`.
+
+**Next:** Project 3 Enterprise AI Workflow — Multi-Agent (out of this repo’s
+active Project 2 charter). Partial adapters stay Partial — not Completed.
+
+> Historical track detail below: Platform Baseline closeout (Sprint 20),
+> post-baseline persistence / listen / AuthN / LLM / MCP / OTLP / OpenSearch
+> (Sprints 21–30), nested deferral expansion (Sprints 32–35).
 
 ## Nested Deferral Expansion Track: CLOSED (Partial)
 
@@ -86,3 +103,4 @@ does not reopen baseline capabilities or mark Partial adapters as Completed.
 | Sprint 34 (Task 142–145) | Establish Distributed Tracing (OTLP Spans) (`Tracer`/`Span`, `InMemoryTracer`, `OtlpTracesExporter`, ObservingHttpRouter instrumentation, optional OTEL composition; official SDK / full propagator suite deferred) |
 | Sprint 35 (Task 146–149) | Establish MCP Stdio Transport (stdio IO contract, `StdioMcpJsonRpcSession`, Fake streams validation, optional `createInMemoryStdioMcpSession`; HTTP `/mcp` remains default network path; official MCP SDK deferred) |
 | Sprint 36 (Task 150–153) | Close Out Nested Deferral Expansion Track (portfolio/ops docs alignment, `validate:project:nested-expansion-closeout`, roadmap track CLOSED Partial) |
+| Sprint 37 (Task 154–157) | Close Out Project 2 / Project 3 Handoff (portfolio Project 2 CLOSED + Multi-Agent handoff, `validate:project:final-closeout`, roadmap Project 2: CLOSED) |

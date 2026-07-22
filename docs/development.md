@@ -190,10 +190,9 @@ evidence: portfolio **Project 2: CLOSED** + Project 3 Multi-Agent handoff
 keywords, all three track CLOSED markers on the roadmap, and the four
 closeout scripts. It does **not** require Partial adapters to become
 Completed. Included in top-level `pnpm validate` after nested-expansion
-closeout. Formal roadmap header **Project 2: CLOSED** is finalized in
-Task 157. See
-[`docs/progress/PROJECT02_ROADMAP_STATUS.md`](progress/PROJECT02_ROADMAP_STATUS.md)
-and [`docs/portfolio.md`](portfolio.md).
+closeout. Formal roadmap header **Project 2: CLOSED** is on
+[`docs/progress/PROJECT02_ROADMAP_STATUS.md`](progress/PROJECT02_ROADMAP_STATUS.md).
+See also [`docs/portfolio.md`](portfolio.md).
 
 ## 4. Commit strategy
 

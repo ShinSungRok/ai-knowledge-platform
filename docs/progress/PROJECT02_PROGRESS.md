@@ -4130,3 +4130,30 @@ Add Project 2 final-closeout validation runner
 **Status**
 Completed
 
+## Task 157
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Finalize Project 2 CLOSED on roadmap and Progress Log
+
+**Summary**
+- Roadmap top header **Project 2: CLOSED** with three-track + Sprint 37 handoff summary
+- Strengthened `validate:project:final-closeout` with `Project 2: CLOSED` + Sprint 37 asserts
+- README/development record final-closeout command; Project 2 final closeout complete
+
+**Validation**
+- `pnpm validate:project:closeout`
+- `pnpm validate:project:post-baseline-closeout`
+- `pnpm validate:project:nested-expansion-closeout`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

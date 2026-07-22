@@ -33,7 +33,7 @@ pnpm validate
 pnpm validate:project:closeout
 pnpm validate:project:post-baseline-closeout
 pnpm validate:project:nested-expansion-closeout
-# Sprint 37: pnpm validate:project:final-closeout (wired in Task 156)
+pnpm validate:project:final-closeout
 ```
 
 ## Local runtime
@@ -215,6 +215,7 @@ See [`docs/architecture.md`](docs/architecture.md) and
 | `pnpm validate:project:closeout` | Static Project 2 baseline docs/scripts/exports closeout |
 | `pnpm validate:project:post-baseline-closeout` | Static Sprints 21–30 Partial infra evidence closeout |
 | `pnpm validate:project:nested-expansion-closeout` | Static Sprints 32–35 nested expansion evidence closeout |
+| `pnpm validate:project:final-closeout` | Static Project 2 CLOSED + Project 3 handoff closeout |
 | `pnpm validate:skeleton` | Directory, barrel, docs, and script integrity |
 | `pnpm typecheck` | TypeScript strict check (`tsc --noEmit`) |
 | `pnpm validate:deployment:readiness` | Static Docker/docs/export readiness (no daemon) |

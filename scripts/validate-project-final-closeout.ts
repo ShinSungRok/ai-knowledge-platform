@@ -67,6 +67,12 @@ function main(): void {
     "Nested Deferral Expansion Track: CLOSED (Partial)",
     "roadmap must declare nested expansion track CLOSED (Partial)",
   );
+  assertContains(
+    roadmap,
+    "Project 2: CLOSED",
+    "roadmap must declare Project 2: CLOSED",
+  );
+  assertContains(roadmap, "Sprint 37", "roadmap must include Sprint 37");
 
   console.log("[final-closeout] Checking package.json closeout scripts...");
   const packageJson = JSON.parse(
