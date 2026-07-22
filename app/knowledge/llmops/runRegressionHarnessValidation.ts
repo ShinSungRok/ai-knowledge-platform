@@ -54,7 +54,10 @@ function assertCandidateDropRegression(): void {
   assertEqual(result.passed, false, "failed");
   assertEqual(result.regressions.length, 1, "one regression");
   assertEqual(result.regressions[0]?.metricKey, "hitRateAtK", "metric key");
-  assertEqual(result.regressions[0]?.delta, -0.2, "delta");
+  assertTruthy(
+    Math.abs((result.regressions[0]?.delta ?? 0) + 0.2) < 1e-9,
+    "delta approximately -0.2",
+  );
 }
 
 function assertTolerancePreventsRegression(): void {
@@ -77,7 +80,10 @@ function assertMissingCandidateKeyRegression(): void {
   });
   assertEqual(result.passed, false, "failed");
   assertEqual(result.regressions[0]?.candidate, 0, "candidate treated as 0");
-  assertEqual(result.regressions[0]?.delta, -0.8, "delta");
+  assertTruthy(
+    Math.abs((result.regressions[0]?.delta ?? 0) + 0.8) < 1e-9,
+    "delta approximately -0.8",
+  );
 }
 
 function assertEmptyBaselineThrows(): void {
