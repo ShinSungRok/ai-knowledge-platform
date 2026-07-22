@@ -146,11 +146,10 @@ async function assertDefensiveCopies(): Promise<void> {
     kind: "note",
     content: "keep",
   });
-  const listed = (await store.listByRun(
-    "workspace-a",
-    runId,
-  )) as { content: string }[];
-  listed[0]!.content = "mutated";
+  const listed = [...(await store.listByRun("workspace-a", runId))];
+  const first = listed[0];
+  assertTruthy(first !== undefined, "expected entry");
+  (first as { content: string }).content = "mutated";
   listed.pop();
   const again = await store.listByRun("workspace-a", runId);
   assertEqual(again.length, 1, "store length unchanged");

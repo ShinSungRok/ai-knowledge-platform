@@ -456,3 +456,30 @@ Wire Shared Workflow Memory into DefaultWorkflowOrchestrator
 
 **Status**
 Completed
+
+## Task 177
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Validate Shared Workflow Memory and update roadmap Partial
+
+**Summary**
+- Added runInMemoryWorkflowMemoryStoreValidation; wired validate:workflow:memory
+- Extended orchestrator validation for memory sequence on success/failure
+- Marked Shared Workflow Memory Partial on roadmap/portfolio/README/modules
+
+**Validation**
+- `pnpm validate:workflow:handoff`
+- `pnpm validate:workflow:orchestrator`
+- `pnpm validate:workflow:memory`
+- `pnpm validate:project03:charter-skeleton`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed
