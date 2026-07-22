@@ -3854,7 +3854,7 @@ Completed
 2026-07-22
 
 **Commit**
-Pending
+b0901ba
 
 **Title**
 Define MCP stdio IO contract and config
