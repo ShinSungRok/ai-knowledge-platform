@@ -359,3 +359,29 @@ Wire handoff into DefaultWorkflowOrchestrator
 
 **Status**
 Completed
+
+## Task 173
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Validate handoff and update roadmap Partial
+
+**Summary**
+- Added runWorkflowHandoffValidation; wired validate:workflow:handoff
+- Marked Agent Handoff / Delegation Partial on roadmap/portfolio/README
+- Shared Memory / Evaluation remain Not Started; Project 2 CLOSED
+
+**Validation**
+- `pnpm validate:workflow:orchestrator`
+- `pnpm validate:workflow:handoff`
+- `pnpm validate:project03:charter-skeleton`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed

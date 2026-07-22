@@ -63,7 +63,8 @@ function main(): void {
   assertTruthy(
     roadmap.includes("Active (Charter Skeleton)") ||
       roadmap.includes("Active — Multi-Agent Role Contract Partial") ||
-      roadmap.includes("Active — Role Contract + Workflow Orchestrator Partial"),
+      roadmap.includes("Active — Role Contract + Workflow Orchestrator Partial") ||
+      roadmap.includes("Active — Role Contract + Orchestrator + Handoff Partial"),
     "PROJECT03 roadmap must declare an Active Project 3 status phrase",
   );
 

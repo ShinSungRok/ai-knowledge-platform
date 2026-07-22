@@ -1,15 +1,16 @@
 # Project 3 Roadmap Status
 
 > Enterprise AI Workflow — Multi-Agent  
-> **Active — Role Contract + Workflow Orchestrator Partial** — Sprint 40
+> **Active — Role Contract + Orchestrator + Handoff Partial** — Sprint 41
 
 ## Status
 
-**Project 3 — Active — Role Contract + Workflow Orchestrator Partial.**
+**Project 3 — Active — Role Contract + Orchestrator + Handoff Partial.**
 Charter Skeleton (Sprint 38) remains the foundation. Multi-Agent Role Contract
-is **Partial**. Workflow Orchestrator is **Partial** (Deterministic planner +
-Default orchestrator + Fake invoker validated). Agent Handoff/Delegation,
-Shared Workflow Memory, and Multi-Agent Evaluation remain **Not Started**.
+and Workflow Orchestrator are **Partial**. Agent Handoff / Delegation is
+**Partial** (`WorkflowHandoff` + `DefaultWorkflowHandoffBuilder` wired into
+`DefaultWorkflowOrchestrator`; `pnpm validate:workflow:handoff`). Shared
+Workflow Memory and Multi-Agent Evaluation remain **Not Started**.
 
 **Project 2 remains CLOSED** (Sprint 37). Partial infrastructure adapters from
 Project 2 stay Partial — not Completed. Do not reopen Project 2 tracks.
@@ -30,14 +31,14 @@ Project 2 stay Partial — not Completed. Do not reopen Project 2 tracks.
 | Capability | Status | Notes |
 |---|---|---|
 | Multi-Agent Role Contract | **Partial** | `workflow` module: roles/descriptors + InMemory registry; `pnpm validate:workflow:contract` / `validate:workflow:registry` |
-| Workflow Orchestrator | **Partial** | `DeterministicWorkflowPlanner` + `DefaultWorkflowOrchestrator` + `FakeWorkflowAgentInvoker`; `pnpm validate:workflow:orchestrator`; no Handoff/Shared Memory |
-| Agent Handoff / Delegation | Not Started | Explicit handoff contracts between agents |
+| Workflow Orchestrator | **Partial** | `DeterministicWorkflowPlanner` + `DefaultWorkflowOrchestrator` + `FakeWorkflowAgentInvoker`; `pnpm validate:workflow:orchestrator` |
+| Agent Handoff / Delegation | **Partial** | `WorkflowHandoff` / `DefaultWorkflowHandoffBuilder`; runtime handoff overrides step input after step 0; `pnpm validate:workflow:handoff` |
 | Shared Workflow Memory | Not Started | Workspace/workflow-scoped shared memory boundaries |
 | Multi-Agent Evaluation | Not Started | Evaluation of multi-agent runs |
 
 ## Explicit non-goals (current)
 
-- Explicit Handoff message types / Shared Workflow Memory / Multi-Agent Evaluation
+- Shared Workflow Memory / Multi-Agent Evaluation runtime
 - Official SDKs, Express/Fastify, full OIDC login, full W3C propagator
 - Reopening Project 2 CLOSED tracks or promoting Partial → Completed
 - Conflating Project 2 `AgentRole` with Multi-Agent `WorkflowAgentRole`
@@ -50,6 +51,7 @@ Project 2 stay Partial — not Completed. Do not reopen Project 2 tracks.
 | Sprint 38 (Task 158–161) | Establish Project 3 Charter Skeleton (PROJECT03 instructions, Progress/Roadmap stubs, agent ops pointers, static skeleton validator) |
 | Sprint 39 (Task 162–165) | Establish Multi-Agent Role Contract (`workflow` ports + InMemory registry + validators; Partial) |
 | Sprint 40 (Task 166–169) | Establish Workflow Orchestrator (goal/plan/invoker/orchestrator + Fake validation; Partial) |
+| Sprint 41 (Task 170–173) | Establish Agent Handoff / Delegation (contract + builder + orchestrator wiring + validators; Partial) |
 
 ## Sprint 38 close note
 
@@ -74,3 +76,11 @@ delivered Workflow goal/plan/result ports, Fake invoker, Deterministic
 planner, Default orchestrator, and `pnpm validate:workflow:orchestrator`.
 Handoff / Shared Memory / Multi-Agent Evaluation remain **Not Started**.
 Project 2 remains **CLOSED**.
+
+## Sprint 41 close note
+
+**Sprint 41 — Establish Agent Handoff / Delegation: CLOSED.** Tasks 170–173
+delivered `WorkflowHandoff` contract, `DefaultWorkflowHandoffBuilder`,
+orchestrator wiring (step0 objective; later steps handoff payload), and
+`pnpm validate:workflow:handoff`. Shared Memory / Multi-Agent Evaluation
+remain **Not Started**. Project 2 remains **CLOSED**.
