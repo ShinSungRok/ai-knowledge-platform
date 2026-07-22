@@ -60,10 +60,10 @@ function main(): void {
     "utf8",
   );
   assertContains(roadmap, "Sprint 38", "PROJECT03 roadmap must include Sprint 38");
-  assertContains(
-    roadmap,
-    "Active (Charter Skeleton)",
-    "PROJECT03 roadmap must declare Active (Charter Skeleton)",
+  assertTruthy(
+    roadmap.includes("Active (Charter Skeleton)") ||
+      roadmap.includes("Active — Multi-Agent Role Contract Partial"),
+    "PROJECT03 roadmap must declare Active (Charter Skeleton) or Active — Multi-Agent Role Contract Partial",
   );
 
   console.log(

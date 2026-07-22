@@ -170,3 +170,29 @@ Add contract and registry validation runners
 
 **Status**
 Completed
+
+## Task 165
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Update Project 3 roadmap/portfolio for Role Contract Partial
+
+**Summary**
+- Marked Multi-Agent Role Contract Partial on PROJECT03 roadmap; Sprint 39 closed
+- Updated portfolio/README Project 3 status; kept Project 2 CLOSED
+- Relaxed charter-skeleton validator Active phrasing for Role Contract Partial
+
+**Validation**
+- `pnpm validate:workflow:contract`
+- `pnpm validate:workflow:registry`
+- `pnpm validate:project03:charter-skeleton`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed

@@ -12,15 +12,16 @@ composition root, and dependency-free validation runners.
 
 ## Status
 
-**Project 2: CLOSED** (Sprint 37). **Project 3: Active (Charter Skeleton)**
-(Sprint 38) — Multi-Agent product features remain Not Started.
+**Project 2: CLOSED** (Sprint 37). **Project 3: Active — Multi-Agent Role
+Contract Partial** (Sprint 39; Charter Skeleton from Sprint 38).
 
 | Track | Status |
 |---|---|
 | Charter Platform Baseline | CLOSED (Sprint 20) |
 | Post-baseline Infrastructure | CLOSED (Partial) (Sprint 31) |
 | Nested Deferral Expansion | CLOSED (Partial) (Sprint 36) |
-| Project 3 Charter Skeleton | Active (Sprint 38) |
+| Project 3 Charter Skeleton | CLOSED (Sprint 38) |
+| Project 3 Multi-Agent Role Contract | Partial (Sprint 39) |
 
 Charter capabilities through Operations are Completed. Partial infra adapters
 stay Partial (not Completed). See [`docs/portfolio.md`](docs/portfolio.md),
@@ -224,6 +225,8 @@ See [`docs/architecture.md`](docs/architecture.md) and
 | `pnpm validate:project:nested-expansion-closeout` | Static Sprints 32–35 nested expansion evidence closeout |
 | `pnpm validate:project:final-closeout` | Static Project 2 CLOSED + Project 3 handoff closeout |
 | `pnpm validate:project03:charter-skeleton` | Static Project 3 Active (Charter Skeleton) docs closeout |
+| `pnpm validate:workflow:contract` | Multi-Agent Role Contract types / FakeWorkflowAgent |
+| `pnpm validate:workflow:registry` | InMemoryWorkflowAgentRegistry invariants |
 | `pnpm validate:skeleton` | Directory, barrel, docs, and script integrity |
 | `pnpm typecheck` | TypeScript strict check (`tsc --noEmit`) |
 | `pnpm validate:deployment:readiness` | Static Docker/docs/export readiness (no daemon) |
@@ -239,9 +242,9 @@ Minimized for the platform baseline:
 ## Next
 
 **Project 2 is CLOSED.** **Project 3 — Enterprise AI Workflow — Multi-Agent**
-is **Active (Charter Skeleton)**; product Multi-Agent features are Not Started.
-By-design non-goals (official SDKs, Express/Fastify, full OIDC login, full W3C
-propagator / `prom-client`) remain deferred. See
-[`docs/portfolio.md`](docs/portfolio.md),
+is **Active — Multi-Agent Role Contract Partial** (`app/knowledge/workflow`;
+orchestrator/handoff still Not Started). By-design non-goals (official SDKs,
+Express/Fastify, full OIDC login, full W3C propagator / `prom-client`) remain
+deferred. See [`docs/portfolio.md`](docs/portfolio.md),
 [`docs/agent/PROJECT03_INSTRUCTIONS.md`](docs/agent/PROJECT03_INSTRUCTIONS.md),
 and [`docs/development.md`](docs/development.md).

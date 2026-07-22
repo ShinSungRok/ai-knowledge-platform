@@ -28,10 +28,13 @@ Default `pnpm validate` stays **dependency-free** (Fake / in-memory adapters).
 
 ## 1c. Project 3 — Enterprise AI Workflow (Multi-Agent)
 
-**Project 3: Active (Charter Skeleton).** Charter docs, Progress/Roadmap stubs,
-agent ops pointers, and `pnpm validate:project03:charter-skeleton` are in place.
-Product Multi-Agent features (roles, workflow orchestration, handoff/delegation,
-shared workflow memory, multi-agent evaluation) are **Not Started**.
+**Project 3: Active — Multi-Agent Role Contract Partial.** Charter docs and
+`pnpm validate:project03:charter-skeleton` remain in place (Sprint 38).
+Sprint 39 adds `app/knowledge/workflow` Multi-Agent Role Contract +
+InMemory registry, proven by `pnpm validate:workflow:contract` and
+`pnpm validate:workflow:registry` (**Partial** — orchestrator/handoff deferred).
+Workflow Orchestrator, Agent Handoff/Delegation, Shared Workflow Memory, and
+Multi-Agent Evaluation remain **Not Started**.
 
 **Reuse from Project 2:**
 
@@ -41,10 +44,10 @@ shared workflow memory, multi-agent evaluation) are **Not Started**.
 - Partial infra adapters (Postgres, OpenSearch, HTTP LLM, OTLP, JWT OIDC-lite,
   Prometheus scrape, MCP HTTP + stdio) as optional Fake-validated paths
 
-**Still out of scope for this skeleton (and Project 2 non-goals):**
+**Still out of scope (and Project 2 non-goals):**
 official SDKs, Express/Fastify, full OIDC authorization-code login, full W3C
-propagator suite / `prom-client`, and implementing Multi-Agent product/runtime
-features.
+propagator suite / `prom-client`, and Multi-Agent orchestrator/handoff/runtime
+features beyond the Role Contract Partial.
 
 Active charter: [`docs/agent/PROJECT03_INSTRUCTIONS.md`](agent/PROJECT03_INSTRUCTIONS.md).
 Progress / roadmap: [`docs/progress/PROJECT03_PROGRESS.md`](progress/PROJECT03_PROGRESS.md),
@@ -56,7 +59,7 @@ Progress / roadmap: [`docs/progress/PROJECT03_PROGRESS.md`](progress/PROJECT03_P
 |---|---|---|
 | Project 1 | Public Law AI — Grounded RAG | Complete (separate repo) |
 | Project 2 | AI Knowledge Platform — Knowledge + MCP + Agent | **CLOSED** |
-| Project 3 | Enterprise AI Workflow — Multi-Agent | **Active (Charter Skeleton)** |
+| Project 3 | Enterprise AI Workflow — Multi-Agent | **Active — Multi-Agent Role Contract Partial** |
 | Project 4 | Enterprise LLMOps Platform | Future |
 
 Project 2 delivers a **completed platform baseline**: workspace-scoped
