@@ -580,3 +580,28 @@ Update roadmap/portfolio for Evaluation Partial
 
 **Status**
 Completed
+
+## Task 182
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Declare Project 3 CLOSED (Partial) and Project 4 handoff in portfolio
+
+**Summary**
+- Portfolio Project 3: CLOSED (Partial) with five Partial capability evidence table
+- Project 4 handoff: Enterprise LLMOps Platform (outside active Project 3 charter)
+- Project sequence: Project 3 CLOSED (Partial); Project 4 Next (handoff)
+- Project 2 CLOSED preserved; Partial≠Completed
+
+**Validation**
+- `pnpm validate:project:final-closeout`
+- `pnpm validate:project03:charter-skeleton`
+- `pnpm typecheck`
+
+**Status**
+Completed

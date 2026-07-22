@@ -26,18 +26,23 @@ remain out of Project 2.
 
 Default `pnpm validate` stays **dependency-free** (Fake / in-memory adapters).
 
-## 1c. Project 3 — Enterprise AI Workflow (Multi-Agent)
+## 1c. Project 3: CLOSED (Partial) — Enterprise AI Workflow (Multi-Agent)
 
-**Project 3: Active — Role Contract + Orchestrator + Handoff + Shared Memory +
-Evaluation Partial.** Charter docs and `pnpm validate:project03:charter-skeleton`
-remain in place (Sprint 38). Sprint 39–43 deliver **Partial** for all five
-charter capabilities (none Completed; Project 3 not CLOSED). Multi-Agent
-Evaluation (`DefaultWorkflowRunEvaluator` + `RunWorkflowEvaluationUseCase`)
-scores orchestrator/memory artifacts only — LLM-as-judge deferred. Proven by
-`pnpm validate:workflow:contract`, `validate:workflow:registry`,
-`validate:workflow:orchestrator`, `validate:workflow:handoff`,
-`validate:workflow:memory`, `validate:workflow:evaluation`, and
-`validate:application:eval-workflow`. Distinct from Project 2 RAG evaluation.
+**Project 3: CLOSED (Partial).** The active Project 3 Multi-Agent charter is
+complete as a **Partial** closeout — five charter capabilities are each
+**Partial** (none Completed):
+
+| Capability | Status | Representative validators |
+|---|---|---|
+| Multi-Agent Role Contract | **Partial** | `pnpm validate:workflow:contract`, `validate:workflow:registry` |
+| Workflow Orchestrator | **Partial** | `pnpm validate:workflow:orchestrator` |
+| Agent Handoff / Delegation | **Partial** | `pnpm validate:workflow:handoff` |
+| Shared Workflow Memory | **Partial** | `pnpm validate:workflow:memory` |
+| Multi-Agent Evaluation | **Partial** | `pnpm validate:workflow:evaluation`, `validate:application:eval-workflow` |
+
+Partial means Fake/InMemory-proven boundaries exist; they are **not** promoted
+to Completed. Charter Skeleton (Sprint 38) through Evaluation (Sprint 43)
+remain the evidence base; Sprint 44 records overall closeout.
 
 **Reuse from Project 2:**
 
@@ -47,12 +52,18 @@ scores orchestrator/memory artifacts only — LLM-as-judge deferred. Proven by
 - Partial infra adapters (Postgres, OpenSearch, HTTP LLM, OTLP, JWT OIDC-lite,
   Prometheus scrape, MCP HTTP + stdio) as optional Fake-validated paths
 
-**Still out of scope (and Project 2 non-goals):**
-official SDKs, Express/Fastify, full OIDC authorization-code login, full W3C
-propagator suite / `prom-client`, LLM-as-judge, HTTP multi-agent API, and
-promoting Partial → Completed / Project 3 closeout.
+**Remaining by design (out of Project 3 closeout):**
+LLM-as-judge, HTTP multi-agent API, promoting Partial → Completed, and
+inherited Project 2 non-goals where still applicable (official SDKs,
+Express/Fastify, full OIDC authorization-code login, full W3C propagator suite
+/ `prom-client`).
 
-Active charter: [`docs/agent/PROJECT03_INSTRUCTIONS.md`](agent/PROJECT03_INSTRUCTIONS.md).
+**Project 4 handoff — Enterprise LLMOps Platform:** Next work reuses the
+Project 2 Knowledge/MCP/Agent platform and Project 3 Multi-Agent workflow
+boundaries. Project 4 is **outside** this repository’s active Project 3
+charter (no PROJECT04 implementation in Project 3 closeout).
+
+Charter (historical after Sprint 44): [`docs/agent/PROJECT03_INSTRUCTIONS.md`](agent/PROJECT03_INSTRUCTIONS.md).
 Progress / roadmap: [`docs/progress/PROJECT03_PROGRESS.md`](progress/PROJECT03_PROGRESS.md),
 [`docs/progress/PROJECT03_ROADMAP_STATUS.md`](progress/PROJECT03_ROADMAP_STATUS.md).
 
@@ -62,8 +73,8 @@ Progress / roadmap: [`docs/progress/PROJECT03_PROGRESS.md`](progress/PROJECT03_P
 |---|---|---|
 | Project 1 | Public Law AI — Grounded RAG | Complete (separate repo) |
 | Project 2 | AI Knowledge Platform — Knowledge + MCP + Agent | **CLOSED** |
-| Project 3 | Enterprise AI Workflow — Multi-Agent | **Active — Role Contract + Orchestrator + Handoff + Shared Memory + Evaluation Partial** |
-| Project 4 | Enterprise LLMOps Platform | Future |
+| Project 3 | Enterprise AI Workflow — Multi-Agent | **CLOSED (Partial)** |
+| Project 4 | Enterprise LLMOps Platform | Next (handoff) |
 
 Project 2 delivers a **completed platform baseline**: workspace-scoped
 knowledge pipelines through cited RAG answers, MCP/tool/agent/memory/jobs,
