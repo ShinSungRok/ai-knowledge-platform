@@ -3799,7 +3799,7 @@ Completed
 2026-07-22
 
 **Commit**
-Pending
+31dab8a
 
 **Title**
 Instrument ObservingHttpRouter with HTTP spans
