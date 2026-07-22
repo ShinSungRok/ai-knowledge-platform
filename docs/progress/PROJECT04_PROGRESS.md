@@ -387,3 +387,30 @@ Add gate and regression validation runners
 
 **Status**
 Completed
+
+## Task 201
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Update roadmap/portfolio for Gates Partial
+
+**Summary**
+- Roadmap: Active — Run Tracking + Registry + Evaluation Gates Partial; Sprint 48 close note
+- Portfolio/README: gate/regression Partial evidence; Serving/Observability Not Started
+- Charter-skeleton allows new Active Partial phrase; Partial≠Completed; P2/P3 CLOSED
+
+**Validation**
+- `pnpm validate:llmops:evaluation-gate`
+- `pnpm validate:llmops:regression-harness`
+- `pnpm validate:project04:charter-skeleton`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed
