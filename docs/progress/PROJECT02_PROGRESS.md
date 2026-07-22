@@ -3749,7 +3749,7 @@ Completed
 2026-07-22
 
 **Commit**
-Pending
+6f4d208
 
 **Title**
 Define Trace/Span contract and Tracer port
