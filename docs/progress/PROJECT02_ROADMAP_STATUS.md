@@ -18,6 +18,8 @@ SDKs, full W3C propagator suite / `prom-client`.
 
 **Next:** Project 3 Enterprise AI Workflow — Multi-Agent (out of this repo’s
 active Project 2 charter). Partial adapters stay Partial — not Completed.
+**Project 3 active docs:** `docs/agent/PROJECT03_INSTRUCTIONS.md`,
+`docs/progress/PROJECT03_PROGRESS.md`, `docs/progress/PROJECT03_ROADMAP_STATUS.md`.
 
 > Historical track detail below: Platform Baseline closeout (Sprint 20),
 > post-baseline persistence / listen / AuthN / LLM / MCP / OTLP / OpenSearch
