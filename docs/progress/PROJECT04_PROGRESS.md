@@ -315,7 +315,7 @@ Completed
 2026-07-22
 
 **Commit**
-Pending
+cf7027d
 
 **Title**
 Define Evaluation Gate and Regression Harness contracts
