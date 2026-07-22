@@ -59,3 +59,4 @@ export type { WorkflowMemoryEntryKind } from "./WorkflowMemoryEntryKind";
 export type { WorkflowMemoryEntry } from "./WorkflowMemoryEntry";
 export type { WorkflowMemoryAppendInput } from "./WorkflowMemoryAppendInput";
 export type { WorkflowMemoryStore } from "./WorkflowMemoryStore";
+export { InMemoryWorkflowMemoryStore } from "./InMemoryWorkflowMemoryStore";

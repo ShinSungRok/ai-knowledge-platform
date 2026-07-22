@@ -256,6 +256,7 @@ export {
   DeterministicWorkflowPlanner,
   DefaultWorkflowOrchestrator,
   DefaultWorkflowHandoffBuilder,
+  InMemoryWorkflowMemoryStore,
 } from "./workflow";
 export { KNOWLEDGE_MODULE_MEMORY } from "./memory";
 export type {

@@ -408,3 +408,25 @@ Define WorkflowMemory contract
 
 **Status**
 Completed
+
+## Task 175
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add InMemoryWorkflowMemoryStore
+
+**Summary**
+- Added InMemoryWorkflowMemoryStore with workspace/run isolation and sequence ids
+- Defensive copies on append/list; clear() for validation
+- Distinct from Project 2 InMemoryMemoryStore
+
+**Validation**
+- `pnpm typecheck`
+
+**Status**
+Completed
