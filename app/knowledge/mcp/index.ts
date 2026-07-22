@@ -38,3 +38,4 @@ export {
   DEFAULT_MCP_STDIO_MAX_LINE_BYTES,
   resolveMcpStdioSessionConfig,
 } from "./McpStdioSessionConfig";
+export { StdioMcpJsonRpcSession } from "./StdioMcpJsonRpcSession";

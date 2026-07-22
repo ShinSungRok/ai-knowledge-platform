@@ -3873,3 +3873,27 @@ Define MCP stdio IO contract and config
 **Status**
 Completed
 
+## Task 147
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add StdioMcpJsonRpcSession over McpJsonRpcHandler
+
+**Summary**
+- Added `StdioMcpJsonRpcSession` for newline-delimited JSON-RPC over stdio ports
+- Parse/oversized lines → -32700; invalid/notification (no id) → -32600; then continue
+- Delegates valid requests to `McpJsonRpcHandler` (no Bearer on stdio)
+
+**Validation**
+- `pnpm validate:mcp:jsonrpc-handler`
+- `pnpm validate:mcp:stdio-contract`
+- `pnpm typecheck`
+
+**Status**
+Completed
+
