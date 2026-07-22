@@ -1,19 +1,20 @@
 # Project 3 Roadmap Status
 
 > Enterprise AI Workflow — Multi-Agent  
-> **Active — Role Contract + Orchestrator + Handoff + Shared Memory + Evaluation Partial** — Sprint 43
+> **Closing — Role Contract + Orchestrator + Handoff + Shared Memory + Evaluation Partial** — Sprint 44  
+> Formal **Project 3: CLOSED (Partial)** header lands in Sprint 44 Task 185.
 
 ## Status
 
-**Project 3 — Active — all five charter capabilities Partial (none Completed).**
-Charter Skeleton (Sprint 38) remains the foundation. Multi-Agent Role Contract,
-Workflow Orchestrator, Agent Handoff / Delegation, Shared Workflow Memory, and
-Multi-Agent Evaluation are each **Partial**. Project 3 is **not CLOSED** —
-final closeout is a later Sprint. LLM-as-judge and HTTP multi-agent API remain
+**Project 3 — closing out.** All five charter capabilities remain **Partial**
+(none Completed). Portfolio already records **Project 3: CLOSED (Partial)** and
+Project 4 handoff. This roadmap keeps Partial evidence tables until Task 185
+promotes the formal CLOSED header. LLM-as-judge and HTTP multi-agent API remain
 deferred. Project 2 session `MemoryStore` / RAG evaluation remain unchanged.
 
 **Project 2 remains CLOSED** (Sprint 37). Partial infrastructure adapters from
 Project 2 stay Partial — not Completed. Do not reopen Project 2 tracks.
+**Partial ≠ Completed** for Project 3 Multi-Agent capabilities.
 
 ## Reuse from Project 2
 
@@ -42,7 +43,7 @@ Project 2 stay Partial — not Completed. Do not reopen Project 2 tracks.
 - LLM-as-judge / reading memory into invoker prompts for scoring
 - Official SDKs, Express/Fastify, full OIDC login, full W3C propagator
 - Reopening Project 2 CLOSED tracks or promoting Partial → Completed
-- Declaring Project 3 CLOSED (deferred to a closeout Sprint)
+- Declaring Project 3 CLOSED (in progress — Sprint 44 closeout)
 - Conflating Project 2 `AgentRole` / session `MemoryStore` / RAG evaluation with workflow caps
 - Application/HTTP multi-agent API wiring / SQL workflow memory
 
@@ -56,6 +57,7 @@ Project 2 stay Partial — not Completed. Do not reopen Project 2 tracks.
 | Sprint 41 (Task 170–173) | Establish Agent Handoff / Delegation (contract + builder + orchestrator wiring + validators; Partial) |
 | Sprint 42 (Task 174–177) | Establish Shared Workflow Memory (contract + InMemory store + orchestrator append + validators; Partial) |
 | Sprint 43 (Task 178–181) | Establish Multi-Agent Evaluation (contract + evaluator + use case + validators; Partial) |
+| Sprint 44 (Task 182–185) | Close Out Project 3 / Project 4 Handoff (portfolio CLOSED Partial + closeout validator) |
 
 ## Sprint 38 close note
 

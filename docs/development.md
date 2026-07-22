@@ -133,6 +133,15 @@ pnpm validate:project:closeout # Project 2 baseline docs/scripts/exports closeou
 pnpm validate:project:post-baseline-closeout # Sprints 21–30 Partial infra evidence (static)
 pnpm validate:project:nested-expansion-closeout # Sprints 32–35 nested expansion evidence (static)
 pnpm validate:project:final-closeout # Project 2 overall CLOSED + Project 3 handoff (static; Sprint 37)
+pnpm validate:project03:charter-skeleton # Project 3 charter docs + Partial/CLOSED status phrases
+pnpm validate:project03:closeout # Project 3 CLOSED (Partial) five-capability evidence (Sprint 44)
+pnpm validate:workflow:contract # Multi-Agent Role Contract
+pnpm validate:workflow:registry # InMemoryWorkflowAgentRegistry
+pnpm validate:workflow:orchestrator # DefaultWorkflowOrchestrator
+pnpm validate:workflow:handoff # WorkflowHandoff wiring
+pnpm validate:workflow:memory # Shared Workflow Memory
+pnpm validate:workflow:evaluation # DefaultWorkflowRunEvaluator
+pnpm validate:application:eval-workflow # RunWorkflowEvaluationUseCase
 pnpm validate:infra:sql-gateway-contract # SqlGateway port contract
 pnpm validate:infra:in-memory-sql # InMemorySqlGateway document/source/chunk SQL
 pnpm validate:infra:knowledge-schema # applyKnowledgeSchema + SQL repos smoke
@@ -154,10 +163,33 @@ phases. Prefer validation runners for architectural and contract checks.
 
 ## 3. Sprint / Task validation flow
 
-**Project 3 (Active):** Progress Log entries go under
+**Project 3: CLOSED (Partial).** Progress Log entries remain under
 `docs/progress/PROJECT03_PROGRESS.md`. Roadmap status lives in
-`docs/progress/PROJECT03_ROADMAP_STATUS.md`. Charter:
-`docs/agent/PROJECT03_INSTRUCTIONS.md`.
+`docs/progress/PROJECT03_ROADMAP_STATUS.md`. Charter
+(`docs/agent/PROJECT03_INSTRUCTIONS.md`) becomes Closed (historical) at Sprint
+44 finalization. Five Multi-Agent charter capabilities stay **Partial** —
+**Partial ≠ Completed**. Do not promote them to Completed during closeout.
+
+**Project 3 closeout** (Sprint 44) additionally requires:
+
+```bash
+pnpm validate:project03:charter-skeleton
+pnpm validate:project03:closeout
+pnpm validate:workflow:contract
+pnpm validate:workflow:registry
+pnpm validate:workflow:orchestrator
+pnpm validate:workflow:handoff
+pnpm validate:workflow:memory
+pnpm validate:workflow:evaluation
+pnpm validate:application:eval-workflow
+```
+
+`validate:project03:closeout` statically checks five Partial capability
+evidence (docs, scripts, source files) and Project 3 CLOSED (Partial) /
+Project 2 CLOSED markers without Docker, network, or Partial→Completed.
+
+**Project 4 handoff:** Enterprise LLMOps Platform reuses Project 2/3 platforms;
+new Project 4 charter docs are out of Project 3 closeout scope.
 
 **Project 2 (CLOSED):** Historical Progress/Roadmap remain under
 `docs/progress/PROJECT02_*`. Do not reopen Project 2 tracks.

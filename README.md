@@ -12,9 +12,8 @@ composition root, and dependency-free validation runners.
 
 ## Status
 
-**Project 2: CLOSED** (Sprint 37). **Project 3: Active — Role Contract +
-Orchestrator + Handoff + Shared Memory + Evaluation Partial** (Sprint 43;
-all five charter capabilities Partial; Project 3 not CLOSED).
+**Project 2: CLOSED** (Sprint 37). **Project 3: CLOSED (Partial)** (Sprint 44
+closeout; five charter capabilities each Partial — none Completed).
 
 | Track | Status |
 |---|---|
@@ -27,9 +26,11 @@ all five charter capabilities Partial; Project 3 not CLOSED).
 | Project 3 Agent Handoff / Delegation | Partial (Sprint 41) |
 | Project 3 Shared Workflow Memory | Partial (Sprint 42) |
 | Project 3 Multi-Agent Evaluation | Partial (Sprint 43) |
+| Project 3 overall / Project 4 handoff | CLOSED (Partial) (Sprint 44) |
 
 Charter capabilities through Operations are Completed. Partial infra adapters
-stay Partial (not Completed). See [`docs/portfolio.md`](docs/portfolio.md),
+and Project 3 Multi-Agent capabilities stay Partial (not Completed). See
+[`docs/portfolio.md`](docs/portfolio.md),
 [`docs/progress/PROJECT02_ROADMAP_STATUS.md`](docs/progress/PROJECT02_ROADMAP_STATUS.md),
 and Project 3 docs:
 [`docs/agent/PROJECT03_INSTRUCTIONS.md`](docs/agent/PROJECT03_INSTRUCTIONS.md),
@@ -47,6 +48,15 @@ pnpm validate:project:post-baseline-closeout
 pnpm validate:project:nested-expansion-closeout
 pnpm validate:project:final-closeout
 pnpm validate:project03:charter-skeleton
+# Project 3 Multi-Agent Partial evidence:
+pnpm validate:workflow:contract
+pnpm validate:workflow:registry
+pnpm validate:workflow:orchestrator
+pnpm validate:workflow:handoff
+pnpm validate:workflow:memory
+pnpm validate:workflow:evaluation
+pnpm validate:application:eval-workflow
+# Preview (Sprint 44 Task 184): pnpm validate:project03:closeout
 ```
 
 ## Local runtime
@@ -229,7 +239,8 @@ See [`docs/architecture.md`](docs/architecture.md) and
 | `pnpm validate:project:post-baseline-closeout` | Static Sprints 21–30 Partial infra evidence closeout |
 | `pnpm validate:project:nested-expansion-closeout` | Static Sprints 32–35 nested expansion evidence closeout |
 | `pnpm validate:project:final-closeout` | Static Project 2 CLOSED + Project 3 handoff closeout |
-| `pnpm validate:project03:charter-skeleton` | Static Project 3 Active (Charter Skeleton) docs closeout |
+| `pnpm validate:project03:charter-skeleton` | Static Project 3 charter docs closeout |
+| `pnpm validate:project03:closeout` | Static Project 3 CLOSED (Partial) evidence (Sprint 44) |
 | `pnpm validate:workflow:contract` | Multi-Agent Role Contract types / FakeWorkflowAgent |
 | `pnpm validate:workflow:registry` | InMemoryWorkflowAgentRegistry invariants |
 | `pnpm validate:workflow:orchestrator` | DefaultWorkflowOrchestrator + Fake invoker |
@@ -252,10 +263,10 @@ Minimized for the platform baseline:
 ## Next
 
 **Project 2 is CLOSED.** **Project 3 — Enterprise AI Workflow — Multi-Agent**
-is **Active — Role Contract + Orchestrator + Handoff + Shared Memory +
-Evaluation Partial** (`app/knowledge/workflow`; all five caps Partial; Project 3
-not CLOSED; LLM-as-judge deferred). By-design non-goals (official SDKs,
-Express/Fastify, full OIDC login, full W3C propagator / `prom-client`) remain
-deferred. See [`docs/portfolio.md`](docs/portfolio.md),
+is **CLOSED (Partial)** (five charter capabilities Partial; none Completed).
+Handoff is to **Project 4 — Enterprise LLMOps Platform**. By-design non-goals
+(LLM-as-judge, HTTP multi-agent API, official SDKs, Express/Fastify, full OIDC
+login, full W3C propagator / `prom-client`) remain deferred. See
+[`docs/portfolio.md`](docs/portfolio.md),
 [`docs/agent/PROJECT03_INSTRUCTIONS.md`](docs/agent/PROJECT03_INSTRUCTIONS.md),
 and [`docs/development.md`](docs/development.md).

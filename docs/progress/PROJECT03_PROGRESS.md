@@ -605,3 +605,27 @@ Declare Project 3 CLOSED (Partial) and Project 4 handoff in portfolio
 
 **Status**
 Completed
+
+## Task 183
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Align README, development, and roadmap docs for Project 3 final status
+
+**Summary**
+- README: Project 3 CLOSED (Partial) + workflow validate summary + closeout preview
+- development.md: Project 3 closeout flow and Partial≠Completed
+- Roadmap: closing prep for Sprint 44 (formal CLOSED header in Task 185)
+
+**Validation**
+- `pnpm validate:project:final-closeout`
+- `pnpm validate:project03:charter-skeleton`
+- `pnpm typecheck`
+
+**Status**
+Completed

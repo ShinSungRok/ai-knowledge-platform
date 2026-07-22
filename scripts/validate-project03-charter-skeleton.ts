@@ -71,8 +71,10 @@ function main(): void {
       roadmap.includes(
         "Active — Role Contract + Orchestrator + Handoff + Shared Memory + Evaluation Partial",
       ) ||
-      roadmap.includes("all five charter capabilities Partial"),
-    "PROJECT03 roadmap must declare an Active Project 3 status phrase",
+      roadmap.includes("all five charter capabilities Partial") ||
+      roadmap.includes("Closing — Role Contract + Orchestrator + Handoff + Shared Memory + Evaluation Partial") ||
+      roadmap.includes("Project 3: CLOSED"),
+    "PROJECT03 roadmap must declare an Active/Closing/CLOSED Project 3 status phrase",
   );
 
   console.log(
