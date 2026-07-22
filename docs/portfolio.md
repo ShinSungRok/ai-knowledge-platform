@@ -44,8 +44,9 @@ Sprints 21–30 delivered Fake-/in-memory-validated Partial adapters. Default
 | MCP network | JSON-RPC HTTP `POST /mcp` (`tools/list`·`tools/call`); official MCP SDK / stdio deferred |
 | TCP listen | `NodeHttpListener` + listening operations (`createListeningOperationsServer`); Express unused |
 | AuthN | API Key / Bearer; optional JWT HS256 + JWKS/RS256 OIDC-lite (`Hs256JwtAuthenticator`, `Rs256JwtAuthenticator`); default operations ApiKey; full OIDC login/SDK deferred |
-| OTLP export | OTLP/HTTP log+metrics via Fake transport; optional `OTEL_EXPORTER_OTLP_ENDPOINT`; official OTel SDK deferred |
-| Prometheus scrape | `GET /metrics` Prometheus text via `ObservingHttpRouter` + `toPrometheusText`; `prom-client` / tracing deferred |
+| OTLP export | OTLP/HTTP log+metrics+traces via Fake transport; optional `OTEL_EXPORTER_OTLP_ENDPOINT`; official OTel SDK deferred |
+| Prometheus scrape | `GET /metrics` Prometheus text via `ObservingHttpRouter` + `toPrometheusText`; `prom-client` deferred |
+| Distributed tracing | `Tracer`/`Span`, `InMemoryTracer`, `OtlpTracesExporter` `/v1/traces`, ObservingHttpRouter HTTP spans + minimal `traceparent`; official SDK / full W3C propagator suite deferred |
 
 ## 4. Validation strategy
 
@@ -64,7 +65,7 @@ Partial”):
 - MCP stdio transport
 - Express / Fastify HTTP frameworks
 - Full OIDC authorization-code login flows and JWT/OIDC SDKs (`jsonwebtoken`, `jose`, `passport`)
-- Distributed tracing (Prometheus text scrape at `GET /metrics` is implemented; official `prom-client` remains deferred)
+- Full W3C propagator suite / baggage (minimal `traceparent` parent continuation is implemented; official `prom-client` remains deferred)
 
 Charter Platform Baseline capabilities (section 2) remain **Completed**.
 Post-baseline items (section 3) stay **Partial**, not Completed.

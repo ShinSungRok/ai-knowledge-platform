@@ -23,7 +23,7 @@ runners skip when env is unset and are not in top-level validate.
 | `OPENSEARCH_URL` / `OPENSEARCH_INDEX` | Optional live OpenSearch VectorIndex |
 | `OPENSEARCH_USERNAME` / `OPENSEARCH_PASSWORD` | Optional Basic auth for OpenSearch |
 | `LLM_API_KEY` (and related `LLM_*`) | Optional HTTP LLM (`HttpLanguageModelProvider`) |
-| `OTEL_EXPORTER_OTLP_ENDPOINT` | Optional OTLP/HTTP log+metrics export |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | Optional OTLP/HTTP log+metrics+traces export |
 | `JWT_SECRET` / `JWT_JWKS_URL` | Optional JWT AuthN (`auth` option or `createOperationsKnowledgeServerFromEnv`) |
 | `JWT_ISSUER` / `JWT_AUDIENCE` | Optional JWT claim validation |
 | API keys / Bearer | Default operations/listening AuthN (`apiKeys` map) |
@@ -203,9 +203,11 @@ LLM_API_KEY=sk-... pnpm validate:ai:http-provider-live
 ## 5c. Optional OTLP/HTTP observability export
 
 Default operations/listening servers use `InMemoryLogger` / `InMemoryMetrics`
-only. When `OTEL_EXPORTER_OTLP_ENDPOINT` is set, the same sinks are wrapped
-with `ExportingLogger` / `ExportingMetrics` for the observing router.
-Call `flushObservability()` to push buffered logs and metric snapshots.
+only, with tracing off. When `OTEL_EXPORTER_OTLP_ENDPOINT` is set, the same
+sinks are wrapped with `ExportingLogger` / `ExportingMetrics`, and an
+`ExportingTracer` is passed to `ObservingHttpRouter` for HTTP spans.
+`flushObservability()` pushes buffered logs, metric snapshots, and traces
+(`/v1/logs`, `/v1/metrics`, `/v1/traces`).
 
 | Env | Role |
 |---|---|
@@ -222,9 +224,10 @@ OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 \
   pnpm validate:observability:otlp-live
 ```
 
-Official `@opentelemetry/*` SDK and distributed tracing remain deferred.
-Prometheus text scrape is available at `GET /metrics` on `ObservingHttpRouter`
-(dependency-free; no `prom-client`).
+Official `@opentelemetry/*` SDK and full W3C propagator suite remain deferred.
+HTTP tracing is enabled when `OTEL_EXPORTER_OTLP_ENDPOINT` is set (minimal
+`traceparent` parent continuation). Prometheus text scrape is available at
+`GET /metrics` on `ObservingHttpRouter` (dependency-free; no `prom-client`).
 
 ## 5d. OpenSearch VectorIndex (optional)
 
@@ -295,8 +298,8 @@ pnpm validate:composition:jwt-auth
   when `JWT_SECRET`/`JWT_JWKS_URL` is set. JWT must include `workspace_id`
   claim. Full OIDC login flows and official JWT SDKs remain deferred.
 - HTTP LLM is optional; default composition remains Fake (no official LLM SDK).
-- OTLP/HTTP log+metrics export is optional via env; official OTel SDK /
-  tracing are not included. Prometheus text scrape is exposed at `GET /metrics`
-  (no `prom-client`).
+- OTLP/HTTP log+metrics+traces export is optional via env; official OTel SDK /
+  full W3C propagator suite are not included. Prometheus text scrape is
+  exposed at `GET /metrics` (no `prom-client`).
 - OpenSearch VectorIndex is optional via env/Fake; official OpenSearch SDK
   remains deferred; default composition stays InMemory/`SqlVectorIndex`.

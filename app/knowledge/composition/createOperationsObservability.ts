@@ -1,13 +1,17 @@
 import { ExportingLogger } from "../observability/ExportingLogger";
 import { ExportingMetrics } from "../observability/ExportingMetrics";
+import { ExportingTracer } from "../observability/ExportingTracer";
 import { FetchOtlpHttpTransport } from "../observability/FetchOtlpHttpTransport";
 import { InMemoryLogger } from "../observability/InMemoryLogger";
 import { InMemoryMetrics } from "../observability/InMemoryMetrics";
+import { InMemoryTracer } from "../observability/InMemoryTracer";
 import type { Logger } from "../observability/Logger";
 import { loadOtlpExporterConfig } from "../observability/loadOtlpExporterConfig";
 import type { Metrics } from "../observability/Metrics";
 import { OtlpLogsExporter } from "../observability/OtlpLogsExporter";
 import { OtlpMetricsExporter } from "../observability/OtlpMetricsExporter";
+import { OtlpTracesExporter } from "../observability/OtlpTracesExporter";
+import type { Tracer } from "../observability/Tracer";
 
 export type OperationsObservability = {
   /** Always the in-memory sink (validation-friendly `getEvents`). */
@@ -19,16 +23,22 @@ export type OperationsObservability = {
   /** Metrics injected into ObservingHttpRouter (may wrap with OTLP export). */
   routerMetrics: Metrics;
   /**
-   * When `OTEL_EXPORTER_OTLP_ENDPOINT` is set, flushes buffered logs and
-   * metric snapshots to the collector. Undefined when OTLP is inactive.
+   * Tracer injected into ObservingHttpRouter when OTLP is active.
+   * Undefined when tracing is off (default).
+   */
+  tracer?: Tracer;
+  /**
+   * When `OTEL_EXPORTER_OTLP_ENDPOINT` is set, flushes buffered logs,
+   * metric snapshots, and traces to the collector. Undefined when OTLP
+   * is inactive.
    */
   flushObservability?: () => Promise<void>;
 };
 
 /**
- * Builds operations observability. Default is InMemory only.
+ * Builds operations observability. Default is InMemory only (tracing off).
  * When `OTEL_EXPORTER_OTLP_ENDPOINT` is set, wraps InMemory sinks with
- * ExportingLogger/ExportingMetrics for the HTTP router.
+ * ExportingLogger/ExportingMetrics/ExportingTracer for the HTTP router.
  */
 export function createOperationsObservability(
   env: NodeJS.ProcessEnv | Record<string, string | undefined> = process.env,
@@ -54,14 +64,20 @@ export function createOperationsObservability(
     metrics,
     new OtlpMetricsExporter(otlp, transport),
   );
+  const exportingTracer = new ExportingTracer(
+    new InMemoryTracer(),
+    new OtlpTracesExporter(otlp, transport),
+  );
   return {
     logger,
     metrics,
     routerLogger: exportingLogger,
     routerMetrics: exportingMetrics,
+    tracer: exportingTracer,
     flushObservability: async () => {
       await exportingLogger.flush();
       await exportingMetrics.flush();
+      await exportingTracer.forceFlush();
     },
   };
 }

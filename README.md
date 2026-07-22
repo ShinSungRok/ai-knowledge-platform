@@ -109,9 +109,10 @@ pnpm validate:ai:http-provider-live
 LLM_API_KEY=sk-... pnpm validate:ai:http-provider-live
 ```
 
-Default operations observability is `InMemoryLogger` / `InMemoryMetrics`.
-When `OTEL_EXPORTER_OTLP_ENDPOINT` is set, the HTTP router wraps those sinks
-with OTLP/HTTP exporters (`flushObservability()` after work). Official
+Default operations observability is `InMemoryLogger` / `InMemoryMetrics`
+(tracing off). When `OTEL_EXPORTER_OTLP_ENDPOINT` is set, the HTTP router wraps
+those sinks with OTLP/HTTP exporters and enables `ExportingTracer` HTTP spans
+(`/v1/logs`, `/v1/metrics`, `/v1/traces` via `flushObservability()`). Official
 OpenTelemetry SDK remains unused.
 
 ```bash
@@ -162,7 +163,7 @@ Partial adapters above are Fake-validated. These remain out of scope by design:
 - Official SDKs (`@opentelemetry/*`, OpenSearch JS, LLM vendor SDKs, MCP SDK)
 - MCP stdio; Express / Fastify
 - Full OIDC authorization-code login flows and JWT/OIDC SDKs (`jsonwebtoken`, `jose`, `passport`)
-- Distributed tracing (`GET /metrics` Prometheus text scrape is implemented; `prom-client` deferred)
+- Full W3C propagator suite / baggage (OTLP HTTP spans + minimal `traceparent` are implemented; `prom-client` deferred)
 - Live Postgres/OpenSearch/LLM/OTLP as the **default** validate path
   (optional live runners skip when env is unset)
 
@@ -213,8 +214,8 @@ Minimized for the platform baseline:
 
 ## Next
 
-Nested deferrals (official SDKs, full OIDC login flows, tracing, Express,
-MCP stdio) belong to later productization. Project 2 Charter baseline and
-post-baseline Partial adapters are documented in
+Nested deferrals (official SDKs, full OIDC login flows, full W3C propagator
+suite, Express, MCP stdio) belong to later productization. Project 2 Charter
+baseline and post-baseline Partial adapters are documented in
 [`docs/portfolio.md`](docs/portfolio.md). See
 [`docs/development.md`](docs/development.md).

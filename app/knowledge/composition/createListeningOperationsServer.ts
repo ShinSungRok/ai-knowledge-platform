@@ -67,8 +67,9 @@ export type ListeningOperationsServer = {
 
 /**
  * Operations wiring with {@link NodeHttpListener} for TCP listen.
- * Optional OTLP export when `OTEL_EXPORTER_OTLP_ENDPOINT` is set
- * (default observability remains InMemory).
+ * Optional OTLP export (logs/metrics/traces) when
+ * `OTEL_EXPORTER_OTLP_ENDPOINT` is set (default observability remains
+ * InMemory; tracing off without the endpoint).
  */
 export function createListeningOperationsServer(
   options: CreateListeningOperationsServerOptions,
@@ -92,6 +93,7 @@ export function createListeningOperationsServer(
     innerRouter,
     observability.routerLogger,
     observability.routerMetrics,
+    observability.tracer,
   );
   const listener = new NodeHttpListener(router);
 

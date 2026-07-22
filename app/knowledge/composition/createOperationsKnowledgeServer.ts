@@ -50,8 +50,9 @@ function resolveAuthenticator(
 /**
  * Operations-ready in-memory server: composition + Bearer AuthN +
  * workspace AuthZ + observing HTTP router + {@link DefaultKnowledgeServer}.
- * When `OTEL_EXPORTER_OTLP_ENDPOINT` is set, router logs/metrics use
- * Exporting adapters over the same InMemory sinks (default remains InMemory).
+ * When `OTEL_EXPORTER_OTLP_ENDPOINT` is set, router logs/metrics/spans use
+ * Exporting adapters over the same InMemory sinks (default remains InMemory;
+ * tracing stays off without the endpoint).
  */
 export function createOperationsKnowledgeServer(
   options: CreateOperationsKnowledgeServerOptions,
@@ -80,6 +81,7 @@ export function createOperationsKnowledgeServer(
     innerRouter,
     observability.routerLogger,
     observability.routerMetrics,
+    observability.tracer,
   );
   const server = new DefaultKnowledgeServer(router);
   return {

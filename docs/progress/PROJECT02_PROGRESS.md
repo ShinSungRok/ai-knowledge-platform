@@ -3820,3 +3820,31 @@ Instrument ObservingHttpRouter with HTTP spans
 **Status**
 Completed
 
+## Task 145
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Optional composition wiring and roadmap update
+
+**Summary**
+- Extended `createOperationsObservability` with optional `ExportingTracer` when OTEL endpoint is set
+- Wired tracer into operations/listening `ObservingHttpRouter`; flush includes `/v1/traces`
+- Updated roadmap/portfolio/deployment/README/modules for Sprint 34 tracing Partial progress
+
+**Validation**
+- `pnpm validate:http:observing-tracing`
+- `pnpm validate:observability:otlp-traces`
+- `pnpm validate:composition:operations`
+- `pnpm validate:composition:listening-operations`
+- `pnpm validate:project:post-baseline-closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
