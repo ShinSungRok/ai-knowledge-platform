@@ -483,3 +483,26 @@ Validate Shared Workflow Memory and update roadmap Partial
 
 **Status**
 Completed
+
+## Task 178
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Define Workflow evaluation contract
+
+**Summary**
+- Added WorkflowEvaluationCase/Dataset, WorkflowCaseScore/Metrics, WorkflowRunEvaluator
+- Pure artifact scoring (no LLM-as-judge); distinct from Project 2 RAG evaluation
+- Barrel exports updated under workflow/
+
+**Validation**
+- `pnpm validate:workflow:memory`
+- `pnpm typecheck`
+
+**Status**
+Completed

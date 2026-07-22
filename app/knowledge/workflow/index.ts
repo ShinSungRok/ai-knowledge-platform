@@ -2,11 +2,12 @@
  * Module: `app/knowledge/workflow`
  *
  * Multi-Agent role/identity, Workflow Orchestrator, Agent Handoff /
- * Delegation, and Shared Workflow Memory contract
- * ({@link WorkflowMemoryStore}). Multi-Agent Evaluation remains deferred.
+ * Delegation, Shared Workflow Memory, and Multi-Agent Evaluation
+ * contract ({@link WorkflowRunEvaluator}). LLM-as-judge remains deferred.
  *
  * Shared Workflow Memory is **not** Project 2 session `MemoryStore` and
- * is unrelated to Knowledge search.
+ * is unrelated to Knowledge search. Workflow evaluation is **not** Project 2
+ * RAG evaluation under `app/knowledge/evaluation`.
  *
  * Project 2 `AgentRole` (`planner`|`executor`|`reviewer`) stays the
  * single-agent internal role set under `app/knowledge/agent` and must
@@ -60,3 +61,11 @@ export type { WorkflowMemoryEntry } from "./WorkflowMemoryEntry";
 export type { WorkflowMemoryAppendInput } from "./WorkflowMemoryAppendInput";
 export type { WorkflowMemoryStore } from "./WorkflowMemoryStore";
 export { InMemoryWorkflowMemoryStore } from "./InMemoryWorkflowMemoryStore";
+export type { WorkflowEvaluationCase } from "./WorkflowEvaluationCase";
+export type { WorkflowEvaluationDataset } from "./WorkflowEvaluationDataset";
+export type { WorkflowCaseScore } from "./WorkflowCaseScore";
+export type { WorkflowEvaluationMetrics } from "./WorkflowEvaluationMetrics";
+export type {
+  WorkflowRunEvaluatorInput,
+  WorkflowRunEvaluator,
+} from "./WorkflowRunEvaluator";

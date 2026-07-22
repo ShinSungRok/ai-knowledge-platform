@@ -245,6 +245,12 @@ export type {
   WorkflowMemoryEntry,
   WorkflowMemoryAppendInput,
   WorkflowMemoryStore,
+  WorkflowEvaluationCase,
+  WorkflowEvaluationDataset,
+  WorkflowCaseScore,
+  WorkflowEvaluationMetrics,
+  WorkflowRunEvaluatorInput,
+  WorkflowRunEvaluator,
 } from "./workflow";
 export {
   asWorkflowAgentId,
