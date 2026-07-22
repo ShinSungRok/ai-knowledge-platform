@@ -291,3 +291,26 @@ Validate orchestrator and update roadmap Partial
 
 **Status**
 Completed
+
+## Task 170
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Define WorkflowHandoff contract
+
+**Summary**
+- Added WorkflowHandoffKind and WorkflowHandoff (from/to/payload contract)
+- Documented validation rules; Shared Memory still deferred
+- Orchestrator behavior unchanged (wiring in later Task)
+
+**Validation**
+- `pnpm validate:workflow:orchestrator`
+- `pnpm typecheck`
+
+**Status**
+Completed

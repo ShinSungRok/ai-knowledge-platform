@@ -236,6 +236,8 @@ export type {
   WorkflowAgentInvokeInput,
   WorkflowAgentInvokeResult,
   WorkflowAgentInvoker,
+  WorkflowHandoffKind,
+  WorkflowHandoff,
 } from "./workflow";
 export {
   asWorkflowAgentId,

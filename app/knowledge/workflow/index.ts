@@ -1,10 +1,10 @@
 /**
  * Module: `app/knowledge/workflow`
  *
- * Multi-Agent role/identity contract plus Workflow Orchestrator
- * boundary (goal → plan → agent invoke → result). Explicit Agent
- * Handoff/Delegation, Shared Workflow Memory, and Multi-Agent
- * Evaluation remain deferred.
+ * Multi-Agent role/identity contract, Workflow Orchestrator boundary
+ * (goal → plan → agent invoke → result), and Agent Handoff / Delegation
+ * contract ({@link WorkflowHandoff}). Shared Workflow Memory and
+ * Multi-Agent Evaluation remain deferred.
  *
  * Project 2 `AgentRole` (`planner`|`executor`|`reviewer`) stays the
  * single-agent internal role set under `app/knowledge/agent` and must
@@ -44,3 +44,5 @@ export type {
 } from "./FakeWorkflowAgentInvoker";
 export { DeterministicWorkflowPlanner } from "./DeterministicWorkflowPlanner";
 export { DefaultWorkflowOrchestrator } from "./DefaultWorkflowOrchestrator";
+export type { WorkflowHandoffKind } from "./WorkflowHandoffKind";
+export type { WorkflowHandoff } from "./WorkflowHandoff";
