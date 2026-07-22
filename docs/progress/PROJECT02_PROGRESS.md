@@ -3897,3 +3897,28 @@ Add StdioMcpJsonRpcSession over McpJsonRpcHandler
 **Status**
 Completed
 
+## Task 148
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add Fake stdio streams validation
+
+**Summary**
+- Added `FakeMcpStdioLineReader` / `FakeMcpStdioLineWriter` and optional Node stream adapters
+- Added `validate:mcp:stdio-session` covering tools/list·call, parse errors, EOF
+- Wired stdio-session into top-level `pnpm validate`
+
+**Validation**
+- `pnpm validate:mcp:jsonrpc-handler`
+- `pnpm validate:mcp:stdio-session`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

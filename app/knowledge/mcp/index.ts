@@ -39,3 +39,9 @@ export {
   resolveMcpStdioSessionConfig,
 } from "./McpStdioSessionConfig";
 export { StdioMcpJsonRpcSession } from "./StdioMcpJsonRpcSession";
+export { FakeMcpStdioLineReader } from "./FakeMcpStdioLineReader";
+export { FakeMcpStdioLineWriter } from "./FakeMcpStdioLineWriter";
+export {
+  NodeMcpStdioLineReader,
+  NodeMcpStdioLineWriter,
+} from "./NodeMcpStdioLines";
