@@ -655,3 +655,33 @@ Add Project 3 closeout validation runner
 
 **Status**
 Completed
+
+## Task 185
+
+**Date**
+2026-07-22
+
+**Commit**
+affda85
+
+**Title**
+Finalize Project 3 CLOSED on roadmap and Progress Log
+
+**Summary**
+- Roadmap: Project 3: CLOSED (Partial); Sprint 44 close note; Next Project 4
+- PROJECT03_INSTRUCTIONS Status → Closed (historical)
+- Closeout validator asserts Project 3: CLOSED / CLOSED (Partial)
+- Charter-skeleton allows Closed (historical); agent-ops note Project 4 not chartered
+- README: validate:project03:closeout finalized
+- Five capabilities remain Partial (none Completed); Project 2 CLOSED intact
+
+**Validation**
+- `pnpm validate:workflow:evaluation`
+- `pnpm validate:application:eval-workflow`
+- `pnpm validate:project:final-closeout`
+- `pnpm validate:project03:charter-skeleton`
+- `pnpm validate:project03:closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed
