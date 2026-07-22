@@ -3774,7 +3774,7 @@ Completed
 2026-07-22
 
 **Commit**
-Pending
+7ebb27e
 
 **Title**
 Add InMemoryTracer and OTLP traces exporter
