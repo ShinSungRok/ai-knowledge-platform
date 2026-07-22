@@ -3848,3 +3848,28 @@ Optional composition wiring and roadmap update
 **Status**
 Completed
 
+## Task 146
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Define MCP stdio IO contract and config
+
+**Summary**
+- Added `McpStdioLineReader` / `McpStdioLineWriter` ports and `McpStdioSessionConfig`
+- Updated mcp module docs for HTTP + stdio boundaries (official SDK deferred)
+- Added `validate:mcp:stdio-contract` and wired into `pnpm validate`
+
+**Validation**
+- `pnpm validate:mcp:jsonrpc-contract`
+- `pnpm validate:mcp:stdio-contract`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
