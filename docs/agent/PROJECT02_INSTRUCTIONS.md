@@ -2,9 +2,9 @@
 
 > AI Knowledge Platform — Project 2 Core Charter  
 > Version: 1.0  
-> Status: Active  
-> Applies To: Cursor Planning Agent, Cursor Developer Agent, 모든 Project 2 작업  
-> Last Updated: 2026-07-16
+> Status: Closed (historical) — Project 2: CLOSED (Sprint 37). New work uses `PROJECT03_INSTRUCTIONS.md`.  
+> Applies To: Historical reference for Project 2 charter; do not reopen CLOSED tracks  
+> Last Updated: 2026-07-22 (status line only; body remains Project 2 historical charter)
 
 ---
 
