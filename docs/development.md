@@ -185,11 +185,13 @@ OTLP tracing, MCP stdio — docs, roadmap Sprint rows, validators, and source
 files). **Nested Deferral Expansion Track closeout** (Sprint 36) additionally
 requires this command (included in top-level `pnpm validate`).
 
-**Project 2 final closeout** (Sprint 37) combines the three track closeouts
-plus portfolio Project 2 CLOSED / Project 3 handoff evidence. After Task 156,
-run `pnpm validate:project:final-closeout` (also included in top-level
-`pnpm validate`). Formal roadmap header **Project 2: CLOSED** is finalized
-in Task 157. See
+`validate:project:final-closeout` statically checks Project 2 overall CLOSED
+evidence: portfolio **Project 2: CLOSED** + Project 3 Multi-Agent handoff
+keywords, all three track CLOSED markers on the roadmap, and the four
+closeout scripts. It does **not** require Partial adapters to become
+Completed. Included in top-level `pnpm validate` after nested-expansion
+closeout. Formal roadmap header **Project 2: CLOSED** is finalized in
+Task 157. See
 [`docs/progress/PROJECT02_ROADMAP_STATUS.md`](progress/PROJECT02_ROADMAP_STATUS.md)
 and [`docs/portfolio.md`](portfolio.md).
 

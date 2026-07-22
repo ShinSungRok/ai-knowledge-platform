@@ -4103,3 +4103,30 @@ Align README, development, and roadmap for Project 2 final status
 **Status**
 Completed
 
+## Task 156
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add Project 2 final-closeout validation runner
+
+**Summary**
+- Added `scripts/validate-project-final-closeout.ts` (portfolio CLOSED + three tracks + scripts)
+- Wired `validate:project:final-closeout` after nested-expansion in `pnpm validate`
+- Documented final closeout purpose in `docs/development.md`
+
+**Validation**
+- `pnpm validate:project:closeout`
+- `pnpm validate:project:post-baseline-closeout`
+- `pnpm validate:project:nested-expansion-closeout`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
