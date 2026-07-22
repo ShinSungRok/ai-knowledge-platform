@@ -13,9 +13,9 @@
 이 문서는 Project 3에서 적용했던 **핵심 개발 헌장**이다 (Sprint 44 closeout
 이후 **Closed (historical)**).
 
-신규 제품 작업은 Project 3 CLOSED (Partial) 이후 **Project 4 — Enterprise
-LLMOps Platform** 헌장이 마련될 때까지 Project 3를 Active로 재개하지 않는다.
-Project 2 CLOSED / Partial≠Completed 서술을 되돌리지 않는다.
+신규 제품 작업은 **Project 4 — Enterprise LLMOps Platform** 헌장
+(`docs/agent/PROJECT04_INSTRUCTIONS.md`)을 따른다. Project 3를 Active로
+재개하지 않는다. Project 2 CLOSED / Partial≠Completed 서술을 되돌리지 않는다.
 
 Agent 역할, Skill 선택, 운영 규칙이 필요한 경우에만
 `docs/agent/AGENT_OPERATIONS_GUIDE.md`를 참조한다.
@@ -33,9 +33,9 @@ docs/agent/AGENT_OPERATIONS_GUIDE.md
 ```
 
 Project 2 헌장(`PROJECT02_INSTRUCTIONS.md`)은 **Closed (historical)**이다.
-신규 작업의 상위 헌장은 이 문서(PROJECT03, Closed historical)이다. Project 4
-charter가 마련되기 전까지 Project 3를 Active로 재개하지 않는다. Project 2 CLOSED /
-Partial≠Completed 서술을 되돌리지 않는다.
+신규 작업의 상위 헌장은 `PROJECT04_INSTRUCTIONS.md`(Active)이다. Project 3를
+Active로 재개하지 않는다. Project 2 CLOSED / Partial≠Completed 서술을
+되돌리지 않는다.
 
 현재 Task가 이 문서의 아키텍처·안전·검증 원칙과 충돌하면 즉시 구현하지
 말고 충돌 이유와 대안을 보고한다.
@@ -51,7 +51,7 @@ Project 2  AI Knowledge Platform — Knowledge + MCP + Agent (CLOSED)
     ↓
 Project 3  Enterprise AI Workflow — Multi-Agent (CLOSED Partial)
     ↓
-Project 4  Enterprise LLMOps Platform (handoff / next)
+Project 4  Enterprise LLMOps Platform (현재 Active — 헌장 PROJECT04)
 ```
 
 Project 3는 Project 2에서 검증된 Knowledge / MCP / Tool / single-Agent /

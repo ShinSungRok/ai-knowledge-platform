@@ -53,3 +53,29 @@ Add Project 4 Progress Log and Roadmap stubs
 
 **Status**
 Completed
+
+## Task 188
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Point agent operations at Project 4 charter
+
+**Summary**
+- Updated agent-workflow.mdc to read PROJECT04 first
+- Updated AGENT_OPERATIONS_GUIDE priority to PROJECT04 (PROJECT02/03 historical Closed)
+- Documented PROJECT04 Progress/Roadmap paths and charter-skeleton preview in development.md
+- Pointed PROJECT03 historical notes at Active PROJECT04
+
+**Validation**
+- `pnpm validate:project:final-closeout`
+- `pnpm validate:project03:closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
