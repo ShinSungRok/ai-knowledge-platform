@@ -4052,3 +4052,29 @@ Finalize roadmap track closeout and Progress Log
 **Status**
 Completed
 
+## Task 154
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Declare Project 2 CLOSED and Project 3 handoff in portfolio
+
+**Summary**
+- Declared **Project 2: CLOSED** with three track CLOSED evidence table
+- Added Project 3 Multi-Agent handoff (reuse vs non-goals) and Project 1→4 sequence
+- Kept Partial adapters Partial; by-design deferrals unchanged
+
+**Validation**
+- `pnpm validate:project:closeout`
+- `pnpm validate:project:post-baseline-closeout`
+- `pnpm validate:project:nested-expansion-closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

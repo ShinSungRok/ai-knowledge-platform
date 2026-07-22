@@ -7,6 +7,51 @@ knowledge retrieval and grounded question answering. It inherits the Clean /
 Hexagonal / DDD architecture philosophy proven in Project1 (`public-law-ai`),
 generalized beyond a single legal domain.
 
+## 1b. Project 2: CLOSED
+
+**Project 2: CLOSED.** The charter for this repository’s active Project 2 work
+is complete:
+
+| Track | Status | Sprint |
+|---|---|---|
+| Charter Platform Baseline | **CLOSED** (capabilities Completed) | Sprint 20 |
+| Post-baseline Infrastructure | **CLOSED (Partial)** | Sprint 31 |
+| Nested Deferral Expansion | **CLOSED (Partial)** | Sprint 36 |
+| Project 2 overall / handoff | **CLOSED** | Sprint 37 |
+
+Partial infrastructure adapters (sections 3 / 3b) stay **Partial** — they are
+**not** promoted to Completed. Remaining by-design non-goals (official SDKs,
+Express/Fastify, full OIDC login/SDK, full W3C propagator suite / `prom-client`)
+remain out of Project 2.
+
+Default `pnpm validate` stays **dependency-free** (Fake / in-memory adapters).
+
+## 1c. Project 3 handoff — Enterprise AI Workflow (Multi-Agent)
+
+**Next:** Project 3 — Enterprise AI Workflow — Multi-Agent (outside this
+repo’s active Project 2 charter).
+
+**Handoff / reuse from Project 2:**
+
+- Clean / Hexagonal / DDD module boundaries and a single composition root
+- MCP tool registry, tool calling, agent planner→execute→review, session memory
+- Dependency-free `tsx` validation runners and static closeout validators
+- Partial infra adapters (Postgres, OpenSearch, HTTP LLM, OTLP, JWT OIDC-lite,
+  Prometheus scrape, MCP HTTP + stdio) as optional Fake-validated paths
+
+**Not in Project 2 scope (remain Project 2 non-goals or later productization):**
+official SDKs, Express/Fastify, full OIDC authorization-code login, full W3C
+propagator suite / `prom-client`, and Project 3 multi-agent workflow features.
+
+## 1d. Project sequence
+
+| Project | Focus | Status (this portfolio) |
+|---|---|---|
+| Project 1 | Public Law AI — Grounded RAG | Complete (separate repo) |
+| Project 2 | AI Knowledge Platform — Knowledge + MCP + Agent | **CLOSED** |
+| Project 3 | Enterprise AI Workflow — Multi-Agent | Next (handoff) |
+| Project 4 | Enterprise LLMOps Platform | Future |
+
 Project 2 delivers a **completed platform baseline**: workspace-scoped
 knowledge pipelines through cited RAG answers, MCP/tool/agent/memory/jobs,
 evaluation, in-process runtime, and operations foundations — all proven by
@@ -87,9 +132,9 @@ not Completed.
 
 ## 6. Relationship to Project1
 
-| Concern | Project1 (`public-law-ai`) | This project |
+| Concern | Project1 (`public-law-ai`) | This project (Project 2) |
 |---|---|---|
 | Domain | Korean legal statutes / cases | General knowledge documents |
 | Architecture | Clean / Hexagonal / DDD | Same philosophy |
 | Validation | `tsx` runners, fake adapters | Same approach |
-| Goal | Portfolio RAG backend + UI | Broader knowledge + MCP + Agent platform baseline |
+| Goal | Portfolio RAG backend + UI | Knowledge + MCP + Agent platform (**CLOSED**; handoff to Project 3 Multi-Agent) |
