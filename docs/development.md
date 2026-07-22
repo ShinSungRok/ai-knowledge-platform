@@ -132,6 +132,7 @@ pnpm validate:deployment:readiness # static Docker/docs/export readiness
 pnpm validate:project:closeout # Project 2 baseline docs/scripts/exports closeout
 pnpm validate:project:post-baseline-closeout # Sprints 21–30 Partial infra evidence (static)
 pnpm validate:project:nested-expansion-closeout # Sprints 32–35 nested expansion evidence (static)
+pnpm validate:project:final-closeout # Project 2 overall CLOSED + Project 3 handoff (static; Sprint 37)
 pnpm validate:infra:sql-gateway-contract # SqlGateway port contract
 pnpm validate:infra:in-memory-sql # InMemorySqlGateway document/source/chunk SQL
 pnpm validate:infra:knowledge-schema # applyKnowledgeSchema + SQL repos smoke
@@ -182,8 +183,15 @@ top-level `pnpm validate`).
 nested expansion Partial evidence (JWT OIDC-lite, Prometheus `/metrics`,
 OTLP tracing, MCP stdio — docs, roadmap Sprint rows, validators, and source
 files). **Nested Deferral Expansion Track closeout** (Sprint 36) additionally
-requires this command (included in top-level `pnpm validate`). See
-[`docs/progress/PROJECT02_ROADMAP_STATUS.md`](progress/PROJECT02_ROADMAP_STATUS.md).
+requires this command (included in top-level `pnpm validate`).
+
+**Project 2 final closeout** (Sprint 37) combines the three track closeouts
+plus portfolio Project 2 CLOSED / Project 3 handoff evidence. After Task 156,
+run `pnpm validate:project:final-closeout` (also included in top-level
+`pnpm validate`). Formal roadmap header **Project 2: CLOSED** is finalized
+in Task 157. See
+[`docs/progress/PROJECT02_ROADMAP_STATUS.md`](progress/PROJECT02_ROADMAP_STATUS.md)
+and [`docs/portfolio.md`](portfolio.md).
 
 ## 4. Commit strategy
 

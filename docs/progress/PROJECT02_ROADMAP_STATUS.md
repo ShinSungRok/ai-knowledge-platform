@@ -1,10 +1,10 @@
 # Project 2 Roadmap Status
 
-> Status of AI Knowledge Platform Charter capabilities at Project 2
-> Platform Baseline closeout (Sprint 20), plus post-baseline persistence,
-> listen, AuthN, LLM, MCP transport, OTLP export, and OpenSearch vector
-> adapter progress (Sprints 21–30), and nested deferral expansion
-> (Sprints 32–35).
+> Status of AI Knowledge Platform Charter capabilities at Project 2.
+> **Project 2 overall status: CLOSED** (portfolio Sprint 37; formal roadmap
+> header finalized in Sprint 37 Task 157). Tracks: Platform Baseline closeout
+> (Sprint 20), post-baseline persistence / listen / AuthN / LLM / MCP / OTLP /
+> OpenSearch (Sprints 21–30), nested deferral expansion (Sprints 32–35).
 
 ## Nested Deferral Expansion Track: CLOSED (Partial)
 

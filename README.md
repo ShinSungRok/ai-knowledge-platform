@@ -12,19 +12,20 @@ composition root, and dependency-free validation runners.
 
 ## Status
 
-**Project 2 Platform Baseline — closed (Sprint 20).**
-Charter capabilities through Operations are implemented and documented. See
-[`docs/portfolio.md`](docs/portfolio.md) and
+**Project 2: CLOSED** (Sprint 37 final closeout / Project 3 handoff).
+
+| Track | Status |
+|---|---|
+| Charter Platform Baseline | CLOSED (Sprint 20) |
+| Post-baseline Infrastructure | CLOSED (Partial) (Sprint 31) |
+| Nested Deferral Expansion | CLOSED (Partial) (Sprint 36) |
+
+Charter capabilities through Operations are Completed. Partial infra adapters
+stay Partial (not Completed). See [`docs/portfolio.md`](docs/portfolio.md) and
 [`docs/progress/PROJECT02_ROADMAP_STATUS.md`](docs/progress/PROJECT02_ROADMAP_STATUS.md).
 
-Post-baseline Sprints 21–30 add **Partial** infrastructure adapters (Fake-
-validated; live optional via env). **Post-baseline Infrastructure Track:
-CLOSED (Partial).** Nested expansion Sprints 32–35 add further **Partial**
-evidence (optional JWT OIDC-lite, `GET /metrics`, OTLP traces, MCP stdio)
-while default AuthN stays ApiKey and HTTP `/mcp` stays the network path.
 Default `pnpm validate` remains **dependency-free** (Fake / in-memory /
 SqlVectorIndex — no Docker, network, or API keys required).
-**Nested Deferral Expansion Track: CLOSED (Partial)** (Sprint 36).
 
 ```bash
 pnpm install
@@ -32,6 +33,7 @@ pnpm validate
 pnpm validate:project:closeout
 pnpm validate:project:post-baseline-closeout
 pnpm validate:project:nested-expansion-closeout
+# Sprint 37: pnpm validate:project:final-closeout (wired in Task 156)
 ```
 
 ## Local runtime
@@ -169,7 +171,8 @@ OPENSEARCH_URL=http://localhost:9200 \
 
 ## Still deferred by design (nested)
 
-Partial adapters above are Fake-validated. These remain out of scope by design:
+These remain **Project 2 non-goals** (by design). Partial adapters above are
+Fake-validated and stay Partial — not Completed:
 
 - Official SDKs (`@opentelemetry/*`, OpenSearch JS, LLM vendor SDKs, MCP SDK)
 - Express / Fastify
@@ -178,8 +181,8 @@ Partial adapters above are Fake-validated. These remain out of scope by design:
 - Live Postgres/OpenSearch/LLM/OTLP as the **default** validate path
   (optional live runners skip when env is unset)
 
-See [`docs/portfolio.md`](docs/portfolio.md) § Post-baseline infrastructure,
-§ Nested deferral expansion, and intentional non-goals.
+See [`docs/portfolio.md`](docs/portfolio.md) § Project 2 CLOSED, nested
+expansion, and intentional non-goals.
 
 ## Layout
 
@@ -226,8 +229,9 @@ Minimized for the platform baseline:
 
 ## Next
 
-Nested deferrals (official SDKs, full OIDC login flows, full W3C propagator
-suite, Express) belong to later productization. Project 2 Charter
-baseline and post-baseline Partial adapters are documented in
-[`docs/portfolio.md`](docs/portfolio.md). See
-[`docs/development.md`](docs/development.md).
+**Project 2 is CLOSED.** Handoff is to **Project 3 — Enterprise AI Workflow —
+Multi-Agent** (outside this repo’s active Project 2 charter). By-design
+non-goals (official SDKs, Express/Fastify, full OIDC login, full W3C
+propagator / `prom-client`) remain deferred. See
+[`docs/portfolio.md`](docs/portfolio.md) § Project 2 CLOSED and Project 3
+handoff, and [`docs/development.md`](docs/development.md).

@@ -4078,3 +4078,28 @@ Declare Project 2 CLOSED and Project 3 handoff in portfolio
 **Status**
 Completed
 
+## Task 155
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Align README, development, and roadmap for Project 2 final status
+
+**Summary**
+- README Status: Project 2 CLOSED + three-track table; previewed final-closeout command
+- development.md: Sprint 37 final closeout flow; roadmap intro notes overall CLOSED pending Task 157 header
+
+**Validation**
+- `pnpm validate:project:closeout`
+- `pnpm validate:project:post-baseline-closeout`
+- `pnpm validate:project:nested-expansion-closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
