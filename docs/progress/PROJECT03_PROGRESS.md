@@ -343,7 +343,7 @@ Completed
 2026-07-22
 
 **Commit**
-Pending
+bde2891
 
 **Title**
 Wire handoff into DefaultWorkflowOrchestrator
