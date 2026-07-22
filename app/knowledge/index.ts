@@ -324,6 +324,10 @@ export {
 export {
   InMemoryExperimentRunStore,
   DefaultExperimentRunStore,
+  InMemoryPromptRegistry,
+  DefaultPromptRegistry,
+  InMemoryModelRegistry,
+  DefaultModelRegistry,
 } from "./llmops";
 export { KNOWLEDGE_MODULE_API } from "./api";
 export {

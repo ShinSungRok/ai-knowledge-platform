@@ -57,3 +57,11 @@ export type {
   ModelVersionRegisterInput,
   ModelRegistry,
 } from "./ModelRegistry";
+export {
+  InMemoryPromptRegistry,
+  DefaultPromptRegistry,
+} from "./InMemoryPromptRegistry";
+export {
+  InMemoryModelRegistry,
+  DefaultModelRegistry,
+} from "./InMemoryModelRegistry";

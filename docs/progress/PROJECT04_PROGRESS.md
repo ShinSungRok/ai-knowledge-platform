@@ -231,3 +231,25 @@ Define Prompt and Model registry contract
 
 **Status**
 Completed
+
+## Task 195
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add InMemory PromptRegistry and ModelRegistry
+
+**Summary**
+- Implemented InMemoryPromptRegistry and InMemoryModelRegistry (+ Default* aliases)
+- Duplicate id/version reject; workspace isolation; defensive copies; ordered lists
+- No SQL or HTTP adapters
+
+**Validation**
+- `pnpm typecheck`
+
+**Status**
+Completed
