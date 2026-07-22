@@ -131,6 +131,7 @@ pnpm validate:composition:jwt-auth # operations server JWT HS256 cited-answer sm
 pnpm validate:deployment:readiness # static Docker/docs/export readiness
 pnpm validate:project:closeout # Project 2 baseline docs/scripts/exports closeout
 pnpm validate:project:post-baseline-closeout # Sprints 21–30 Partial infra evidence (static)
+pnpm validate:project:nested-expansion-closeout # Sprints 32–35 nested expansion evidence (static)
 pnpm validate:infra:sql-gateway-contract # SqlGateway port contract
 pnpm validate:infra:in-memory-sql # InMemorySqlGateway document/source/chunk SQL
 pnpm validate:infra:knowledge-schema # applyKnowledgeSchema + SQL repos smoke
@@ -175,7 +176,12 @@ scripts, and baseline barrel exports without Docker daemon or network.
 Partial infrastructure evidence (portfolio keywords, roadmap Sprint rows,
 representative validators, and adapter source files). **Post-baseline Infrastructure Track closeout** (Sprint 31) additionally
 requires `pnpm validate:project:post-baseline-closeout` (included in
-top-level `pnpm validate`). See
+top-level `pnpm validate`).
+
+`validate:project:nested-expansion-closeout` statically checks Sprints 32–35
+nested expansion Partial evidence (JWT OIDC-lite, Prometheus `/metrics`,
+OTLP tracing, MCP stdio — docs, roadmap Sprint rows, validators, and source
+files). See
 [`docs/progress/PROJECT02_ROADMAP_STATUS.md`](progress/PROJECT02_ROADMAP_STATUS.md).
 
 ## 4. Commit strategy

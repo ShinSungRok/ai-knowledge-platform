@@ -3998,3 +3998,29 @@ Align README, deployment, and modules docs
 **Status**
 Completed
 
+## Task 152
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add nested-expansion closeout validation runner
+
+**Summary**
+- Added `scripts/validate-nested-expansion-closeout.ts` (docs/Sprint 32–35/scripts/source asserts)
+- Wired `validate:project:nested-expansion-closeout` after post-baseline in `pnpm validate`
+- Documented the command in `docs/development.md`
+
+**Validation**
+- `pnpm validate:project:closeout`
+- `pnpm validate:project:post-baseline-closeout`
+- `pnpm validate:project:nested-expansion-closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
