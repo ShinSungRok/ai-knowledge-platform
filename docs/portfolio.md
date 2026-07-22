@@ -41,7 +41,8 @@ Sprints 21–30 delivered Fake-/in-memory-validated Partial adapters. Default
 | Postgres SoT | `PostgresSqlGateway` + Fake pool; live `DATABASE_URL` optional; default `InMemorySqlGateway` |
 | OpenSearch vector | `OpenSearchVectorIndex` + Fake HTTP transport; live `OPENSEARCH_URL` optional; default InMemory/`SqlVectorIndex` |
 | Real LLM HTTP | `HttpLanguageModelProvider` + Fake transport; live `LLM_API_KEY` optional; default Fake |
-| MCP network | JSON-RPC HTTP `POST /mcp` (`tools/list`·`tools/call`); official MCP SDK / stdio deferred |
+| MCP network | JSON-RPC HTTP `POST /mcp` (`tools/list`·`tools/call`); official MCP SDK deferred |
+| MCP stdio | Newline-delimited JSON-RPC via `StdioMcpJsonRpcSession` + Fake streams; `createInMemoryStdioMcpSession`; HTTP `/mcp` remains default network path; official MCP SDK deferred |
 | TCP listen | `NodeHttpListener` + listening operations (`createListeningOperationsServer`); Express unused |
 | AuthN | API Key / Bearer; optional JWT HS256 + JWKS/RS256 OIDC-lite (`Hs256JwtAuthenticator`, `Rs256JwtAuthenticator`); default operations ApiKey; full OIDC login/SDK deferred |
 | OTLP export | OTLP/HTTP log+metrics+traces via Fake transport; optional `OTEL_EXPORTER_OTLP_ENDPOINT`; official OTel SDK deferred |
@@ -62,7 +63,6 @@ Nested deferrals that remain **out of Project 2 by design** (not “unimplemente
 Partial”):
 
 - Official SDKs: `@opentelemetry/*`, OpenSearch JS (`@opensearch-project/opensearch`), LLM vendor SDKs, official MCP SDK
-- MCP stdio transport
 - Express / Fastify HTTP frameworks
 - Full OIDC authorization-code login flows and JWT/OIDC SDKs (`jsonwebtoken`, `jose`, `passport`)
 - Full W3C propagator suite / baggage (minimal `traceparent` parent continuation is implemented; official `prom-client` remains deferred)

@@ -120,11 +120,20 @@ await listening.stop();
 ```
 
 `POST /mcp` accepts JSON-RPC `tools/list` and `tools/call` (Bearer required;
-`tools/call` enforces `arguments.workspaceId` vs principal). Official MCP
-SDK / stdio remain deferred.
+`tools/call` enforces `arguments.workspaceId` vs principal). HTTP `/mcp`
+remains the default network path.
 
-Default `pnpm validate` uses loopback ephemeral ports only (no Docker /
-external network). Express/Fastify are not used.
+Local stdio MCP (newline-delimited JSON-RPC, no Bearer) is available via
+`createInMemoryStdioMcpSession` / optional `pnpm mcp:stdio`. Official MCP SDK
+remains deferred.
+
+```bash
+# one-line JSON-RPC over stdin/stdout (manual; not in pnpm validate)
+echo '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | pnpm mcp:stdio
+```
+
+Default `pnpm validate` uses Fake stdio streams and loopback ephemeral ports
+only (no Docker / external network). Express/Fastify are not used.
 
 ## 5. Knowledge schema (SqlGateway)
 

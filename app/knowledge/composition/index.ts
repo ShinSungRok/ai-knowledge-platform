@@ -65,3 +65,8 @@ export {
   createOpenSearchVectorIndexFromEnv,
   createFakeOpenSearchOption,
 } from "./createOpenSearchVectorIndexFromEnv";
+export type { CreateStdioMcpSessionOptions } from "./createInMemoryStdioMcpSession";
+export {
+  createInMemoryStdioMcpSession,
+  createNodeStdioLineReaderWriter,
+} from "./createInMemoryStdioMcpSession";

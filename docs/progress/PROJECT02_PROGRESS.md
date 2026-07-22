@@ -3922,3 +3922,30 @@ Add Fake stdio streams validation
 **Status**
 Completed
 
+## Task 149
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Optional composition entry and roadmap update
+
+**Summary**
+- Added `createInMemoryStdioMcpSession` / `createNodeStdioLineReaderWriter` and optional `pnpm mcp:stdio`
+- Added `validate:composition:mcp-stdio` (Fake streams) to top-level validate
+- Updated roadmap/portfolio/deployment/README/modules: HTTP `/mcp` default; stdio local path; official SDK deferred
+
+**Validation**
+- `pnpm validate:mcp:stdio-session`
+- `pnpm validate:composition:mcp-stdio`
+- `pnpm validate:api:mcp-jsonrpc`
+- `pnpm validate:project:post-baseline-closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

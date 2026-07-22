@@ -77,6 +77,12 @@ await fetch(`http://127.0.0.1:${port}/mcp`, {
 await listening.stop();
 ```
 
+HTTP `/mcp` remains the default network path. Local stdio MCP (no Bearer):
+
+```bash
+echo '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | pnpm mcp:stdio
+```
+
 Pass `{ listen: { host: "127.0.0.1", port: 8080 } }` for an explicit port in
 local/production use. Baseline without observability wrapping:
 `createInMemoryKnowledgeServer` / `createInMemoryKnowledgeComposition`.
@@ -161,7 +167,7 @@ OPENSEARCH_URL=http://localhost:9200 \
 Partial adapters above are Fake-validated. These remain out of scope by design:
 
 - Official SDKs (`@opentelemetry/*`, OpenSearch JS, LLM vendor SDKs, MCP SDK)
-- MCP stdio; Express / Fastify
+- Express / Fastify
 - Full OIDC authorization-code login flows and JWT/OIDC SDKs (`jsonwebtoken`, `jose`, `passport`)
 - Full W3C propagator suite / baggage (OTLP HTTP spans + minimal `traceparent` are implemented; `prom-client` deferred)
 - Live Postgres/OpenSearch/LLM/OTLP as the **default** validate path
@@ -215,7 +221,7 @@ Minimized for the platform baseline:
 ## Next
 
 Nested deferrals (official SDKs, full OIDC login flows, full W3C propagator
-suite, Express, MCP stdio) belong to later productization. Project 2 Charter
+suite, Express) belong to later productization. Project 2 Charter
 baseline and post-baseline Partial adapters are documented in
 [`docs/portfolio.md`](docs/portfolio.md). See
 [`docs/development.md`](docs/development.md).
