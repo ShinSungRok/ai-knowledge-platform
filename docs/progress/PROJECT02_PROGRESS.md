@@ -3726,7 +3726,7 @@ Completed
 2026-07-22
 
 **Commit**
-Pending
+ae55e84
 
 **Title**
 Update roadmap/portfolio for Prometheus scrape progress
