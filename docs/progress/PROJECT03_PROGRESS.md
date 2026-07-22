@@ -629,3 +629,29 @@ Align README, development, and roadmap docs for Project 3 final status
 
 **Status**
 Completed
+
+## Task 184
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add Project 3 closeout validation runner
+
+**Summary**
+- Added scripts/validate-project03-closeout.ts (fs/path only)
+- Checks five Partial capabilities, Sprint 38–43, scripts, source files
+- Wired validate:project03:closeout into top-level pnpm validate
+- Does not require Partial→Completed
+
+**Validation**
+- `pnpm validate:project:final-closeout`
+- `pnpm validate:project03:charter-skeleton`
+- `pnpm validate:project03:closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed
