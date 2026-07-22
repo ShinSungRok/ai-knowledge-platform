@@ -430,3 +430,29 @@ Add InMemoryWorkflowMemoryStore
 
 **Status**
 Completed
+
+## Task 176
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Wire Shared Workflow Memory into DefaultWorkflowOrchestrator
+
+**Summary**
+- Required WorkflowMemoryStore + optional runIdFactory on orchestrator
+- Append objective at start; handoff before invoke; step_output after success
+- Skip empty step_output memory append so handoff can reject whitespace outputs
+- WorkflowRunResult.workflowRunId; WorkflowGoal.workflowRunId optional
+- Updated orchestrator/handoff validators
+
+**Validation**
+- `pnpm typecheck`
+- `pnpm validate:workflow:orchestrator`
+- `pnpm validate:workflow:handoff`
+
+**Status**
+Completed

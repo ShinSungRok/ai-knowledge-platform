@@ -201,14 +201,18 @@ export class DefaultWorkflowOrchestrator implements WorkflowOrchestrator {
         };
       }
 
-      await this.memory.append({
-        workspaceId: goal.workspaceId,
-        workflowRunId,
-        kind: "step_output",
-        content: invoked.output,
-        agentId: step.agentId,
-        stepId: step.id,
-      });
+      // Skip empty/whitespace outputs so handoff can reject them on the
+      // next step; do not fail the completed step on memory append.
+      if (invoked.output.trim().length > 0) {
+        await this.memory.append({
+          workspaceId: goal.workspaceId,
+          workflowRunId,
+          kind: "step_output",
+          content: invoked.output,
+          agentId: step.agentId,
+          stepId: step.id,
+        });
+      }
 
       return {
         stepId: step.id,
