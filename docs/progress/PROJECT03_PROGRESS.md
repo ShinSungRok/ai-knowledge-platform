@@ -385,3 +385,26 @@ Validate handoff and update roadmap Partial
 
 **Status**
 Completed
+
+## Task 174
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Define WorkflowMemory contract
+
+**Summary**
+- Added WorkflowRunId, WorkflowMemoryEntryKind/Entry/AppendInput, WorkflowMemoryStore
+- Documented separation from Project 2 session MemoryStore; Evaluation deferred
+- Barrel exports updated; app/knowledge/memory unchanged
+
+**Validation**
+- `pnpm validate:workflow:handoff`
+- `pnpm typecheck`
+
+**Status**
+Completed

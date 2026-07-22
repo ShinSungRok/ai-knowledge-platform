@@ -1,10 +1,12 @@
 /**
  * Module: `app/knowledge/workflow`
  *
- * Multi-Agent role/identity contract, Workflow Orchestrator boundary
- * (goal → plan → agent invoke → result), and Agent Handoff / Delegation
- * contract ({@link WorkflowHandoff}). Shared Workflow Memory and
- * Multi-Agent Evaluation remain deferred.
+ * Multi-Agent role/identity, Workflow Orchestrator, Agent Handoff /
+ * Delegation, and Shared Workflow Memory contract
+ * ({@link WorkflowMemoryStore}). Multi-Agent Evaluation remains deferred.
+ *
+ * Shared Workflow Memory is **not** Project 2 session `MemoryStore` and
+ * is unrelated to Knowledge search.
  *
  * Project 2 `AgentRole` (`planner`|`executor`|`reviewer`) stays the
  * single-agent internal role set under `app/knowledge/agent` and must
@@ -51,3 +53,9 @@ export type {
   WorkflowHandoffBuilder,
 } from "./WorkflowHandoffBuilder";
 export { DefaultWorkflowHandoffBuilder } from "./DefaultWorkflowHandoffBuilder";
+export type { WorkflowRunId } from "./WorkflowRunId";
+export { asWorkflowRunId } from "./WorkflowRunId";
+export type { WorkflowMemoryEntryKind } from "./WorkflowMemoryEntryKind";
+export type { WorkflowMemoryEntry } from "./WorkflowMemoryEntry";
+export type { WorkflowMemoryAppendInput } from "./WorkflowMemoryAppendInput";
+export type { WorkflowMemoryStore } from "./WorkflowMemoryStore";

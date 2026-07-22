@@ -240,9 +240,15 @@ export type {
   WorkflowHandoff,
   WorkflowHandoffBuildInput,
   WorkflowHandoffBuilder,
+  WorkflowRunId,
+  WorkflowMemoryEntryKind,
+  WorkflowMemoryEntry,
+  WorkflowMemoryAppendInput,
+  WorkflowMemoryStore,
 } from "./workflow";
 export {
   asWorkflowAgentId,
+  asWorkflowRunId,
   WORKFLOW_AGENT_ROLES,
   InMemoryWorkflowAgentRegistry,
   DefaultWorkflowAgentRegistry,
