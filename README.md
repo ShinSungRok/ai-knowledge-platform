@@ -19,8 +19,11 @@ Charter capabilities through Operations are implemented and documented. See
 
 Post-baseline Sprints 21–30 add **Partial** infrastructure adapters (Fake-
 validated; live optional via env). **Post-baseline Infrastructure Track:
-CLOSED (Partial).** Default `pnpm validate` remains **dependency-free**
-(Fake / in-memory / SqlVectorIndex — no Docker, network, or API keys required).
+CLOSED (Partial).** Nested expansion Sprints 32–35 add further **Partial**
+evidence (optional JWT OIDC-lite, `GET /metrics`, OTLP traces, MCP stdio)
+while default AuthN stays ApiKey and HTTP `/mcp` stays the network path.
+Default `pnpm validate` remains **dependency-free** (Fake / in-memory /
+SqlVectorIndex — no Docker, network, or API keys required).
 
 ```bash
 pnpm install
@@ -173,8 +176,8 @@ Partial adapters above are Fake-validated. These remain out of scope by design:
 - Live Postgres/OpenSearch/LLM/OTLP as the **default** validate path
   (optional live runners skip when env is unset)
 
-See [`docs/portfolio.md`](docs/portfolio.md) § Post-baseline infrastructure
-(Partial) and intentional non-goals.
+See [`docs/portfolio.md`](docs/portfolio.md) § Post-baseline infrastructure,
+§ Nested deferral expansion, and intentional non-goals.
 
 ## Layout
 

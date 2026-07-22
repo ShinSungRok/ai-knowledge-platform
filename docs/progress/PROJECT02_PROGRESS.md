@@ -3974,3 +3974,27 @@ Align portfolio for Sprint 32–35 expansion evidence
 **Status**
 Completed
 
+## Task 151
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Align README, deployment, and modules docs
+
+**Summary**
+- README/deployment: nested expansion (JWT, `/metrics`, OTLP traces, MCP stdio) + dependency-free validate principle
+- modules/architecture: ObservingHttpRouter metrics/tracing, JWT, composition stdio summaries aligned with portfolio
+
+**Validation**
+- `pnpm validate:project:closeout`
+- `pnpm validate:project:post-baseline-closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

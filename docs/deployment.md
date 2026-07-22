@@ -15,6 +15,11 @@ Platform Baseline deployment readiness bar for Project 2.
 no live Postgres, OpenSearch, LLM, or OTLP collector required). Optional live
 runners skip when env is unset and are not in top-level validate.
 
+Nested expansion (Sprints 32–35, Partial): optional JWT (`JWT_SECRET` /
+`JWT_JWKS_URL`), Prometheus `GET /metrics`, OTLP traces when
+`OTEL_EXPORTER_OTLP_ENDPOINT` is set, and local MCP stdio (`pnpm mcp:stdio`).
+HTTP `POST /mcp` remains the default network path; default AuthN remains ApiKey.
+
 ### Post-baseline optional env (summary)
 
 | Env | Role |

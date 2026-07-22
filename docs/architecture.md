@@ -892,20 +892,23 @@ depends on it. `domain` sits at the bottom with no outward dependencies.
   over `HttpRouter` only; no TCP) and an `HttpListener` contract for a
   separate TCP listen adapter in front of a router. `createInMemoryKnowledgeServer` in
   composition wires the full in-memory runtime entrypath.
-- The `observability` module provides dependency-free `Logger`/`Metrics`
-  ports with `InMemoryLogger`/`InMemoryMetrics` adapters, plus optional
-  OTLP/HTTP exporters (`ExportingLogger`/`ExportingMetrics`) without an
-  official OpenTelemetry SDK.
+- The `observability` module provides dependency-free `Logger`/`Metrics`/
+  `Tracer` ports with InMemory adapters, plus optional OTLP/HTTP exporters
+  (`ExportingLogger`/`ExportingMetrics`/`ExportingTracer`) without an
+  official OpenTelemetry SDK. Full W3C propagator suite remains deferred.
 - The `reliability` module provides deterministic `DefaultRetryPolicy`
   (no delay) and `DefaultTimeoutPolicy` (`Promise.race` + timer).
 - The `security` module provides `Authenticator`/`AuthPrincipal`,
-  `ApiKeyAuthenticator`, `HttpBearerGuard`, `DefaultWorkspaceAuthorizer`, and
-  `HttpWorkspaceGuard`; cited-answer HTTP requires
-  `Authorization: Bearer <api-key>` then workspace AuthZ against the principal.
+  `ApiKeyAuthenticator`, `HttpBearerGuard`, optional JWT HS256/JWKS RS256
+  verifiers (no `jsonwebtoken`/`jose`/`passport`), `DefaultWorkspaceAuthorizer`,
+  and `HttpWorkspaceGuard`; cited-answer HTTP requires
+  `Authorization: Bearer <token>` then workspace AuthZ against the principal.
+  Default operations AuthN remains ApiKey; full OIDC login remains deferred.
 - `ObservingHttpRouter` and `createOperationsKnowledgeServer` /
-  `createListeningOperationsServer` wire logging/metrics/AuthN+AuthZ;
-  both factories require `apiKeys` for Bearer API key AuthN. OTLP export
-  activates only when `OTEL_EXPORTER_OTLP_ENDPOINT` is set.
+  `createListeningOperationsServer` wire logging/metrics/AuthN+AuthZ and
+  optional tracing; both factories default to ApiKey AuthN. OTLP
+  logs/metrics/traces activate only when `OTEL_EXPORTER_OTLP_ENDPOINT` is set.
+  Prometheus text scrape is available at `GET /metrics` (no `prom-client`).
   `validate:deployment:readiness` checks Docker/docs/scripts statically
   without a Docker daemon.
 - Express/Fastify are not used. Post-baseline Sprint 25 adds
