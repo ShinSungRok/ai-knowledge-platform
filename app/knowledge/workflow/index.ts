@@ -34,3 +34,11 @@ export type { WorkflowRunStatus } from "./WorkflowRunStatus";
 export type { WorkflowRunResult } from "./WorkflowRunResult";
 export type { WorkflowPlanner } from "./WorkflowPlanner";
 export type { WorkflowOrchestrator } from "./WorkflowOrchestrator";
+export type { WorkflowAgentInvokeInput } from "./WorkflowAgentInvokeInput";
+export type { WorkflowAgentInvokeResult } from "./WorkflowAgentInvokeResult";
+export type { WorkflowAgentInvoker } from "./WorkflowAgentInvoker";
+export { FakeWorkflowAgentInvoker } from "./FakeWorkflowAgentInvoker";
+export type {
+  FakeWorkflowAgentInvokerHandler,
+  FakeWorkflowAgentInvokerOptions,
+} from "./FakeWorkflowAgentInvoker";

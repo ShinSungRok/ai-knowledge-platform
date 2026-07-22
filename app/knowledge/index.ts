@@ -233,12 +233,16 @@ export type {
   WorkflowRunResult,
   WorkflowPlanner,
   WorkflowOrchestrator,
+  WorkflowAgentInvokeInput,
+  WorkflowAgentInvokeResult,
+  WorkflowAgentInvoker,
 } from "./workflow";
 export {
   asWorkflowAgentId,
   WORKFLOW_AGENT_ROLES,
   InMemoryWorkflowAgentRegistry,
   DefaultWorkflowAgentRegistry,
+  FakeWorkflowAgentInvoker,
 } from "./workflow";
 export { KNOWLEDGE_MODULE_MEMORY } from "./memory";
 export type {

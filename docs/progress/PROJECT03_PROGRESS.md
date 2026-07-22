@@ -220,3 +220,25 @@ Define Workflow goal/plan/result and Orchestrator port
 
 **Status**
 Completed
+
+## Task 167
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add WorkflowAgentInvoker port and Fake invoker
+
+**Summary**
+- Added WorkflowAgentInvokeInput/Result and WorkflowAgentInvoker port
+- Added FakeWorkflowAgentInvoker (echo output, per-agent failure/handlers)
+- Kept WorkflowAgent identity-only (no run on agent)
+
+**Validation**
+- `pnpm typecheck`
+
+**Status**
+Completed
