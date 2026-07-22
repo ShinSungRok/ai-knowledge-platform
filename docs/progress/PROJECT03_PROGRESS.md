@@ -124,3 +124,24 @@ Define workflow module and Multi-Agent Role contract
 **Status**
 Completed
 
+## Task 163
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add WorkflowAgentRegistry port and InMemory adapter
+
+**Summary**
+- Added WorkflowAgentRegistry port (sync register/get/list)
+- Added InMemoryWorkflowAgentRegistry (+ DefaultWorkflowAgentRegistry alias)
+- Duplicate id / empty id|displayName throw; defensive list copies
+
+**Validation**
+- `pnpm typecheck`
+
+**Status**
+Completed

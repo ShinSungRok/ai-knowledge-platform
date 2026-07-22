@@ -222,8 +222,14 @@ export type {
   WorkflowAgentRole,
   WorkflowAgentDescriptor,
   WorkflowAgent,
+  WorkflowAgentRegistry,
 } from "./workflow";
-export { asWorkflowAgentId, WORKFLOW_AGENT_ROLES } from "./workflow";
+export {
+  asWorkflowAgentId,
+  WORKFLOW_AGENT_ROLES,
+  InMemoryWorkflowAgentRegistry,
+  DefaultWorkflowAgentRegistry,
+} from "./workflow";
 export { KNOWLEDGE_MODULE_MEMORY } from "./memory";
 export type {
   MemoryEntryRole,

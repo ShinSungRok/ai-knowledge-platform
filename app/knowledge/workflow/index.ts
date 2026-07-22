@@ -17,3 +17,8 @@ export type { WorkflowAgentRole } from "./WorkflowAgentRole";
 export { WORKFLOW_AGENT_ROLES } from "./WorkflowAgentRole";
 export type { WorkflowAgentDescriptor } from "./WorkflowAgentDescriptor";
 export type { WorkflowAgent } from "./WorkflowAgent";
+export type { WorkflowAgentRegistry } from "./WorkflowAgentRegistry";
+export {
+  InMemoryWorkflowAgentRegistry,
+  DefaultWorkflowAgentRegistry,
+} from "./InMemoryWorkflowAgentRegistry";
