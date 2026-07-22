@@ -62,8 +62,9 @@ function main(): void {
   assertContains(roadmap, "Sprint 38", "PROJECT03 roadmap must include Sprint 38");
   assertTruthy(
     roadmap.includes("Active (Charter Skeleton)") ||
-      roadmap.includes("Active — Multi-Agent Role Contract Partial"),
-    "PROJECT03 roadmap must declare Active (Charter Skeleton) or Active — Multi-Agent Role Contract Partial",
+      roadmap.includes("Active — Multi-Agent Role Contract Partial") ||
+      roadmap.includes("Active — Role Contract + Workflow Orchestrator Partial"),
+    "PROJECT03 roadmap must declare an Active Project 3 status phrase",
   );
 
   console.log(

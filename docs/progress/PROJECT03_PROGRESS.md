@@ -264,3 +264,30 @@ Add DeterministicWorkflowPlanner and DefaultWorkflowOrchestrator
 
 **Status**
 Completed
+
+## Task 169
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Validate orchestrator and update roadmap Partial
+
+**Summary**
+- Added runDefaultWorkflowOrchestratorValidation; wired validate:workflow:orchestrator
+- Marked Workflow Orchestrator Partial on roadmap/portfolio/README
+- Kept Handoff/Shared Memory/Evaluation Not Started; Project 2 CLOSED
+
+**Validation**
+- `pnpm validate:workflow:contract`
+- `pnpm validate:workflow:registry`
+- `pnpm validate:workflow:orchestrator`
+- `pnpm validate:project03:charter-skeleton`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed
