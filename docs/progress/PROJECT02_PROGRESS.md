@@ -3767,3 +3767,29 @@ Define Trace/Span contract and Tracer port
 
 **Status**
 Completed
+
+## Task 143
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add InMemoryTracer and OTLP traces exporter
+
+**Summary**
+- Added `InMemoryTracer` with injectable id/clock factories and `EndedSpan` snapshots
+- Added `OtlpTracesExporter` (`/v1/traces`) and `ExportingTracer` (buffer + forceFlush retain-on-failure)
+- Extended `resolveOtlpSignalUrl` for `/v1/traces`; added in-memory and otlp-traces validate scripts
+
+**Validation**
+- `pnpm validate:observability:tracer-contract`
+- `pnpm validate:observability:otlp-traces`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

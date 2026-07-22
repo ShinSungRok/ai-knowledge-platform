@@ -1,10 +1,10 @@
 /**
  * Builds OTLP signal paths against a collector base endpoint.
- * Avoids duplicating `/v1/logs` or `/v1/metrics` when already present.
+ * Avoids duplicating `/v1/logs`, `/v1/metrics`, or `/v1/traces` when already present.
  */
 export function resolveOtlpSignalUrl(
   endpoint: string,
-  signalPath: "/v1/logs" | "/v1/metrics",
+  signalPath: "/v1/logs" | "/v1/metrics" | "/v1/traces",
 ): string {
   const base = endpoint.replace(/\/+$/, "");
   if (base.endsWith(signalPath)) {
