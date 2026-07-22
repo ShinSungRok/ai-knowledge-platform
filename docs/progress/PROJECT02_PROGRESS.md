@@ -4004,7 +4004,7 @@ Completed
 2026-07-22
 
 **Commit**
-Pending
+70c3446
 
 **Title**
 Add nested-expansion closeout validation runner
