@@ -145,3 +145,28 @@ Add WorkflowAgentRegistry port and InMemory adapter
 
 **Status**
 Completed
+
+## Task 164
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add contract and registry validation runners
+
+**Summary**
+- Added runWorkflowAgentContractValidation and runInMemoryWorkflowAgentRegistryValidation
+- Wired validate:workflow:contract and validate:workflow:registry into pnpm validate
+
+**Validation**
+- `pnpm validate:workflow:contract`
+- `pnpm validate:workflow:registry`
+- `pnpm validate:project03:charter-skeleton`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed
