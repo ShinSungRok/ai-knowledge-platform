@@ -3793,3 +3793,30 @@ Add InMemoryTracer and OTLP traces exporter
 **Status**
 Completed
 
+## Task 144
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Instrument ObservingHttpRouter with HTTP spans
+
+**Summary**
+- Added optional `tracer?: Tracer` to `ObservingHttpRouter` (default off)
+- Records `http.request` spans on success/error including `/metrics` fast-path
+- Minimal optional W3C `traceparent` parent continuation
+- Added `validate:http:observing-tracing` and wired into `pnpm validate`
+
+**Validation**
+- `pnpm validate:http:observing`
+- `pnpm validate:http:prometheus-scrape`
+- `pnpm validate:http:observing-tracing`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
