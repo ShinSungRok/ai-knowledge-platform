@@ -3,6 +3,8 @@ import { DefaultWorkflowHandoffBuilder } from "./DefaultWorkflowHandoffBuilder";
 import { DefaultWorkflowOrchestrator } from "./DefaultWorkflowOrchestrator";
 import { DeterministicWorkflowPlanner } from "./DeterministicWorkflowPlanner";
 import { FakeWorkflowAgentInvoker } from "./FakeWorkflowAgentInvoker";
+import { InMemoryWorkflowMemoryStore } from "./InMemoryWorkflowMemoryStore";
+import { asWorkflowRunId } from "./WorkflowRunId";
 import { InMemoryWorkflowAgentRegistry } from "./InMemoryWorkflowAgentRegistry";
 import type { WorkflowAgent } from "./WorkflowAgent";
 import type { WorkflowAgentDescriptor } from "./WorkflowAgentDescriptor";
@@ -68,6 +70,8 @@ async function assertMultiStepHandoffChain(): Promise<void> {
     registry,
     invoker,
     new DefaultWorkflowHandoffBuilder(),
+    new InMemoryWorkflowMemoryStore(),
+    () => asWorkflowRunId("run-fixed-handoff"),
   );
 
   const result = await orchestrator.run(sampleGoal());
@@ -128,6 +132,8 @@ async function assertEmptyPreviousOutputFails(): Promise<void> {
     registry,
     invoker,
     new DefaultWorkflowHandoffBuilder(),
+    new InMemoryWorkflowMemoryStore(),
+    () => asWorkflowRunId("run-fixed-handoff"),
   );
 
   const result = await orchestrator.run(sampleGoal());
@@ -158,6 +164,8 @@ async function assertCoordinatorDelegationKind(): Promise<void> {
     registry,
     invoker,
     new DefaultWorkflowHandoffBuilder(),
+    new InMemoryWorkflowMemoryStore(),
+    () => asWorkflowRunId("run-fixed-handoff"),
   );
 
   const result = await orchestrator.run(sampleGoal());

@@ -3,6 +3,8 @@ import { DefaultWorkflowHandoffBuilder } from "./DefaultWorkflowHandoffBuilder";
 import { DefaultWorkflowOrchestrator } from "./DefaultWorkflowOrchestrator";
 import { DeterministicWorkflowPlanner } from "./DeterministicWorkflowPlanner";
 import { FakeWorkflowAgentInvoker } from "./FakeWorkflowAgentInvoker";
+import { InMemoryWorkflowMemoryStore } from "./InMemoryWorkflowMemoryStore";
+import { asWorkflowRunId } from "./WorkflowRunId";
 import { InMemoryWorkflowAgentRegistry } from "./InMemoryWorkflowAgentRegistry";
 import type { WorkflowAgent } from "./WorkflowAgent";
 import type { WorkflowAgentDescriptor } from "./WorkflowAgentDescriptor";
@@ -82,6 +84,7 @@ function registerCoreTrio(
 function buildOrchestrator(
   registry: InMemoryWorkflowAgentRegistry,
   invoker: FakeWorkflowAgentInvoker,
+  memory: InMemoryWorkflowMemoryStore = new InMemoryWorkflowMemoryStore(),
 ): WorkflowOrchestrator {
   const planner: WorkflowPlanner = new DeterministicWorkflowPlanner(registry);
   return new DefaultWorkflowOrchestrator(
@@ -89,6 +92,8 @@ function buildOrchestrator(
     registry,
     invoker,
     new DefaultWorkflowHandoffBuilder(),
+    memory,
+    () => asWorkflowRunId("run-fixed-orchestrator"),
   );
 }
 
@@ -191,6 +196,8 @@ async function assertMissingAgentFails(): Promise<void> {
     registry,
     invoker,
     new DefaultWorkflowHandoffBuilder(),
+    new InMemoryWorkflowMemoryStore(),
+    () => asWorkflowRunId("run-fixed-direct"),
   );
   const result = await orchestrator.run(sampleGoal());
   assertEqual(result.status, "failed", "missing agent → failed");
@@ -229,6 +236,8 @@ async function assertRoleMismatchFails(): Promise<void> {
     registry,
     invoker,
     new DefaultWorkflowHandoffBuilder(),
+    new InMemoryWorkflowMemoryStore(),
+    () => asWorkflowRunId("run-fixed-direct"),
   );
   const result = await orchestrator.run(sampleGoal());
   assertEqual(result.status, "failed", "role mismatch → failed");
