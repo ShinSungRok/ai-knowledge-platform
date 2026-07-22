@@ -308,3 +308,30 @@ Update roadmap/portfolio for Registry Partial
 
 **Status**
 Completed
+
+## Task 198
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Define Evaluation Gate and Regression Harness contracts
+
+**Summary**
+- Added EvaluationGateId, rules, results, and EvaluationGateEvaluator port
+- Added RegressionHarness port + RegressionHarnessResult types
+- Soft-link docs for ExperimentRunRecord.metrics; no evaluation imports
+- Barrel exports; no Default adapters yet; ExperimentRunStore unchanged
+
+**Validation**
+- `pnpm validate:llmops:contract`
+- `pnpm validate:llmops:run-store`
+- `pnpm validate:llmops:prompt-registry`
+- `pnpm validate:llmops:model-registry`
+- `pnpm typecheck`
+
+**Status**
+Completed

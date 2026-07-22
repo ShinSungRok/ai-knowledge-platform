@@ -312,6 +312,18 @@ export type {
   ModelRegisterInput,
   ModelVersionRegisterInput,
   ModelRegistry,
+  EvaluationGateId,
+  EvaluationGateComparator,
+  EvaluationGateRule,
+  EvaluationGateDefinition,
+  EvaluationGateRuleResult,
+  EvaluationGateResult,
+  RegressionMetricRegression,
+  RegressionHarnessResult,
+  EvaluationGateEvaluatorInput,
+  EvaluationGateEvaluator,
+  RegressionHarnessInput,
+  RegressionHarness,
 } from "./llmops";
 export {
   asExperimentId,
@@ -320,6 +332,7 @@ export {
   asPromptVersionId,
   asModelId,
   asModelVersionId,
+  asEvaluationGateId,
 } from "./llmops";
 export {
   InMemoryExperimentRunStore,

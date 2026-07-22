@@ -3,15 +3,18 @@
  *
  * Project 4 Enterprise LLMOps boundary:
  * - **Experiment / Run Tracking** (Partial) — {@link ExperimentRunStore}
- * - **Prompt & Model Registry** (contract this Sprint) — {@link PromptRegistry}
- *   / {@link ModelRegistry}
+ * - **Prompt & Model Registry** (Partial) — {@link PromptRegistry} /
+ *   {@link ModelRegistry}
+ * - **Evaluation Gates / Regression Harness** (contract) —
+ *   {@link EvaluationGateEvaluator} / {@link RegressionHarness}
  *
- * Soft link (document only): experiment run `params` may later store
- * `promptVersionId` / `modelVersionId` without changing ExperimentRunStore.
+ * Soft links (document only):
+ * - Run `params` may store `promptVersionId` / `modelVersionId`
+ * - Gate input metrics may come from {@link ExperimentRunRecord.metrics} or
+ *   flattened evaluation aggregates — do not import evaluation types here
  *
- * Deferred: Evaluation Gates / Regression Harness, Deployment / Serving
- * Configuration, LLMOps Observability product code. Does not bind
- * `ai` LanguageModelProvider to the registry.
+ * Deferred: Deployment / Serving Configuration, LLMOps Observability, LLM-as-judge.
+ * Does not bind `ai` LanguageModelProvider to the registry.
  *
  * Distinct from Project 2 `JobRecord` / `JobStore` and Project 3
  * `WorkflowRunId` / workflow memory — do not conflate.
@@ -65,3 +68,21 @@ export {
   InMemoryModelRegistry,
   DefaultModelRegistry,
 } from "./InMemoryModelRegistry";
+
+export type { EvaluationGateId } from "./EvaluationGateId";
+export { asEvaluationGateId } from "./EvaluationGateId";
+export type { EvaluationGateComparator } from "./EvaluationGateComparator";
+export type { EvaluationGateRule } from "./EvaluationGateRule";
+export type { EvaluationGateDefinition } from "./EvaluationGateDefinition";
+export type { EvaluationGateRuleResult } from "./EvaluationGateRuleResult";
+export type { EvaluationGateResult } from "./EvaluationGateResult";
+export type { RegressionMetricRegression } from "./RegressionMetricRegression";
+export type { RegressionHarnessResult } from "./RegressionHarnessResult";
+export type {
+  EvaluationGateEvaluatorInput,
+  EvaluationGateEvaluator,
+} from "./EvaluationGateEvaluator";
+export type {
+  RegressionHarnessInput,
+  RegressionHarness,
+} from "./RegressionHarness";
