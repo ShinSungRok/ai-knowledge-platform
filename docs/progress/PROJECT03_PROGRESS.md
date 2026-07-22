@@ -196,3 +196,27 @@ Update Project 3 roadmap/portfolio for Role Contract Partial
 
 **Status**
 Completed
+
+## Task 166
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Define Workflow goal/plan/result and Orchestrator port
+
+**Summary**
+- Added WorkflowGoal/Plan/Step/Result and WorkflowPlanner/Orchestrator ports
+- Kept WorkflowAgent identity-only; Handoff/Shared Memory still deferred
+- Updated workflow barrel, knowledge barrel, and modules.md
+
+**Validation**
+- `pnpm validate:workflow:contract`
+- `pnpm validate:workflow:registry`
+- `pnpm typecheck`
+
+**Status**
+Completed

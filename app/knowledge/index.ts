@@ -223,6 +223,16 @@ export type {
   WorkflowAgentDescriptor,
   WorkflowAgent,
   WorkflowAgentRegistry,
+  WorkflowGoal,
+  WorkflowStepId,
+  WorkflowPlanStep,
+  WorkflowPlan,
+  WorkflowStepStatus,
+  WorkflowStepResult,
+  WorkflowRunStatus,
+  WorkflowRunResult,
+  WorkflowPlanner,
+  WorkflowOrchestrator,
 } from "./workflow";
 export {
   asWorkflowAgentId,

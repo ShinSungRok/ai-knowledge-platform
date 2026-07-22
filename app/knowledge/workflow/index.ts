@@ -1,13 +1,15 @@
 /**
  * Module: `app/knowledge/workflow`
  *
- * Multi-Agent role/identity contract. WorkflowOrchestrator, Agent
- * Handoff/Delegation, Shared Workflow Memory, and Multi-Agent Evaluation
- * remain deferred.
+ * Multi-Agent role/identity contract plus Workflow Orchestrator
+ * boundary (goal → plan → agent invoke → result). Explicit Agent
+ * Handoff/Delegation, Shared Workflow Memory, and Multi-Agent
+ * Evaluation remain deferred.
  *
  * Project 2 `AgentRole` (`planner`|`executor`|`reviewer`) stays the
  * single-agent internal role set under `app/knowledge/agent` and must
  * not be conflated with {@link WorkflowAgentRole}.
+ * {@link WorkflowAgent} remains identity-only (no `run` on the agent).
  */
 export const KNOWLEDGE_MODULE_WORKFLOW = "app/knowledge/workflow" as const;
 
@@ -22,3 +24,13 @@ export {
   InMemoryWorkflowAgentRegistry,
   DefaultWorkflowAgentRegistry,
 } from "./InMemoryWorkflowAgentRegistry";
+export type { WorkflowGoal } from "./WorkflowGoal";
+export type { WorkflowStepId } from "./WorkflowStepId";
+export type { WorkflowPlanStep } from "./WorkflowPlanStep";
+export type { WorkflowPlan } from "./WorkflowPlan";
+export type { WorkflowStepStatus } from "./WorkflowStepStatus";
+export type { WorkflowStepResult } from "./WorkflowStepResult";
+export type { WorkflowRunStatus } from "./WorkflowRunStatus";
+export type { WorkflowRunResult } from "./WorkflowRunResult";
+export type { WorkflowPlanner } from "./WorkflowPlanner";
+export type { WorkflowOrchestrator } from "./WorkflowOrchestrator";
