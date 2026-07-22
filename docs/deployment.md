@@ -222,7 +222,9 @@ OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 \
   pnpm validate:observability:otlp-live
 ```
 
-Official `@opentelemetry/*` SDK, Prometheus scrape, and tracing remain deferred.
+Official `@opentelemetry/*` SDK and distributed tracing remain deferred.
+Prometheus text scrape is available at `GET /metrics` on `ObservingHttpRouter`
+(dependency-free; no `prom-client`).
 
 ## 5d. OpenSearch VectorIndex (optional)
 
@@ -294,6 +296,7 @@ pnpm validate:composition:jwt-auth
   claim. Full OIDC login flows and official JWT SDKs remain deferred.
 - HTTP LLM is optional; default composition remains Fake (no official LLM SDK).
 - OTLP/HTTP log+metrics export is optional via env; official OTel SDK /
-  Prometheus scrape / tracing are not included.
+  tracing are not included. Prometheus text scrape is exposed at `GET /metrics`
+  (no `prom-client`).
 - OpenSearch VectorIndex is optional via env/Fake; official OpenSearch SDK
   remains deferred; default composition stays InMemory/`SqlVectorIndex`.

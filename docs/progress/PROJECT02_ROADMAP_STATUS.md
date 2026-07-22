@@ -14,7 +14,7 @@ dependency-free.
 
 **Remaining nested deferrals (by design):** official SDKs (`@opentelemetry/*`,
 OpenSearch JS, LLM vendor SDKs, MCP SDK), MCP stdio, Express/Fastify,
-full OIDC login flows / JWT-OIDC SDKs, Prometheus scrape, distributed tracing.
+full OIDC login flows / JWT-OIDC SDKs, distributed tracing.
 
 **Charter Platform Baseline remains CLOSED** (Sprint 20). This track closeout
 does not reopen baseline capabilities or mark Partial adapters as Completed.
@@ -44,7 +44,7 @@ does not reopen baseline capabilities or mark Partial adapters as Completed.
 | MCP network transport | Partial | JSON-RPC HTTP `POST /mcp` (`tools/list`·`tools/call`) validated with Bearer AuthN; official MCP SDK / stdio still deferred |
 | `node:http` / Express TCP listen | Partial | `NodeHttpListener` + `createListeningOperationsServer` validated on 127.0.0.1 ephemeral; Express still not used; dispatch-only path retained |
 | AuthN (JWT / OIDC) | Partial | API Key + optional JWT HS256 / JWKS RS256 OIDC-lite validated (`Hs256JwtAuthenticator`, `Rs256JwtAuthenticator`, Fake JWKS); default operations/listening remain ApiKey; full OIDC login flows and official JWT/OIDC SDKs still deferred |
-| OpenTelemetry / Prometheus exporters | Partial | OTLP/HTTP log+metrics export validated with Fake transport; optional composition via `OTEL_EXPORTER_OTLP_ENDPOINT`; official OTel SDK / Prometheus scrape / tracing still deferred |
+| OpenTelemetry / Prometheus exporters | Partial | OTLP/HTTP log+metrics export validated with Fake transport; optional composition via `OTEL_EXPORTER_OTLP_ENDPOINT`; dependency-free Prometheus text scrape at `GET /metrics` (`ObservingHttpRouter` + `toPrometheusText`); official OTel SDK / tracing still deferred |
 
 ## Task range
 
@@ -64,3 +64,4 @@ does not reopen baseline capabilities or mark Partial adapters as Completed.
 | Sprint 30 (Task 126–129) | Establish OpenSearch Vector Index Adapter (HTTP contract, `OpenSearchVectorIndex`, Fake validation, optional composition; official SDK deferred; default InMemory/`SqlVectorIndex`) |
 | Sprint 31 (Task 130–133) | Close Out Post-baseline Infrastructure Track (portfolio/README/deployment alignment, `validate:project:post-baseline-closeout`, roadmap track CLOSED Partial) |
 | Sprint 32 (Task 134–137) | Establish JWT/OIDC Authentication (JWT contract/verifiers, HS256 + JWKS RS256, optional composition `auth`; default ApiKey; official SDK/login flows deferred) |
+| Sprint 33 (Task 138–141) | Establish Prometheus `/metrics` Scrape Endpoint (`toPrometheusText`, `ObservingHttpRouter` GET `/metrics`, scrape validation; `prom-client` / tracing deferred) |

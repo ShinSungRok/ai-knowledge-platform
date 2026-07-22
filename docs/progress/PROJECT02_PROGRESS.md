@@ -3719,3 +3719,26 @@ Add dependency-free validation runner for `/metrics`
 
 **Status**
 Completed
+
+## Task 141
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Update roadmap/portfolio for Prometheus scrape progress
+
+**Summary**
+- Removed Prometheus scrape from remaining nested deferrals in roadmap status
+- Documented Sprint 33 (Task 138–141) and `GET /metrics` Partial evidence
+- Aligned portfolio / deployment / README: scrape implemented; `prom-client` and tracing remain deferred
+
+**Validation**
+- `pnpm validate:project:post-baseline-closeout`
+- `pnpm validate`
+
+**Status**
+Completed
