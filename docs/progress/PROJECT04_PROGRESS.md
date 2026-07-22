@@ -130,3 +130,25 @@ Define llmops module and Experiment/Run contract
 
 **Status**
 Completed
+
+## Task 191
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add InMemoryExperimentRunStore
+
+**Summary**
+- Implemented InMemoryExperimentRunStore with create/get/list/updateStatus
+- DefaultExperimentRunStore alias; workspace isolation; status transitions
+- Defensive copies of params/metrics; no SQL adapter
+
+**Validation**
+- `pnpm typecheck`
+
+**Status**
+Completed

@@ -25,3 +25,7 @@ export type {
   ExperimentRunUpdateStatusInput,
   ExperimentRunStore,
 } from "./ExperimentRunStore";
+export {
+  InMemoryExperimentRunStore,
+  DefaultExperimentRunStore,
+} from "./InMemoryExperimentRunStore";

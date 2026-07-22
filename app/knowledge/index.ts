@@ -300,6 +300,10 @@ export type {
   ExperimentRunStore,
 } from "./llmops";
 export { asExperimentId, asExperimentRunId } from "./llmops";
+export {
+  InMemoryExperimentRunStore,
+  DefaultExperimentRunStore,
+} from "./llmops";
 export { KNOWLEDGE_MODULE_API } from "./api";
 export {
   HealthController,
