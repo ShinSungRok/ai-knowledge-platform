@@ -13,8 +13,11 @@ evaluation, in-process runtime, and operations foundations — all proven by
 dependency-free validation runners against fake/in-memory adapters.
 
 Post-baseline Sprints 21–30 add **Partial** infrastructure adapters (Fake-
-validated; live optional via env). Those do not reopen or replace the Charter
-Platform Baseline closeout (Sprint 20).
+validated; live optional via env). Nested deferral expansion Sprints 32–35
+add further **Partial** evidence (JWT/OIDC-lite, Prometheus scrape, OTLP
+tracing, MCP stdio) without reopening Charter Platform Baseline closeout
+(Sprint 20) or Post-baseline Infrastructure Track CLOSED (Partial)
+(Sprint 31).
 
 ## 2. Capabilities Project 2 proves (Charter order)
 
@@ -41,13 +44,22 @@ Sprints 21–30 delivered Fake-/in-memory-validated Partial adapters. Default
 | Postgres SoT | `PostgresSqlGateway` + Fake pool; live `DATABASE_URL` optional; default `InMemorySqlGateway` |
 | OpenSearch vector | `OpenSearchVectorIndex` + Fake HTTP transport; live `OPENSEARCH_URL` optional; default InMemory/`SqlVectorIndex` |
 | Real LLM HTTP | `HttpLanguageModelProvider` + Fake transport; live `LLM_API_KEY` optional; default Fake |
-| MCP network | JSON-RPC HTTP `POST /mcp` (`tools/list`·`tools/call`); official MCP SDK deferred |
-| MCP stdio | Newline-delimited JSON-RPC via `StdioMcpJsonRpcSession` + Fake streams; `createInMemoryStdioMcpSession`; HTTP `/mcp` remains default network path; official MCP SDK deferred |
+| MCP network | JSON-RPC HTTP `POST /mcp` (`tools/list`·`tools/call`); default network path; official MCP SDK deferred |
 | TCP listen | `NodeHttpListener` + listening operations (`createListeningOperationsServer`); Express unused |
-| AuthN | API Key / Bearer; optional JWT HS256 + JWKS/RS256 OIDC-lite (`Hs256JwtAuthenticator`, `Rs256JwtAuthenticator`); default operations ApiKey; full OIDC login/SDK deferred |
-| OTLP export | OTLP/HTTP log+metrics+traces via Fake transport; optional `OTEL_EXPORTER_OTLP_ENDPOINT`; official OTel SDK deferred |
+| AuthN (API Key) | API Key / Bearer for operations/listening cited-answer and `/mcp` |
+| OTLP export (logs/metrics) | OTLP/HTTP log+metrics via Fake transport; optional `OTEL_EXPORTER_OTLP_ENDPOINT`; official OTel SDK deferred |
+
+## 3b. Nested deferral expansion (Partial) — Sprints 32–35
+
+Sprints 32–35 closed selected nested deferrals as **Partial** Fake-/in-memory-
+validated paths. They do **not** mark these adapters Completed.
+
+| Area | Partial evidence |
+|---|---|
+| AuthN (JWT / OIDC-lite) | Optional JWT HS256 + JWKS RS256 (`Hs256JwtAuthenticator`, `Rs256JwtAuthenticator`); default operations AuthN remains ApiKey; full OIDC login/SDK deferred |
 | Prometheus scrape | `GET /metrics` Prometheus text via `ObservingHttpRouter` + `toPrometheusText`; `prom-client` deferred |
-| Distributed tracing | `Tracer`/`Span`, `InMemoryTracer`, `OtlpTracesExporter` `/v1/traces`, ObservingHttpRouter HTTP spans + minimal `traceparent`; official SDK / full W3C propagator suite deferred |
+| Distributed tracing | `Tracer`/`Span`, `InMemoryTracer`, `OtlpTracesExporter` `/v1/traces`, `ExportingTracer`, ObservingHttpRouter HTTP spans + minimal `traceparent`; official SDK / full W3C propagator suite deferred |
+| MCP stdio | Newline-delimited JSON-RPC via `StdioMcpJsonRpcSession` + Fake streams; `createInMemoryStdioMcpSession`; HTTP `/mcp` remains the default network path; official MCP SDK deferred |
 
 ## 4. Validation strategy
 
@@ -60,15 +72,17 @@ runners skip (exit 0) when env is unset and are not part of top-level validate.
 ## 5. Intentional non-goals / still deferred by design
 
 Nested deferrals that remain **out of Project 2 by design** (not “unimplemented
-Partial”):
+Partial” — MCP stdio, JWT OIDC-lite, Prometheus scrape, and OTLP tracing
+above are implemented as Partial):
 
 - Official SDKs: `@opentelemetry/*`, OpenSearch JS (`@opensearch-project/opensearch`), LLM vendor SDKs, official MCP SDK
 - Express / Fastify HTTP frameworks
 - Full OIDC authorization-code login flows and JWT/OIDC SDKs (`jsonwebtoken`, `jose`, `passport`)
-- Full W3C propagator suite / baggage (minimal `traceparent` parent continuation is implemented; official `prom-client` remains deferred)
+- Full W3C propagator suite / baggage and official `prom-client` (minimal `traceparent` and dependency-free Prometheus text scrape are implemented)
 
 Charter Platform Baseline capabilities (section 2) remain **Completed**.
-Post-baseline items (section 3) stay **Partial**, not Completed.
+Post-baseline and nested-expansion items (sections 3 / 3b) stay **Partial**,
+not Completed.
 
 ## 6. Relationship to Project1
 

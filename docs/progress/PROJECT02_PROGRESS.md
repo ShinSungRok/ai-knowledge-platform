@@ -3949,3 +3949,28 @@ Optional composition entry and roadmap update
 **Status**
 Completed
 
+## Task 150
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Align portfolio for Sprint 32–35 expansion evidence
+
+**Summary**
+- Split portfolio Partial evidence: §3 post-baseline (21–30) vs §3b nested expansion (32–35)
+- Documented JWT OIDC-lite, Prometheus `/metrics`, OTLP tracing, MCP stdio without Completing Partial
+- Aligned intentional non-goals with roadmap (MCP stdio not listed as unimplemented)
+
+**Validation**
+- `pnpm validate:project:closeout`
+- `pnpm validate:project:post-baseline-closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
