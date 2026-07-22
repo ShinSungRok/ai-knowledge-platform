@@ -216,6 +216,14 @@ export { DeterministicKnowledgeAgentPlanner } from "./agent";
 export { DefaultAgentStepExecutor } from "./agent";
 export { DefaultAgentReviewer } from "./agent";
 export { DefaultAgentOrchestrator } from "./agent";
+export { KNOWLEDGE_MODULE_WORKFLOW } from "./workflow";
+export type {
+  WorkflowAgentId,
+  WorkflowAgentRole,
+  WorkflowAgentDescriptor,
+  WorkflowAgent,
+} from "./workflow";
+export { asWorkflowAgentId, WORKFLOW_AGENT_ROLES } from "./workflow";
 export { KNOWLEDGE_MODULE_MEMORY } from "./memory";
 export type {
   MemoryEntryRole,

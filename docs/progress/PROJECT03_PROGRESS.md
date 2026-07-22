@@ -101,3 +101,26 @@ Add Project 3 charter-skeleton validator and portfolio Active status
 **Status**
 Completed
 
+## Task 162
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Define workflow module and Multi-Agent Role contract
+
+**Summary**
+- Added `app/knowledge/workflow` with WorkflowAgentId/Role/Descriptor/Agent ports
+- Documented separation from Project 2 single-agent `AgentRole`
+- Updated `docs/modules.md`, knowledge barrel, and skeleton REQUIRED_MODULES
+
+**Validation**
+- `pnpm validate:project03:charter-skeleton`
+- `pnpm typecheck`
+
+**Status**
+Completed
+
