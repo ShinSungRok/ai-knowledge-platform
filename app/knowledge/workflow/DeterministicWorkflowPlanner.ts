@@ -14,7 +14,9 @@ import type { WorkflowPlanner } from "./WorkflowPlanner";
  * 5. executor (optional)
  *
  * At least one of researcher / synthesizer / critic must be registered.
- * Every step receives `goal.objective` as `input` (no implied Handoff).
+ * Every planned step receives `goal.objective` as `input`. Runtime
+ * {@link DefaultWorkflowOrchestrator} overrides steps after index 0 with
+ * {@link WorkflowHandoff} payload.
  */
 const PLAN_ROLE_PRIORITY: readonly WorkflowAgentRole[] = [
   "coordinator",
@@ -35,7 +37,8 @@ const REQUIRED_CORE_ROLES: readonly WorkflowAgentRole[] = [
  * the first registered agent for each role in {@link PLAN_ROLE_PRIORITY}.
  *
  * Injects only {@link WorkflowAgentRegistry}. Does not invoke agents or
- * invent Handoff payloads — every step `input` is `goal.objective`.
+ * invent Handoff payloads at plan time — every step `input` is
+ * `goal.objective`; runtime handoff overrides after step 0.
  */
 export class DeterministicWorkflowPlanner implements WorkflowPlanner {
   constructor(private readonly registry: WorkflowAgentRegistry) {}

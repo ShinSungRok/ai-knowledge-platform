@@ -1,6 +1,8 @@
 import type { WorkflowAgentInvoker } from "./WorkflowAgentInvoker";
 import type { WorkflowAgentRegistry } from "./WorkflowAgentRegistry";
 import type { WorkflowGoal } from "./WorkflowGoal";
+import type { WorkflowHandoff } from "./WorkflowHandoff";
+import type { WorkflowHandoffBuilder } from "./WorkflowHandoffBuilder";
 import type { WorkflowOrchestrator } from "./WorkflowOrchestrator";
 import type { WorkflowPlan } from "./WorkflowPlan";
 import type { WorkflowPlanStep } from "./WorkflowPlanStep";
@@ -14,15 +16,18 @@ import type { WorkflowStepResult } from "./WorkflowStepResult";
  * aggregate status. Mirrors Project 2 {@link DefaultAgentOrchestrator}
  * stop-on-failure (no skipped step entries).
  *
- * Constructor injects only planner / registry / invoker ports.
- * v1 status: any failed step → `"failed"` (no `"partial"` yet).
- * Explicit Handoff and Shared Workflow Memory remain deferred.
+ * Constructor injects planner / registry / invoker / handoffBuilder.
+ * Step 0 uses planned `step.input` (typically `goal.objective`). Steps
+ * after 0 use {@link WorkflowHandoffBuilder} payload (runtime handoff
+ * overrides planned input). Shared Workflow Memory remains deferred.
+ * v1 status: any failed step → `"failed"`.
  */
 export class DefaultWorkflowOrchestrator implements WorkflowOrchestrator {
   constructor(
     private readonly planner: WorkflowPlanner,
     private readonly registry: WorkflowAgentRegistry,
     private readonly invoker: WorkflowAgentInvoker,
+    private readonly handoffBuilder: WorkflowHandoffBuilder,
   ) {}
 
   async run(goal: WorkflowGoal): Promise<WorkflowRunResult> {
@@ -42,8 +47,13 @@ export class DefaultWorkflowOrchestrator implements WorkflowOrchestrator {
   ): Promise<WorkflowStepResult[]> {
     const stepResults: WorkflowStepResult[] = [];
 
-    for (const step of plan.steps) {
-      const result = await this.executeStep(plan.goal, step);
+    for (let index = 0; index < plan.steps.length; index += 1) {
+      const step = plan.steps[index];
+      if (!step) {
+        continue;
+      }
+      const previous = index > 0 ? stepResults[index - 1] : undefined;
+      const result = await this.executeStep(plan.goal, step, previous);
       stepResults.push(result);
       if (result.status === "failed") {
         break;
@@ -56,6 +66,7 @@ export class DefaultWorkflowOrchestrator implements WorkflowOrchestrator {
   private async executeStep(
     goal: WorkflowGoal,
     step: WorkflowPlanStep,
+    previous: WorkflowStepResult | undefined,
   ): Promise<WorkflowStepResult> {
     const agent = this.registry.getById(step.agentId);
     if (!agent) {
@@ -80,12 +91,36 @@ export class DefaultWorkflowOrchestrator implements WorkflowOrchestrator {
       };
     }
 
+    let invokeInput = step.input;
+    let handoff: WorkflowHandoff | undefined;
+
+    if (previous !== undefined) {
+      try {
+        handoff = this.handoffBuilder.build({
+          goal,
+          previous,
+          next: step,
+        });
+        invokeInput = handoff.payload;
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        return {
+          stepId: step.id,
+          agentId: step.agentId,
+          role: step.role,
+          status: "failed",
+          output: "",
+          error: message,
+        };
+      }
+    }
+
     try {
       const invoked = await this.invoker.invoke({
         workspaceId: goal.workspaceId,
         agentId: step.agentId,
         role: step.role,
-        input: step.input,
+        input: invokeInput,
         stepId: step.id,
       });
 
@@ -97,6 +132,7 @@ export class DefaultWorkflowOrchestrator implements WorkflowOrchestrator {
           status: "failed",
           output: invoked.output ?? "",
           error: invoked.error ?? "Workflow agent invoke failed",
+          ...(handoff !== undefined ? { handoff } : {}),
         };
       }
 
@@ -106,6 +142,7 @@ export class DefaultWorkflowOrchestrator implements WorkflowOrchestrator {
         role: step.role,
         status: "completed",
         output: invoked.output,
+        ...(handoff !== undefined ? { handoff } : {}),
       };
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
@@ -116,6 +153,7 @@ export class DefaultWorkflowOrchestrator implements WorkflowOrchestrator {
         status: "failed",
         output: "",
         error: message,
+        ...(handoff !== undefined ? { handoff } : {}),
       };
     }
   }
