@@ -554,3 +554,29 @@ Add RunWorkflowEvaluationUseCase and Fake validation
 
 **Status**
 Completed
+
+## Task 181
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Update roadmap/portfolio for Evaluation Partial
+
+**Summary**
+- Marked Multi-Agent Evaluation Partial; all five charter capabilities Partial
+- Explicit: Project 3 not CLOSED; LLM-as-judge / HTTP deferred
+- Updated portfolio/README/modules and charter-skeleton Active phrases
+
+**Validation**
+- `pnpm validate:workflow:evaluation`
+- `pnpm validate:application:eval-workflow`
+- `pnpm validate:project03:charter-skeleton`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed

@@ -1,17 +1,16 @@
 # Project 3 Roadmap Status
 
 > Enterprise AI Workflow — Multi-Agent  
-> **Active — Role Contract + Orchestrator + Handoff + Shared Memory Partial** — Sprint 42
+> **Active — Role Contract + Orchestrator + Handoff + Shared Memory + Evaluation Partial** — Sprint 43
 
 ## Status
 
-**Project 3 — Active — Role Contract + Orchestrator + Handoff + Shared Memory
-Partial.** Charter Skeleton (Sprint 38) remains the foundation. Multi-Agent
-Role Contract, Workflow Orchestrator, and Agent Handoff / Delegation are
-**Partial**. Shared Workflow Memory is **Partial**
-(`WorkflowMemoryStore` / `InMemoryWorkflowMemoryStore` write-only append from
-`DefaultWorkflowOrchestrator`; `pnpm validate:workflow:memory`). Distinct from
-Project 2 session `MemoryStore`. Multi-Agent Evaluation remains **Not Started**.
+**Project 3 — Active — all five charter capabilities Partial (none Completed).**
+Charter Skeleton (Sprint 38) remains the foundation. Multi-Agent Role Contract,
+Workflow Orchestrator, Agent Handoff / Delegation, Shared Workflow Memory, and
+Multi-Agent Evaluation are each **Partial**. Project 3 is **not CLOSED** —
+final closeout is a later Sprint. LLM-as-judge and HTTP multi-agent API remain
+deferred. Project 2 session `MemoryStore` / RAG evaluation remain unchanged.
 
 **Project 2 remains CLOSED** (Sprint 37). Partial infrastructure adapters from
 Project 2 stay Partial — not Completed. Do not reopen Project 2 tracks.
@@ -22,6 +21,7 @@ Project 2 stay Partial — not Completed. Do not reopen Project 2 tracks.
 - `app/knowledge/agent` — single-agent planner / executor / reviewer / orchestrator
 - `app/knowledge/mcp` / `tools` — tool registry and tool calling
 - `app/knowledge/memory` — session memory (not Knowledge search; not replaced by workflow memory)
+- `app/knowledge/evaluation` — RAG evaluators (not replaced by workflow evaluation)
 - `app/knowledge/application` / `composition` — use cases and composition root
 - Dependency-free `tsx` validation runners and static closeout validators
 - Optional Partial infra (Postgres, OpenSearch, HTTP LLM, OTLP, JWT, Prometheus,
@@ -35,14 +35,15 @@ Project 2 stay Partial — not Completed. Do not reopen Project 2 tracks.
 | Workflow Orchestrator | **Partial** | `DeterministicWorkflowPlanner` + `DefaultWorkflowOrchestrator` + `FakeWorkflowAgentInvoker`; `pnpm validate:workflow:orchestrator` |
 | Agent Handoff / Delegation | **Partial** | `WorkflowHandoff` / `DefaultWorkflowHandoffBuilder`; runtime handoff overrides step input after step 0; `pnpm validate:workflow:handoff` |
 | Shared Workflow Memory | **Partial** | `WorkflowMemoryStore` / `InMemoryWorkflowMemoryStore`; orchestrator appends objective/handoff/step_output; `pnpm validate:workflow:memory` |
-| Multi-Agent Evaluation | Not Started | Evaluation of multi-agent runs |
+| Multi-Agent Evaluation | **Partial** | `WorkflowRunEvaluator` / `DefaultWorkflowRunEvaluator` + `RunWorkflowEvaluationUseCase`; `pnpm validate:workflow:evaluation` / `validate:application:eval-workflow`; no LLM-as-judge |
 
 ## Explicit non-goals (current)
 
-- Multi-Agent Evaluation runtime / reading memory into invoker prompts
+- LLM-as-judge / reading memory into invoker prompts for scoring
 - Official SDKs, Express/Fastify, full OIDC login, full W3C propagator
 - Reopening Project 2 CLOSED tracks or promoting Partial → Completed
-- Conflating Project 2 `AgentRole` / session `MemoryStore` with workflow memory
+- Declaring Project 3 CLOSED (deferred to a closeout Sprint)
+- Conflating Project 2 `AgentRole` / session `MemoryStore` / RAG evaluation with workflow caps
 - Application/HTTP multi-agent API wiring / SQL workflow memory
 
 ## Task range
@@ -54,6 +55,7 @@ Project 2 stay Partial — not Completed. Do not reopen Project 2 tracks.
 | Sprint 40 (Task 166–169) | Establish Workflow Orchestrator (goal/plan/invoker/orchestrator + Fake validation; Partial) |
 | Sprint 41 (Task 170–173) | Establish Agent Handoff / Delegation (contract + builder + orchestrator wiring + validators; Partial) |
 | Sprint 42 (Task 174–177) | Establish Shared Workflow Memory (contract + InMemory store + orchestrator append + validators; Partial) |
+| Sprint 43 (Task 178–181) | Establish Multi-Agent Evaluation (contract + evaluator + use case + validators; Partial) |
 
 ## Sprint 38 close note
 
@@ -93,3 +95,12 @@ remain **Not Started**. Project 2 remains **CLOSED**.
 delivered `WorkflowMemoryStore` / `InMemoryWorkflowMemoryStore`, orchestrator
 write-only appends, and `pnpm validate:workflow:memory`. Multi-Agent
 Evaluation remains **Not Started**. Project 2 remains **CLOSED**.
+
+## Sprint 43 close note
+
+**Sprint 43 — Establish Multi-Agent Evaluation: CLOSED.** Tasks 178–181
+delivered `WorkflowRunEvaluator` / `DefaultWorkflowRunEvaluator`,
+`RunWorkflowEvaluationUseCase`, and `pnpm validate:workflow:evaluation` /
+`validate:application:eval-workflow`. All five charter capabilities are
+**Partial** (none Completed). Project 3 is **not CLOSED**. LLM-as-judge /
+HTTP multi-agent API remain deferred. Project 2 remains **CLOSED**.

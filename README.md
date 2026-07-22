@@ -13,7 +13,8 @@ composition root, and dependency-free validation runners.
 ## Status
 
 **Project 2: CLOSED** (Sprint 37). **Project 3: Active — Role Contract +
-Orchestrator + Handoff + Shared Memory Partial** (Sprint 42).
+Orchestrator + Handoff + Shared Memory + Evaluation Partial** (Sprint 43;
+all five charter capabilities Partial; Project 3 not CLOSED).
 
 | Track | Status |
 |---|---|
@@ -25,6 +26,7 @@ Orchestrator + Handoff + Shared Memory Partial** (Sprint 42).
 | Project 3 Workflow Orchestrator | Partial (Sprint 40) |
 | Project 3 Agent Handoff / Delegation | Partial (Sprint 41) |
 | Project 3 Shared Workflow Memory | Partial (Sprint 42) |
+| Project 3 Multi-Agent Evaluation | Partial (Sprint 43) |
 
 Charter capabilities through Operations are Completed. Partial infra adapters
 stay Partial (not Completed). See [`docs/portfolio.md`](docs/portfolio.md),
@@ -233,6 +235,8 @@ See [`docs/architecture.md`](docs/architecture.md) and
 | `pnpm validate:workflow:orchestrator` | DefaultWorkflowOrchestrator + Fake invoker |
 | `pnpm validate:workflow:handoff` | WorkflowHandoff builder + orchestrator wiring |
 | `pnpm validate:workflow:memory` | InMemoryWorkflowMemoryStore + orchestrator append |
+| `pnpm validate:workflow:evaluation` | DefaultWorkflowRunEvaluator pure scoring |
+| `pnpm validate:application:eval-workflow` | RunWorkflowEvaluationUseCase Fake path |
 | `pnpm validate:skeleton` | Directory, barrel, docs, and script integrity |
 | `pnpm typecheck` | TypeScript strict check (`tsc --noEmit`) |
 | `pnpm validate:deployment:readiness` | Static Docker/docs/export readiness (no daemon) |
@@ -248,10 +252,10 @@ Minimized for the platform baseline:
 ## Next
 
 **Project 2 is CLOSED.** **Project 3 — Enterprise AI Workflow — Multi-Agent**
-is **Active — Role Contract + Orchestrator + Handoff + Shared Memory Partial**
-(`app/knowledge/workflow`; Multi-Agent Evaluation still Not Started). By-design
-non-goals (official SDKs, Express/Fastify, full OIDC login, full W3C
-propagator / `prom-client`) remain deferred. See
-[`docs/portfolio.md`](docs/portfolio.md),
+is **Active — Role Contract + Orchestrator + Handoff + Shared Memory +
+Evaluation Partial** (`app/knowledge/workflow`; all five caps Partial; Project 3
+not CLOSED; LLM-as-judge deferred). By-design non-goals (official SDKs,
+Express/Fastify, full OIDC login, full W3C propagator / `prom-client`) remain
+deferred. See [`docs/portfolio.md`](docs/portfolio.md),
 [`docs/agent/PROJECT03_INSTRUCTIONS.md`](docs/agent/PROJECT03_INSTRUCTIONS.md),
 and [`docs/development.md`](docs/development.md).
