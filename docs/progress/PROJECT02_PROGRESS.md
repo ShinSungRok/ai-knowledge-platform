@@ -3709,11 +3709,13 @@ Add dependency-free validation runner for `/metrics`
 **Summary**
 - Added `runObservingHttpRouterPrometheusValidation.ts` to verify `/metrics` Prometheus text response, router logs, and `http.requests` increment
 - Added `validate:http:prometheus-scrape` script
+- Wired `validate:observability:prometheus-format` and `validate:http:prometheus-scrape` into top-level `pnpm validate`
 
 **Validation**
 - `pnpm validate:http:observing`
 - `pnpm validate:http:prometheus-scrape`
 - `pnpm typecheck`
+- `pnpm validate`
 
 **Status**
 Completed
