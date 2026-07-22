@@ -288,7 +288,7 @@ Completed
 2026-07-22
 
 **Commit**
-Pending
+ccac19e
 
 **Title**
 Update roadmap/portfolio for Registry Partial
