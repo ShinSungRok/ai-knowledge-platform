@@ -968,7 +968,7 @@ baseline):
   transport validated; default composition remains InMemory/`SqlVectorIndex`)
 - Official LLM provider SDKs (optional `HttpLanguageModelProvider` exists;
   default composition remains Fake)
-- Official MCP SDK / stdio (JSON-RPC HTTP `POST /mcp` validated)
+- Official MCP SDK (JSON-RPC HTTP `POST /mcp` and stdio newline session validated)
 - Express TCP listen
   (`NodeHttpListener` validated post-baseline; Express unused)
 
