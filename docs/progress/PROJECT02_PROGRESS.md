@@ -3679,7 +3679,7 @@ Completed
 2026-07-21
 
 **Commit**
-Pending
+8c6d1f7
 
 **Title**
 Add GET `/metrics` handling in `ObservingHttpRouter`
