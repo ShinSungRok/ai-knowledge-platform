@@ -1,16 +1,17 @@
 # Project 3 Roadmap Status
 
 > Enterprise AI Workflow — Multi-Agent  
-> **Active — Role Contract + Orchestrator + Handoff Partial** — Sprint 41
+> **Active — Role Contract + Orchestrator + Handoff + Shared Memory Partial** — Sprint 42
 
 ## Status
 
-**Project 3 — Active — Role Contract + Orchestrator + Handoff Partial.**
-Charter Skeleton (Sprint 38) remains the foundation. Multi-Agent Role Contract
-and Workflow Orchestrator are **Partial**. Agent Handoff / Delegation is
-**Partial** (`WorkflowHandoff` + `DefaultWorkflowHandoffBuilder` wired into
-`DefaultWorkflowOrchestrator`; `pnpm validate:workflow:handoff`). Shared
-Workflow Memory and Multi-Agent Evaluation remain **Not Started**.
+**Project 3 — Active — Role Contract + Orchestrator + Handoff + Shared Memory
+Partial.** Charter Skeleton (Sprint 38) remains the foundation. Multi-Agent
+Role Contract, Workflow Orchestrator, and Agent Handoff / Delegation are
+**Partial**. Shared Workflow Memory is **Partial**
+(`WorkflowMemoryStore` / `InMemoryWorkflowMemoryStore` write-only append from
+`DefaultWorkflowOrchestrator`; `pnpm validate:workflow:memory`). Distinct from
+Project 2 session `MemoryStore`. Multi-Agent Evaluation remains **Not Started**.
 
 **Project 2 remains CLOSED** (Sprint 37). Partial infrastructure adapters from
 Project 2 stay Partial — not Completed. Do not reopen Project 2 tracks.
@@ -20,7 +21,7 @@ Project 2 stay Partial — not Completed. Do not reopen Project 2 tracks.
 - Clean / Hexagonal / DDD modules and composition-only wiring
 - `app/knowledge/agent` — single-agent planner / executor / reviewer / orchestrator
 - `app/knowledge/mcp` / `tools` — tool registry and tool calling
-- `app/knowledge/memory` — session memory (not Knowledge search)
+- `app/knowledge/memory` — session memory (not Knowledge search; not replaced by workflow memory)
 - `app/knowledge/application` / `composition` — use cases and composition root
 - Dependency-free `tsx` validation runners and static closeout validators
 - Optional Partial infra (Postgres, OpenSearch, HTTP LLM, OTLP, JWT, Prometheus,
@@ -33,16 +34,16 @@ Project 2 stay Partial — not Completed. Do not reopen Project 2 tracks.
 | Multi-Agent Role Contract | **Partial** | `workflow` module: roles/descriptors + InMemory registry; `pnpm validate:workflow:contract` / `validate:workflow:registry` |
 | Workflow Orchestrator | **Partial** | `DeterministicWorkflowPlanner` + `DefaultWorkflowOrchestrator` + `FakeWorkflowAgentInvoker`; `pnpm validate:workflow:orchestrator` |
 | Agent Handoff / Delegation | **Partial** | `WorkflowHandoff` / `DefaultWorkflowHandoffBuilder`; runtime handoff overrides step input after step 0; `pnpm validate:workflow:handoff` |
-| Shared Workflow Memory | Not Started | Workspace/workflow-scoped shared memory boundaries |
+| Shared Workflow Memory | **Partial** | `WorkflowMemoryStore` / `InMemoryWorkflowMemoryStore`; orchestrator appends objective/handoff/step_output; `pnpm validate:workflow:memory` |
 | Multi-Agent Evaluation | Not Started | Evaluation of multi-agent runs |
 
 ## Explicit non-goals (current)
 
-- Shared Workflow Memory / Multi-Agent Evaluation runtime
+- Multi-Agent Evaluation runtime / reading memory into invoker prompts
 - Official SDKs, Express/Fastify, full OIDC login, full W3C propagator
 - Reopening Project 2 CLOSED tracks or promoting Partial → Completed
-- Conflating Project 2 `AgentRole` with Multi-Agent `WorkflowAgentRole`
-- Application/HTTP multi-agent API wiring
+- Conflating Project 2 `AgentRole` / session `MemoryStore` with workflow memory
+- Application/HTTP multi-agent API wiring / SQL workflow memory
 
 ## Task range
 
@@ -52,6 +53,7 @@ Project 2 stay Partial — not Completed. Do not reopen Project 2 tracks.
 | Sprint 39 (Task 162–165) | Establish Multi-Agent Role Contract (`workflow` ports + InMemory registry + validators; Partial) |
 | Sprint 40 (Task 166–169) | Establish Workflow Orchestrator (goal/plan/invoker/orchestrator + Fake validation; Partial) |
 | Sprint 41 (Task 170–173) | Establish Agent Handoff / Delegation (contract + builder + orchestrator wiring + validators; Partial) |
+| Sprint 42 (Task 174–177) | Establish Shared Workflow Memory (contract + InMemory store + orchestrator append + validators; Partial) |
 
 ## Sprint 38 close note
 
@@ -84,3 +86,10 @@ delivered `WorkflowHandoff` contract, `DefaultWorkflowHandoffBuilder`,
 orchestrator wiring (step0 objective; later steps handoff payload), and
 `pnpm validate:workflow:handoff`. Shared Memory / Multi-Agent Evaluation
 remain **Not Started**. Project 2 remains **CLOSED**.
+
+## Sprint 42 close note
+
+**Sprint 42 — Establish Shared Workflow Memory: CLOSED.** Tasks 174–177
+delivered `WorkflowMemoryStore` / `InMemoryWorkflowMemoryStore`, orchestrator
+write-only appends, and `pnpm validate:workflow:memory`. Multi-Agent
+Evaluation remains **Not Started**. Project 2 remains **CLOSED**.

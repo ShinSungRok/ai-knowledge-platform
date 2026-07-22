@@ -28,14 +28,15 @@ Default `pnpm validate` stays **dependency-free** (Fake / in-memory adapters).
 
 ## 1c. Project 3 — Enterprise AI Workflow (Multi-Agent)
 
-**Project 3: Active — Role Contract + Orchestrator + Handoff Partial.**
-Charter docs and `pnpm validate:project03:charter-skeleton` remain in place
-(Sprint 38). Sprint 39–41 deliver **Partial** Role Contract, Workflow
-Orchestrator, and Agent Handoff / Delegation (`WorkflowHandoff` +
-`DefaultWorkflowHandoffBuilder` wired into `DefaultWorkflowOrchestrator`),
-proven by `pnpm validate:workflow:contract`, `validate:workflow:registry`,
-`validate:workflow:orchestrator`, and `validate:workflow:handoff`. Shared
-Workflow Memory and Multi-Agent Evaluation remain **Not Started**.
+**Project 3: Active — Role Contract + Orchestrator + Handoff + Shared Memory
+Partial.** Charter docs and `pnpm validate:project03:charter-skeleton` remain
+in place (Sprint 38). Sprint 39–42 deliver **Partial** Role Contract, Workflow
+Orchestrator, Agent Handoff / Delegation, and Shared Workflow Memory
+(`WorkflowMemoryStore` / `InMemoryWorkflowMemoryStore`, distinct from Project 2
+session `MemoryStore`), proven by `pnpm validate:workflow:contract`,
+`validate:workflow:registry`, `validate:workflow:orchestrator`,
+`validate:workflow:handoff`, and `validate:workflow:memory`. Multi-Agent
+Evaluation remains **Not Started**.
 
 **Reuse from Project 2:**
 
@@ -47,8 +48,8 @@ Workflow Memory and Multi-Agent Evaluation remain **Not Started**.
 
 **Still out of scope (and Project 2 non-goals):**
 official SDKs, Express/Fastify, full OIDC authorization-code login, full W3C
-propagator suite / `prom-client`, and Shared Workflow Memory / Multi-Agent
-Evaluation beyond Role Contract + Orchestrator + Handoff Partial.
+propagator suite / `prom-client`, and Multi-Agent Evaluation beyond Role
+Contract + Orchestrator + Handoff + Shared Memory Partial.
 
 Active charter: [`docs/agent/PROJECT03_INSTRUCTIONS.md`](agent/PROJECT03_INSTRUCTIONS.md).
 Progress / roadmap: [`docs/progress/PROJECT03_PROGRESS.md`](progress/PROJECT03_PROGRESS.md),
@@ -60,7 +61,7 @@ Progress / roadmap: [`docs/progress/PROJECT03_PROGRESS.md`](progress/PROJECT03_P
 |---|---|---|
 | Project 1 | Public Law AI — Grounded RAG | Complete (separate repo) |
 | Project 2 | AI Knowledge Platform — Knowledge + MCP + Agent | **CLOSED** |
-| Project 3 | Enterprise AI Workflow — Multi-Agent | **Active — Role Contract + Orchestrator + Handoff Partial** |
+| Project 3 | Enterprise AI Workflow — Multi-Agent | **Active — Role Contract + Orchestrator + Handoff + Shared Memory Partial** |
 | Project 4 | Enterprise LLMOps Platform | Future |
 
 Project 2 delivers a **completed platform baseline**: workspace-scoped

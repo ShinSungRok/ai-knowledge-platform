@@ -104,7 +104,8 @@ async function assertSuccessfulRun(): Promise<void> {
   const registry = new InMemoryWorkflowAgentRegistry();
   registerCoreTrio(registry);
   const invoker = new FakeWorkflowAgentInvoker();
-  const orchestrator = buildOrchestrator(registry, invoker);
+  const memory = new InMemoryWorkflowMemoryStore();
+  const orchestrator = buildOrchestrator(registry, invoker, memory);
 
   const result = await orchestrator.run(sampleGoal());
   assertEqual(result.status, "completed", "status completed");
@@ -145,6 +146,29 @@ async function assertSuccessfulRun(): Promise<void> {
     "sequential",
     "step2 sequential handoff",
   );
+
+  assertEqual(
+    String(result.workflowRunId),
+    "run-fixed-orchestrator",
+    "workflowRunId on result",
+  );
+  const entries = await memory.listByRun(
+    "workspace-a",
+    result.workflowRunId,
+  );
+  assertEqual(entries.length, 6, "objective + 2 handoffs + 3 step_outputs");
+  assertEqual(entries[0]?.kind, "objective", "mem objective");
+  assertEqual(entries[0]?.content, objective, "mem objective content");
+  assertEqual(entries[1]?.kind, "step_output", "mem step0");
+  assertEqual(entries[2]?.kind, "handoff", "mem handoff1");
+  assertEqual(entries[3]?.kind, "step_output", "mem step1");
+  assertEqual(entries[4]?.kind, "handoff", "mem handoff2");
+  assertEqual(entries[5]?.kind, "step_output", "mem step2");
+  assertEqual(
+    entries.map((entry) => entry.sequence).join(","),
+    "1,2,3,4,5,6",
+    "memory sequence order",
+  );
 }
 
 async function assertInvokerFailureStops(): Promise<void> {
@@ -156,7 +180,8 @@ async function assertInvokerFailureStops(): Promise<void> {
   const invoker = new FakeWorkflowAgentInvoker({
     failingAgentIds: new Set(["agent-synthesizer"]),
   });
-  const orchestrator = buildOrchestrator(registry, invoker);
+  const memory = new InMemoryWorkflowMemoryStore();
+  const orchestrator = buildOrchestrator(registry, invoker, memory);
 
   const result = await orchestrator.run(sampleGoal());
   assertEqual(result.status, "failed", "status failed");
@@ -167,6 +192,20 @@ async function assertInvokerFailureStops(): Promise<void> {
   assertTruthy(
     !invoker.calls.some((call) => String(call.agentId) === "agent-critic"),
     "critic not in invoker calls",
+  );
+
+  const entries = await memory.listByRun(
+    "workspace-a",
+    result.workflowRunId,
+  );
+  const kinds = entries.map((entry) => entry.kind);
+  assertTruthy(kinds.includes("objective"), "objective present on failure");
+  assertTruthy(kinds.includes("step_output"), "completed step_output present");
+  assertTruthy(kinds.includes("handoff"), "handoff before failed invoke");
+  assertEqual(
+    kinds.filter((kind) => kind === "step_output").length,
+    1,
+    "only completed step has step_output",
   );
 }
 

@@ -13,7 +13,7 @@ composition root, and dependency-free validation runners.
 ## Status
 
 **Project 2: CLOSED** (Sprint 37). **Project 3: Active — Role Contract +
-Orchestrator + Handoff Partial** (Sprint 41).
+Orchestrator + Handoff + Shared Memory Partial** (Sprint 42).
 
 | Track | Status |
 |---|---|
@@ -24,6 +24,7 @@ Orchestrator + Handoff Partial** (Sprint 41).
 | Project 3 Multi-Agent Role Contract | Partial (Sprint 39) |
 | Project 3 Workflow Orchestrator | Partial (Sprint 40) |
 | Project 3 Agent Handoff / Delegation | Partial (Sprint 41) |
+| Project 3 Shared Workflow Memory | Partial (Sprint 42) |
 
 Charter capabilities through Operations are Completed. Partial infra adapters
 stay Partial (not Completed). See [`docs/portfolio.md`](docs/portfolio.md),
@@ -231,6 +232,7 @@ See [`docs/architecture.md`](docs/architecture.md) and
 | `pnpm validate:workflow:registry` | InMemoryWorkflowAgentRegistry invariants |
 | `pnpm validate:workflow:orchestrator` | DefaultWorkflowOrchestrator + Fake invoker |
 | `pnpm validate:workflow:handoff` | WorkflowHandoff builder + orchestrator wiring |
+| `pnpm validate:workflow:memory` | InMemoryWorkflowMemoryStore + orchestrator append |
 | `pnpm validate:skeleton` | Directory, barrel, docs, and script integrity |
 | `pnpm typecheck` | TypeScript strict check (`tsc --noEmit`) |
 | `pnpm validate:deployment:readiness` | Static Docker/docs/export readiness (no daemon) |
@@ -246,8 +248,8 @@ Minimized for the platform baseline:
 ## Next
 
 **Project 2 is CLOSED.** **Project 3 — Enterprise AI Workflow — Multi-Agent**
-is **Active — Role Contract + Orchestrator + Handoff Partial**
-(`app/knowledge/workflow`; shared memory still Not Started). By-design
+is **Active — Role Contract + Orchestrator + Handoff + Shared Memory Partial**
+(`app/knowledge/workflow`; Multi-Agent Evaluation still Not Started). By-design
 non-goals (official SDKs, Express/Fastify, full OIDC login, full W3C
 propagator / `prom-client`) remain deferred. See
 [`docs/portfolio.md`](docs/portfolio.md),
