@@ -56,7 +56,7 @@ pnpm validate:workflow:handoff
 pnpm validate:workflow:memory
 pnpm validate:workflow:evaluation
 pnpm validate:application:eval-workflow
-# Preview (Sprint 44 Task 184): pnpm validate:project03:closeout
+pnpm validate:project03:closeout
 ```
 
 ## Local runtime

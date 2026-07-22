@@ -12,8 +12,8 @@ function assertContains(haystack: string, needle: string, message: string): void
 }
 
 /**
- * Static Project 3 charter skeleton: docs + roadmap Active (Charter Skeleton)
- * + Project 2 remains CLOSED. Dependency-free (fs/path only).
+ * Static Project 3 charter skeleton: docs + Active/Closing/CLOSED status
+ * phrases + Project 2 remains CLOSED. Dependency-free (fs/path only).
  * Does not require Multi-Agent product/runtime implementation.
  */
 function main(): void {
@@ -48,10 +48,10 @@ function main(): void {
     instructions.includes("Multi-Agent") || instructions.includes("multi-agent"),
     "PROJECT03_INSTRUCTIONS must mention Multi-Agent",
   );
-  assertContains(
-    instructions,
-    "Status: Active",
-    "PROJECT03_INSTRUCTIONS must declare Status: Active",
+  assertTruthy(
+    instructions.includes("Status: Active") ||
+      instructions.includes("Status: Closed (historical)"),
+    "PROJECT03_INSTRUCTIONS must declare Status: Active or Closed (historical)",
   );
 
   console.log("[project03-charter-skeleton] Checking Project 3 roadmap...");

@@ -14,8 +14,8 @@ function assertContains(haystack: string, needle: string, message: string): void
 /**
  * Static Project 3 closeout: five Partial Multi-Agent capability evidence +
  * docs/scripts/source paths. Dependency-free (fs/path only).
- * Does **not** require Partial → Completed. Formal `Project 3: CLOSED`
- * string assert is strengthened in Sprint 44 Task 185.
+ * Does **not** require Partial → Completed. Asserts `Project 3: CLOSED`
+ * and CLOSED (Partial) on portfolio and roadmap.
  */
 function main(): void {
   const root = process.cwd();
@@ -38,6 +38,16 @@ function main(): void {
   console.log("[project03-closeout] Checking portfolio Partial evidence...");
   const portfolio = readFileSync(path.join(root, "docs/portfolio.md"), "utf8");
   assertContains(portfolio, "Partial", "portfolio must mention Partial");
+  assertContains(
+    portfolio,
+    "Project 3: CLOSED",
+    "portfolio must declare Project 3: CLOSED",
+  );
+  assertTruthy(
+    portfolio.includes("CLOSED (Partial)") ||
+      portfolio.includes("Project 3: CLOSED (Partial)"),
+    "portfolio must declare Project 3 CLOSED (Partial)",
+  );
   assertTruthy(
     portfolio.includes("Multi-Agent") || portfolio.includes("multi-agent"),
     "portfolio must mention Multi-Agent",
@@ -92,9 +102,20 @@ function main(): void {
   assertContains(roadmap, "**Partial**", "roadmap must mark capabilities Partial");
   assertContains(
     roadmap,
+    "Project 3: CLOSED",
+    "roadmap must declare Project 3: CLOSED",
+  );
+  assertContains(
+    roadmap,
+    "CLOSED (Partial)",
+    "roadmap must declare CLOSED (Partial)",
+  );
+  assertContains(
+    roadmap,
     "Project 2 remains CLOSED",
     "roadmap must retain Project 2 CLOSED",
   );
+  assertContains(roadmap, "Sprint 44", "roadmap must include Sprint 44");
 
   console.log("[project03-closeout] Checking package.json scripts...");
   const packageJson = JSON.parse(

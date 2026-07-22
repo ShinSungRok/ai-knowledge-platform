@@ -14,28 +14,29 @@
 이 문서는 프로젝트의 최상위 개발 지시서가 아니며, **Skill 선택·설치·호출·문제 해결이 필요할 때만 참조하는 운영 매뉴얼**이다.
 
 프로젝트 목적, 아키텍처 원칙, 개발 절차, Validation, Commit 규칙은 별도의
-`PROJECT03_INSTRUCTIONS.md`를 따른다. Project 2 헌장
-(`PROJECT02_INSTRUCTIONS.md`)은 Closed (historical)이며, Project 2: CLOSED /
-Partial≠Completed 서술을 되돌리지 않는다.
+`PROJECT03_INSTRUCTIONS.md`를 따른다 (Status: **Closed (historical)** —
+Project 3: CLOSED (Partial)). Project 2 헌장
+(`PROJECT02_INSTRUCTIONS.md`)도 Closed (historical)이며, Project 2: CLOSED /
+Partial≠Completed 서술을 되돌리지 않는다. Project 4 charter
+(`PROJECT04_INSTRUCTIONS`)는 아직 없다 — handoff만 portfolio/roadmap에 있다.
 
 문서 간 우선순위는 다음과 같다.
 
 ```text
-PROJECT03_INSTRUCTIONS.md
+PROJECT03_INSTRUCTIONS.md (Closed historical — Multi-Agent reference)
         ↓
 AGENT_OPERATIONS_GUIDE.md
         ↓
 개별 Task Prompt
 ```
 
-- `PROJECT03_INSTRUCTIONS.md`: 무엇을 만들고 어떤 원칙으로 개발할지 정의 (Active)
+- `PROJECT03_INSTRUCTIONS.md`: Project 3 Multi-Agent charter (Closed historical)
 - `PROJECT02_INSTRUCTIONS.md`: Project 2 historical charter (Closed — 참조만)
 - `AGENT_OPERATIONS_GUIDE.md`: 어떤 Agent Skill을 언제 어떻게 사용할지 정의
 - 개별 Task Prompt: 현재 작업의 구체적인 범위와 완료 조건 정의
 
-일반 작업에서는 `PROJECT03_INSTRUCTIONS.md`만 상시 적용한다. Skill 사용법이 필요할 때만 이 문서를 읽는다.
-
-Skill 사용 결과가 프로젝트 지시서와 충돌하면 항상 `PROJECT03_INSTRUCTIONS.md`를 우선한다.
+Skill 사용법이 필요할 때만 이 문서를 읽는다. Skill 결과가 Project 3
+Closed/Partial 서술과 충돌하면 CLOSED (Partial)를 보존한다.
 Project 2 CLOSED 서술과 충돌하면 Project 2 CLOSED를 보존한다.
 
 ---
@@ -132,7 +133,7 @@ Commit 후 추가 구현을 하지 말고 즉시 멈춰라.
 Skill의 역할은 다음처럼 구분한다.
 
 ```text
-프로젝트 규칙    → PROJECT03_INSTRUCTIONS.md (Active; PROJECT02 = historical Closed)
+프로젝트 규칙    → PROJECT03_INSTRUCTIONS.md (Closed historical; PROJECT02 = Closed)
 개발 프로세스    → superpowers / gstack
 코드 양과 복잡도 → ponytail
 응답 길이        → caveman

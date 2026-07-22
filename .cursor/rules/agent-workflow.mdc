@@ -9,8 +9,11 @@ alwaysApply: true
 다음 문서를 먼저 읽어라.
 
 1. `docs/agent/PROJECT03_INSTRUCTIONS.md`
-   - Project 3(Enterprise AI Workflow — Multi-Agent)의 **최상위** 개발 헌장이다.
+   - Project 3(Enterprise AI Workflow — Multi-Agent) 헌장이다.
+     **Status: Closed (historical)** — Project 3: CLOSED (Partial).
    - Architecture, Reuse, Validation, Commit, Stop 규칙을 적용하라.
+   - 신규 제품 작업은 Project 4 charter가 마련될 때까지 Project 3를
+     Active로 재개하지 마라. PROJECT04_INSTRUCTIONS는 아직 없다.
 
 2. `docs/agent/AGENT_OPERATIONS_GUIDE.md`
    - Agent 역할, Skill 선택 또는 Skill 사용법이 필요한 경우에만 관련 부분을 읽어라.
@@ -18,7 +21,7 @@ alwaysApply: true
 
 3. `docs/agent/PROJECT02_INSTRUCTIONS.md` (historical)
    - Project 2: CLOSED. 충돌 시 Project 2 CLOSED / Partial≠Completed 서술을
-     되돌리지 마라. 신규 작업의 상위 헌장은 PROJECT03이다.
+     되돌리지 마라.
 
 문서를 읽은 후 현재 역할을 명확히 구분하라.
 
