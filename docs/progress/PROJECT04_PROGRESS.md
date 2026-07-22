@@ -207,3 +207,27 @@ Update Project 4 roadmap/portfolio for Run Tracking Partial
 
 **Status**
 Completed
+
+## Task 194
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Define Prompt and Model registry contract
+
+**Summary**
+- Added PromptTemplate/Version and Model/Version ids, records, and registry ports
+- Soft-link note: run params may store promptVersionId/modelVersionId later
+- Barrel exports; no InMemory adapters yet; ExperimentRunStore unchanged
+
+**Validation**
+- `pnpm validate:llmops:contract`
+- `pnpm validate:llmops:run-store`
+- `pnpm typecheck`
+
+**Status**
+Completed

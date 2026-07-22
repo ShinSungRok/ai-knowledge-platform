@@ -298,8 +298,29 @@ export type {
   ExperimentRunCreateInput,
   ExperimentRunUpdateStatusInput,
   ExperimentRunStore,
+  PromptTemplateId,
+  PromptVersionId,
+  PromptTemplateRecord,
+  PromptVersionRecord,
+  PromptTemplateRegisterInput,
+  PromptVersionRegisterInput,
+  PromptRegistry,
+  ModelId,
+  ModelVersionId,
+  ModelRecord,
+  ModelVersionRecord,
+  ModelRegisterInput,
+  ModelVersionRegisterInput,
+  ModelRegistry,
 } from "./llmops";
-export { asExperimentId, asExperimentRunId } from "./llmops";
+export {
+  asExperimentId,
+  asExperimentRunId,
+  asPromptTemplateId,
+  asPromptVersionId,
+  asModelId,
+  asModelVersionId,
+} from "./llmops";
 export {
   InMemoryExperimentRunStore,
   DefaultExperimentRunStore,
