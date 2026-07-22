@@ -51,3 +51,27 @@ Add Project 3 Progress Log and Roadmap stubs
 **Status**
 Completed
 
+## Task 160
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Point agent operations at Project 3 charter
+
+**Summary**
+- Updated `.cursor/rules/agent-workflow.mdc` to read PROJECT03 first
+- Updated `AGENT_OPERATIONS_GUIDE.md` priority to PROJECT03 (PROJECT02 historical Closed)
+- Documented PROJECT03 Progress/Roadmap paths in `docs/development.md`
+
+**Validation**
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+

@@ -1,19 +1,24 @@
 ---
-description: "새로운 Task를 시작하거나 Planning/Developer Agent 역할로 작업할 때 적용하는 Project 2 워크플로"
+description: "새로운 Task를 시작하거나 Planning/Developer Agent 역할로 작업할 때 적용하는 Project 3 워크플로"
 alwaysApply: true
 ---
 
 # Agent Workflow & Roles
 
-새로운 기능, 버그 수정, 설계 변경 등 의미 있는 Task를 시작하기 전에 다음 문서를 먼저 읽어라.
+새로운 기능, 버그 수정, 설계 변경 등 의미 있는 Sprint/Task를 시작하기 전에
+다음 문서를 먼저 읽어라.
 
-1. `docs/agent/PROJECT02_INSTRUCTIONS.md`
-   - Project 2의 최상위 개발 원칙이다.
+1. `docs/agent/PROJECT03_INSTRUCTIONS.md`
+   - Project 3(Enterprise AI Workflow — Multi-Agent)의 **최상위** 개발 헌장이다.
    - Architecture, Reuse, Validation, Commit, Stop 규칙을 적용하라.
 
 2. `docs/agent/AGENT_OPERATIONS_GUIDE.md`
    - Agent 역할, Skill 선택 또는 Skill 사용법이 필요한 경우에만 관련 부분을 읽어라.
-   - 일반적인 Task에서는 전체 문서를 불필요하게 읽지 마라.
+   - 일반적인 Sprint에서는 전체 문서를 불필요하게 읽지 마라.
+
+3. `docs/agent/PROJECT02_INSTRUCTIONS.md` (historical)
+   - Project 2: CLOSED. 충돌 시 Project 2 CLOSED / Partial≠Completed 서술을
+     되돌리지 마라. 신규 작업의 상위 헌장은 PROJECT03이다.
 
 문서를 읽은 후 현재 역할을 명확히 구분하라.
 
@@ -21,27 +26,55 @@ alwaysApply: true
 
 - Repository와 기존 구현을 먼저 분석하라.
 - 직접 코드를 수정하지 마라.
-- 재사용 후보와 Architecture 영향을 검토하라.
-- Task 범위, Validation, Definition of Done을 정의하라.
-- Developer Agent가 실행할 구체적인 Prompt를 작성한 뒤 멈춰라.
+- Roadmap Mapping을 통해 완료, 부분 구현, 미구현 Capability를 판단하라.
+- 현재 Platform Gap과 Architecture 영향을 검토하라.
+- 하나의 Platform Capability를 기준으로 Sprint Goal을 정의하라.
+- Sprint는 Sprint Goal을 달성하기 위한 3~5개의 연관된 Task로 구성하라.
+- 서로 다른 Platform Capability를 하나의 Sprint에 혼합하지 마라.
+- 각 Task의 범위, Validation, Definition of Done을 정의하라.
+- Sprint 내 Task 순서와 선행 관계를 명확히 정의하라.
+- `docs/agent/AGENT_OPERATIONS_GUIDE.md`에 정의된
+  Developer Agent Sprint 작업 지시서 필수 형식에 따라
+  구조화된 Prompt를 작성한 뒤 멈춰라.
+- 단일 서술형 문단으로 Sprint 작업 지시서를 작성하지 마라.
+- 모호한 선택지와 Repository에서 검증되지 않은 사실을 포함하지 마라.
+- Planning 단계에서 예상 Completion Report를 작성하지 마라.
 
 ## Developer Agent
 
-- 승인된 Planning 결과를 먼저 검토하라.
+- 승인된 Sprint Planning 결과를 먼저 검토하라.
+- Sprint Goal, Task 순서, Architecture Constraints를 변경하지 마라.
 - 기존 구현과 추상화를 우선 재사용하라.
-- 승인된 Task 범위만 구현하라.
-- 관련 Validation과 Diff Review를 수행하라.
-- 검증 성공 후 Commit하고 즉시 멈춰라.
+- 승인된 Sprint 범위만 구현하라.
+- Sprint의 첫 번째 미완료 Task부터 순서대로 수행하라.
+- 각 Task 완료 후 관련 Validation과 Diff Review를 수행하라.
+- 각 Task의 검증 성공 후 해당 Task만 Commit하라.
+- Commit 완료 후 Sprint에 남은 다음 Task를 자동으로 수행하라.
+- Sprint의 모든 Task가 완료될 때까지 중간에 멈추지 마라.
+- Architecture 변경, 범위 확장 또는 선행 Task 수정이 필요하면 임의로 변경하지 말고 문제를 보고한 뒤 멈춰라.
+- 모든 Task 완료 후 전체 Validation과 최종 Diff Review를 수행하라.
+- Sprint Report를 작성한 뒤 멈춰라.
 
-모든 작업은 다음 순서를 따른다.
+모든 Sprint 작업은 다음 순서를 따른다.
 
-Review
+Sprint Review
+→ Repository Review
 → Reuse
-→ Design
+→ Design 확인
+→ 첫 번째 미완료 Task 선택
 → Implement
-→ Validate
-→ Diff Review
-→ Commit
+→ Task Validation
+→ Task Diff Review
+→ Task Commit
+→ 다음 미완료 Task 수행
+→ Sprint 전체 Validation
+→ Sprint 전체 Diff Review
+→ Sprint Report
 → Stop
+
+각 Task의 Commit 이후 Sprint에 남은 Task가 있으면 Stop하지 마라.
+
+Sprint Goal 변경, Architecture 변경, 승인 범위 밖 구현이 필요하면
+다음 Task로 진행하지 말고 문제를 보고한 뒤 Stop하라.
 
 위 절차를 확인하기 전에는 코드를 작성하거나 수정하지 마라.

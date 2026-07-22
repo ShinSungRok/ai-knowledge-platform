@@ -154,12 +154,22 @@ phases. Prefer validation runners for architectural and contract checks.
 
 ## 3. Sprint / Task validation flow
 
+**Project 3 (Active):** Progress Log entries go under
+`docs/progress/PROJECT03_PROGRESS.md`. Roadmap status lives in
+`docs/progress/PROJECT03_ROADMAP_STATUS.md`. Charter:
+`docs/agent/PROJECT03_INSTRUCTIONS.md`.
+
+**Project 2 (CLOSED):** Historical Progress/Roadmap remain under
+`docs/progress/PROJECT02_*`. Do not reopen Project 2 tracks.
+
 For each approved Sprint Task:
 
 1. Review the listed files before editing.
 2. Implement only the Task scope (reuse first).
 3. Run the Task's listed `pnpm validate:*` commands, then `pnpm typecheck`.
-4. Append a Progress Log entry under `docs/progress/PROJECT02_PROGRESS.md`.
+4. Append a Progress Log entry under `docs/progress/PROJECT03_PROGRESS.md`
+   (Project 3 work) or the historical PROJECT02 log only when documenting
+   Project 2 closeout history.
 5. Diff-review in-scope files, then commit that Task alone.
 
 After all Sprint Tasks: run `pnpm validate`, write the Sprint Report, and stop.
