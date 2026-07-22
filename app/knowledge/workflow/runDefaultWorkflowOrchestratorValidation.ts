@@ -1,4 +1,5 @@
 import { asWorkflowAgentId } from "./WorkflowAgentId";
+import { DefaultWorkflowHandoffBuilder } from "./DefaultWorkflowHandoffBuilder";
 import { DefaultWorkflowOrchestrator } from "./DefaultWorkflowOrchestrator";
 import { DeterministicWorkflowPlanner } from "./DeterministicWorkflowPlanner";
 import { FakeWorkflowAgentInvoker } from "./FakeWorkflowAgentInvoker";
@@ -83,7 +84,12 @@ function buildOrchestrator(
   invoker: FakeWorkflowAgentInvoker,
 ): WorkflowOrchestrator {
   const planner: WorkflowPlanner = new DeterministicWorkflowPlanner(registry);
-  return new DefaultWorkflowOrchestrator(planner, registry, invoker);
+  return new DefaultWorkflowOrchestrator(
+    planner,
+    registry,
+    invoker,
+    new DefaultWorkflowHandoffBuilder(),
+  );
 }
 
 async function assertSuccessfulRun(): Promise<void> {
@@ -107,14 +113,33 @@ async function assertSuccessfulRun(): Promise<void> {
     "agent-researcher,agent-synthesizer,agent-critic",
     "deterministic invoker call order",
   );
-  for (const step of result.stepResults) {
-    assertEqual(step.status, "completed", `${step.stepId} completed`);
-    assertEqual(
-      step.output,
-      `echo:${step.role}:summarize the policy`,
-      `${step.stepId} echo output`,
-    );
-  }
+
+  const objective = "summarize the policy";
+  const step0Out = `echo:researcher:${objective}`;
+  const step1Out = `echo:synthesizer:${step0Out}`;
+  const step2Out = `echo:critic:${step1Out}`;
+
+  assertEqual(invoker.calls[0]?.input, objective, "step0 uses objective");
+  assertEqual(invoker.calls[1]?.input, step0Out, "step1 uses handoff payload");
+  assertEqual(invoker.calls[2]?.input, step1Out, "step2 uses handoff payload");
+  assertEqual(result.stepResults[0]?.output, step0Out, "step0 output");
+  assertEqual(result.stepResults[1]?.output, step1Out, "step1 output");
+  assertEqual(result.stepResults[2]?.output, step2Out, "step2 output");
+  assertEqual(
+    result.stepResults[0]?.handoff,
+    undefined,
+    "step0 has no handoff",
+  );
+  assertEqual(
+    result.stepResults[1]?.handoff?.kind,
+    "sequential",
+    "step1 sequential handoff",
+  );
+  assertEqual(
+    result.stepResults[2]?.handoff?.kind,
+    "sequential",
+    "step2 sequential handoff",
+  );
 }
 
 async function assertInvokerFailureStops(): Promise<void> {
@@ -165,6 +190,7 @@ async function assertMissingAgentFails(): Promise<void> {
     planner,
     registry,
     invoker,
+    new DefaultWorkflowHandoffBuilder(),
   );
   const result = await orchestrator.run(sampleGoal());
   assertEqual(result.status, "failed", "missing agent → failed");
@@ -202,6 +228,7 @@ async function assertRoleMismatchFails(): Promise<void> {
     planner,
     registry,
     invoker,
+    new DefaultWorkflowHandoffBuilder(),
   );
   const result = await orchestrator.run(sampleGoal());
   assertEqual(result.status, "failed", "role mismatch → failed");

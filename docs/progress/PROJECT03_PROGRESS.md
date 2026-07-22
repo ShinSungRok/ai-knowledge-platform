@@ -336,3 +336,26 @@ Add WorkflowHandoffBuilder and DefaultWorkflowHandoffBuilder
 
 **Status**
 Completed
+
+## Task 172
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Wire handoff into DefaultWorkflowOrchestrator
+
+**Summary**
+- Required handoffBuilder on DefaultWorkflowOrchestrator
+- Step 0 uses planned input; later steps use handoff payload and record handoff
+- Updated orchestrator validation for handoff chain inputs/outputs
+
+**Validation**
+- `pnpm typecheck`
+- `pnpm validate:workflow:orchestrator`
+
+**Status**
+Completed
