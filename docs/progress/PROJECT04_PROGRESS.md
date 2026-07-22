@@ -253,3 +253,31 @@ Add InMemory PromptRegistry and ModelRegistry
 
 **Status**
 Completed
+
+## Task 196
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add registry validation runners
+
+**Summary**
+- Added runPromptRegistryValidation and runModelRegistryValidation
+- Wired validate:llmops:prompt-registry and validate:llmops:model-registry into pnpm validate
+- Covers happy path, duplicates, isolation, defensive copies; run-store remains green
+
+**Validation**
+- `pnpm validate:llmops:prompt-registry`
+- `pnpm validate:llmops:model-registry`
+- `pnpm validate:llmops:run-store`
+- `pnpm validate:project04:charter-skeleton`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed
