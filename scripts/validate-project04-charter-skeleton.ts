@@ -63,8 +63,11 @@ function main(): void {
   assertContains(roadmap, "Sprint 45", "PROJECT04 roadmap must include Sprint 45");
   assertTruthy(
     roadmap.includes("Active (Charter Skeleton)") ||
-      roadmap.includes("Active — Experiment / Run Tracking Partial"),
-    "PROJECT04 roadmap must declare Active (Charter Skeleton) or Active — Experiment / Run Tracking Partial",
+      roadmap.includes("Active — Experiment / Run Tracking Partial") ||
+      roadmap.includes(
+        "Active — Run Tracking + Prompt & Model Registry Partial",
+      ),
+    "PROJECT04 roadmap must declare an Active charter/Partial status phrase",
   );
   assertContains(
     roadmap,

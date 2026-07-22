@@ -281,3 +281,30 @@ Add registry validation runners
 
 **Status**
 Completed
+
+## Task 197
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Update roadmap/portfolio for Registry Partial
+
+**Summary**
+- Roadmap: Active — Run Tracking + Prompt & Model Registry Partial; Sprint 47 close note
+- Portfolio/README: registry Partial evidence; Gates/Serving/Observability Not Started
+- Charter-skeleton allows new Active Partial phrase; Partial≠Completed; P2/P3 CLOSED
+
+**Validation**
+- `pnpm validate:llmops:prompt-registry`
+- `pnpm validate:llmops:model-registry`
+- `pnpm validate:project04:charter-skeleton`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed
