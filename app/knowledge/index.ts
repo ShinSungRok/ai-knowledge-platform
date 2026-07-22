@@ -289,6 +289,17 @@ export { InMemoryJobStore } from "./jobs";
 export { SyncKnowledgeSourceJobHandler } from "./jobs";
 export { DefaultJobProcessor } from "./jobs";
 export { ReindexKnowledgeSourceJobHandler } from "./jobs";
+export { KNOWLEDGE_MODULE_LLMOPS } from "./llmops";
+export type {
+  ExperimentId,
+  ExperimentRunId,
+  ExperimentRunStatus,
+  ExperimentRunRecord,
+  ExperimentRunCreateInput,
+  ExperimentRunUpdateStatusInput,
+  ExperimentRunStore,
+} from "./llmops";
+export { asExperimentId, asExperimentRunId } from "./llmops";
 export { KNOWLEDGE_MODULE_API } from "./api";
 export {
   HealthController,

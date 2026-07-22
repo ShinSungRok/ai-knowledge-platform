@@ -106,3 +106,27 @@ Add Project 4 charter-skeleton validator and portfolio Active status
 
 **Status**
 Completed
+
+## Task 190
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Define llmops module and Experiment/Run contract
+
+**Summary**
+- Added app/knowledge/llmops with ExperimentId/RunId, status, record, store port
+- Barrel + top-level export + skeleton module list + modules.md row
+- Distinct from JobStore and WorkflowRunId; no InMemory adapter yet
+
+**Validation**
+- `pnpm validate:project04:charter-skeleton`
+- `pnpm typecheck`
+- `pnpm validate:skeleton`
+
+**Status**
+Completed
