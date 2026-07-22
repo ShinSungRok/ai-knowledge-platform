@@ -43,3 +43,10 @@ Project 2 stay Partial — not Completed. Do not reopen Project 2 tracks.
 | Range | Scope |
 |---|---|
 | Sprint 38 (Task 158–161) | Establish Project 3 Charter Skeleton (PROJECT03 instructions, Progress/Roadmap stubs, agent ops pointers, static skeleton validator) |
+
+## Sprint 38 close note
+
+**Sprint 38 — Establish Project 3 Charter Skeleton: CLOSED.** Tasks 158–161
+delivered Active charter docs, Progress/Roadmap stubs, agent ops pointers to
+PROJECT03, and `pnpm validate:project03:charter-skeleton`. Multi-Agent product
+capabilities remain **Not Started**. Project 2 remains **CLOSED**.

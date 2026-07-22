@@ -12,17 +12,23 @@ composition root, and dependency-free validation runners.
 
 ## Status
 
-**Project 2: CLOSED** (Sprint 37 final closeout / Project 3 handoff).
+**Project 2: CLOSED** (Sprint 37). **Project 3: Active (Charter Skeleton)**
+(Sprint 38) — Multi-Agent product features remain Not Started.
 
 | Track | Status |
 |---|---|
 | Charter Platform Baseline | CLOSED (Sprint 20) |
 | Post-baseline Infrastructure | CLOSED (Partial) (Sprint 31) |
 | Nested Deferral Expansion | CLOSED (Partial) (Sprint 36) |
+| Project 3 Charter Skeleton | Active (Sprint 38) |
 
 Charter capabilities through Operations are Completed. Partial infra adapters
-stay Partial (not Completed). See [`docs/portfolio.md`](docs/portfolio.md) and
-[`docs/progress/PROJECT02_ROADMAP_STATUS.md`](docs/progress/PROJECT02_ROADMAP_STATUS.md).
+stay Partial (not Completed). See [`docs/portfolio.md`](docs/portfolio.md),
+[`docs/progress/PROJECT02_ROADMAP_STATUS.md`](docs/progress/PROJECT02_ROADMAP_STATUS.md),
+and Project 3 docs:
+[`docs/agent/PROJECT03_INSTRUCTIONS.md`](docs/agent/PROJECT03_INSTRUCTIONS.md),
+[`docs/progress/PROJECT03_PROGRESS.md`](docs/progress/PROJECT03_PROGRESS.md),
+[`docs/progress/PROJECT03_ROADMAP_STATUS.md`](docs/progress/PROJECT03_ROADMAP_STATUS.md).
 
 Default `pnpm validate` remains **dependency-free** (Fake / in-memory /
 SqlVectorIndex — no Docker, network, or API keys required).
@@ -34,6 +40,7 @@ pnpm validate:project:closeout
 pnpm validate:project:post-baseline-closeout
 pnpm validate:project:nested-expansion-closeout
 pnpm validate:project:final-closeout
+pnpm validate:project03:charter-skeleton
 ```
 
 ## Local runtime
@@ -216,6 +223,7 @@ See [`docs/architecture.md`](docs/architecture.md) and
 | `pnpm validate:project:post-baseline-closeout` | Static Sprints 21–30 Partial infra evidence closeout |
 | `pnpm validate:project:nested-expansion-closeout` | Static Sprints 32–35 nested expansion evidence closeout |
 | `pnpm validate:project:final-closeout` | Static Project 2 CLOSED + Project 3 handoff closeout |
+| `pnpm validate:project03:charter-skeleton` | Static Project 3 Active (Charter Skeleton) docs closeout |
 | `pnpm validate:skeleton` | Directory, barrel, docs, and script integrity |
 | `pnpm typecheck` | TypeScript strict check (`tsc --noEmit`) |
 | `pnpm validate:deployment:readiness` | Static Docker/docs/export readiness (no daemon) |
@@ -230,9 +238,10 @@ Minimized for the platform baseline:
 
 ## Next
 
-**Project 2 is CLOSED.** Handoff is to **Project 3 — Enterprise AI Workflow —
-Multi-Agent** (outside this repo’s active Project 2 charter). By-design
-non-goals (official SDKs, Express/Fastify, full OIDC login, full W3C
+**Project 2 is CLOSED.** **Project 3 — Enterprise AI Workflow — Multi-Agent**
+is **Active (Charter Skeleton)**; product Multi-Agent features are Not Started.
+By-design non-goals (official SDKs, Express/Fastify, full OIDC login, full W3C
 propagator / `prom-client`) remain deferred. See
-[`docs/portfolio.md`](docs/portfolio.md) § Project 2 CLOSED and Project 3
-handoff, and [`docs/development.md`](docs/development.md).
+[`docs/portfolio.md`](docs/portfolio.md),
+[`docs/agent/PROJECT03_INSTRUCTIONS.md`](docs/agent/PROJECT03_INSTRUCTIONS.md),
+and [`docs/development.md`](docs/development.md).

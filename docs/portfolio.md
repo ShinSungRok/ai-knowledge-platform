@@ -26,12 +26,14 @@ remain out of Project 2.
 
 Default `pnpm validate` stays **dependency-free** (Fake / in-memory adapters).
 
-## 1c. Project 3 handoff — Enterprise AI Workflow (Multi-Agent)
+## 1c. Project 3 — Enterprise AI Workflow (Multi-Agent)
 
-**Next:** Project 3 — Enterprise AI Workflow — Multi-Agent (outside this
-repo’s active Project 2 charter).
+**Project 3: Active (Charter Skeleton).** Charter docs, Progress/Roadmap stubs,
+agent ops pointers, and `pnpm validate:project03:charter-skeleton` are in place.
+Product Multi-Agent features (roles, workflow orchestration, handoff/delegation,
+shared workflow memory, multi-agent evaluation) are **Not Started**.
 
-**Handoff / reuse from Project 2:**
+**Reuse from Project 2:**
 
 - Clean / Hexagonal / DDD module boundaries and a single composition root
 - MCP tool registry, tool calling, agent planner→execute→review, session memory
@@ -39,9 +41,14 @@ repo’s active Project 2 charter).
 - Partial infra adapters (Postgres, OpenSearch, HTTP LLM, OTLP, JWT OIDC-lite,
   Prometheus scrape, MCP HTTP + stdio) as optional Fake-validated paths
 
-**Not in Project 2 scope (remain Project 2 non-goals or later productization):**
+**Still out of scope for this skeleton (and Project 2 non-goals):**
 official SDKs, Express/Fastify, full OIDC authorization-code login, full W3C
-propagator suite / `prom-client`, and Project 3 multi-agent workflow features.
+propagator suite / `prom-client`, and implementing Multi-Agent product/runtime
+features.
+
+Active charter: [`docs/agent/PROJECT03_INSTRUCTIONS.md`](agent/PROJECT03_INSTRUCTIONS.md).
+Progress / roadmap: [`docs/progress/PROJECT03_PROGRESS.md`](progress/PROJECT03_PROGRESS.md),
+[`docs/progress/PROJECT03_ROADMAP_STATUS.md`](progress/PROJECT03_ROADMAP_STATUS.md).
 
 ## 1d. Project sequence
 
@@ -49,7 +56,7 @@ propagator suite / `prom-client`, and Project 3 multi-agent workflow features.
 |---|---|---|
 | Project 1 | Public Law AI — Grounded RAG | Complete (separate repo) |
 | Project 2 | AI Knowledge Platform — Knowledge + MCP + Agent | **CLOSED** |
-| Project 3 | Enterprise AI Workflow — Multi-Agent | Next (handoff) |
+| Project 3 | Enterprise AI Workflow — Multi-Agent | **Active (Charter Skeleton)** |
 | Project 4 | Enterprise LLMOps Platform | Future |
 
 Project 2 delivers a **completed platform baseline**: workspace-scoped

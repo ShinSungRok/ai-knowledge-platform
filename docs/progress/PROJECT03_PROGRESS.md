@@ -57,7 +57,7 @@ Completed
 2026-07-22
 
 **Commit**
-Pending
+b0123fc
 
 **Title**
 Point agent operations at Project 3 charter
@@ -69,6 +69,32 @@ Point agent operations at Project 3 charter
 
 **Validation**
 - `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
+
+## Task 161
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add Project 3 charter-skeleton validator and portfolio Active status
+
+**Summary**
+- Added `scripts/validate-project03-charter-skeleton.ts` and `pnpm validate:project03:charter-skeleton`
+- Included script in top-level `pnpm validate` (after final-closeout)
+- Set portfolio / README Project 3 to Active (Charter Skeleton); Multi-Agent Not Started
+- Recorded Sprint 38 close note on PROJECT03 roadmap
+
+**Validation**
+- `pnpm validate:project:final-closeout`
+- `pnpm validate:project03:charter-skeleton`
 - `pnpm typecheck`
 - `pnpm validate`
 
