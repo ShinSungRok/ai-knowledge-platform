@@ -61,10 +61,10 @@ function main(): void {
     "utf8",
   );
   assertContains(roadmap, "Sprint 45", "PROJECT04 roadmap must include Sprint 45");
-  assertContains(
-    roadmap,
-    "Active (Charter Skeleton)",
-    "PROJECT04 roadmap must declare Active (Charter Skeleton)",
+  assertTruthy(
+    roadmap.includes("Active (Charter Skeleton)") ||
+      roadmap.includes("Active — Experiment / Run Tracking Partial"),
+    "PROJECT04 roadmap must declare Active (Charter Skeleton) or Active — Experiment / Run Tracking Partial",
   );
   assertContains(
     roadmap,

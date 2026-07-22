@@ -1,58 +1,69 @@
 # Project 4 Roadmap Status
 
 > Enterprise LLMOps Platform  
-> **Active (Charter Skeleton)** — Sprint 45
+> **Active — Experiment / Run Tracking Partial** — Sprint 46
 
 ## Status
 
-**Active (Charter Skeleton).** Project 4 Enterprise LLMOps Platform charter
-docs and static skeleton validation are in progress. No LLMOps product/runtime
-modules in this Sprint.
+**Active — Experiment / Run Tracking Partial.** `app/knowledge/llmops`
+Experiment / Run Tracking is Fake/InMemory-proven (**Partial**, not Completed).
+Prompt & Model Registry, Evaluation Gates, Deployment / Serving, and LLMOps
+Observability remain **Not Started**.
 
 **Project 2 remains CLOSED** (Sprint 37). **Project 3 remains CLOSED
 (Partial)** (Sprint 44). Do not reopen Project 2/3 tracks.
-**Partial ≠ Completed** for Project 2 infra adapters and Project 3 Multi-Agent
-capabilities.
+**Partial ≠ Completed** for Project 2 infra adapters, Project 3 Multi-Agent
+capabilities, and Project 4 Experiment / Run Tracking.
 
 ## Reuse from Project 2 / Project 3
 
 - Clean / Hexagonal / DDD modules and composition-only wiring
-- `app/knowledge/evaluation` — RAG / run evaluators (gates harness base)
-- `app/knowledge/observability` — OTLP / metrics boundaries
-- `app/knowledge/jobs` — background / batch job boundaries
+- `app/knowledge/jobs` — JobStore / InMemoryJobStore pattern (not replaced)
+- `app/knowledge/evaluation` — RAG / run evaluators (gates harness base; not extended yet)
+- `app/knowledge/observability` — OTLP / metrics boundaries (not extended yet)
 - `app/knowledge/ai` — HTTP LLM + Fake LLM paths
 - `app/knowledge/composition` — composition root
 - `app/knowledge/workflow` — Project 3 Multi-Agent workflow (Partial)
 - `app/knowledge/application` — use cases over ports
 - Dependency-free `tsx` validation runners and Project 2/3 closeout validators
 
-## Charter capabilities (planned)
+## Charter capabilities
 
 | Capability | Status | Notes |
 |---|---|---|
-| Experiment / Run Tracking | **Not Started** | Documented in PROJECT04_INSTRUCTIONS only |
-| Prompt & Model Registry | **Not Started** | Documented in PROJECT04_INSTRUCTIONS only |
-| Evaluation Gates / Regression Harness | **Not Started** | Extend existing evaluators; no LLM-as-judge in skeleton |
-| Deployment / Serving Configuration | **Not Started** | Documented in PROJECT04_INSTRUCTIONS only |
-| LLMOps Observability | **Not Started** | Build on OTLP/metrics; official SDK still deferred |
+| Experiment / Run Tracking | **Partial** | `llmops` store + `pnpm validate:llmops:contract` / `validate:llmops:run-store` |
+| Prompt & Model Registry | **Not Started** | Deferred |
+| Evaluation Gates / Regression Harness | **Not Started** | Extend existing evaluators later; no LLM-as-judge required yet |
+| Deployment / Serving Configuration | **Not Started** | Deferred |
+| LLMOps Observability | **Not Started** | Build on OTLP/metrics later; official SDK still deferred |
 
-## Remaining by design (skeleton phase)
+## Remaining by design
 
-- Implementing any LLMOps product/runtime features in Sprint 45
+- Prompt & Model Registry / Gates / Serving / Observability product code
+- Promoting Experiment / Run Tracking Partial → Completed
 - Reopening Project 2 CLOSED or Project 3 CLOSED (Partial)
-- Promoting Partial → Completed
 - Express/Fastify, full OIDC login, official vendor LLMOps SaaS SDKs as hard deps
+- SQL/Postgres ExperimentRunStore / HTTP composition API for runs
 
 ## Task range
 
 | Range | Scope |
 |---|---|
 | Sprint 45 (Task 186–189) | Establish Project 4 Charter Skeleton |
+| Sprint 46 (Task 190–193) | Establish Experiment / Run Tracking (Partial) |
 
 ## Sprint 45 close note
 
 **Sprint 45 — Establish Project 4 Charter Skeleton: complete.** Tasks 186–189
 added PROJECT04 Active charter, Progress/Roadmap stubs, agent-ops pointers, and
-`pnpm validate:project04:charter-skeleton`. Five LLMOps capabilities remain
-**Not Started** (no product runtime). Project 2 remains **CLOSED**. Project 3
-remains **CLOSED (Partial)**.
+`pnpm validate:project04:charter-skeleton`. Five LLMOps capabilities started as
+**Not Started**. Project 2 remains **CLOSED**. Project 3 remains **CLOSED
+(Partial)**.
+
+## Sprint 46 close note
+
+**Sprint 46 — Establish Experiment / Run Tracking: Partial.** Tasks 190–193
+added `llmops` Experiment/Run contract, `InMemoryExperimentRunStore`, and
+dependency-free validators. Experiment / Run Tracking is **Partial** (not
+Completed). Other four capabilities remain **Not Started**. Project 2 remains
+**CLOSED**. Project 3 remains **CLOSED (Partial)**.

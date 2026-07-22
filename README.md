@@ -14,8 +14,8 @@ composition root, and dependency-free validation runners.
 
 **Project 2: CLOSED** (Sprint 37). **Project 3: CLOSED (Partial)** (Sprint 44
 closeout; five charter capabilities each Partial — none Completed).
-**Project 4: Active (Charter Skeleton)** (Sprint 45 — Enterprise LLMOps; no
-product runtime yet).
+**Project 4: Active — Experiment / Run Tracking Partial** (Sprint 46 —
+`llmops` store + validators; other LLMOps caps Not Started).
 
 | Track | Status |
 |---|---|
@@ -29,7 +29,8 @@ product runtime yet).
 | Project 3 Shared Workflow Memory | Partial (Sprint 42) |
 | Project 3 Multi-Agent Evaluation | Partial (Sprint 43) |
 | Project 3 overall | CLOSED (Partial) (Sprint 44) |
-| Project 4 Charter Skeleton | Active (Sprint 45) |
+| Project 4 Charter Skeleton | CLOSED (Sprint 45) |
+| Project 4 Experiment / Run Tracking | Partial (Sprint 46) |
 
 Charter capabilities through Operations are Completed. Partial infra adapters
 and Project 3 Multi-Agent capabilities stay Partial (not Completed). See
@@ -65,6 +66,8 @@ pnpm validate:workflow:evaluation
 pnpm validate:application:eval-workflow
 pnpm validate:project03:closeout
 pnpm validate:project04:charter-skeleton
+pnpm validate:llmops:contract
+pnpm validate:llmops:run-store
 ```
 
 ## Local runtime

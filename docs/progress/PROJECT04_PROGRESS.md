@@ -179,3 +179,31 @@ Add contract and store validation runners
 
 **Status**
 Completed
+
+## Task 193
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Update Project 4 roadmap/portfolio for Run Tracking Partial
+
+**Summary**
+- Roadmap: Active — Experiment / Run Tracking Partial; Sprint 46 close note
+- Portfolio/README: Partial evidence for llmops validators
+- Charter-skeleton validator allows Active — … Partial phrase
+- Other four capabilities remain Not Started; Partial≠Completed; P2/P3 CLOSED
+
+**Validation**
+- `pnpm validate:llmops:contract`
+- `pnpm validate:llmops:run-store`
+- `pnpm validate:project04:charter-skeleton`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed
