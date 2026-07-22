@@ -335,3 +335,25 @@ Define Evaluation Gate and Regression Harness contracts
 
 **Status**
 Completed
+
+## Task 199
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add DefaultEvaluationGateEvaluator and DefaultRegressionHarness
+
+**Summary**
+- DefaultEvaluationGateEvaluator: gte/lte/eq, missing metric fails, empty rules throw
+- DefaultRegressionHarness: higher-is-better, tolerance, missing candidate=0
+- Barrel exports; no HTTP/SQL/composition wiring
+
+**Validation**
+- `pnpm typecheck`
+
+**Status**
+Completed

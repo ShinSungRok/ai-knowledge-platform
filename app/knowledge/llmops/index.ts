@@ -86,3 +86,5 @@ export type {
   RegressionHarnessInput,
   RegressionHarness,
 } from "./RegressionHarness";
+export { DefaultEvaluationGateEvaluator } from "./DefaultEvaluationGateEvaluator";
+export { DefaultRegressionHarness } from "./DefaultRegressionHarness";

@@ -341,6 +341,8 @@ export {
   DefaultPromptRegistry,
   InMemoryModelRegistry,
   DefaultModelRegistry,
+  DefaultEvaluationGateEvaluator,
+  DefaultRegressionHarness,
 } from "./llmops";
 export { KNOWLEDGE_MODULE_API } from "./api";
 export {
