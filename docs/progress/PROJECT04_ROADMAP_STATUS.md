@@ -48,3 +48,11 @@ capabilities.
 | Range | Scope |
 |---|---|
 | Sprint 45 (Task 186–189) | Establish Project 4 Charter Skeleton |
+
+## Sprint 45 close note
+
+**Sprint 45 — Establish Project 4 Charter Skeleton: complete.** Tasks 186–189
+added PROJECT04 Active charter, Progress/Roadmap stubs, agent-ops pointers, and
+`pnpm validate:project04:charter-skeleton`. Five LLMOps capabilities remain
+**Not Started** (no product runtime). Project 2 remains **CLOSED**. Project 3
+remains **CLOSED (Partial)**.

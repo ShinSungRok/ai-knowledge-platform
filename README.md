@@ -14,6 +14,8 @@ composition root, and dependency-free validation runners.
 
 **Project 2: CLOSED** (Sprint 37). **Project 3: CLOSED (Partial)** (Sprint 44
 closeout; five charter capabilities each Partial — none Completed).
+**Project 4: Active (Charter Skeleton)** (Sprint 45 — Enterprise LLMOps; no
+product runtime yet).
 
 | Track | Status |
 |---|---|
@@ -26,16 +28,21 @@ closeout; five charter capabilities each Partial — none Completed).
 | Project 3 Agent Handoff / Delegation | Partial (Sprint 41) |
 | Project 3 Shared Workflow Memory | Partial (Sprint 42) |
 | Project 3 Multi-Agent Evaluation | Partial (Sprint 43) |
-| Project 3 overall / Project 4 handoff | CLOSED (Partial) (Sprint 44) |
+| Project 3 overall | CLOSED (Partial) (Sprint 44) |
+| Project 4 Charter Skeleton | Active (Sprint 45) |
 
 Charter capabilities through Operations are Completed. Partial infra adapters
 and Project 3 Multi-Agent capabilities stay Partial (not Completed). See
 [`docs/portfolio.md`](docs/portfolio.md),
 [`docs/progress/PROJECT02_ROADMAP_STATUS.md`](docs/progress/PROJECT02_ROADMAP_STATUS.md),
-and Project 3 docs:
+Project 3 docs:
 [`docs/agent/PROJECT03_INSTRUCTIONS.md`](docs/agent/PROJECT03_INSTRUCTIONS.md),
 [`docs/progress/PROJECT03_PROGRESS.md`](docs/progress/PROJECT03_PROGRESS.md),
-[`docs/progress/PROJECT03_ROADMAP_STATUS.md`](docs/progress/PROJECT03_ROADMAP_STATUS.md).
+[`docs/progress/PROJECT03_ROADMAP_STATUS.md`](docs/progress/PROJECT03_ROADMAP_STATUS.md),
+and Project 4 docs:
+[`docs/agent/PROJECT04_INSTRUCTIONS.md`](docs/agent/PROJECT04_INSTRUCTIONS.md),
+[`docs/progress/PROJECT04_PROGRESS.md`](docs/progress/PROJECT04_PROGRESS.md),
+[`docs/progress/PROJECT04_ROADMAP_STATUS.md`](docs/progress/PROJECT04_ROADMAP_STATUS.md).
 
 Default `pnpm validate` remains **dependency-free** (Fake / in-memory /
 SqlVectorIndex — no Docker, network, or API keys required).
@@ -57,6 +64,7 @@ pnpm validate:workflow:memory
 pnpm validate:workflow:evaluation
 pnpm validate:application:eval-workflow
 pnpm validate:project03:closeout
+pnpm validate:project04:charter-skeleton
 ```
 
 ## Local runtime

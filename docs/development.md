@@ -135,7 +135,7 @@ pnpm validate:project:nested-expansion-closeout # Sprints 32–35 nested expansi
 pnpm validate:project:final-closeout # Project 2 overall CLOSED + Project 3 handoff (static; Sprint 37)
 pnpm validate:project03:charter-skeleton # Project 3 charter docs + Partial/CLOSED status phrases
 pnpm validate:project03:closeout # Project 3 CLOSED (Partial) five-capability evidence (Sprint 44)
-# Preview (Sprint 45 Task 189): pnpm validate:project04:charter-skeleton
+pnpm validate:project04:charter-skeleton # Project 4 Active charter docs + CLOSED P2/P3 markers
 pnpm validate:workflow:contract # Multi-Agent Role Contract
 pnpm validate:workflow:registry # InMemoryWorkflowAgentRegistry
 pnpm validate:workflow:orchestrator # DefaultWorkflowOrchestrator
@@ -167,7 +167,7 @@ phases. Prefer validation runners for architectural and contract checks.
 **Project 4: Active (Charter Skeleton).** Progress Log entries go under
 `docs/progress/PROJECT04_PROGRESS.md`. Roadmap status lives in
 `docs/progress/PROJECT04_ROADMAP_STATUS.md`. Active charter:
-`docs/agent/PROJECT04_INSTRUCTIONS.md`. Preview static check (Task 189):
+`docs/agent/PROJECT04_INSTRUCTIONS.md`. Static check:
 `pnpm validate:project04:charter-skeleton`.
 
 **Project 3: CLOSED (Partial).** Historical Progress/Roadmap remain under

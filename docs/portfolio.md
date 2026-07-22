@@ -58,23 +58,45 @@ inherited Project 2 non-goals where still applicable (official SDKs,
 Express/Fastify, full OIDC authorization-code login, full W3C propagator suite
 / `prom-client`).
 
-**Project 4 handoff — Enterprise LLMOps Platform:** Next work reuses the
-Project 2 Knowledge/MCP/Agent platform and Project 3 Multi-Agent workflow
-boundaries. Project 4 is **outside** this repository’s active Project 3
-charter (no PROJECT04 implementation in Project 3 closeout).
+**Project 4 handoff — Enterprise LLMOps Platform:** See §1d. Project 4 is
+**Active (Charter Skeleton)** and reuses Project 2/3 platforms. Project 4
+product implementation is **outside** the closed Project 3 charter.
 
 Charter (historical after Sprint 44): [`docs/agent/PROJECT03_INSTRUCTIONS.md`](agent/PROJECT03_INSTRUCTIONS.md).
 Progress / roadmap: [`docs/progress/PROJECT03_PROGRESS.md`](progress/PROJECT03_PROGRESS.md),
 [`docs/progress/PROJECT03_ROADMAP_STATUS.md`](progress/PROJECT03_ROADMAP_STATUS.md).
 
-## 1d. Project sequence
+## 1d. Project 4: Active (Charter Skeleton) — Enterprise LLMOps Platform
+
+**Project 4: Active (Charter Skeleton).** Enterprise LLMOps Platform charter
+docs and static skeleton validation are established (Sprint 45). No LLMOps
+product/runtime modules yet. Reuses Project 2 Knowledge/MCP/Agent and Project 3
+Multi-Agent workflow boundaries.
+
+| Capability | Status |
+|---|---|
+| Experiment / Run Tracking | **Not Started** |
+| Prompt & Model Registry | **Not Started** |
+| Evaluation Gates / Regression Harness | **Not Started** |
+| Deployment / Serving Configuration | **Not Started** |
+| LLMOps Observability | **Not Started** |
+
+Project 2 remains **CLOSED**. Project 3 remains **CLOSED (Partial)**.
+**Partial ≠ Completed**.
+
+Charter: [`docs/agent/PROJECT04_INSTRUCTIONS.md`](agent/PROJECT04_INSTRUCTIONS.md).
+Progress / roadmap: [`docs/progress/PROJECT04_PROGRESS.md`](progress/PROJECT04_PROGRESS.md),
+[`docs/progress/PROJECT04_ROADMAP_STATUS.md`](progress/PROJECT04_ROADMAP_STATUS.md).
+Static check: `pnpm validate:project04:charter-skeleton`.
+
+## 1e. Project sequence
 
 | Project | Focus | Status (this portfolio) |
 |---|---|---|
 | Project 1 | Public Law AI — Grounded RAG | Complete (separate repo) |
 | Project 2 | AI Knowledge Platform — Knowledge + MCP + Agent | **CLOSED** |
 | Project 3 | Enterprise AI Workflow — Multi-Agent | **CLOSED (Partial)** |
-| Project 4 | Enterprise LLMOps Platform | Next (handoff) |
+| Project 4 | Enterprise LLMOps Platform | **Active (Charter Skeleton)** |
 
 Project 2 delivers a **completed platform baseline**: workspace-scoped
 knowledge pipelines through cited RAG answers, MCP/tool/agent/memory/jobs,

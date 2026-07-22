@@ -79,3 +79,30 @@ Point agent operations at Project 4 charter
 
 **Status**
 Completed
+
+## Task 189
+
+**Date**
+2026-07-22
+
+**Commit**
+Pending
+
+**Title**
+Add Project 4 charter-skeleton validator and portfolio Active status
+
+**Summary**
+- Added scripts/validate-project04-charter-skeleton.ts (fs/path only)
+- Wired validate:project04:charter-skeleton into top-level pnpm validate
+- Portfolio/README: Project 4 Active (Charter Skeleton); capabilities Not Started
+- Roadmap Sprint 45 close note; Project 2/3 CLOSED preserved; no LLMOps runtime
+
+**Validation**
+- `pnpm validate:project:final-closeout`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project04:charter-skeleton`
+- `pnpm typecheck`
+- `pnpm validate`
+
+**Status**
+Completed
