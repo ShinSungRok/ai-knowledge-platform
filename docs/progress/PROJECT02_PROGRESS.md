@@ -4408,3 +4408,26 @@ Add listening factory for SQL/Postgres composition
 **Status**
 Completed
 
+## Task 229
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Wire DATABASE_URL into pnpm start host
+
+**Summary**
+- createConfiguredListeningHost: InMemory default; Postgres when DATABASE_URL set
+- Logs STORE: inmemory|postgres; ends pg Pool on shutdown
+- Optional HTTP LLM + SKIP_DEMO_SEED still apply on both paths
+
+**Validation**
+- `pnpm validate:server:start-smoke`
+- `pnpm typecheck`
+
+**Status**
+Completed
+

@@ -1,15 +1,23 @@
 /**
  * Shared env + factory for P2 Service Completion Phase A/B HTTP host.
- * InMemory composition + Fake LLM by default; optional HTTP LLM when
- * `LLM_API_KEY` is set. No Express / Postgres / OpenSearch.
+ * InMemory by default; optional Postgres when DATABASE_URL is set.
+ * Fake LLM by default; optional HTTP LLM when LLM_API_KEY is set.
+ * No Express / OpenSearch.
  */
 
 import { loadLlmHttpProviderConfig } from "../ai/loadLlmHttpProviderConfig";
+import type { PostgresPool } from "../infra/PostgresPool";
 import {
   createListeningOperationsServer,
   type ListeningOperationsServer,
 } from "./createListeningOperationsServer";
+import {
+  createListeningOperationsServerFromComposition,
+  type ListeningOperationsServerBase,
+} from "./createListeningOperationsServerFromComposition";
 import type { LlmProviderOption } from "./createLanguageModelProvider";
+import { createPostgresKnowledgeComposition } from "./createPostgresKnowledgeComposition";
+import type { SqlKnowledgeComposition } from "./SqlKnowledgeComposition";
 
 export type ListeningOperationsHostEnv = {
   host: string;
@@ -21,6 +29,20 @@ export type ListeningOperationsHostEnv = {
   /** `fake` when LLM_API_KEY unset; `http` when set. */
   llmMode: "fake" | "http";
   llm?: LlmProviderOption;
+  /** Unset → InMemory; set → Postgres SoT. */
+  databaseUrl?: string;
+  storeMode: "inmemory" | "postgres";
+};
+
+export type ListeningHostHandle = {
+  storeMode: "inmemory" | "postgres";
+  llmMode: "fake" | "http";
+  workspaceId: string;
+  skipDemoSeed: boolean;
+  server: ListeningOperationsServerBase & {
+    composition: ListeningOperationsServer["composition"] | SqlKnowledgeComposition;
+  };
+  dispose(): Promise<void>;
 };
 
 function getEnv(
@@ -78,6 +100,11 @@ export function loadListeningOperationsHostEnv(
   }
   const skip = getEnv(env, "SKIP_DEMO_SEED", "0");
   const llm = resolveLlmOption(env);
+  const databaseUrlRaw = env["DATABASE_URL"]?.trim();
+  const databaseUrl =
+    databaseUrlRaw !== undefined && databaseUrlRaw.length > 0
+      ? databaseUrlRaw
+      : undefined;
   return {
     host: getEnv(env, "HOST", "127.0.0.1"),
     port,
@@ -85,10 +112,13 @@ export function loadListeningOperationsHostEnv(
     apiKeySubject: getEnv(env, "API_KEY_SUBJECT", "demo-user"),
     workspaceId: getEnv(env, "WORKSPACE_ID", "workspace-a"),
     skipDemoSeed: skip === "1" || skip.toLowerCase() === "true",
+    databaseUrl,
+    storeMode: databaseUrl !== undefined ? "postgres" : "inmemory",
     ...llm,
   };
 }
 
+/** InMemory path only (used by start-smoke). */
 export function createConfiguredListeningOperationsServer(
   hostEnv: ListeningOperationsHostEnv = loadListeningOperationsHostEnv(),
 ): ListeningOperationsServer {
@@ -102,4 +132,76 @@ export function createConfiguredListeningOperationsServer(
     },
     ...(hostEnv.llm !== undefined ? { llm: hostEnv.llm } : {}),
   });
+}
+
+type PostgresPoolWithEnd = PostgresPool & {
+  end?: () => Promise<void>;
+};
+
+async function createPostgresPool(
+  databaseUrl: string,
+): Promise<PostgresPoolWithEnd> {
+  const { Pool } = await import("pg");
+  return new Pool({ connectionString: databaseUrl }) as PostgresPoolWithEnd;
+}
+
+/**
+ * Creates the Phase A/B listening host: InMemory by default, Postgres when
+ * `DATABASE_URL` is set. Caller must `dispose()` after stop.
+ */
+export async function createConfiguredListeningHost(
+  hostEnv: ListeningOperationsHostEnv = loadListeningOperationsHostEnv(),
+): Promise<ListeningHostHandle> {
+  const apiKeys = {
+    [hostEnv.apiKey]: {
+      subject: hostEnv.apiKeySubject,
+      workspaceId: hostEnv.workspaceId,
+    },
+  } as const;
+  const listen = { host: hostEnv.host, port: hostEnv.port };
+
+  if (hostEnv.storeMode === "inmemory" || hostEnv.databaseUrl === undefined) {
+    const server = createListeningOperationsServer({
+      listen,
+      apiKeys,
+      ...(hostEnv.llm !== undefined ? { llm: hostEnv.llm } : {}),
+    });
+    return {
+      storeMode: "inmemory",
+      llmMode: hostEnv.llmMode,
+      workspaceId: hostEnv.workspaceId,
+      skipDemoSeed: hostEnv.skipDemoSeed,
+      server,
+      dispose: async () => {
+        /* no pool */
+      },
+    };
+  }
+
+  const pool = await createPostgresPool(hostEnv.databaseUrl);
+  const composition = await createPostgresKnowledgeComposition({
+    pool,
+    applySchema: true,
+    ...(hostEnv.llm !== undefined ? { llm: hostEnv.llm } : {}),
+  });
+  const server = createListeningOperationsServerFromComposition({
+    composition,
+    listen,
+    apiKeys,
+  });
+  return {
+    storeMode: "postgres",
+    llmMode: hostEnv.llmMode,
+    workspaceId: hostEnv.workspaceId,
+    skipDemoSeed: hostEnv.skipDemoSeed,
+    server: {
+      ...server,
+      composition,
+    },
+    dispose: async () => {
+      if (typeof pool.end === "function") {
+        await pool.end();
+      }
+    },
+  };
 }

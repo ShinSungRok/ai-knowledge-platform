@@ -5,30 +5,31 @@
  *
  * Env defaults: HOST=127.0.0.1 PORT=8080 API_KEY=demo-key
  * API_KEY_SUBJECT=demo-user WORKSPACE_ID=workspace-a
+ * STORE: inmemory by default; postgres when DATABASE_URL is set.
  * Fake LLM by default; HTTP LLM when LLM_API_KEY is set.
- * InMemory composition; NodeHttpListener (no Express).
- * Demo seed on start (`SKIP_DEMO_SEED=1` to skip).
+ * NodeHttpListener (no Express). Demo seed unless SKIP_DEMO_SEED=1.
  */
 import {
-  createConfiguredListeningOperationsServer,
+  createConfiguredListeningHost,
   loadListeningOperationsHostEnv,
 } from "./listeningOperationsHostConfig";
 import { seedDemoKnowledge } from "./seedDemoKnowledge";
 
 async function main(): Promise<void> {
   const hostEnv = loadListeningOperationsHostEnv();
-  const server = createConfiguredListeningOperationsServer(hostEnv);
+  const host = await createConfiguredListeningHost(hostEnv);
 
-  console.log(`LLM: ${hostEnv.llmMode}`);
+  console.log(`STORE: ${host.storeMode}`);
+  console.log(`LLM: ${host.llmMode}`);
 
-  if (!hostEnv.skipDemoSeed) {
-    await seedDemoKnowledge(server.composition, hostEnv.workspaceId);
-    console.log(`Demo knowledge seeded for workspace ${hostEnv.workspaceId}`);
+  if (!host.skipDemoSeed) {
+    await seedDemoKnowledge(host.server.composition, host.workspaceId);
+    console.log(`Demo knowledge seeded for workspace ${host.workspaceId}`);
   } else {
     console.log("SKIP_DEMO_SEED set; starting without demo seed.");
   }
 
-  const address = await server.start();
+  const address = await host.server.start();
   console.log(
     `Listening operations host bound at http://${address.host}:${address.port}`,
   );
@@ -41,10 +42,11 @@ async function main(): Promise<void> {
     stopping = true;
     console.log(`Received ${signal}; stopping...`);
     try {
-      if (server.flushObservability) {
-        await server.flushObservability();
+      if (host.server.flushObservability) {
+        await host.server.flushObservability();
       }
-      await server.stop();
+      await host.server.stop();
+      await host.dispose();
     } finally {
       process.exit(0);
     }
