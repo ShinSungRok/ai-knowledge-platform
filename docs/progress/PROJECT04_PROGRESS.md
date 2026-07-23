@@ -450,7 +450,7 @@ Completed
 2026-07-23
 
 **Commit**
-Pending
+41197b9
 
 **Title**
 Add InMemoryServingConfigStore
