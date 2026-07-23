@@ -522,3 +522,32 @@ Update roadmap/portfolio for Serving Partial
 
 **Status**
 Completed
+
+## Task 206
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Define LLMOps Observability contract
+
+**Summary**
+- Added LlmopsObservationId, LlmopsObservationRecord, LlmopsObservationStore port
+- Soft-link experimentRunId/servingConfigId; soft-map Metrics/OTLP names in docs
+- Does not import observability; barrel exports; no InMemory adapter yet
+
+**Validation**
+- `pnpm validate:llmops:contract`
+- `pnpm validate:llmops:run-store`
+- `pnpm validate:llmops:prompt-registry`
+- `pnpm validate:llmops:model-registry`
+- `pnpm validate:llmops:evaluation-gate`
+- `pnpm validate:llmops:regression-harness`
+- `pnpm validate:llmops:serving-config`
+- `pnpm typecheck`
+
+**Status**
+Completed

@@ -332,6 +332,10 @@ export type {
   ServingConfigActivateInput,
   ServingConfigRetireInput,
   ServingConfigStore,
+  LlmopsObservationId,
+  LlmopsObservationRecord,
+  LlmopsObservationRecordInput,
+  LlmopsObservationStore,
 } from "./llmops";
 export {
   asExperimentId,
@@ -342,6 +346,7 @@ export {
   asModelVersionId,
   asEvaluationGateId,
   asServingConfigId,
+  asLlmopsObservationId,
 } from "./llmops";
 export {
   InMemoryExperimentRunStore,

@@ -7,16 +7,22 @@
  *   {@link ModelRegistry}
  * - **Evaluation Gates / Regression Harness** (Partial) —
  *   {@link EvaluationGateEvaluator} / {@link RegressionHarness}
- * - **Deployment / Serving Configuration** (contract) —
+ * - **Deployment / Serving Configuration** (Partial) —
  *   {@link ServingConfigStore}
+ * - **LLMOps Observability** (contract) — {@link LlmopsObservationStore}
  *
  * Soft links (document only):
  * - Run `params` may store `promptVersionId` / `modelVersionId`
  * - Gate input metrics may come from {@link ExperimentRunRecord.metrics} or
  *   flattened evaluation aggregates — do not import evaluation types here
  * - Serving config holds soft-link ids only (no registry/gate calls on activate)
+ * - Observations soft-link `experimentRunId` / `servingConfigId` only
  *
- * Deferred: LLMOps Observability, HTTP serving (Express/Fastify), LLM-as-judge.
+ * Soft-map to cross-cutting observability (docs only — **no import**):
+ * `llmops.quality.<key>`, `llmops.cost.units`, `llmops.latency.ms` for later
+ * Metrics/OTLP export. This Sprint does not wire exporters.
+ *
+ * Deferred: HTTP serving (Express/Fastify), LLM-as-judge, `@opentelemetry/*`.
  * Does not bind `ai` LanguageModelProvider to the registry or serving config.
  *
  * Distinct from Project 2 `JobRecord` / `JobStore` and Project 3
@@ -107,3 +113,11 @@ export {
   InMemoryServingConfigStore,
   DefaultServingConfigStore,
 } from "./InMemoryServingConfigStore";
+
+export type { LlmopsObservationId } from "./LlmopsObservationId";
+export { asLlmopsObservationId } from "./LlmopsObservationId";
+export type { LlmopsObservationRecord } from "./LlmopsObservationRecord";
+export type {
+  LlmopsObservationRecordInput,
+  LlmopsObservationStore,
+} from "./LlmopsObservationStore";
