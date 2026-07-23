@@ -59,17 +59,17 @@ Express/Fastify, full OIDC authorization-code login, full W3C propagator suite
 / `prom-client`).
 
 **Project 4 handoff — Enterprise LLMOps Platform:** See §1d. Project 4 is
-**Active — Five LLMOps Capabilities Partial** and reuses Project 2/3 platforms.
-Project 4 product work continues under PROJECT04.
+**CLOSED (Partial)** and reuses Project 2/3 platforms. Closing Project 4 does
+**not** reopen Project 2 or Project 3.
 
 Charter (historical after Sprint 44): [`docs/agent/PROJECT03_INSTRUCTIONS.md`](agent/PROJECT03_INSTRUCTIONS.md).
 Progress / roadmap: [`docs/progress/PROJECT03_PROGRESS.md`](progress/PROJECT03_PROGRESS.md),
 [`docs/progress/PROJECT03_ROADMAP_STATUS.md`](progress/PROJECT03_ROADMAP_STATUS.md).
 
-## 1d. Project 4: Active — Five LLMOps Capabilities Partial
+## 1d. Project 4: CLOSED (Partial) — Enterprise LLMOps Platform
 
-**Project 4: Active — Five LLMOps Capabilities Partial.**
-Enterprise LLMOps Platform (Sprint 45+) with all five charter capabilities
+**Project 4: CLOSED (Partial).** The active Project 4 Enterprise LLMOps charter
+is complete as a **Partial** closeout — five charter capabilities are each
 **Partial** (none Completed): Experiment / Run Tracking (Sprint 46), Prompt &
 Model Registry (Sprint 47), Evaluation Gates / Regression Harness (Sprint 48),
 Deployment / Serving Configuration (Sprint 49), LLMOps Observability
@@ -77,7 +77,7 @@ Deployment / Serving Configuration (Sprint 49), LLMOps Observability
 `metrics` and serving config ids may reference registry or gates. Observation
 records soft-link run/serving ids and soft-map Metrics/OTLP names
 (`llmops.quality.<key>`, `llmops.cost.units`, `llmops.latency.ms`) without
-importing `observability`.
+importing `observability`. Sprint 51 records overall closeout.
 
 | Capability | Status | Evidence |
 |---|---|---|
@@ -88,7 +88,8 @@ importing `observability`.
 | LLMOps Observability | **Partial** | `LlmopsObservationStore` / `InMemoryLlmopsObservationStore`, `pnpm validate:llmops:observation-store` |
 
 Project 2 remains **CLOSED**. Project 3 remains **CLOSED (Partial)**.
-**Partial ≠ Completed**. Project 4 is **not** CLOSED.
+**Partial ≠ Completed**. Closing Project 4 does **not** reopen Project 2 or
+Project 3. This closeout does **not** invent a Project 5 / PROJECT05 charter.
 
 Charter: [`docs/agent/PROJECT04_INSTRUCTIONS.md`](agent/PROJECT04_INSTRUCTIONS.md).
 Progress / roadmap: [`docs/progress/PROJECT04_PROGRESS.md`](progress/PROJECT04_PROGRESS.md),
@@ -102,7 +103,7 @@ Static check: `pnpm validate:project04:charter-skeleton`.
 | Project 1 | Public Law AI — Grounded RAG | Complete (separate repo) |
 | Project 2 | AI Knowledge Platform — Knowledge + MCP + Agent | **CLOSED** |
 | Project 3 | Enterprise AI Workflow — Multi-Agent | **CLOSED (Partial)** |
-| Project 4 | Enterprise LLMOps Platform | **Active — Five LLMOps Capabilities Partial** |
+| Project 4 | Enterprise LLMOps Platform | **CLOSED (Partial)** |
 
 Project 2 delivers a **completed platform baseline**: workspace-scoped
 knowledge pipelines through cited RAG answers, MCP/tool/agent/memory/jobs,

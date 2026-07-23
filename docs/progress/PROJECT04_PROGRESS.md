@@ -629,3 +629,30 @@ Update roadmap/portfolio for Observability Partial
 
 **Status**
 Completed
+
+## Task 210
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Declare Project 4 CLOSED (Partial) in portfolio
+
+**Summary**
+- Portfolio §1d/§1e: Project 4: CLOSED (Partial); five caps remain Partial
+- Explicit Partial≠Completed; P2/P3 CLOSED preserved; no Project 5
+- Closing P4 does not reopen P2/P3
+
+**Validation**
+- `pnpm validate:llmops:observation-store`
+- `pnpm validate:llmops:serving-config`
+- `pnpm validate:project04:charter-skeleton`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed
