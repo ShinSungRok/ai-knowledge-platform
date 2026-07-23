@@ -4286,3 +4286,27 @@ Close Phase A and open Phase B on roadmap
 **Status**
 Completed
 
+## Task 224
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Wire optional HTTP LLM into pnpm start
+
+**Summary**
+- Host uses HttpLanguageModelProvider when LLM_API_KEY is set
+- Fake LLM default when key unset; logs LLM: fake|http on start
+- Reuses loadLlmHttpProviderConfig (LLM_BASE_URL / LLM_MODEL / timeout)
+
+**Validation**
+- `pnpm validate:server:start-smoke`
+- `pnpm validate:composition:listening-operations`
+- `pnpm typecheck`
+
+**Status**
+Completed
+

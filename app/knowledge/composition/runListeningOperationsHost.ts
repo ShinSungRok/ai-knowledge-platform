@@ -1,12 +1,13 @@
 /**
- * Long-running HTTP host for P2 Service Completion Phase A.
+ * Long-running HTTP host for P2 Service Completion Phase A/B.
  *
  *   pnpm start
  *
  * Env defaults: HOST=127.0.0.1 PORT=8080 API_KEY=demo-key
  * API_KEY_SUBJECT=demo-user WORKSPACE_ID=workspace-a
- * Fake LLM; InMemory composition; NodeHttpListener (no Express).
- * Demo seed is wired in Task 221 (`SKIP_DEMO_SEED=1` to skip).
+ * Fake LLM by default; HTTP LLM when LLM_API_KEY is set.
+ * InMemory composition; NodeHttpListener (no Express).
+ * Demo seed on start (`SKIP_DEMO_SEED=1` to skip).
  */
 import {
   createConfiguredListeningOperationsServer,
@@ -17,6 +18,8 @@ import { seedDemoKnowledge } from "./seedDemoKnowledge";
 async function main(): Promise<void> {
   const hostEnv = loadListeningOperationsHostEnv();
   const server = createConfiguredListeningOperationsServer(hostEnv);
+
+  console.log(`LLM: ${hostEnv.llmMode}`);
 
   if (!hostEnv.skipDemoSeed) {
     await seedDemoKnowledge(server.composition, hostEnv.workspaceId);
