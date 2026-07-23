@@ -4584,3 +4584,25 @@ Point Dockerfile runner at pnpm start
 
 **Status**
 Completed
+
+## Task 236
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Add compose app service
+
+**Summary**
+- Added app service (InMemory pnpm start) and app-full profile (Postgres+OpenSearch)
+- Kept postgres/opensearch services; updated docker/README and .env.example
+
+**Validation**
+- `pnpm infra:config`
+- `pnpm typecheck`
+
+**Status**
+Completed

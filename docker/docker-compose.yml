@@ -1,4 +1,51 @@
 services:
+  # InMemory host by default (no Postgres/OpenSearch required).
+  #   docker compose -f docker/docker-compose.yml up app --build
+  # Full stack (Postgres SoT + OpenSearch VectorIndex):
+  #   docker compose -f docker/docker-compose.yml --profile full up app-full postgres opensearch --build
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: ai-knowledge-app
+    ports:
+      - "8080:8080"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8080
+      - API_KEY=${API_KEY:-demo-key}
+      - API_KEY_SUBJECT=${API_KEY_SUBJECT:-demo-user}
+      - WORKSPACE_ID=${WORKSPACE_ID:-workspace-a}
+      # Optional: set DATABASE_URL / OPENSEARCH_URL / LLM_API_KEY via .env
+      # when postgres/opensearch (or external) are reachable on the network.
+    networks:
+      - ai-knowledge-network
+
+  app-full:
+    profiles: ["full"]
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: ai-knowledge-app-full
+    ports:
+      - "8080:8080"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8080
+      - API_KEY=${API_KEY:-demo-key}
+      - API_KEY_SUBJECT=${API_KEY_SUBJECT:-demo-user}
+      - WORKSPACE_ID=${WORKSPACE_ID:-workspace-a}
+      - DATABASE_URL=postgres://${POSTGRES_USER:-knowledge}:${POSTGRES_PASSWORD:-knowledge}@postgres:5432/${POSTGRES_DATABASE:-knowledge}
+      - OPENSEARCH_URL=http://opensearch:9200
+      - OPENSEARCH_INDEX=${OPENSEARCH_INDEX:-knowledge-embeddings}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      opensearch:
+        condition: service_healthy
+    networks:
+      - ai-knowledge-network
+
   postgres:
     image: postgres:16
     container_name: ai-knowledge-postgres
