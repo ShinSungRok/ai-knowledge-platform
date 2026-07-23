@@ -4613,7 +4613,7 @@ Completed
 2026-07-23
 
 **Commit**
-Pending
+a78ddc0
 
 **Title**
 Extend static deployment/compose validation
