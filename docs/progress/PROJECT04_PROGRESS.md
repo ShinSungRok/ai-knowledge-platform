@@ -573,3 +573,32 @@ Add InMemoryLlmopsObservationStore
 
 **Status**
 Completed
+
+## Task 208
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Add LLMOps Observability validation runners
+
+**Summary**
+- Added runLlmopsObservationStoreValidation
+- Wired validate:llmops:observation-store into top-level pnpm validate
+- Covers signals, isolation, soft-link filters, defensive copies
+
+**Validation**
+- `pnpm validate:llmops:observation-store`
+- `pnpm validate:llmops:serving-config`
+- `pnpm validate:llmops:run-store`
+- `pnpm validate:observability:contract`
+- `pnpm validate:project04:charter-skeleton`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed
