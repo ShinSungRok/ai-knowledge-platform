@@ -22,16 +22,16 @@ Project 3: CLOSED (Partial) / Project 4: CLOSED (Partial) /
 Partial≠Completed 서술을 되돌리지 않는다. **Do not invent Project 5 /
 PROJECT05**. Do not reopen Partial tracks.
 
-**Current Active implementation track (human-authorized):**
-**P2 Service Completion Phase B** — Phase A **Complete**; optional HTTP LLM
-when `LLM_API_KEY` is set (Fake LLM default). Do **not** implement Project 3 /
-Project 4 product features in this track. Do **not** use Express/Fastify.
-Postgres/OpenSearch listening wiring remains later Phase B.
+**Current implementation track status (human-authorized):**
+**P2 Service Completion Track: Complete** (Phase A + Phase B Complete —
+Sprint 61). Do **not** invent Project 5 / PROJECT05. Do **not** reopen
+Project 3 / Project 4 Partial tracks or implement P3/P4 product features.
+Do **not** use Express/Fastify. Partial infra adapters stay Partial.
 
 문서 간 우선순위는 다음과 같다.
 
 ```text
-Human-authorized Active track (P2 Service Completion Phase B)
+Closed human-authorized track (P2 Service Completion Complete)
         ↓
 Closed historical charters (PROJECT04 / PROJECT03 / PROJECT02) for constraints
         ↓

@@ -21,31 +21,33 @@ active Project 2 charter). Partial adapters stay Partial — not Completed.
 **Project 3 active docs:** `docs/agent/PROJECT03_INSTRUCTIONS.md`,
 `docs/progress/PROJECT03_PROGRESS.md`, `docs/progress/PROJECT03_ROADMAP_STATUS.md`.
 
-## P2 Service Completion Track: Active — Phase B
+## P2 Service Completion Track: Complete
 
-**Human-authorized** additional Active track (does **not** reopen Project 2
-charter baseline CLOSED or promote Partial infra to Completed).
+**Human-authorized** track (does **not** reopen Project 2 charter baseline
+CLOSED or promote Partial infra adapters to Completed).
 
 | Item | Status |
 |---|---|
-| Track | **Active — Phase B** |
+| Track | **Complete** (Sprint 61 closeout) |
 | Phase A | **Complete** (Sprint 57: `pnpm start`, `seedDemoKnowledge`, `pnpm validate:server:start-smoke`) |
+| Phase B | **Complete** (Sprint 58–61: optional HTTP LLM + Postgres SoT + OpenSearch VectorIndex + compose `app` / `app-full`) |
 | Phase B (Sprint 58) | Optional HTTP LLM when `LLM_API_KEY` is set; Fake LLM default |
-| Phase B (Sprint 59) | Optional Postgres SoT when `DATABASE_URL` is set; InMemory default; FakePostgres listen smoke in `pnpm validate` |
+| Phase B (Sprint 59) | Optional Postgres SoT when `DATABASE_URL` is set; FakePostgres listen smoke in `pnpm validate` |
 | Phase B (Sprint 60) | Optional OpenSearch VectorIndex when `OPENSEARCH_URL` is set; FakeOpenSearch listen smoke in `pnpm validate` |
-| Later Phase B | Compose app service / Phase B closeout (not this Sprint; Phase B not marked Complete) |
-| Stack | InMemory default + optional Postgres / OpenSearch; `NodeHttpListener` (no Express); Fake LLM default |
-| Frozen | Project 3 / Project 4 product work; Express/Fastify; Partial→Completed |
-| Progress Log | `docs/progress/PROJECT02_PROGRESS.md` from Task 219+ |
+| Phase B (Sprint 61) | Dockerfile `pnpm start`; compose `app` + `app-full` profile; static deployment asserts; track Complete |
+| Stack | InMemory default + optional Postgres / OpenSearch; `NodeHttpListener` (no Express); Fake LLM default; compose app |
+| Frozen | Project 3 / Project 4 product work; Express/Fastify; Partial→Completed; no Project 5 |
+| Progress Log | `docs/progress/PROJECT02_PROGRESS.md` from Task 219–238 |
 
-Sprint 57 (Task 219–222) completed Phase A. Sprint 58 (Task 223–226) added
-optional HTTP LLM (`LLM_API_KEY`; Fake default). Sprint 59 (Task 227–230)
-added optional Postgres SoT on host (`DATABASE_URL`). Sprint 60 (Task 231–234)
-added optional OpenSearch VectorIndex on host (`OPENSEARCH_URL`; combinations
-with Postgres; Fake smokes in top-level validate; live optional skip).
-Remaining Phase B: compose app / Phase B closeout — do **not** mark entire
-Phase B Complete here. Do not invent Project 5. P3/P4 remain CLOSED (Partial)
-/ CLOSED (Partial) and frozen for this track.
+Sprint 57 completed Phase A. Sprints 58–60 delivered Phase B optional LLM /
+Postgres / OpenSearch host paths. Sprint 61 (Task 235–238) added compose app
+image/`pnpm start` runner, static compose/deployment asserts, and closed
+Phase B + this Service Completion track as **Complete**.
+
+**Explicit:** Project 2 charter baseline remains **CLOSED**. Partial infra
+(Postgres/OpenSearch/HTTP LLM adapters, etc.) stay **Partial** — not promoted
+to Completed. P3/P4 remain **CLOSED (Partial)** and frozen. Do not invent
+Project 5.
 
 > Historical track detail below: Platform Baseline closeout (Sprint 20),
 > post-baseline persistence / listen / AuthN / LLM / MCP / OTLP / OpenSearch
@@ -136,3 +138,4 @@ does not reopen baseline capabilities or mark Partial adapters as Completed.
 | Sprint 58 (Task 223–226) | Phase A Complete + Phase B optional HTTP LLM (`LLM_API_KEY`; Fake default; P3/P4 frozen) |
 | Sprint 59 (Task 227–230) | Phase B optional Postgres SoT on host (`DATABASE_URL`; FakePostgres smoke; live optional; P3/P4 frozen) |
 | Sprint 60 (Task 231–234) | Phase B optional OpenSearch VectorIndex on host (`OPENSEARCH_URL`; Fake smokes; live optional; P3/P4 frozen) |
+| Sprint 61 (Task 235–238) | Compose app + Phase B / Service Completion Track Complete (Dockerfile `pnpm start`; static readiness; P3/P4 frozen) |

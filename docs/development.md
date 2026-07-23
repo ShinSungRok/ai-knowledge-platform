@@ -165,13 +165,13 @@ phases. Prefer validation runners for architectural and contract checks.
 
 ## 3. Sprint / Task validation flow
 
-**P2 Service Completion Phase B (human-authorized Active track).** Progress Log
-entries for this track go under `docs/progress/PROJECT02_PROGRESS.md` from
-Task 219+. Roadmap section: **P2 Service Completion Track: Active — Phase B**
-(Phase A Complete) in `docs/progress/PROJECT02_ROADMAP_STATUS.md`. Does **not**
-reopen Project 2 charter baseline CLOSED. Frozen: P3/P4 product work, Express.
-Optional Postgres (`DATABASE_URL`, Sprint 59) and OpenSearch VectorIndex
-(`OPENSEARCH_URL`, Sprint 60). Remaining Phase B: compose app / closeout.
+**P2 Service Completion Track: Complete** (human-authorized; Sprint 61).
+Progress Log: `docs/progress/PROJECT02_PROGRESS.md` Task 219–238. Roadmap:
+**P2 Service Completion Track: Complete** in
+`docs/progress/PROJECT02_ROADMAP_STATUS.md`. Does **not** reopen Project 2
+charter baseline CLOSED. Frozen: P3/P4 product work, Express. Phase B delivered
+optional LLM / Postgres / OpenSearch + compose `app`. Partial infra stays
+Partial. No Project 5.
 
 Phase A/B local service checks:
 
@@ -182,17 +182,18 @@ pnpm validate:server:start-postgres-smoke
 pnpm validate:server:start-opensearch-smoke
 pnpm validate:server:start-postgres-opensearch-smoke
 pnpm validate:composition:listening-operations
+pnpm validate:deployment:readiness
 pnpm start   # InMemory + Fake LLM unless DATABASE_URL / OPENSEARCH_URL / LLM_API_KEY set
+
+# Optional compose (not in pnpm validate; needs Docker daemon for up/build):
+pnpm infra:config
+# docker compose -f docker/docker-compose.yml up app --build
+# docker compose -f docker/docker-compose.yml --profile full up app-full postgres opensearch --build
 
 # Optional live (skip exit 0 when unset; NOT in pnpm validate):
 pnpm validate:server:start-llm-live
 pnpm validate:server:start-postgres-live
 pnpm validate:server:start-opensearch-live
-# LLM_API_KEY=sk-... pnpm validate:server:start-llm-live
-# DATABASE_URL=postgres://knowledge:knowledge@127.0.0.1:5432/knowledge \
-#   pnpm validate:server:start-postgres-live
-# OPENSEARCH_URL=http://127.0.0.1:9200 pnpm validate:server:start-opensearch-live
-# docker compose -f docker/docker-compose.yml up -d postgres opensearch
 ```
 
 **Project 4: CLOSED (Partial).** Historical Progress/Roadmap remain under

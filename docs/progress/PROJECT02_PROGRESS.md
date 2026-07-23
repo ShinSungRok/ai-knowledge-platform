@@ -4631,3 +4631,33 @@ Extend static deployment/compose validation
 
 **Status**
 Completed
+
+## Task 238
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Mark Phase B Complete and close Service Completion track
+
+**Summary**
+- Roadmap: Phase B Complete; P2 Service Completion Track Complete (Sprint 61)
+- Updated portfolio/README/development/deployment/agent-ops for compose + closeout
+- Project 2 charter CLOSED preserved; Partial infra not promoted; no Project 5
+
+**Validation**
+- `pnpm validate:deployment:readiness`
+- `pnpm infra:config`
+- `pnpm validate:server:start-smoke`
+- `pnpm validate:server:start-postgres-smoke`
+- `pnpm validate:server:start-opensearch-smoke`
+- `pnpm validate:project:final-closeout`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project04:closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed

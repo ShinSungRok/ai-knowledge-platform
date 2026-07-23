@@ -19,10 +19,10 @@ each Partial — none Completed). Closeout script:
 `pnpm validate:project04:closeout`.
 
 **P2 Service Completion (human-authorized):** Phase A **Complete** (Sprint 57);
-Phase B **Active** — optional HTTP LLM (`LLM_API_KEY`), optional Postgres SoT
-(`DATABASE_URL`), optional OpenSearch VectorIndex (`OPENSEARCH_URL`). Does not
+Phase B **Complete** (Sprint 58–61); track **Complete** (Sprint 61). Optional
+HTTP LLM / Postgres / OpenSearch + compose `app` / `pnpm start`. Does not
 reopen Project 2 charter CLOSED. P3/P4 product work frozen. No Project 5.
-Remaining Phase B: compose app / Phase B closeout (later).
+Partial infra adapters stay Partial.
 
 | Track | Status |
 |---|---|
@@ -44,7 +44,8 @@ Remaining Phase B: compose app / Phase B closeout (later).
 | Project 4 LLMOps Observability | Partial (Sprint 50) |
 | Project 4 overall | CLOSED (Partial) (Sprint 51) |
 | P2 Service Completion Phase A | Complete (Sprint 57) |
-| P2 Service Completion Phase B | Active (Sprint 60 — optional OpenSearch VectorIndex) |
+| P2 Service Completion Phase B | Complete (Sprint 61) |
+| P2 Service Completion Track | Complete (Sprint 61) |
 
 Charter capabilities through Operations are Completed. Partial infra adapters,
 Project 3 Multi-Agent capabilities, and Project 4 LLMOps capabilities stay
@@ -97,8 +98,8 @@ pnpm validate:llmops:observation-store
 ### P2 Service Completion Phase A/B (`pnpm start`)
 
 Long-running HTTP host (`NodeHttpListener`, no Express).
-**Phase A Complete:** demo seed + health/cited-answer smoke.
-**Phase B Active:** InMemory store + Fake LLM by default. Optional:
+**Phase A Complete** / **Phase B Complete** / track **Complete** (Sprint 61).
+InMemory store + Fake LLM by default. Optional:
 
 | Env combination | STORE | VECTOR |
 |---|---|---|
@@ -158,6 +159,10 @@ pnpm validate:server:start-postgres-opensearch-smoke
 # LLM_API_KEY=sk-... pnpm validate:server:start-llm-live
 # DATABASE_URL=postgres://... pnpm validate:server:start-postgres-live
 # OPENSEARCH_URL=http://127.0.0.1:9200 pnpm validate:server:start-opensearch-live
+
+# Compose (optional; not in pnpm validate):
+# docker compose -f docker/docker-compose.yml up app --build
+# docker compose -f docker/docker-compose.yml --profile full up app-full postgres opensearch --build
 ```
 
 ### In-process / library usage

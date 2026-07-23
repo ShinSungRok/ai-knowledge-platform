@@ -55,8 +55,20 @@ readiness checks):
 
 | Service | Role |
 |---|---|
+| `app` | Listening operations host (`pnpm start`; InMemory default) |
+| `app-full` | Profile `full`: Postgres SoT + OpenSearch VectorIndex |
 | PostgreSQL | Source-of-truth document store |
 | OpenSearch | Search / vector index |
+
+```bash
+# InMemory app container
+docker compose -f docker/docker-compose.yml up app --build
+# Full stack
+docker compose -f docker/docker-compose.yml --profile full \
+  up app-full postgres opensearch --build
+```
+
+Default `pnpm validate` does **not** run `docker build` / `compose up`.
 
 ## 3. Application image
 
