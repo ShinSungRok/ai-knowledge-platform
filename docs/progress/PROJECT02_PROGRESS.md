@@ -4567,7 +4567,7 @@ Completed
 2026-07-23
 
 **Commit**
-Pending
+9a2ae78
 
 **Title**
 Point Dockerfile runner at pnpm start
