@@ -171,6 +171,14 @@ Task 219+. Roadmap section: **P2 Service Completion Track: Active — Phase A**
 in `docs/progress/PROJECT02_ROADMAP_STATUS.md`. Does **not** reopen Project 2
 charter baseline CLOSED. Frozen: P3/P4 product work, Express, Phase B infra.
 
+Phase A local service checks:
+
+```bash
+pnpm validate:server:start-smoke
+pnpm validate:composition:listening-operations
+pnpm start   # HOST/PORT/API_KEY defaults; CTRL+C to stop
+```
+
 **Project 4: CLOSED (Partial).** Historical Progress/Roadmap remain under
 `docs/progress/PROJECT04_*`. Charter (`docs/agent/PROJECT04_INSTRUCTIONS.md`)
 is Closed (historical). Five LLMOps charter capabilities stay **Partial** —

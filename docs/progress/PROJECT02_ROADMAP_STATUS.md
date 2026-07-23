@@ -31,11 +31,13 @@ charter baseline CLOSED or promote Partial infra to Completed).
 | Track | **Active — Phase A** |
 | Goal | `pnpm start` HTTP listen + demo seed + `/health` / cited-answer smoke |
 | Stack | InMemory composition + Fake LLM + `NodeHttpListener` (no Express) |
+| Deliverables (Sprint 57) | `pnpm start`, `seedDemoKnowledge`, `pnpm validate:server:start-smoke` |
 | Frozen | Project 3 / Project 4 product work; Express/Fastify; Phase B infra wiring (Postgres/OpenSearch/real LLM) |
 | Progress Log | `docs/progress/PROJECT02_PROGRESS.md` from Task 219+ |
 
-Sprint 57 (Task 219–222) establishes Phase A deliverables. Phase A stays
-**Active** until a human closes it. Do not invent Project 5.
+Sprint 57 (Task 219–222) established Phase A deliverables. Phase A stays
+**Active** until a human closes it. Do not invent Project 5. P3/P4 remain
+CLOSED (Partial) / CLOSED (Partial) and frozen for this track.
 
 > Historical track detail below: Platform Baseline closeout (Sprint 20),
 > post-baseline persistence / listen / AuthN / LLM / MCP / OTLP / OpenSearch

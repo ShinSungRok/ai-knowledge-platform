@@ -4233,3 +4233,30 @@ Add demo seed for local cited-answers
 **Status**
 Completed
 
+## Task 222
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Add start smoke validation + README Phase A docs
+
+**Summary**
+- Added runListeningOperationsHostSmokeValidation (health + cited-answers)
+- Wired validate:server:start-smoke into top-level pnpm validate
+- README/development/roadmap Phase A deliverables; P3/P4 freeze reminder
+
+**Validation**
+- `pnpm validate:server:start-smoke`
+- `pnpm validate:composition:listening-operations`
+- `pnpm validate:project:final-closeout`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project04:closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed
+

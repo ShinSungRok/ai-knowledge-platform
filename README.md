@@ -18,6 +18,10 @@ closeout; five charter capabilities each Partial — none Completed).
 each Partial — none Completed). Closeout script:
 `pnpm validate:project04:closeout`.
 
+**P2 Service Completion Phase A (human-authorized):** Active — `pnpm start` +
+demo seed + `pnpm validate:server:start-smoke`. Does not reopen Project 2
+charter CLOSED. P3/P4 product work frozen. No Project 5.
+
 | Track | Status |
 |---|---|
 | Charter Platform Baseline | CLOSED (Sprint 20) |
@@ -37,6 +41,7 @@ each Partial — none Completed). Closeout script:
 | Project 4 Deployment / Serving Configuration | Partial (Sprint 49) |
 | Project 4 LLMOps Observability | Partial (Sprint 50) |
 | Project 4 overall | CLOSED (Partial) (Sprint 51) |
+| P2 Service Completion Phase A | Active (Sprint 57) |
 
 Charter capabilities through Operations are Completed. Partial infra adapters,
 Project 3 Multi-Agent capabilities, and Project 4 LLMOps capabilities stay
@@ -85,6 +90,42 @@ pnpm validate:llmops:observation-store
 ```
 
 ## Local runtime
+
+### P2 Service Completion Phase A (`pnpm start`)
+
+Long-running HTTP host on InMemory composition + Fake LLM (`NodeHttpListener`,
+no Express). Demo knowledge is seeded on start unless `SKIP_DEMO_SEED=1`.
+
+```bash
+pnpm start
+# optional:
+# HOST=127.0.0.1 PORT=8080 API_KEY=demo-key WORKSPACE_ID=workspace-a pnpm start
+```
+
+| Env | Default |
+|---|---|
+| `HOST` | `127.0.0.1` |
+| `PORT` | `8080` |
+| `API_KEY` | `demo-key` |
+| `API_KEY_SUBJECT` | `demo-user` |
+| `WORKSPACE_ID` | `workspace-a` |
+| `SKIP_DEMO_SEED` | unset (seed on); `1` skips |
+
+```bash
+curl -sS http://127.0.0.1:8080/health
+curl -sS -X POST http://127.0.0.1:8080/workspaces/workspace-a/cited-answers \
+  -H 'content-type: application/json' \
+  -H 'Authorization: Bearer demo-key' \
+  -d '{"query":"aaaaaaaa"}'
+```
+
+Smoke (ephemeral port, included in `pnpm validate`):
+
+```bash
+pnpm validate:server:start-smoke
+```
+
+### In-process / library usage
 
 In-process operations entry (dispatch only, no TCP). Cited-answer requires
 `Authorization: Bearer <api-key>`; `/health` stays public:
