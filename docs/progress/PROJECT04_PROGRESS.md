@@ -558,7 +558,7 @@ Completed
 2026-07-23
 
 **Commit**
-Pending
+4e58bf9
 
 **Title**
 Add InMemoryLlmopsObservationStore
