@@ -529,7 +529,7 @@ Completed
 2026-07-23
 
 **Commit**
-Pending
+13215b3
 
 **Title**
 Define LLMOps Observability contract
