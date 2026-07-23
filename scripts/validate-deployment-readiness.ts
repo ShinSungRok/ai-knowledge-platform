@@ -20,19 +20,37 @@ function main(): void {
   assertContains(dockerfile, "AS deps", "Dockerfile must include AS deps");
   assertContains(dockerfile, "AS builder", "Dockerfile must include AS builder");
   assertContains(dockerfile, "AS runner", "Dockerfile must include AS runner");
+  assertContains(
+    dockerfile,
+    'CMD ["pnpm", "start"]',
+    "Dockerfile runner must CMD pnpm start",
+  );
+  assertContains(dockerfile, "EXPOSE 8080", "Dockerfile must EXPOSE 8080");
 
   console.log("[deployment] Checking docker/docker-compose.yml services...");
   const composePath = path.join(root, "docker/docker-compose.yml");
   assertTruthy(existsSync(composePath), "docker/docker-compose.yml must exist");
   const compose = readFileSync(composePath, "utf8");
+  assertContains(compose, "app:", "compose must define app service");
   assertContains(compose, "postgres:", "compose must define postgres service");
   assertContains(compose, "opensearch:", "compose must define opensearch service");
+  assertContains(
+    compose,
+    "dockerfile: docker/Dockerfile",
+    "compose app must build docker/Dockerfile",
+  );
 
   console.log("[deployment] Checking package.json scripts...");
   const packageJson = JSON.parse(
     readFileSync(path.join(root, "package.json"), "utf8"),
   ) as { scripts?: Record<string, string> };
   const scripts = packageJson.scripts ?? {};
+  assertTruthy(scripts.start, "package.json must define start");
+  assertContains(
+    scripts.start as string,
+    "runListeningOperationsHost",
+    "start must run listening operations host",
+  );
   assertTruthy(scripts["infra:config"], "package.json must define infra:config");
   assertTruthy(scripts.validate, "package.json must define validate");
   assertTruthy(scripts.typecheck, "package.json must define typecheck");

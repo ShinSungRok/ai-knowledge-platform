@@ -4606,3 +4606,28 @@ Add compose app service
 
 **Status**
 Completed
+
+## Task 237
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Extend static deployment/compose validation
+
+**Summary**
+- Assert Dockerfile CMD pnpm start + EXPOSE 8080
+- Assert compose app service and package.json start host script
+- Still daemon-free for readiness; infra:config remains optional compose check
+
+**Validation**
+- `pnpm validate:deployment:readiness`
+- `pnpm infra:config`
+- `pnpm validate:server:start-smoke`
+- `pnpm typecheck`
+
+**Status**
+Completed
