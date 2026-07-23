@@ -31,7 +31,7 @@ Completed
 2026-07-16
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add DefaultInMemoryRepository for domain storage
@@ -57,7 +57,7 @@ Completed
 2026-07-16
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Implement basic query use case for knowledge items
@@ -77,7 +77,7 @@ Completed
 2026-07-16
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Implement create use case for knowledge items
@@ -104,7 +104,7 @@ Completed
 2026-07-16
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Implement update use case for knowledge items
@@ -131,7 +131,7 @@ Completed
 2026-07-16
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Implement delete use case for knowledge items
@@ -158,7 +158,7 @@ Completed
 2026-07-16
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Implement search use case for knowledge items
@@ -212,7 +212,7 @@ Completed
 2026-07-16
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Implement export use case for knowledge items
@@ -239,7 +239,7 @@ Completed
 2026-07-16
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Scope knowledge documents by workspace
@@ -267,7 +267,7 @@ Completed
 2026-07-16
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add workspace-scoped knowledge source registry
@@ -296,7 +296,7 @@ Completed
 2026-07-16
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Enforce document source provenance
@@ -328,7 +328,7 @@ Completed
 2026-07-16
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add knowledge source connector boundary
@@ -355,7 +355,7 @@ Completed
 2026-07-16
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add idempotent knowledge source sync pipeline
@@ -383,7 +383,7 @@ Completed
 2026-07-16
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add traceable document chunk storage
@@ -410,7 +410,7 @@ Completed
 2026-07-16
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add deterministic document chunker
@@ -436,7 +436,7 @@ Completed
 2026-07-16
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add document chunking pipeline
@@ -463,7 +463,7 @@ Completed
 2026-07-16
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add source chunk rebuild pipeline
@@ -491,7 +491,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add deterministic embedding provider
@@ -517,7 +517,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add workspace-scoped vector index
@@ -544,7 +544,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add document chunk embedding pipeline
@@ -572,7 +572,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add source embedding reindex pipeline
@@ -601,7 +601,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Establish workspace-global chunk identity lookup
@@ -628,7 +628,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add vector nearest-neighbor query
@@ -654,7 +654,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add default vector retriever
@@ -683,7 +683,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add retrieve knowledge chunks use case
@@ -709,7 +709,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add workspace-scoped document chunk discovery
@@ -734,7 +734,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add deterministic keyword search
@@ -760,7 +760,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add reciprocal-rank-fusion hybrid search
@@ -787,7 +787,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add retrieve hybrid knowledge chunks use case
@@ -813,7 +813,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Define grounding context assembly contract
@@ -838,7 +838,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add deterministic grounding context assembler
@@ -867,7 +867,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add retrieve grounding context use case
@@ -895,7 +895,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Define re-ranking contract
@@ -920,7 +920,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add deterministic relevance reranker
@@ -950,7 +950,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add reranked hybrid search
@@ -979,7 +979,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Integrate reranked search into grounding context
@@ -1007,7 +1007,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Define grounded prompt contract
@@ -1032,7 +1032,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add deterministic grounded prompt builder
@@ -1062,7 +1062,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add build grounded prompt use case
@@ -1091,7 +1091,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Define language model provider contract
@@ -1116,7 +1116,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add deterministic fake language model provider
@@ -1145,7 +1145,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add generate grounded text use case
@@ -1175,7 +1175,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Define grounded answer assembly contract
@@ -1201,7 +1201,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add deterministic grounded answer assembler
@@ -1232,7 +1232,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add generate grounded answer use case
@@ -1266,7 +1266,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Define citation contract
@@ -1292,7 +1292,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add deterministic citation builder
@@ -1323,7 +1323,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add generate cited grounded answer use case
@@ -1354,7 +1354,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Define MCP tool contract and module boundary
@@ -1382,7 +1382,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add cited grounded answer MCP tool
@@ -1410,7 +1410,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add MCP tool registry
@@ -1436,7 +1436,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add invoke MCP tool use case
@@ -1462,7 +1462,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Define tool calling contract and module boundary
@@ -1490,7 +1490,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add default tool executor
@@ -1519,7 +1519,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Enforce tool call timeout boundary
@@ -1546,7 +1546,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add execute tool call use case
@@ -1573,7 +1573,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Define agent contract and module boundary
@@ -1599,7 +1599,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add deterministic knowledge agent planner
@@ -1625,7 +1625,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add agent step executor and reviewer
@@ -1653,7 +1653,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add agent orchestrator and run use case
@@ -1681,7 +1681,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Define memory contract and module boundary
@@ -1708,7 +1708,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add in-memory memory store
@@ -1734,7 +1734,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add append and recall memory use cases
@@ -1761,7 +1761,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add run agent with memory use case
@@ -1790,7 +1790,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Define job contract and module boundary
@@ -1816,7 +1816,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add in-memory job store
@@ -1841,7 +1841,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add job processor and sync job handler
@@ -1869,7 +1869,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add reindex job handler and job application use cases
@@ -1899,7 +1899,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Define sync change-set and lifecycle contract
@@ -1927,7 +1927,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add deterministic knowledge source change detector
@@ -1953,7 +1953,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add vector delete and knowledge source reconciler
@@ -1981,7 +1981,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add reconciling sync pipeline and wire sync job handler
@@ -2011,7 +2011,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Define evaluation dataset and metrics contract
@@ -2038,7 +2038,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add retrieval evaluator and run use case
@@ -2066,7 +2066,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add grounding evaluator and run use case
@@ -2093,7 +2093,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add citation evaluator and run use case
@@ -2120,7 +2120,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Define runtime configuration contract and loader
@@ -2146,7 +2146,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add in-memory knowledge composition root
@@ -2173,7 +2173,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add HTTP abstraction and cited-answer API controller
@@ -2200,7 +2200,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add server lifecycle and request dispatch
@@ -2227,7 +2227,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Define observability logger and metrics
@@ -2253,7 +2253,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add reliability retry and timeout policies
@@ -2279,7 +2279,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add workspace authorization and HTTP security guard
@@ -2306,7 +2306,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add deployment readiness validation and operations wiring
@@ -2335,7 +2335,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Update portfolio for Project 2 completion
@@ -2360,7 +2360,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Document architecture limits and roadmap completion
@@ -2386,7 +2386,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add project closeout validation runner
@@ -2412,7 +2412,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Finalize README and Progress Log closeout entry
@@ -2438,7 +2438,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Define SQL gateway contract and infra boundary
@@ -2464,7 +2464,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add SQL-backed knowledge document repository
@@ -2490,7 +2490,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add in-memory SQL gateway and repository validation
@@ -2516,7 +2516,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add SQL-backed composition path and update roadmap status
@@ -2544,7 +2544,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add SQL-backed knowledge source repository
@@ -2569,7 +2569,7 @@ Completed
 2026-07-20
 
 **Commit**
-5ea63b7
+Pending
 
 **Title**
 Add SQL-backed document chunk repository
