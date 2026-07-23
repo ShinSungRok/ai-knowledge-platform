@@ -4209,3 +4209,27 @@ Add pnpm start HTTP host entrypoint
 **Status**
 Completed
 
+## Task 221
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Add demo seed for local cited-answers
+
+**Summary**
+- Implemented seedDemoKnowledge with demo document/chunk/vector
+- Stable token aaaaaaaa for FakeEmbedding retrieval hits
+- Host seeds on start unless SKIP_DEMO_SEED=1
+
+**Validation**
+- `pnpm typecheck`
+- `pnpm validate:composition:listening-operations`
+- Manual: start + cited-answers Bearer → 200 grounded answer
+
+**Status**
+Completed
+
