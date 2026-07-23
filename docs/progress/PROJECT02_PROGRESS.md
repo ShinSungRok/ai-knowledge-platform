@@ -4414,7 +4414,7 @@ Completed
 2026-07-23
 
 **Commit**
-Pending
+3581593
 
 **Title**
 Wire DATABASE_URL into pnpm start host
