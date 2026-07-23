@@ -359,6 +359,8 @@ export {
   DefaultRegressionHarness,
   InMemoryServingConfigStore,
   DefaultServingConfigStore,
+  InMemoryLlmopsObservationStore,
+  DefaultLlmopsObservationStore,
 } from "./llmops";
 export { KNOWLEDGE_MODULE_API } from "./api";
 export {

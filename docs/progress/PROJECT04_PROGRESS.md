@@ -551,3 +551,25 @@ Define LLMOps Observability contract
 
 **Status**
 Completed
+
+## Task 207
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Add InMemoryLlmopsObservationStore
+
+**Summary**
+- Implemented InMemoryLlmopsObservationStore (+ DefaultLlmopsObservationStore alias)
+- Requires quality/cost/latency signal; rejects negatives; workspace isolation
+- Soft-link filtering; no observability import; no SQL/HTTP
+
+**Validation**
+- `pnpm typecheck`
+
+**Status**
+Completed

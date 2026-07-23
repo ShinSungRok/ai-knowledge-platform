@@ -121,3 +121,7 @@ export type {
   LlmopsObservationRecordInput,
   LlmopsObservationStore,
 } from "./LlmopsObservationStore";
+export {
+  InMemoryLlmopsObservationStore,
+  DefaultLlmopsObservationStore,
+} from "./InMemoryLlmopsObservationStore";
