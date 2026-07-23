@@ -4508,3 +4508,28 @@ Wire OPENSEARCH_URL into pnpm start host
 
 **Status**
 Completed
+
+## Task 233
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Add FakeOpenSearch listening smoke to pnpm validate
+
+**Summary**
+- validate:server:start-opensearch-smoke (InMemorySql + FakeOpenSearch)
+- validate:server:start-postgres-opensearch-smoke combo; both in pnpm validate
+- Existing InMemory + FakePostgres smokes remain green
+
+**Validation**
+- `pnpm validate:server:start-opensearch-smoke`
+- `pnpm validate:server:start-smoke`
+- `pnpm validate:server:start-postgres-smoke`
+- `pnpm typecheck`
+
+**Status**
+Completed
