@@ -465,3 +465,34 @@ Add InMemoryServingConfigStore
 
 **Status**
 Completed
+
+## Task 204
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Add Serving Configuration validation runners
+
+**Summary**
+- Added runServingConfigStoreValidation
+- Wired validate:llmops:serving-config into top-level pnpm validate
+- Covers activate/retire, one-active-per-env, isolation, trafficPercent, copies
+
+**Validation**
+- `pnpm validate:llmops:serving-config`
+- `pnpm validate:llmops:run-store`
+- `pnpm validate:llmops:prompt-registry`
+- `pnpm validate:llmops:model-registry`
+- `pnpm validate:llmops:evaluation-gate`
+- `pnpm validate:llmops:regression-harness`
+- `pnpm validate:project04:charter-skeleton`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed
