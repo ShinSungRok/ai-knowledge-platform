@@ -4366,7 +4366,7 @@ Completed
 2026-07-23
 
 **Commit**
-Pending
+366ac48
 
 **Title**
 Extend Postgres composition + seed surface for host
