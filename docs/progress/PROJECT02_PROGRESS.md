@@ -4390,7 +4390,7 @@ Completed
 2026-07-23
 
 **Commit**
-Pending
+3b7e9ef
 
 **Title**
 Add listening factory for SQL/Postgres composition
