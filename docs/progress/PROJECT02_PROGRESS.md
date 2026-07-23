@@ -4215,7 +4215,7 @@ Completed
 2026-07-23
 
 **Commit**
-Pending
+22c7671
 
 **Title**
 Add demo seed for local cited-answers
