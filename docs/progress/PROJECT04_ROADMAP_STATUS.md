@@ -1,14 +1,15 @@
 # Project 4 Roadmap Status
 
 > Enterprise LLMOps Platform  
-> **Active — Run Tracking + Registry + Evaluation Gates Partial** — Sprint 48
+> **Active — Run Tracking + Registry + Gates + Serving Partial** — Sprint 49
 
 ## Status
 
-**Active — Run Tracking + Registry + Evaluation Gates Partial.**
-Experiment / Run Tracking, Prompt & Model Registry, and Evaluation Gates /
-Regression Harness are Fake/InMemory-proven (**Partial**, not Completed).
-Deployment / Serving and LLMOps Observability remain **Not Started**.
+**Active — Run Tracking + Registry + Gates + Serving Partial.**
+Experiment / Run Tracking, Prompt & Model Registry, Evaluation Gates /
+Regression Harness, and Deployment / Serving Configuration are
+Fake/InMemory-proven (**Partial**, not Completed). LLMOps Observability
+remains **Not Started**.
 
 **Project 2 remains CLOSED** (Sprint 37). **Project 3 remains CLOSED
 (Partial)** (Sprint 44). Do not reopen Project 2/3 tracks.
@@ -22,7 +23,7 @@ capabilities, and Project 4 LLMOps Partial capabilities.
 - `app/knowledge/mcp` — registry duplicate-reject / list patterns
 - `app/knowledge/evaluation` — Default evaluator pattern (gates use generic numeric metrics only; evaluation API unchanged)
 - `app/knowledge/observability` — OTLP / metrics boundaries (not extended yet)
-- `app/knowledge/ai` — HTTP LLM + Fake LLM paths (not bound to registry)
+- `app/knowledge/ai` — HTTP LLM + Fake LLM paths (not bound to registry or serving)
 - `app/knowledge/composition` — composition root
 - `app/knowledge/workflow` — Project 3 Multi-Agent workflow (Partial)
 - `app/knowledge/application` — use cases over ports
@@ -35,16 +36,16 @@ capabilities, and Project 4 LLMOps Partial capabilities.
 | Experiment / Run Tracking | **Partial** | `llmops` store + `pnpm validate:llmops:contract` / `validate:llmops:run-store` |
 | Prompt & Model Registry | **Partial** | `PromptRegistry` / `ModelRegistry` + `pnpm validate:llmops:prompt-registry` / `validate:llmops:model-registry` |
 | Evaluation Gates / Regression Harness | **Partial** | `EvaluationGateEvaluator` / `RegressionHarness` + `pnpm validate:llmops:evaluation-gate` / `validate:llmops:regression-harness`; no LLM-as-judge |
-| Deployment / Serving Configuration | **Not Started** | Deferred |
+| Deployment / Serving Configuration | **Partial** | `ServingConfigStore` + `pnpm validate:llmops:serving-config`; soft-link ids only; no HTTP/Express |
 | LLMOps Observability | **Not Started** | Build on OTLP/metrics later; official SDK still deferred |
 
 ## Remaining by design
 
-- Deployment / Serving / Observability product code
+- LLMOps Observability product code
 - Promoting Partial → Completed
 - Reopening Project 2 CLOSED or Project 3 CLOSED (Partial)
-- Express/Fastify, full OIDC login, official vendor LLMOps SaaS SDKs as hard deps
-- LLM-as-judge; binding `ai` LanguageModelProvider to registry; SQL adapters; HTTP API
+- Express/Fastify HTTP serving, full OIDC login, official vendor LLMOps SaaS SDKs as hard deps
+- LLM-as-judge; binding `ai` LanguageModelProvider to registry/serving; SQL adapters
 
 ## Task range
 
@@ -54,6 +55,7 @@ capabilities, and Project 4 LLMOps Partial capabilities.
 | Sprint 46 (Task 190–193) | Establish Experiment / Run Tracking (Partial) |
 | Sprint 47 (Task 194–197) | Establish Prompt & Model Registry (Partial) |
 | Sprint 48 (Task 198–201) | Establish Evaluation Gates / Regression Harness (Partial) |
+| Sprint 49 (Task 202–205) | Establish Deployment / Serving Configuration (Partial) |
 
 ## Sprint 45 close note
 
@@ -85,3 +87,11 @@ remain **Not Started**. Project 2 remains **CLOSED**. Project 3 remains
 Evaluation Gates / Regression Harness is **Partial** (not Completed). Serving /
 Observability remain **Not Started**. No LLM-as-judge. Project 2 remains
 **CLOSED**. Project 3 remains **CLOSED (Partial)**.
+
+## Sprint 49 close note
+
+**Sprint 49 — Establish Deployment / Serving Configuration: Partial.** Tasks
+202–205 added ServingConfigStore contract, InMemoryServingConfigStore, and
+validators. Deployment / Serving Configuration is **Partial** (not Completed).
+LLMOps Observability remains **Not Started**. No HTTP/Express serving. Project 2
+remains **CLOSED**. Project 3 remains **CLOSED (Partial)**.

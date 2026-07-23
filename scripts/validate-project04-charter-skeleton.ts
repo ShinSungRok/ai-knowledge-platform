@@ -69,6 +69,9 @@ function main(): void {
       ) ||
       roadmap.includes(
         "Active — Run Tracking + Registry + Evaluation Gates Partial",
+      ) ||
+      roadmap.includes(
+        "Active — Run Tracking + Registry + Gates + Serving Partial",
       ),
     "PROJECT04 roadmap must declare an Active charter/Partial status phrase",
   );

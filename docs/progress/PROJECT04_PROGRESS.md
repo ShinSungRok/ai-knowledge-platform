@@ -496,3 +496,29 @@ Add Serving Configuration validation runners
 
 **Status**
 Completed
+
+## Task 205
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Update roadmap/portfolio for Serving Partial
+
+**Summary**
+- Roadmap: Active — Run Tracking + Registry + Gates + Serving Partial; Sprint 49 close note
+- Portfolio/README: serving Partial evidence; Observability Not Started
+- Charter-skeleton allows new Active Partial phrase; Partial≠Completed; P2/P3 CLOSED
+
+**Validation**
+- `pnpm validate:llmops:serving-config`
+- `pnpm validate:project04:charter-skeleton`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed

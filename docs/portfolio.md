@@ -59,28 +59,28 @@ Express/Fastify, full OIDC authorization-code login, full W3C propagator suite
 / `prom-client`).
 
 **Project 4 handoff — Enterprise LLMOps Platform:** See §1d. Project 4 is
-**Active — Run Tracking + Registry + Evaluation Gates Partial** and reuses
+**Active — Run Tracking + Registry + Gates + Serving Partial** and reuses
 Project 2/3 platforms. Project 4 product work continues under PROJECT04.
 
 Charter (historical after Sprint 44): [`docs/agent/PROJECT03_INSTRUCTIONS.md`](agent/PROJECT03_INSTRUCTIONS.md).
 Progress / roadmap: [`docs/progress/PROJECT03_PROGRESS.md`](progress/PROJECT03_PROGRESS.md),
 [`docs/progress/PROJECT03_ROADMAP_STATUS.md`](progress/PROJECT03_ROADMAP_STATUS.md).
 
-## 1d. Project 4: Active — Run Tracking + Registry + Evaluation Gates Partial
+## 1d. Project 4: Active — Run Tracking + Registry + Gates + Serving Partial
 
-**Project 4: Active — Run Tracking + Registry + Evaluation Gates Partial.**
-Enterprise LLMOps Platform (Sprint 45+) with three **Partial** capabilities:
+**Project 4: Active — Run Tracking + Registry + Gates + Serving Partial.**
+Enterprise LLMOps Platform (Sprint 45+) with four **Partial** capabilities:
 Experiment / Run Tracking (Sprint 46), Prompt & Model Registry (Sprint 47),
-Evaluation Gates / Regression Harness (Sprint 48). Reuses Project 2/3
-platforms. Soft link only: run `params` / `metrics` may reference registry or
-evaluation aggregates.
+Evaluation Gates / Regression Harness (Sprint 48), Deployment / Serving
+Configuration (Sprint 49). Reuses Project 2/3 platforms. Soft link only: run
+`params` / `metrics` and serving config ids may reference registry or gates.
 
 | Capability | Status | Evidence |
 |---|---|---|
 | Experiment / Run Tracking | **Partial** | `app/knowledge/llmops`, `pnpm validate:llmops:contract`, `validate:llmops:run-store` |
 | Prompt & Model Registry | **Partial** | `PromptRegistry` / `ModelRegistry`, `pnpm validate:llmops:prompt-registry`, `validate:llmops:model-registry` |
 | Evaluation Gates / Regression Harness | **Partial** | `EvaluationGateEvaluator` / `RegressionHarness`, `pnpm validate:llmops:evaluation-gate`, `validate:llmops:regression-harness` |
-| Deployment / Serving Configuration | **Not Started** | — |
+| Deployment / Serving Configuration | **Partial** | `ServingConfigStore` / `InMemoryServingConfigStore`, `pnpm validate:llmops:serving-config` |
 | LLMOps Observability | **Not Started** | — |
 
 Project 2 remains **CLOSED**. Project 3 remains **CLOSED (Partial)**.
@@ -98,7 +98,7 @@ Static check: `pnpm validate:project04:charter-skeleton`.
 | Project 1 | Public Law AI — Grounded RAG | Complete (separate repo) |
 | Project 2 | AI Knowledge Platform — Knowledge + MCP + Agent | **CLOSED** |
 | Project 3 | Enterprise AI Workflow — Multi-Agent | **CLOSED (Partial)** |
-| Project 4 | Enterprise LLMOps Platform | **Active — Run Tracking + Registry + Evaluation Gates Partial** |
+| Project 4 | Enterprise LLMOps Platform | **Active — Run Tracking + Registry + Gates + Serving Partial** |
 
 Project 2 delivers a **completed platform baseline**: workspace-scoped
 knowledge pipelines through cited RAG answers, MCP/tool/agent/memory/jobs,
