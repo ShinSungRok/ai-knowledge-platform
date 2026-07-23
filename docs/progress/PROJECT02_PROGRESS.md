@@ -4431,3 +4431,31 @@ Wire DATABASE_URL into pnpm start host
 **Status**
 Completed
 
+## Task 230
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+FakePostgres listening smoke + optional live + docs
+
+**Summary**
+- Added validate:server:start-postgres-smoke (FakePostgresPool; in pnpm validate)
+- Added validate:server:start-postgres-live (skip when DATABASE_URL unset; not in validate)
+- Documented DATABASE_URL dual-path; Phase B Postgres slice on roadmap; OpenSearch later
+
+**Validation**
+- `pnpm validate:server:start-smoke`
+- `pnpm validate:server:start-postgres-smoke`
+- `pnpm validate:server:start-postgres-live` (skip OK)
+- `pnpm validate:project:final-closeout`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project04:closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed
+

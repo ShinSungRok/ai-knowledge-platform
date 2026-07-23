@@ -170,19 +170,25 @@ entries for this track go under `docs/progress/PROJECT02_PROGRESS.md` from
 Task 219+. Roadmap section: **P2 Service Completion Track: Active — Phase B**
 (Phase A Complete) in `docs/progress/PROJECT02_ROADMAP_STATUS.md`. Does **not**
 reopen Project 2 charter baseline CLOSED. Frozen: P3/P4 product work, Express.
-Postgres/OpenSearch listening wiring remains later Phase B.
+Optional Postgres SoT when `DATABASE_URL` is set (Sprint 59). OpenSearch
+listening wiring remains later Phase B.
 
 Phase A/B local service checks:
 
 ```bash
-# Always dependency-free (Fake LLM path); included in pnpm validate:
+# Always dependency-free; included in pnpm validate:
 pnpm validate:server:start-smoke
+pnpm validate:server:start-postgres-smoke
 pnpm validate:composition:listening-operations
-pnpm start   # HOST/PORT/API_KEY defaults; Fake LLM unless LLM_API_KEY set
+pnpm start   # InMemory + Fake LLM unless DATABASE_URL / LLM_API_KEY set
 
-# Optional live HTTP LLM (skips exit 0 without LLM_API_KEY; NOT in pnpm validate):
+# Optional live (skip exit 0 when unset; NOT in pnpm validate):
 pnpm validate:server:start-llm-live
+pnpm validate:server:start-postgres-live
 # LLM_API_KEY=sk-... pnpm validate:server:start-llm-live
+# DATABASE_URL=postgres://knowledge:knowledge@127.0.0.1:5432/knowledge \
+#   pnpm validate:server:start-postgres-live
+# docker compose -f docker/docker-compose.yml up -d postgres
 ```
 
 **Project 4: CLOSED (Partial).** Historical Progress/Roadmap remain under
