@@ -443,3 +443,25 @@ Define Serving Configuration contract
 
 **Status**
 Completed
+
+## Task 203
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Add InMemoryServingConfigStore
+
+**Summary**
+- Implemented InMemoryServingConfigStore (+ DefaultServingConfigStore alias)
+- Duplicate id reject; one active per workspace+environment on activate
+- trafficPercent bounds; workspace isolation; defensive copies; no SQL/HTTP
+
+**Validation**
+- `pnpm typecheck`
+
+**Status**
+Completed

@@ -103,3 +103,7 @@ export type {
   ServingConfigRetireInput,
   ServingConfigStore,
 } from "./ServingConfigStore";
+export {
+  InMemoryServingConfigStore,
+  DefaultServingConfigStore,
+} from "./InMemoryServingConfigStore";

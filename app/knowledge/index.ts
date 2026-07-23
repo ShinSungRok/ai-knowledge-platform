@@ -352,6 +352,8 @@ export {
   DefaultModelRegistry,
   DefaultEvaluationGateEvaluator,
   DefaultRegressionHarness,
+  InMemoryServingConfigStore,
+  DefaultServingConfigStore,
 } from "./llmops";
 export { KNOWLEDGE_MODULE_API } from "./api";
 export {
