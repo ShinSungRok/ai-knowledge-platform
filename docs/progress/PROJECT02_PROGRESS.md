@@ -4465,7 +4465,7 @@ Completed
 2026-07-23
 
 **Commit**
-Pending
+a841429
 
 **Title**
 Prepare OpenSearch composition for listening host
