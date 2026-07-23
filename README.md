@@ -18,9 +18,10 @@ closeout; five charter capabilities each Partial — none Completed).
 each Partial — none Completed). Closeout script:
 `pnpm validate:project04:closeout`.
 
-**P2 Service Completion Phase A (human-authorized):** Active — `pnpm start` +
-demo seed + `pnpm validate:server:start-smoke`. Does not reopen Project 2
-charter CLOSED. P3/P4 product work frozen. No Project 5.
+**P2 Service Completion (human-authorized):** Phase A **Complete** (Sprint 57);
+Phase B **Active** — optional HTTP LLM when `LLM_API_KEY` is set (Fake
+default). Does not reopen Project 2 charter CLOSED. P3/P4 product work frozen.
+No Project 5.
 
 | Track | Status |
 |---|---|
@@ -41,7 +42,8 @@ charter CLOSED. P3/P4 product work frozen. No Project 5.
 | Project 4 Deployment / Serving Configuration | Partial (Sprint 49) |
 | Project 4 LLMOps Observability | Partial (Sprint 50) |
 | Project 4 overall | CLOSED (Partial) (Sprint 51) |
-| P2 Service Completion Phase A | Active (Sprint 57) |
+| P2 Service Completion Phase A | Complete (Sprint 57) |
+| P2 Service Completion Phase B | Active (Sprint 58 — optional HTTP LLM) |
 
 Charter capabilities through Operations are Completed. Partial infra adapters,
 Project 3 Multi-Agent capabilities, and Project 4 LLMOps capabilities stay
@@ -91,15 +93,19 @@ pnpm validate:llmops:observation-store
 
 ## Local runtime
 
-### P2 Service Completion Phase A (`pnpm start`)
+### P2 Service Completion Phase A/B (`pnpm start`)
 
-Long-running HTTP host on InMemory composition + Fake LLM (`NodeHttpListener`,
-no Express). Demo knowledge is seeded on start unless `SKIP_DEMO_SEED=1`.
+Long-running HTTP host on InMemory composition (`NodeHttpListener`, no Express).
+**Phase A Complete:** demo seed + health/cited-answer smoke.
+**Phase B Active:** Fake LLM by default; set `LLM_API_KEY` to use
+`HttpLanguageModelProvider`. Demo knowledge is seeded on start unless
+`SKIP_DEMO_SEED=1`. See `.env.example`.
 
 ```bash
 pnpm start
 # optional:
 # HOST=127.0.0.1 PORT=8080 API_KEY=demo-key WORKSPACE_ID=workspace-a pnpm start
+# LLM_API_KEY=sk-... LLM_MODEL=gpt-4o-mini pnpm start
 ```
 
 | Env | Default |
@@ -110,6 +116,10 @@ pnpm start
 | `API_KEY_SUBJECT` | `demo-user` |
 | `WORKSPACE_ID` | `workspace-a` |
 | `SKIP_DEMO_SEED` | unset (seed on); `1` skips |
+| `LLM_API_KEY` | unset → Fake LLM; set → HTTP LLM |
+| `LLM_BASE_URL` | `https://api.openai.com/v1` (when HTTP) |
+| `LLM_MODEL` | `gpt-4o-mini` (when HTTP) |
+| `LLM_TIMEOUT_MS` | optional positive integer |
 
 ```bash
 curl -sS http://127.0.0.1:8080/health

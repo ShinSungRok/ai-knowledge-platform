@@ -36,8 +36,10 @@ charter baseline CLOSED or promote Partial infra to Completed).
 | Frozen | Project 3 / Project 4 product work; Express/Fastify; Partial→Completed |
 | Progress Log | `docs/progress/PROJECT02_PROGRESS.md` from Task 219+ |
 
-Sprint 57 (Task 219–222) completed Phase A. Sprint 58 (Task 223–226) opens
-Phase B with optional HTTP LLM only. Do not invent Project 5. P3/P4 remain
+Sprint 57 (Task 219–222) completed Phase A. Sprint 58 (Task 223–226) opened
+Phase B with optional HTTP LLM only (`LLM_API_KEY`; Fake default;
+`validate:server:start-llm-live` optional). Postgres/OpenSearch listening
+wiring remains later Phase B. Do not invent Project 5. P3/P4 remain
 CLOSED (Partial) / CLOSED (Partial) and frozen for this track.
 
 > Historical track detail below: Platform Baseline closeout (Sprint 20),

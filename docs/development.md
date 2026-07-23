@@ -175,10 +175,14 @@ Postgres/OpenSearch listening wiring remains later Phase B.
 Phase A/B local service checks:
 
 ```bash
+# Always dependency-free (Fake LLM path); included in pnpm validate:
 pnpm validate:server:start-smoke
 pnpm validate:composition:listening-operations
 pnpm start   # HOST/PORT/API_KEY defaults; Fake LLM unless LLM_API_KEY set
-pnpm validate:server:start-llm-live  # optional; skips when LLM_API_KEY unset
+
+# Optional live HTTP LLM (skips exit 0 without LLM_API_KEY; NOT in pnpm validate):
+pnpm validate:server:start-llm-live
+# LLM_API_KEY=sk-... pnpm validate:server:start-llm-live
 ```
 
 **Project 4: CLOSED (Partial).** Historical Progress/Roadmap remain under

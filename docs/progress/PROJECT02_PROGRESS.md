@@ -4334,3 +4334,29 @@ Add optional live HTTP LLM host smoke (skip without key)
 **Status**
 Completed
 
+## Task 226
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Document Phase B LLM env and .env.example
+
+**Summary**
+- README: Phase A Complete; Phase B optional LLM_* table
+- Added .env.example (HOST/PORT/API_KEY/WORKSPACE_ID/SKIP_DEMO_SEED/LLM_*)
+- development: start-smoke vs start-llm-live; roadmap Sprint 58 note
+
+**Validation**
+- `pnpm validate:server:start-smoke`
+- `pnpm validate:project:final-closeout`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project04:closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed
+
