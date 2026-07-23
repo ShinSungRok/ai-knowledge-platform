@@ -4260,3 +4260,29 @@ Add start smoke validation + README Phase A docs
 **Status**
 Completed
 
+## Task 223
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Close Phase A and open Phase B on roadmap
+
+**Summary**
+- Roadmap: Phase A Complete; Track Active — Phase B (optional HTTP LLM)
+- AGENT_OPERATIONS_GUIDE / development / portfolio updated
+- Project 2 CLOSED preserved; P3/P4 frozen; no runtime code
+
+**Validation**
+- `pnpm validate:server:start-smoke`
+- `pnpm validate:project:final-closeout`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project04:closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed
+

@@ -21,22 +21,23 @@ active Project 2 charter). Partial adapters stay Partial — not Completed.
 **Project 3 active docs:** `docs/agent/PROJECT03_INSTRUCTIONS.md`,
 `docs/progress/PROJECT03_PROGRESS.md`, `docs/progress/PROJECT03_ROADMAP_STATUS.md`.
 
-## P2 Service Completion Track: Active — Phase A
+## P2 Service Completion Track: Active — Phase B
 
 **Human-authorized** additional Active track (does **not** reopen Project 2
 charter baseline CLOSED or promote Partial infra to Completed).
 
 | Item | Status |
 |---|---|
-| Track | **Active — Phase A** |
-| Goal | `pnpm start` HTTP listen + demo seed + `/health` / cited-answer smoke |
-| Stack | InMemory composition + Fake LLM + `NodeHttpListener` (no Express) |
-| Deliverables (Sprint 57) | `pnpm start`, `seedDemoKnowledge`, `pnpm validate:server:start-smoke` |
-| Frozen | Project 3 / Project 4 product work; Express/Fastify; Phase B infra wiring (Postgres/OpenSearch/real LLM) |
+| Track | **Active — Phase B** |
+| Phase A | **Complete** (Sprint 57: `pnpm start`, `seedDemoKnowledge`, `pnpm validate:server:start-smoke`) |
+| Phase B (this Sprint) | Optional HTTP LLM when `LLM_API_KEY` is set; Fake LLM default |
+| Later Phase B | Postgres / OpenSearch listening wiring (not this Sprint) |
+| Stack | InMemory composition + `NodeHttpListener` (no Express); Fake LLM default |
+| Frozen | Project 3 / Project 4 product work; Express/Fastify; Partial→Completed |
 | Progress Log | `docs/progress/PROJECT02_PROGRESS.md` from Task 219+ |
 
-Sprint 57 (Task 219–222) established Phase A deliverables. Phase A stays
-**Active** until a human closes it. Do not invent Project 5. P3/P4 remain
+Sprint 57 (Task 219–222) completed Phase A. Sprint 58 (Task 223–226) opens
+Phase B with optional HTTP LLM only. Do not invent Project 5. P3/P4 remain
 CLOSED (Partial) / CLOSED (Partial) and frozen for this track.
 
 > Historical track detail below: Platform Baseline closeout (Sprint 20),
@@ -125,3 +126,4 @@ does not reopen baseline capabilities or mark Partial adapters as Completed.
 | Sprint 36 (Task 150–153) | Close Out Nested Deferral Expansion Track (portfolio/ops docs alignment, `validate:project:nested-expansion-closeout`, roadmap track CLOSED Partial) |
 | Sprint 37 (Task 154–157) | Close Out Project 2 / Project 3 Handoff (portfolio Project 2 CLOSED + Multi-Agent handoff, `validate:project:final-closeout`, roadmap Project 2: CLOSED) |
 | Sprint 57 (Task 219–222) | P2 Service Completion Phase A (`pnpm start`, demo seed, start smoke; human-authorized; P3/P4 frozen) |
+| Sprint 58 (Task 223–226) | Phase A Complete + Phase B optional HTTP LLM (`LLM_API_KEY`; Fake default; P3/P4 frozen) |

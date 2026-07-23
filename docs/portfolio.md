@@ -26,10 +26,10 @@ remain out of Project 2.
 
 Default `pnpm validate` stays **dependency-free** (Fake / in-memory adapters).
 
-**P2 Service Completion Phase A (human-authorized):** Active additional track for
-`pnpm start` + demo seed + health/cited-answer smoke. Does **not** reopen
-charter baseline CLOSED or promote Partial infra to Completed. P3/P4 product
-work remains frozen.
+**P2 Service Completion (human-authorized):** Phase A **Complete**; Phase B
+**Active** (optional HTTP LLM when `LLM_API_KEY` is set; Fake default). Does
+**not** reopen charter baseline CLOSED or promote Partial infra to Completed.
+P3/P4 product work remains frozen.
 
 ## 1c. Project 3: CLOSED (Partial) — Enterprise AI Workflow (Multi-Agent)
 

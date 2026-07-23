@@ -165,18 +165,19 @@ phases. Prefer validation runners for architectural and contract checks.
 
 ## 3. Sprint / Task validation flow
 
-**P2 Service Completion Phase A (human-authorized Active track).** Progress Log
+**P2 Service Completion Phase B (human-authorized Active track).** Progress Log
 entries for this track go under `docs/progress/PROJECT02_PROGRESS.md` from
-Task 219+. Roadmap section: **P2 Service Completion Track: Active — Phase A**
-in `docs/progress/PROJECT02_ROADMAP_STATUS.md`. Does **not** reopen Project 2
-charter baseline CLOSED. Frozen: P3/P4 product work, Express, Phase B infra.
+Task 219+. Roadmap section: **P2 Service Completion Track: Active — Phase B**
+(Phase A Complete) in `docs/progress/PROJECT02_ROADMAP_STATUS.md`. Does **not**
+reopen Project 2 charter baseline CLOSED. Frozen: P3/P4 product work, Express.
+Postgres/OpenSearch listening wiring remains later Phase B.
 
-Phase A local service checks:
+Phase A/B local service checks:
 
 ```bash
 pnpm validate:server:start-smoke
 pnpm validate:composition:listening-operations
-pnpm start   # HOST/PORT/API_KEY defaults; CTRL+C to stop
+pnpm start   # HOST/PORT/API_KEY defaults; Fake LLM unless LLM_API_KEY set
 ```
 
 **Project 4: CLOSED (Partial).** Historical Progress/Roadmap remain under
