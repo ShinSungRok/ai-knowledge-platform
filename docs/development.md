@@ -135,7 +135,8 @@ pnpm validate:project:nested-expansion-closeout # Sprints 32–35 nested expansi
 pnpm validate:project:final-closeout # Project 2 overall CLOSED + Project 3 handoff (static; Sprint 37)
 pnpm validate:project03:charter-skeleton # Project 3 charter docs + Partial/CLOSED status phrases
 pnpm validate:project03:closeout # Project 3 CLOSED (Partial) five-capability evidence (Sprint 44)
-pnpm validate:project04:charter-skeleton # Project 4 Active charter docs + CLOSED P2/P3 markers
+pnpm validate:project04:charter-skeleton # Project 4 charter docs + CLOSED P2/P3 markers
+# pnpm validate:project04:closeout # Project 4 CLOSED (Partial) evidence (Sprint 51 Task 212)
 pnpm validate:workflow:contract # Multi-Agent Role Contract
 pnpm validate:workflow:registry # InMemoryWorkflowAgentRegistry
 pnpm validate:workflow:orchestrator # DefaultWorkflowOrchestrator
@@ -164,11 +165,33 @@ phases. Prefer validation runners for architectural and contract checks.
 
 ## 3. Sprint / Task validation flow
 
-**Project 4: Active (Charter Skeleton).** Progress Log entries go under
-`docs/progress/PROJECT04_PROGRESS.md`. Roadmap status lives in
-`docs/progress/PROJECT04_ROADMAP_STATUS.md`. Active charter:
-`docs/agent/PROJECT04_INSTRUCTIONS.md`. Static check:
-`pnpm validate:project04:charter-skeleton`.
+**Project 4: CLOSED (Partial).** Historical Progress/Roadmap remain under
+`docs/progress/PROJECT04_*`. Charter (`docs/agent/PROJECT04_INSTRUCTIONS.md`)
+moves to Closed (historical) at Sprint 51 finalization. Five LLMOps charter
+capabilities stay **Partial** — **Partial ≠ Completed**. Do not reopen Project 4
+Partial tracks. Do not invent a Project 5 / PROJECT05 charter in this closeout.
+Static checks: `pnpm validate:project04:charter-skeleton` and (Sprint 51
+Task 212) `pnpm validate:project04:closeout`.
+
+**Project 4 closeout** (Sprint 51) requires (must keep passing once wired):
+
+```bash
+pnpm validate:project04:charter-skeleton
+pnpm validate:project04:closeout
+pnpm validate:llmops:contract
+pnpm validate:llmops:run-store
+pnpm validate:llmops:prompt-registry
+pnpm validate:llmops:model-registry
+pnpm validate:llmops:evaluation-gate
+pnpm validate:llmops:regression-harness
+pnpm validate:llmops:serving-config
+pnpm validate:llmops:observation-store
+```
+
+`validate:project04:closeout` statically checks five Partial capability
+evidence (docs, scripts, source files) and Project 4 CLOSED (Partial) /
+Project 2 CLOSED / Project 3 CLOSED (Partial) markers without Docker,
+network, or Partial→Completed.
 
 **Project 3: CLOSED (Partial).** Historical Progress/Roadmap remain under
 `docs/progress/PROJECT03_*`. Charter (`docs/agent/PROJECT03_INSTRUCTIONS.md`)
@@ -202,8 +225,8 @@ For each approved Sprint Task:
 2. Implement only the Task scope (reuse first).
 3. Run the Task's listed `pnpm validate:*` commands, then `pnpm typecheck`.
 4. Append a Progress Log entry under `docs/progress/PROJECT04_PROGRESS.md`
-   (Project 4 work). Use PROJECT03 / PROJECT02 logs only when documenting
-   their historical closeout.
+   for Project 4 historical closeout work. Use PROJECT03 / PROJECT02 logs only
+   when documenting their historical closeout.
 5. Diff-review in-scope files, then commit that Task alone.
 
 After all Sprint Tasks: run `pnpm validate`, write the Sprint Report, and stop.

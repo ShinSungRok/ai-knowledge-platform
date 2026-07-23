@@ -656,3 +656,29 @@ Declare Project 4 CLOSED (Partial) in portfolio
 
 **Status**
 Completed
+
+## Task 211
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Align README, development, and agent-ops for Project 4 final status
+
+**Summary**
+- README: Project 4 CLOSED (Partial); closeout script preview
+- development.md: CLOSED (Partial) Progress Log + closeout flow
+- AGENT_OPERATIONS_GUIDE: closing → Closed (historical) prep; no Project 5
+- Roadmap closing-prep phrasing only (formal CLOSED header in Task 213)
+
+**Validation**
+- `pnpm validate:project04:charter-skeleton`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed

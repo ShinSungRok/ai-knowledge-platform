@@ -1,11 +1,14 @@
 # Project 4 Roadmap Status
 
 > Enterprise LLMOps Platform  
-> **Active — Five LLMOps Capabilities Partial** — Sprint 50
+> **Active — Five LLMOps Capabilities Partial** — Sprint 50  
+> Closing prep (Sprint 51): portfolio declares **Project 4: CLOSED (Partial)**;
+> formal roadmap **CLOSED** header lands in Task 213.
 
 ## Status
 
-**Active — Five LLMOps Capabilities Partial.**
+**Active — Five LLMOps Capabilities Partial** (closing prep for Sprint 51
+**CLOSED (Partial)**).
 Experiment / Run Tracking, Prompt & Model Registry, Evaluation Gates /
 Regression Harness, Deployment / Serving Configuration, and LLMOps
 Observability are Fake/InMemory-proven (**Partial**, not Completed). All five

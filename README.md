@@ -14,8 +14,9 @@ composition root, and dependency-free validation runners.
 
 **Project 2: CLOSED** (Sprint 37). **Project 3: CLOSED (Partial)** (Sprint 44
 closeout; five charter capabilities each Partial — none Completed).
-**Project 4: Active — Five LLMOps Capabilities Partial**
-(Sprint 50 — `llmops` observation-store validator; all five caps Partial).
+**Project 4: CLOSED (Partial)** (Sprint 51 closeout; five LLMOps capabilities
+each Partial — none Completed). Closeout script:
+`pnpm validate:project04:closeout` (wired in Sprint 51 Task 212).
 
 | Track | Status |
 |---|---|
@@ -35,9 +36,11 @@ closeout; five charter capabilities each Partial — none Completed).
 | Project 4 Evaluation Gates / Regression Harness | Partial (Sprint 48) |
 | Project 4 Deployment / Serving Configuration | Partial (Sprint 49) |
 | Project 4 LLMOps Observability | Partial (Sprint 50) |
+| Project 4 overall | CLOSED (Partial) (Sprint 51) |
 
-Charter capabilities through Operations are Completed. Partial infra adapters
-and Project 3 Multi-Agent capabilities stay Partial (not Completed). See
+Charter capabilities through Operations are Completed. Partial infra adapters,
+Project 3 Multi-Agent capabilities, and Project 4 LLMOps capabilities stay
+Partial (not Completed). See
 [`docs/portfolio.md`](docs/portfolio.md),
 [`docs/progress/PROJECT02_ROADMAP_STATUS.md`](docs/progress/PROJECT02_ROADMAP_STATUS.md),
 Project 3 docs:
