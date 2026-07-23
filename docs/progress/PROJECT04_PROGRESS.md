@@ -414,3 +414,32 @@ Update roadmap/portfolio for Gates Partial
 
 **Status**
 Completed
+
+## Task 202
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Define Serving Configuration contract
+
+**Summary**
+- Added ServingConfigId, environment/status types, ServingConfigurationRecord
+- Added ServingConfigStore port (register/get/list/activate/retire)
+- Soft-link promptVersionId/modelVersionId/gateId; no registry/gate calls
+- Barrel exports; no InMemory adapter yet; existing llmops APIs unchanged
+
+**Validation**
+- `pnpm validate:llmops:contract`
+- `pnpm validate:llmops:run-store`
+- `pnpm validate:llmops:prompt-registry`
+- `pnpm validate:llmops:model-registry`
+- `pnpm validate:llmops:evaluation-gate`
+- `pnpm validate:llmops:regression-harness`
+- `pnpm typecheck`
+
+**Status**
+Completed

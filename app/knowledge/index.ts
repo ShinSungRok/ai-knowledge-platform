@@ -324,6 +324,14 @@ export type {
   EvaluationGateEvaluator,
   RegressionHarnessInput,
   RegressionHarness,
+  ServingConfigId,
+  ServingEnvironment,
+  ServingConfigStatus,
+  ServingConfigurationRecord,
+  ServingConfigRegisterInput,
+  ServingConfigActivateInput,
+  ServingConfigRetireInput,
+  ServingConfigStore,
 } from "./llmops";
 export {
   asExperimentId,
@@ -333,6 +341,7 @@ export {
   asModelId,
   asModelVersionId,
   asEvaluationGateId,
+  asServingConfigId,
 } from "./llmops";
 export {
   InMemoryExperimentRunStore,

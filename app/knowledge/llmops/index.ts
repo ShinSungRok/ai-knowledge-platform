@@ -5,16 +5,19 @@
  * - **Experiment / Run Tracking** (Partial) — {@link ExperimentRunStore}
  * - **Prompt & Model Registry** (Partial) — {@link PromptRegistry} /
  *   {@link ModelRegistry}
- * - **Evaluation Gates / Regression Harness** (contract) —
+ * - **Evaluation Gates / Regression Harness** (Partial) —
  *   {@link EvaluationGateEvaluator} / {@link RegressionHarness}
+ * - **Deployment / Serving Configuration** (contract) —
+ *   {@link ServingConfigStore}
  *
  * Soft links (document only):
  * - Run `params` may store `promptVersionId` / `modelVersionId`
  * - Gate input metrics may come from {@link ExperimentRunRecord.metrics} or
  *   flattened evaluation aggregates — do not import evaluation types here
+ * - Serving config holds soft-link ids only (no registry/gate calls on activate)
  *
- * Deferred: Deployment / Serving Configuration, LLMOps Observability, LLM-as-judge.
- * Does not bind `ai` LanguageModelProvider to the registry.
+ * Deferred: LLMOps Observability, HTTP serving (Express/Fastify), LLM-as-judge.
+ * Does not bind `ai` LanguageModelProvider to the registry or serving config.
  *
  * Distinct from Project 2 `JobRecord` / `JobStore` and Project 3
  * `WorkflowRunId` / workflow memory — do not conflate.
@@ -88,3 +91,15 @@ export type {
 } from "./RegressionHarness";
 export { DefaultEvaluationGateEvaluator } from "./DefaultEvaluationGateEvaluator";
 export { DefaultRegressionHarness } from "./DefaultRegressionHarness";
+
+export type { ServingConfigId } from "./ServingConfigId";
+export { asServingConfigId } from "./ServingConfigId";
+export type { ServingEnvironment } from "./ServingEnvironment";
+export type { ServingConfigStatus } from "./ServingConfigStatus";
+export type { ServingConfigurationRecord } from "./ServingConfigurationRecord";
+export type {
+  ServingConfigRegisterInput,
+  ServingConfigActivateInput,
+  ServingConfigRetireInput,
+  ServingConfigStore,
+} from "./ServingConfigStore";
