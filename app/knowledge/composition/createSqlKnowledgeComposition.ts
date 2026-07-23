@@ -10,6 +10,9 @@ import { DefaultContextAssembler } from "../context/DefaultContextAssembler";
 import { FakeEmbeddingProvider } from "../embedding/FakeEmbeddingProvider";
 import { SqlVectorIndex } from "../embedding/SqlVectorIndex";
 import { InMemorySqlGateway } from "../infra/InMemorySqlGateway";
+import { DefaultMcpJsonRpcHandler } from "../mcp/DefaultMcpJsonRpcHandler";
+import { DefaultMcpToolRegistry } from "../mcp/DefaultMcpToolRegistry";
+import { GenerateCitedGroundedAnswerMcpTool } from "../mcp/GenerateCitedGroundedAnswerMcpTool";
 import { SqlDocumentChunkRepository } from "../persistence/SqlDocumentChunkRepository";
 import { SqlKnowledgeDocumentRepository } from "../persistence/SqlKnowledgeDocumentRepository";
 import { SqlKnowledgeSourceRepository } from "../persistence/SqlKnowledgeSourceRepository";
@@ -89,6 +92,11 @@ export function createSqlKnowledgeComposition(
       generateGroundedAnswerUseCase,
       citationBuilder,
     );
+  const mcpTool = new GenerateCitedGroundedAnswerMcpTool(
+    generateCitedGroundedAnswerUseCase,
+  );
+  const mcpRegistry = new DefaultMcpToolRegistry([mcpTool]);
+  const mcpJsonRpcHandler = new DefaultMcpJsonRpcHandler(mcpRegistry);
 
   const runtime: KnowledgeRuntime = {
     config,
@@ -104,6 +112,7 @@ export function createSqlKnowledgeComposition(
 
   return {
     runtime,
+    mcpJsonRpcHandler,
     knowledgeDocumentRepository,
     knowledgeSourceRepository,
     documentChunkRepository,

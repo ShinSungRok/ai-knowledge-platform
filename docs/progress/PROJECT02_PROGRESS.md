@@ -4360,3 +4360,27 @@ Document Phase B LLM env and .env.example
 **Status**
 Completed
 
+## Task 227
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Extend Postgres composition + seed surface for host
+
+**Summary**
+- Postgres/SQL compositions: optional llm + mcpJsonRpcHandler
+- SqlKnowledgeComposition exposes mcpJsonRpcHandler
+- seedDemoKnowledge accepts SeedableKnowledgeSurface (InMemory + SQL)
+
+**Validation**
+- `pnpm validate:composition:postgres-knowledge`
+- `pnpm validate:server:start-smoke`
+- `pnpm typecheck`
+
+**Status**
+Completed
+

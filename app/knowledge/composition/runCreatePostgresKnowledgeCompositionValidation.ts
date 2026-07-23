@@ -93,6 +93,10 @@ async function assertEndToEndViaFakePool(): Promise<void> {
     "SqlVectorIndex",
     "SqlVectorIndex",
   );
+  assertTruthy(
+    typeof composition.mcpJsonRpcHandler.handle === "function",
+    "mcpJsonRpcHandler",
+  );
   assertEqual(
     (await composition.knowledgeSourceRepository.findById(
       WORKSPACE_A,

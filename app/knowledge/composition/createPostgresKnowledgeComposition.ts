@@ -1,7 +1,6 @@
 import { GenerateCitedGroundedAnswerUseCase } from "../application/GenerateCitedGroundedAnswerUseCase";
 import { GenerateGroundedAnswerUseCase } from "../application/GenerateGroundedAnswerUseCase";
 import { RetrieveGroundingContextUseCase } from "../application/RetrieveGroundingContextUseCase";
-import { FakeLanguageModelProvider } from "../ai/FakeLanguageModelProvider";
 import { DefaultCitationBuilder } from "../citation/DefaultCitationBuilder";
 import {
   DEFAULT_KNOWLEDGE_RUNTIME_CONFIG,
@@ -13,6 +12,9 @@ import { SqlVectorIndex } from "../embedding/SqlVectorIndex";
 import { applyKnowledgeSchema } from "../infra/applyKnowledgeSchema";
 import type { PostgresPool } from "../infra/PostgresPool";
 import { PostgresSqlGateway } from "../infra/PostgresSqlGateway";
+import { DefaultMcpJsonRpcHandler } from "../mcp/DefaultMcpJsonRpcHandler";
+import { DefaultMcpToolRegistry } from "../mcp/DefaultMcpToolRegistry";
+import { GenerateCitedGroundedAnswerMcpTool } from "../mcp/GenerateCitedGroundedAnswerMcpTool";
 import { SqlDocumentChunkRepository } from "../persistence/SqlDocumentChunkRepository";
 import { SqlKnowledgeDocumentRepository } from "../persistence/SqlKnowledgeDocumentRepository";
 import { SqlKnowledgeSourceRepository } from "../persistence/SqlKnowledgeSourceRepository";
@@ -23,6 +25,10 @@ import { DefaultHybridSearch } from "../search/DefaultHybridSearch";
 import { DefaultKeywordSearch } from "../search/DefaultKeywordSearch";
 import { DefaultRerankedSearch } from "../search/DefaultRerankedSearch";
 import { DefaultReranker } from "../search/DefaultReranker";
+import {
+  createLanguageModelProvider,
+  type LlmProviderOption,
+} from "./createLanguageModelProvider";
 import type { KnowledgeRuntime } from "./KnowledgeRuntime";
 import type { SqlKnowledgeComposition } from "./SqlKnowledgeComposition";
 
@@ -31,12 +37,14 @@ export type CreatePostgresKnowledgeCompositionOptions = {
   config?: KnowledgeRuntimeConfig;
   /** When not `false`, applies knowledge schema DDL before wiring repos. */
   applySchema?: boolean;
+  /** Defaults to Fake LLM. */
+  llm?: LlmProviderOption;
 };
 
 /**
  * Composition root with SQL-backed document/source/chunk/vector index over
- * {@link PostgresSqlGateway}. Cited-answer stack reuses in-memory/fake
- * adapters. Caller owns the pool lifecycle.
+ * {@link PostgresSqlGateway}. Cited-answer stack reuses fake embedding/search
+ * adapters; LLM defaults to Fake. Caller owns the pool lifecycle.
  *
  * Default in-memory and InMemorySqlGateway SQL paths remain available.
  */
@@ -76,7 +84,9 @@ export async function createPostgresKnowledgeComposition(
     contextAssembler,
   );
   const promptBuilder = new DefaultPromptBuilder();
-  const languageModelProvider = new FakeLanguageModelProvider();
+  const languageModelProvider = createLanguageModelProvider(
+    options.llm ?? { type: "fake" },
+  );
   const groundedAnswerAssembler = new DefaultGroundedAnswerAssembler();
   const generateGroundedAnswerUseCase = new GenerateGroundedAnswerUseCase(
     retrieveGroundingContextUseCase,
@@ -90,6 +100,11 @@ export async function createPostgresKnowledgeComposition(
       generateGroundedAnswerUseCase,
       citationBuilder,
     );
+  const mcpTool = new GenerateCitedGroundedAnswerMcpTool(
+    generateCitedGroundedAnswerUseCase,
+  );
+  const mcpRegistry = new DefaultMcpToolRegistry([mcpTool]);
+  const mcpJsonRpcHandler = new DefaultMcpJsonRpcHandler(mcpRegistry);
 
   const runtime: KnowledgeRuntime = {
     config,
@@ -105,6 +120,7 @@ export async function createPostgresKnowledgeComposition(
 
   return {
     runtime,
+    mcpJsonRpcHandler,
     knowledgeDocumentRepository,
     knowledgeSourceRepository,
     documentChunkRepository,
