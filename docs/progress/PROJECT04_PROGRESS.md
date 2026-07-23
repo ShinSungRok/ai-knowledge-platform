@@ -682,3 +682,30 @@ Align README, development, and agent-ops for Project 4 final status
 
 **Status**
 Completed
+
+## Task 212
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Add Project 4 closeout validation runner
+
+**Summary**
+- Added scripts/validate-project04-closeout.ts (portfolio CLOSED + five Partial evidence)
+- Wired validate:project04:closeout into package.json and top-level pnpm validate
+- Roadmap formal Project 4: CLOSED assertion tightened in Task 213
+
+**Validation**
+- `pnpm validate:project04:closeout`
+- `pnpm validate:project04:charter-skeleton`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+- (full `pnpm validate` at Sprint close after Task 213)
+
+**Status**
+Completed

@@ -136,7 +136,7 @@ pnpm validate:project:final-closeout # Project 2 overall CLOSED + Project 3 hand
 pnpm validate:project03:charter-skeleton # Project 3 charter docs + Partial/CLOSED status phrases
 pnpm validate:project03:closeout # Project 3 CLOSED (Partial) five-capability evidence (Sprint 44)
 pnpm validate:project04:charter-skeleton # Project 4 charter docs + CLOSED P2/P3 markers
-# pnpm validate:project04:closeout # Project 4 CLOSED (Partial) evidence (Sprint 51 Task 212)
+pnpm validate:project04:closeout # Project 4 CLOSED (Partial) five-capability evidence (Sprint 51)
 pnpm validate:workflow:contract # Multi-Agent Role Contract
 pnpm validate:workflow:registry # InMemoryWorkflowAgentRegistry
 pnpm validate:workflow:orchestrator # DefaultWorkflowOrchestrator

@@ -16,7 +16,7 @@ composition root, and dependency-free validation runners.
 closeout; five charter capabilities each Partial — none Completed).
 **Project 4: CLOSED (Partial)** (Sprint 51 closeout; five LLMOps capabilities
 each Partial — none Completed). Closeout script:
-`pnpm validate:project04:closeout` (wired in Sprint 51 Task 212).
+`pnpm validate:project04:closeout`.
 
 | Track | Status |
 |---|---|
@@ -73,6 +73,7 @@ pnpm validate:workflow:evaluation
 pnpm validate:application:eval-workflow
 pnpm validate:project03:closeout
 pnpm validate:project04:charter-skeleton
+pnpm validate:project04:closeout
 pnpm validate:llmops:contract
 pnpm validate:llmops:run-store
 pnpm validate:llmops:prompt-registry
