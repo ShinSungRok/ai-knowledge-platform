@@ -58,10 +58,13 @@ readiness checks):
 | PostgreSQL | Source-of-truth document store |
 | OpenSearch | Search / vector index |
 
-## 3. Application image (skeleton)
+## 3. Application image
 
-`docker/Dockerfile` is a multi-stage Node/pnpm skeleton (`deps` / `builder` /
-`runner`). It is not built or published as part of default validation.
+`docker/Dockerfile` is a multi-stage Node/pnpm image (`deps` / `builder` /
+`runner`). The runner stage defaults to `pnpm start` (listening operations
+host on `HOST=0.0.0.0` / `PORT=8080`, InMemory + Fake LLM). Optional
+`DATABASE_URL` / `OPENSEARCH_URL` / `LLM_API_KEY` follow the host env matrix.
+Not built as part of default `pnpm validate`.
 
 ## 4. Operations-ready in-memory server
 

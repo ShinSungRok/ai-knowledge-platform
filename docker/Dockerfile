@@ -15,13 +15,22 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN pnpm typecheck
 
-# ---- Runtime (placeholder) ----
+# ---- Runtime: P2 Service Completion Phase B host (`pnpm start`) ----
 FROM base AS runner
 ENV NODE_ENV=production
+ENV HOST=0.0.0.0
+ENV PORT=8080
+ENV API_KEY=demo-key
+ENV API_KEY_SUBJECT=demo-user
+ENV WORKSPACE_ID=workspace-a
+# InMemory + Fake LLM by default (no DATABASE_URL / OPENSEARCH_URL / LLM_API_KEY).
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY package.json tsconfig.json ./
 COPY app ./app
 COPY scripts ./scripts
 
-# Production command is deferred until the server module is implemented.
-CMD ["pnpm", "validate:skeleton"]
+EXPOSE 8080
+
+# NodeHttpListener host (no Express). Optional Postgres/OpenSearch via env.
+CMD ["pnpm", "start"]

@@ -4560,3 +4560,27 @@ Optional live OpenSearch smoke + docs/roadmap
 
 **Status**
 Completed
+
+## Task 235
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Point Dockerfile runner at pnpm start
+
+**Summary**
+- Runner CMD pnpm start; EXPOSE 8080; HOST=0.0.0.0 container defaults
+- InMemory/Fake LLM default; no Postgres/OpenSearch required in image
+- Updated deployment.md application image section
+
+**Validation**
+- `pnpm typecheck`
+- `pnpm validate:server:start-smoke`
+- `pnpm validate:deployment:readiness`
+
+**Status**
+Completed
