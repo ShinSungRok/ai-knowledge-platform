@@ -2,6 +2,8 @@ import type { DocumentChunk } from "../domain/DocumentChunk";
 import type { KnowledgeDocument } from "../domain/KnowledgeDocument";
 import type { KnowledgeSource } from "../domain/KnowledgeSource";
 import { FakeEmbeddingProvider } from "../embedding/FakeEmbeddingProvider";
+import { FakePostgresPool } from "../infra/FakePostgresPool";
+import type { SqlKnowledgeComposition } from "./SqlKnowledgeComposition";
 import { createOpenSearchKnowledgeComposition } from "./createOpenSearchKnowledgeComposition";
 import { createFakeOpenSearchOption } from "./createOpenSearchVectorIndexFromEnv";
 import { KNOWLEDGE_MODULE_COMPOSITION } from "./index";
@@ -22,34 +24,10 @@ function assertEqual(actual: unknown, expected: unknown, message: string): void 
   }
 }
 
-async function main(): Promise<void> {
-  console.log(
-    "[composition] KNOWLEDGE_MODULE_COMPOSITION constant is exported correctly...",
-  );
-  assertEqual(
-    KNOWLEDGE_MODULE_COMPOSITION,
-    "app/knowledge/composition",
-    "module constant",
-  );
-
-  console.log(
-    "[composition] createOpenSearchKnowledgeComposition SQL SoT + OpenSearch VectorIndex cited-answer...",
-  );
-  const composition = createOpenSearchKnowledgeComposition(undefined, {
-    openSearch: createFakeOpenSearchOption(),
-  });
-
-  assertEqual(
-    composition.vectorIndex.constructor.name,
-    "OpenSearchVectorIndex",
-    "OpenSearch vector index",
-  );
-  assertEqual(
-    composition.sqlGateway.constructor.name,
-    "InMemorySqlGateway",
-    "SQL SoT gateway",
-  );
-
+async function seedAndCite(
+  composition: SqlKnowledgeComposition,
+  chunkId: string,
+): Promise<void> {
   const source: KnowledgeSource = {
     workspaceId: WORKSPACE_A,
     id: "source-1",
@@ -68,7 +46,7 @@ async function main(): Promise<void> {
 
   const chunk: DocumentChunk = {
     workspaceId: WORKSPACE_A,
-    id: "chunk-1",
+    id: chunkId,
     documentId: document.id,
     text: "aaaaaaaa",
     order: 0,
@@ -94,6 +72,67 @@ async function main(): Promise<void> {
     maxCharacters: 10_000,
   });
   assertTruthy(result.answer.evidence.length > 0, "evidence present");
+  assertTruthy(composition.mcpJsonRpcHandler, "mcpJsonRpcHandler present");
+}
+
+async function main(): Promise<void> {
+  console.log(
+    "[composition] KNOWLEDGE_MODULE_COMPOSITION constant is exported correctly...",
+  );
+  assertEqual(
+    KNOWLEDGE_MODULE_COMPOSITION,
+    "app/knowledge/composition",
+    "module constant",
+  );
+
+  console.log(
+    "[composition] createOpenSearchKnowledgeComposition InMemorySql + OpenSearch...",
+  );
+  const inMemoryComposition = await createOpenSearchKnowledgeComposition(
+    undefined,
+    {
+      openSearch: createFakeOpenSearchOption(),
+    },
+  );
+
+  assertEqual(
+    inMemoryComposition.vectorIndex.constructor.name,
+    "OpenSearchVectorIndex",
+    "OpenSearch vector index",
+  );
+  assertEqual(
+    inMemoryComposition.sqlGateway.constructor.name,
+    "InMemorySqlGateway",
+    "SQL SoT gateway",
+  );
+  await seedAndCite(inMemoryComposition, "chunk-1");
+
+  console.log(
+    "[composition] createOpenSearchKnowledgeComposition FakePostgres + OpenSearch...",
+  );
+  const postgresComposition = await createOpenSearchKnowledgeComposition(
+    undefined,
+    {
+      pool: new FakePostgresPool(),
+      applySchema: true,
+      openSearch: createFakeOpenSearchOption({
+        baseUrl: "http://opensearch.test",
+        indexName: "knowledge-embeddings-pg",
+      }),
+    },
+  );
+  assertEqual(
+    postgresComposition.sqlGateway.constructor.name,
+    "PostgresSqlGateway",
+    "Postgres SoT gateway",
+  );
+  assertEqual(
+    postgresComposition.vectorIndex.constructor.name,
+    "OpenSearchVectorIndex",
+    "OpenSearch vector index (postgres path)",
+  );
+  await seedAndCite(postgresComposition, "chunk-pg-1");
+
   console.log("createOpenSearchKnowledgeComposition validation succeeded.");
 }
 

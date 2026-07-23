@@ -17,8 +17,9 @@
  * shared InMemorySqlGateway (vector/cited-answer still in-memory/fake).
  * `createPostgresKnowledgeComposition` injects a PostgresPool into
  * PostgresSqlGateway (optional schema apply).
- * `createOpenSearchKnowledgeComposition` keeps SQL SoT and swaps VectorIndex
- * to OpenSearch (Fake/Fetch transport; official SDK deferred).
+ * `createOpenSearchKnowledgeComposition` keeps SQL SoT (InMemorySqlGateway or
+ * optional Postgres pool) and swaps VectorIndex to OpenSearch (Fake/Fetch
+ * transport; official SDK deferred).
  * Operations/listening support optional JWT AuthN via `auth` option (default
  * ApiKey). `createListeningOperationsServer` adds NodeHttpListener TCP listen.
  */

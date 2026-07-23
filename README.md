@@ -258,7 +258,7 @@ import {
 } from "./app/knowledge";
 
 // dependency-free composition smoke
-const composition = createOpenSearchKnowledgeComposition(undefined, {
+const composition = await createOpenSearchKnowledgeComposition(undefined, {
   openSearch: createFakeOpenSearchOption(),
 });
 

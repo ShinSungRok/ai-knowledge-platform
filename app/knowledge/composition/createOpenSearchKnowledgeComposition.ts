@@ -9,7 +9,11 @@ import type { KnowledgeRuntimeConfig } from "../config/KnowledgeRuntimeConfig";
 import { DefaultContextAssembler } from "../context/DefaultContextAssembler";
 import { FakeEmbeddingProvider } from "../embedding/FakeEmbeddingProvider";
 import { OpenSearchVectorIndex } from "../embedding/OpenSearchVectorIndex";
+import { applyKnowledgeSchema } from "../infra/applyKnowledgeSchema";
 import { InMemorySqlGateway } from "../infra/InMemorySqlGateway";
+import type { PostgresPool } from "../infra/PostgresPool";
+import { PostgresSqlGateway } from "../infra/PostgresSqlGateway";
+import type { SqlGateway } from "../infra/SqlGateway";
 import { DefaultMcpJsonRpcHandler } from "../mcp/DefaultMcpJsonRpcHandler";
 import { DefaultMcpToolRegistry } from "../mcp/DefaultMcpToolRegistry";
 import { GenerateCitedGroundedAnswerMcpTool } from "../mcp/GenerateCitedGroundedAnswerMcpTool";
@@ -38,20 +42,38 @@ export type CreateOpenSearchKnowledgeCompositionOptions = {
   llm?: LlmProviderOption;
   /** OpenSearch VectorIndex config + transport (Fake or Fetch). */
   openSearch: CreateOpenSearchKnowledgeCompositionOpenSearchOption;
+  /**
+   * When set, document/source/chunk SoT uses {@link PostgresSqlGateway}.
+   * When unset, SoT uses {@link InMemorySqlGateway} (Fake smokes without Postgres).
+   * VectorIndex is always OpenSearch.
+   */
+  pool?: PostgresPool;
+  /** When `pool` is set and not `false`, applies knowledge schema DDL first. */
+  applySchema?: boolean;
 };
 
 /**
  * SQL Source-of-Truth (document/source/chunk) with OpenSearch VectorIndex.
  *
- * Documents remain on {@link InMemorySqlGateway}; only the rebuildable vector
- * search index uses OpenSearch. Default validate / operations paths stay on
- * {@link createSqlKnowledgeComposition} / InMemory — this factory is optional.
+ * Default SoT is {@link InMemorySqlGateway}; pass `pool` for Postgres SoT while
+ * keeping OpenSearch as the rebuildable vector index. Default validate /
+ * operations paths stay on InMemory / Postgres-only factories — this factory
+ * is optional for host OpenSearch wiring.
  */
-export function createOpenSearchKnowledgeComposition(
+export async function createOpenSearchKnowledgeComposition(
   config: KnowledgeRuntimeConfig = DEFAULT_KNOWLEDGE_RUNTIME_CONFIG,
   options: CreateOpenSearchKnowledgeCompositionOptions,
-): SqlKnowledgeComposition {
-  const sqlGateway = new InMemorySqlGateway();
+): Promise<SqlKnowledgeComposition> {
+  let sqlGateway: SqlGateway;
+  if (options.pool !== undefined) {
+    sqlGateway = new PostgresSqlGateway(options.pool);
+    if (options.applySchema !== false) {
+      await applyKnowledgeSchema(sqlGateway);
+    }
+  } else {
+    sqlGateway = new InMemorySqlGateway();
+  }
+
   const knowledgeDocumentRepository = new SqlKnowledgeDocumentRepository(
     sqlGateway,
   );

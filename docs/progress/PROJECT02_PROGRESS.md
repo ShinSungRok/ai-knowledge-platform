@@ -4459,3 +4459,29 @@ FakePostgres listening smoke + optional live + docs
 **Status**
 Completed
 
+## Task 231
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Prepare OpenSearch composition for listening host
+
+**Summary**
+- createOpenSearchKnowledgeComposition is async; optional pool for Postgres SoT
+- VectorIndex remains OpenSearch; InMemorySql path kept for Fake smokes
+- Validator covers InMemorySql+OS and FakePostgres+OS; mcpJsonRpcHandler asserted
+
+**Validation**
+- `pnpm validate:composition:opensearch-knowledge`
+- `pnpm validate:composition:postgres-knowledge`
+- `pnpm validate:server:start-smoke`
+- `pnpm validate:server:start-postgres-smoke`
+- `pnpm typecheck`
+
+**Status**
+Completed
+
