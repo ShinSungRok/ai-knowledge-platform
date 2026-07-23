@@ -172,7 +172,8 @@
     "validate:llmops:regression-harness": "tsx app/knowledge/llmops/runRegressionHarnessValidation.ts",
     "validate:llmops:serving-config": "tsx app/knowledge/llmops/runServingConfigStoreValidation.ts",
     "validate:llmops:observation-store": "tsx app/knowledge/llmops/runLlmopsObservationStoreValidation.ts",
-    "validate:project04:closeout": "tsx scripts/validate-project04-closeout.ts"
+    "validate:project04:closeout": "tsx scripts/validate-project04-closeout.ts",
+    "start": "tsx app/knowledge/composition/runListeningOperationsHost.ts"
   },
   "devDependencies": {
     "@types/node": "^20.17.0",

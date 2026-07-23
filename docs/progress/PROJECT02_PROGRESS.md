@@ -4182,3 +4182,30 @@ Record P2 Service Completion Phase A track
 
 **Status**
 Completed
+
+## Task 220
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Add pnpm start HTTP host entrypoint
+
+**Summary**
+- Added listeningOperationsHostConfig + runListeningOperationsHost
+- package.json start → NodeHttpListener host (Fake LLM, InMemory)
+- Env HOST/PORT/API_KEY/API_KEY_SUBJECT/WORKSPACE_ID/SKIP_DEMO_SEED
+- seedDemoKnowledge stub (filled in Task 221)
+
+**Validation**
+- `pnpm validate:composition:listening-operations`
+- `pnpm validate:server:node-listener`
+- `pnpm typecheck`
+- Manual: pnpm start → GET /health 200
+
+**Status**
+Completed
+
