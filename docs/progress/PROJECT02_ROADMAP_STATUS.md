@@ -21,6 +21,22 @@ active Project 2 charter). Partial adapters stay Partial — not Completed.
 **Project 3 active docs:** `docs/agent/PROJECT03_INSTRUCTIONS.md`,
 `docs/progress/PROJECT03_PROGRESS.md`, `docs/progress/PROJECT03_ROADMAP_STATUS.md`.
 
+## P2 Service Completion Track: Active — Phase A
+
+**Human-authorized** additional Active track (does **not** reopen Project 2
+charter baseline CLOSED or promote Partial infra to Completed).
+
+| Item | Status |
+|---|---|
+| Track | **Active — Phase A** |
+| Goal | `pnpm start` HTTP listen + demo seed + `/health` / cited-answer smoke |
+| Stack | InMemory composition + Fake LLM + `NodeHttpListener` (no Express) |
+| Frozen | Project 3 / Project 4 product work; Express/Fastify; Phase B infra wiring (Postgres/OpenSearch/real LLM) |
+| Progress Log | `docs/progress/PROJECT02_PROGRESS.md` from Task 219+ |
+
+Sprint 57 (Task 219–222) establishes Phase A deliverables. Phase A stays
+**Active** until a human closes it. Do not invent Project 5.
+
 > Historical track detail below: Platform Baseline closeout (Sprint 20),
 > post-baseline persistence / listen / AuthN / LLM / MCP / OTLP / OpenSearch
 > (Sprints 21–30), nested deferral expansion (Sprints 32–35).
@@ -106,3 +122,4 @@ does not reopen baseline capabilities or mark Partial adapters as Completed.
 | Sprint 35 (Task 146–149) | Establish MCP Stdio Transport (stdio IO contract, `StdioMcpJsonRpcSession`, Fake streams validation, optional `createInMemoryStdioMcpSession`; HTTP `/mcp` remains default network path; official MCP SDK deferred) |
 | Sprint 36 (Task 150–153) | Close Out Nested Deferral Expansion Track (portfolio/ops docs alignment, `validate:project:nested-expansion-closeout`, roadmap track CLOSED Partial) |
 | Sprint 37 (Task 154–157) | Close Out Project 2 / Project 3 Handoff (portfolio Project 2 CLOSED + Multi-Agent handoff, `validate:project:final-closeout`, roadmap Project 2: CLOSED) |
+| Sprint 57 (Task 219–222) | P2 Service Completion Phase A (`pnpm start`, demo seed, start smoke; human-authorized; P3/P4 frozen) |

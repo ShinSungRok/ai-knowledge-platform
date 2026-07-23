@@ -165,6 +165,12 @@ phases. Prefer validation runners for architectural and contract checks.
 
 ## 3. Sprint / Task validation flow
 
+**P2 Service Completion Phase A (human-authorized Active track).** Progress Log
+entries for this track go under `docs/progress/PROJECT02_PROGRESS.md` from
+Task 219+. Roadmap section: **P2 Service Completion Track: Active — Phase A**
+in `docs/progress/PROJECT02_ROADMAP_STATUS.md`. Does **not** reopen Project 2
+charter baseline CLOSED. Frozen: P3/P4 product work, Express, Phase B infra.
+
 **Project 4: CLOSED (Partial).** Historical Progress/Roadmap remain under
 `docs/progress/PROJECT04_*`. Charter (`docs/agent/PROJECT04_INSTRUCTIONS.md`)
 is Closed (historical). Five LLMOps charter capabilities stay **Partial** —
@@ -224,9 +230,9 @@ For each approved Sprint Task:
 1. Review the listed files before editing.
 2. Implement only the Task scope (reuse first).
 3. Run the Task's listed `pnpm validate:*` commands, then `pnpm typecheck`.
-4. Append a Progress Log entry under `docs/progress/PROJECT04_PROGRESS.md`
-   for Project 4 historical closeout work. Use PROJECT03 / PROJECT02 logs only
-   when documenting their historical closeout.
+4. Append a Progress Log entry under `docs/progress/PROJECT02_PROGRESS.md`
+   for P2 Service Completion Phase A work (Task 219+). Use PROJECT04 /
+   PROJECT03 logs only when documenting their historical closeout.
 5. Diff-review in-scope files, then commit that Task alone.
 
 After all Sprint Tasks: run `pnpm validate`, write the Sprint Report, and stop.

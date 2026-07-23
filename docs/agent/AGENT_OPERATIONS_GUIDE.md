@@ -22,10 +22,18 @@ Project 3: CLOSED (Partial) / Project 4: CLOSED (Partial) /
 Partial≠Completed 서술을 되돌리지 않는다. **Do not invent Project 5 /
 PROJECT05**. Do not reopen Partial tracks.
 
+**Current Active implementation track (human-authorized):**
+**P2 Service Completion Phase A** — `pnpm start` + demo seed + health /
+cited-answer smoke on InMemory + Fake LLM. Do **not** implement Project 3 /
+Project 4 product features in this track. Do **not** use Express/Fastify.
+Phase B infra wiring is out of scope until separately authorized.
+
 문서 간 우선순위는 다음과 같다.
 
 ```text
-PROJECT04_INSTRUCTIONS.md (Closed historical — Enterprise LLMOps CLOSED Partial)
+Human-authorized Active track (P2 Service Completion Phase A)
+        ↓
+Closed historical charters (PROJECT04 / PROJECT03 / PROJECT02) for constraints
         ↓
 AGENT_OPERATIONS_GUIDE.md
         ↓
@@ -38,9 +46,9 @@ AGENT_OPERATIONS_GUIDE.md
 - `AGENT_OPERATIONS_GUIDE.md`: 어떤 Agent Skill을 언제 어떻게 사용할지 정의
 - 개별 Task Prompt: 현재 작업의 구체적인 범위와 완료 조건 정의
 
-일반 작업에서는 역사적 헌장 참조 시 `PROJECT04_INSTRUCTIONS.md`를 적용한다.
-Skill 사용법이 필요할 때만 이 문서를 읽는다. Skill 결과가 Project 2/3/4
-CLOSED 서술과 충돌하면 CLOSED / CLOSED (Partial)를 보존한다.
+P2 Service Completion Phase A 작업은 `docs/progress/PROJECT02_PROGRESS.md`에
+기록한다. Skill 결과가 Project 2/3/4 CLOSED 서술과 충돌하면 CLOSED /
+CLOSED (Partial)를 보존한다.
 
 ---
 
