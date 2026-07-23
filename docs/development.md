@@ -167,11 +167,11 @@ phases. Prefer validation runners for architectural and contract checks.
 
 **Project 4: CLOSED (Partial).** Historical Progress/Roadmap remain under
 `docs/progress/PROJECT04_*`. Charter (`docs/agent/PROJECT04_INSTRUCTIONS.md`)
-moves to Closed (historical) at Sprint 51 finalization. Five LLMOps charter
-capabilities stay **Partial** — **Partial ≠ Completed**. Do not reopen Project 4
-Partial tracks. Do not invent a Project 5 / PROJECT05 charter in this closeout.
-Static checks: `pnpm validate:project04:charter-skeleton` and (Sprint 51
-Task 212) `pnpm validate:project04:closeout`.
+is Closed (historical). Five LLMOps charter capabilities stay **Partial** —
+**Partial ≠ Completed**. Do not reopen Project 4 Partial tracks. Do not invent
+a Project 5 / PROJECT05 charter in this closeout. Static checks:
+`pnpm validate:project04:charter-skeleton` and
+`pnpm validate:project04:closeout`.
 
 **Project 4 closeout** (Sprint 51) requires (must keep passing once wired):
 

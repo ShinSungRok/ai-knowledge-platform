@@ -91,10 +91,12 @@ Project 2 remains **CLOSED**. Project 3 remains **CLOSED (Partial)**.
 **Partial ≠ Completed**. Closing Project 4 does **not** reopen Project 2 or
 Project 3. This closeout does **not** invent a Project 5 / PROJECT05 charter.
 
-Charter: [`docs/agent/PROJECT04_INSTRUCTIONS.md`](agent/PROJECT04_INSTRUCTIONS.md).
+Charter: [`docs/agent/PROJECT04_INSTRUCTIONS.md`](agent/PROJECT04_INSTRUCTIONS.md)
+(Closed historical).
 Progress / roadmap: [`docs/progress/PROJECT04_PROGRESS.md`](progress/PROJECT04_PROGRESS.md),
 [`docs/progress/PROJECT04_ROADMAP_STATUS.md`](progress/PROJECT04_ROADMAP_STATUS.md).
-Static check: `pnpm validate:project04:charter-skeleton`.
+Static checks: `pnpm validate:project04:charter-skeleton`,
+`pnpm validate:project04:closeout`.
 
 ## 1e. Project sequence
 

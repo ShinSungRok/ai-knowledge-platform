@@ -2,17 +2,22 @@
 
 > AI Knowledge Platform — Project 4 Core Charter  
 > Version: 1.0  
-> Status: Active  
-> Applies To: Cursor Planning Agent, Cursor Developer Agent, 모든 Project 4 작업  
-> Last Updated: 2026-07-22
+> Status: Closed (historical)  
+> Applies To: Historical Project 4 Enterprise LLMOps charter reference  
+> Last Updated: 2026-07-23
 
 ---
 
 ## 1. 문서 목적과 우선순위
 
-이 문서는 Project 4에서 **항상 적용하는 핵심 개발 헌장**이다.
+이 문서는 Project 4에서 적용했던 **핵심 개발 헌장**이다 (Sprint 51 closeout
+이후 **Closed (historical)**).
 
-모든 Agent는 의미 있는 Project 4 Task를 시작하기 전에 이 문서를 적용한다.
+Project 4: **CLOSED (Partial)** — 다섯 LLMOps charter capability는 각각
+**Partial**이며 Completed로 승격하지 않는다. Project 2 CLOSED / Project 3
+CLOSED (Partial) / Partial≠Completed 서술을 되돌리지 않는다. Project 4를
+Active로 재개하지 않는다. 이 closeout에서 **Project 5 / PROJECT05 헌장을
+신설하지 않는다**.
 
 Agent 역할, Skill 선택, 운영 규칙이 필요한 경우에만
 `docs/agent/AGENT_OPERATIONS_GUIDE.md`를 참조한다.
@@ -30,9 +35,9 @@ docs/agent/AGENT_OPERATIONS_GUIDE.md
 ```
 
 Project 2 헌장(`PROJECT02_INSTRUCTIONS.md`)과 Project 3 헌장
-(`PROJECT03_INSTRUCTIONS.md`)은 **Closed (historical)**이다. 신규 작업의
-상위 헌장은 이 문서(PROJECT04)이다. Project 2 CLOSED / Project 3 CLOSED
-(Partial) / Partial≠Completed 서술을 되돌리지 않는다.
+(`PROJECT03_INSTRUCTIONS.md`)은 **Closed (historical)**이다. 이 문서도
+**Closed (historical)**이다. Project 2 CLOSED / Project 3 CLOSED (Partial) /
+Project 4 CLOSED (Partial) / Partial≠Completed 서술을 되돌리지 않는다.
 
 현재 Task가 이 문서의 아키텍처·안전·검증 원칙과 충돌하면 즉시 구현하지
 말고 충돌 이유와 대안을 보고한다.
@@ -48,11 +53,12 @@ Project 2  AI Knowledge Platform — Knowledge + MCP + Agent (CLOSED)
     ↓
 Project 3  Enterprise AI Workflow — Multi-Agent (CLOSED Partial)
     ↓
-Project 4  Enterprise LLMOps Platform (현재)
+Project 4  Enterprise LLMOps Platform (CLOSED Partial)
 ```
 
 Project 4는 Project 2 Knowledge / MCP / Agent 플랫폼과 Project 3
-Multi-Agent workflow 경계 위에 **Enterprise LLMOps Platform**을 확립한다.
+Multi-Agent workflow 경계 위에 **Enterprise LLMOps Platform**을 확립했다
+(Sprint 51: CLOSED Partial).
 
 증명할 역량(목표):
 

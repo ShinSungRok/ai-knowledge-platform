@@ -12,8 +12,8 @@ function assertContains(haystack: string, needle: string, message: string): void
 }
 
 /**
- * Static Project 4 charter skeleton: docs + Active (Charter Skeleton) +
- * Project 2/3 CLOSED markers. Dependency-free (fs/path only).
+ * Static Project 4 charter skeleton: docs + Closed (historical) / legacy Active
+ * phrases + Project 2/3 CLOSED markers. Dependency-free (fs/path only).
  * Does not require LLMOps product/runtime implementation.
  */
 function main(): void {
@@ -49,10 +49,11 @@ function main(): void {
     instructions.includes("LLMOps") || instructions.includes("Enterprise LLMOps"),
     "PROJECT04_INSTRUCTIONS must mention LLMOps",
   );
-  assertContains(
-    instructions,
-    "Status: Active",
-    "PROJECT04_INSTRUCTIONS must declare Status: Active",
+  assertTruthy(
+    instructions.includes("Status: Closed (historical)") ||
+      instructions.includes("Status: Closed") ||
+      instructions.includes("Status: Active"),
+    "PROJECT04_INSTRUCTIONS must declare Status Closed (historical) or legacy Active",
   );
 
   console.log("[project04-charter-skeleton] Checking Project 4 roadmap...");
@@ -62,7 +63,9 @@ function main(): void {
   );
   assertContains(roadmap, "Sprint 45", "PROJECT04 roadmap must include Sprint 45");
   assertTruthy(
-    roadmap.includes("Active (Charter Skeleton)") ||
+    roadmap.includes("Project 4: CLOSED (Partial)") ||
+      roadmap.includes("Project 4: CLOSED") ||
+      roadmap.includes("Active (Charter Skeleton)") ||
       roadmap.includes("Active — Experiment / Run Tracking Partial") ||
       roadmap.includes(
         "Active — Run Tracking + Prompt & Model Registry Partial",
@@ -74,7 +77,7 @@ function main(): void {
         "Active — Run Tracking + Registry + Gates + Serving Partial",
       ) ||
       roadmap.includes("Active — Five LLMOps Capabilities Partial"),
-    "PROJECT04 roadmap must declare an Active charter/Partial status phrase",
+    "PROJECT04 roadmap must declare CLOSED (Partial) or legacy Active Partial phrase",
   );
   assertContains(
     roadmap,

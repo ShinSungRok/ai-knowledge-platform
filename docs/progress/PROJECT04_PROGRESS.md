@@ -709,3 +709,31 @@ Add Project 4 closeout validation runner
 
 **Status**
 Completed
+
+## Task 213
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Finalize Project 4 CLOSED on roadmap and charter
+
+**Summary**
+- Roadmap: Project 4: CLOSED (Partial); Sprint 51 close note; five caps Partial
+- PROJECT04_INSTRUCTIONS: Closed (historical); no Project 5
+- Charter-skeleton allows Closed; closeout requires roadmap Project 4: CLOSED
+- Agent-ops / development finalized; Partial≠Completed; P2/P3 CLOSED preserved
+
+**Validation**
+- `pnpm validate:project04:closeout`
+- `pnpm validate:project04:charter-skeleton`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project:final-closeout`
+- `pnpm validate:llmops:observation-store`
+- `pnpm typecheck`
+
+**Status**
+Completed

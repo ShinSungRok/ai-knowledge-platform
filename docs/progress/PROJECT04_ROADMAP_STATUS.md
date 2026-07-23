@@ -1,21 +1,19 @@
 # Project 4 Roadmap Status
 
 > Enterprise LLMOps Platform  
-> **Active — Five LLMOps Capabilities Partial** — Sprint 50  
-> Closing prep (Sprint 51): portfolio declares **Project 4: CLOSED (Partial)**;
-> formal roadmap **CLOSED** header lands in Task 213.
+> **Project 4: CLOSED (Partial)** — Sprint 51
 
 ## Status
 
-**Active — Five LLMOps Capabilities Partial** (closing prep for Sprint 51
-**CLOSED (Partial)**).
-Experiment / Run Tracking, Prompt & Model Registry, Evaluation Gates /
-Regression Harness, Deployment / Serving Configuration, and LLMOps
-Observability are Fake/InMemory-proven (**Partial**, not Completed). All five
-charter capabilities are **Partial**.
+**Project 4: CLOSED (Partial).** All five charter capabilities remain
+**Partial** (none Completed). Charter Skeleton (Sprint 45) through Observability
+(Sprint 50) plus closeout (Sprint 51) are complete. Express/HTTP serving,
+official vendor LLMOps SaaS SDKs, live OTLP wiring, and Partial→Completed are
+out of this closeout. This closeout does **not** invent a Project 5 /
+PROJECT05 charter.
 
 **Project 2 remains CLOSED** (Sprint 37). **Project 3 remains CLOSED
-(Partial)** (Sprint 44). Do not reopen Project 2/3 tracks.
+(Partial)** (Sprint 44). Do not reopen Project 2/3/4 tracks.
 **Partial ≠ Completed** for Project 2 infra adapters, Project 3 Multi-Agent
 capabilities, and Project 4 LLMOps Partial capabilities.
 
@@ -30,7 +28,7 @@ capabilities, and Project 4 LLMOps Partial capabilities.
 - `app/knowledge/composition` — composition root
 - `app/knowledge/workflow` — Project 3 Multi-Agent workflow (Partial)
 - `app/knowledge/application` — use cases over ports
-- Dependency-free `tsx` validation runners and Project 2/3 closeout validators
+- Dependency-free `tsx` validation runners and Project 2/3/4 closeout validators
 
 ## Charter capabilities
 
@@ -44,12 +42,12 @@ capabilities, and Project 4 LLMOps Partial capabilities.
 
 ## Remaining by design
 
-- Project 4 closeout (later)
 - Promoting Partial → Completed
-- Reopening Project 2 CLOSED or Project 3 CLOSED (Partial)
+- Reopening Project 2 CLOSED, Project 3 CLOSED (Partial), or Project 4 CLOSED (Partial)
 - Express/Fastify HTTP serving, full OIDC login, official vendor LLMOps SaaS SDKs as hard deps
 - LLM-as-judge; binding `ai` LanguageModelProvider to registry/serving; SQL adapters
 - Live OTLP export / wiring ExportingMetrics from `llmops` observations
+- Inventing Project 5 / PROJECT05 in this closeout
 
 ## Task range
 
@@ -61,6 +59,7 @@ capabilities, and Project 4 LLMOps Partial capabilities.
 | Sprint 48 (Task 198–201) | Establish Evaluation Gates / Regression Harness (Partial) |
 | Sprint 49 (Task 202–205) | Establish Deployment / Serving Configuration (Partial) |
 | Sprint 50 (Task 206–209) | Establish LLMOps Observability (Partial) |
+| Sprint 51 (Task 210–213) | Close Out Project 4 (CLOSED Partial) |
 
 ## Sprint 45 close note
 
@@ -111,3 +110,12 @@ observability Metrics/OTLP names (`llmops.quality.<key>`, `llmops.cost.units`,
 `llmops.latency.ms`); `llmops` does not import `observability`. No live OTLP /
 `@opentelemetry/*` / HTTP serving. Project 2 remains **CLOSED**. Project 3
 remains **CLOSED (Partial)**. Project 4 is **not** CLOSED.
+
+## Sprint 51 close note
+
+**Sprint 51 — Close Out Project 4: CLOSED (Partial).** Tasks 210–213 recorded
+portfolio **Project 4: CLOSED (Partial)**, aligned README/development/agent-ops,
+added `pnpm validate:project04:closeout`, and finalized roadmap/charter as
+Closed (historical). All five LLMOps capabilities remain **Partial** (not
+Completed). Project 2 remains **CLOSED**. Project 3 remains **CLOSED
+(Partial)**. No Project 5 / PROJECT05 charter.

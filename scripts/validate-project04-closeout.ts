@@ -114,21 +114,26 @@ function main(): void {
   assertContains(roadmap, "**Partial**", "roadmap must mark capabilities Partial");
   assertContains(
     roadmap,
-    "Project 2 remains CLOSED",
-    "roadmap must retain Project 2 CLOSED",
+    "Project 4: CLOSED",
+    "roadmap must declare Project 4: CLOSED",
   );
   assertContains(
     roadmap,
     "CLOSED (Partial)",
     "roadmap must declare CLOSED (Partial)",
   );
-  // Formal "Project 4: CLOSED" on roadmap is required after Task 213.
-  // Until then, closing-prep phrasing from Task 211 is accepted.
+  assertContains(
+    roadmap,
+    "Project 2 remains CLOSED",
+    "roadmap must retain Project 2 CLOSED",
+  );
+  assertContains(roadmap, "Sprint 51", "roadmap must include Sprint 51");
+  // Formal end-state: Project 4 CLOSED (Partial) on roadmap (Task 213).
   assertTruthy(
-    roadmap.includes("Project 4: CLOSED") ||
-      roadmap.includes("Closing prep") ||
-      roadmap.includes("CLOSED (Partial)"),
-    "roadmap must show Project 4 CLOSED or closing-prep status",
+    roadmap.includes("Project 4: CLOSED (Partial)") ||
+      (roadmap.includes("Project 4: CLOSED") &&
+        roadmap.includes("CLOSED (Partial)")),
+    "roadmap must declare Project 4: CLOSED (Partial)",
   );
 
   console.log("[project04-closeout] Checking package.json scripts...");
