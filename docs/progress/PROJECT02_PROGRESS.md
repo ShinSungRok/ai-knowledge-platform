@@ -4316,7 +4316,7 @@ Completed
 2026-07-23
 
 **Commit**
-Pending
+dcd6076
 
 **Title**
 Add optional live HTTP LLM host smoke (skip without key)
