@@ -4239,7 +4239,7 @@ Completed
 2026-07-23
 
 **Commit**
-Pending
+d40d60a
 
 **Title**
 Add start smoke validation + README Phase A docs
