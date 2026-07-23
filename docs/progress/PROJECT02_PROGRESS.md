@@ -4384,3 +4384,27 @@ Extend Postgres composition + seed surface for host
 **Status**
 Completed
 
+## Task 228
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Add listening factory for SQL/Postgres composition
+
+**Summary**
+- Extracted createListeningOperationsServerFromComposition shared wire helper
+- InMemory createListeningOperationsServer reuses the helper
+- Exported ListeningCompositionSurface for Postgres host path
+
+**Validation**
+- `pnpm validate:composition:listening-operations`
+- `pnpm validate:composition:postgres-knowledge`
+- `pnpm typecheck`
+
+**Status**
+Completed
+

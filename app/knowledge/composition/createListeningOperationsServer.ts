@@ -1,25 +1,19 @@
-import { createKnowledgeHttpRouter } from "../api/createKnowledgeHttpRouter";
 import {
   DEFAULT_KNOWLEDGE_RUNTIME_CONFIG,
 } from "../config/DEFAULT_KNOWLEDGE_RUNTIME_CONFIG";
 import type { KnowledgeRuntimeConfig } from "../config/KnowledgeRuntimeConfig";
-import { ObservingHttpRouter } from "../http/ObservingHttpRouter";
 import type { InMemoryLogger } from "../observability/InMemoryLogger";
 import type { InMemoryMetrics } from "../observability/InMemoryMetrics";
 import type { HttpListenAddress } from "../server/HttpListenAddress";
 import type { HttpListenConfig } from "../server/HttpListenConfig";
 import type { HttpListener } from "../server/HttpListener";
-import { NodeHttpListener } from "../server/NodeHttpListener";
 import type { ApiKeyPrincipalEntry } from "../security/ApiKeyAuthenticator";
-import { DefaultWorkspaceAuthorizer } from "../security/DefaultWorkspaceAuthorizer";
-import { HttpBearerGuard } from "../security/HttpBearerGuard";
-import {
-  createAuthenticatorFromOption,
-  type AuthProviderOption,
-} from "./createAuthenticator";
+import type { AuthProviderOption } from "./createAuthenticator";
 import { createInMemoryKnowledgeComposition } from "./createInMemoryKnowledgeComposition";
 import type { LlmProviderOption } from "./createLanguageModelProvider";
-import { createOperationsObservability } from "./createOperationsObservability";
+import {
+  createListeningOperationsServerFromComposition,
+} from "./createListeningOperationsServerFromComposition";
 import type { InMemoryKnowledgeComposition } from "./InMemoryKnowledgeComposition";
 
 const DEFAULT_LISTEN: HttpListenConfig = {
@@ -38,23 +32,6 @@ export type CreateListeningOperationsServerOptions = {
   apiKeys?: Readonly<Record<string, ApiKeyPrincipalEntry>>;
 };
 
-function resolveAuthenticator(
-  options: CreateListeningOperationsServerOptions,
-) {
-  if (options.auth !== undefined) {
-    return createAuthenticatorFromOption(options.auth);
-  }
-  if (options.apiKeys !== undefined) {
-    return createAuthenticatorFromOption({
-      type: "apiKey",
-      apiKeys: options.apiKeys,
-    });
-  }
-  throw new Error(
-    "createListeningOperationsServer requires apiKeys or auth",
-  );
-}
-
 export type ListeningOperationsServer = {
   listener: HttpListener;
   composition: InMemoryKnowledgeComposition;
@@ -66,10 +43,9 @@ export type ListeningOperationsServer = {
 };
 
 /**
- * Operations wiring with {@link NodeHttpListener} for TCP listen.
- * Optional OTLP export (logs/metrics/traces) when
- * `OTEL_EXPORTER_OTLP_ENDPOINT` is set (default observability remains
- * InMemory; tracing off without the endpoint).
+ * Operations wiring with {@link NodeHttpListener} for TCP listen over
+ * InMemory composition. Optional OTLP export when
+ * `OTEL_EXPORTER_OTLP_ENDPOINT` is set.
  */
 export function createListeningOperationsServer(
   options: CreateListeningOperationsServerOptions,
@@ -79,33 +55,14 @@ export function createListeningOperationsServer(
   const composition = createInMemoryKnowledgeComposition(config, {
     llm: options.llm,
   });
-  const observability = createOperationsObservability();
-  const authenticator = resolveAuthenticator(options);
-  const bearerGuard = new HttpBearerGuard(authenticator);
-  const workspaceAuthorizer = new DefaultWorkspaceAuthorizer();
-  const innerRouter = createKnowledgeHttpRouter(
-    composition.runtime,
-    bearerGuard,
-    workspaceAuthorizer,
-    composition.mcpJsonRpcHandler,
-  );
-  const router = new ObservingHttpRouter(
-    innerRouter,
-    observability.routerLogger,
-    observability.routerMetrics,
-    observability.tracer,
-  );
-  const listener = new NodeHttpListener(router);
-
-  return {
-    listener,
+  const base = createListeningOperationsServerFromComposition({
     composition,
-    logger: observability.logger,
-    metrics: observability.metrics,
-    ...(observability.flushObservability
-      ? { flushObservability: observability.flushObservability }
-      : {}),
-    start: () => listener.listen(listenConfig),
-    stop: () => listener.close(),
+    listen: listenConfig,
+    auth: options.auth,
+    apiKeys: options.apiKeys,
+  });
+  return {
+    ...base,
+    composition,
   };
 }

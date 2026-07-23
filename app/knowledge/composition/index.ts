@@ -36,6 +36,11 @@ export type {
   CreateListeningOperationsServerOptions,
   ListeningOperationsServer,
 } from "./createListeningOperationsServer";
+export type {
+  CreateListeningFromCompositionOptions,
+  ListeningCompositionSurface,
+  ListeningOperationsServerBase,
+} from "./createListeningOperationsServerFromComposition";
 export type { LlmProviderOption } from "./createLanguageModelProvider";
 export type { AuthProviderOption } from "./createAuthenticator";
 export { createLanguageModelProvider } from "./createLanguageModelProvider";
@@ -55,6 +60,7 @@ export {
 export { createOperationsKnowledgeServer } from "./createOperationsKnowledgeServer";
 export { createOperationsKnowledgeServerFromEnv } from "./createOperationsKnowledgeServerFromEnv";
 export { createListeningOperationsServer } from "./createListeningOperationsServer";
+export { createListeningOperationsServerFromComposition } from "./createListeningOperationsServerFromComposition";
 export type { OperationsObservability } from "./createOperationsObservability";
 export { createOperationsObservability } from "./createOperationsObservability";
 export { createSqlDocumentKnowledgeComposition } from "./createSqlDocumentKnowledgeComposition";
