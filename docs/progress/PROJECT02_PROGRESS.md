@@ -4533,3 +4533,30 @@ Add FakeOpenSearch listening smoke to pnpm validate
 
 **Status**
 Completed
+
+## Task 234
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Optional live OpenSearch smoke + docs/roadmap
+
+**Summary**
+- validate:server:start-opensearch-live (skip without OPENSEARCH_URL; not in validate)
+- Documented OPENSEARCH_* + STORE/VECTOR matrix; Phase B OpenSearch slice on roadmap
+- Phase B not marked Complete; remaining compose app / closeout
+
+**Validation**
+- `pnpm validate:server:start-opensearch-smoke`
+- `pnpm validate:server:start-opensearch-live` (skip OK)
+- `pnpm validate:project:final-closeout`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project04:closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed

@@ -32,18 +32,20 @@ charter baseline CLOSED or promote Partial infra to Completed).
 | Phase A | **Complete** (Sprint 57: `pnpm start`, `seedDemoKnowledge`, `pnpm validate:server:start-smoke`) |
 | Phase B (Sprint 58) | Optional HTTP LLM when `LLM_API_KEY` is set; Fake LLM default |
 | Phase B (Sprint 59) | Optional Postgres SoT when `DATABASE_URL` is set; InMemory default; FakePostgres listen smoke in `pnpm validate` |
-| Later Phase B | OpenSearch listening wiring (not this Sprint) |
-| Stack | InMemory default + optional Postgres; `NodeHttpListener` (no Express); Fake LLM default |
+| Phase B (Sprint 60) | Optional OpenSearch VectorIndex when `OPENSEARCH_URL` is set; FakeOpenSearch listen smoke in `pnpm validate` |
+| Later Phase B | Compose app service / Phase B closeout (not this Sprint; Phase B not marked Complete) |
+| Stack | InMemory default + optional Postgres / OpenSearch; `NodeHttpListener` (no Express); Fake LLM default |
 | Frozen | Project 3 / Project 4 product work; Express/Fastify; Partial→Completed |
 | Progress Log | `docs/progress/PROJECT02_PROGRESS.md` from Task 219+ |
 
 Sprint 57 (Task 219–222) completed Phase A. Sprint 58 (Task 223–226) added
 optional HTTP LLM (`LLM_API_KEY`; Fake default). Sprint 59 (Task 227–230)
-added optional Postgres SoT on host (`DATABASE_URL`; InMemory default;
-`validate:server:start-postgres-smoke` in top-level validate;
-`validate:server:start-postgres-live` optional skip). OpenSearch listening
-wiring remains later Phase B. Do not invent Project 5. P3/P4 remain
-CLOSED (Partial) / CLOSED (Partial) and frozen for this track.
+added optional Postgres SoT on host (`DATABASE_URL`). Sprint 60 (Task 231–234)
+added optional OpenSearch VectorIndex on host (`OPENSEARCH_URL`; combinations
+with Postgres; Fake smokes in top-level validate; live optional skip).
+Remaining Phase B: compose app / Phase B closeout — do **not** mark entire
+Phase B Complete here. Do not invent Project 5. P3/P4 remain CLOSED (Partial)
+/ CLOSED (Partial) and frozen for this track.
 
 > Historical track detail below: Platform Baseline closeout (Sprint 20),
 > post-baseline persistence / listen / AuthN / LLM / MCP / OTLP / OpenSearch
@@ -133,3 +135,4 @@ does not reopen baseline capabilities or mark Partial adapters as Completed.
 | Sprint 57 (Task 219–222) | P2 Service Completion Phase A (`pnpm start`, demo seed, start smoke; human-authorized; P3/P4 frozen) |
 | Sprint 58 (Task 223–226) | Phase A Complete + Phase B optional HTTP LLM (`LLM_API_KEY`; Fake default; P3/P4 frozen) |
 | Sprint 59 (Task 227–230) | Phase B optional Postgres SoT on host (`DATABASE_URL`; FakePostgres smoke; live optional; P3/P4 frozen) |
+| Sprint 60 (Task 231–234) | Phase B optional OpenSearch VectorIndex on host (`OPENSEARCH_URL`; Fake smokes; live optional; P3/P4 frozen) |

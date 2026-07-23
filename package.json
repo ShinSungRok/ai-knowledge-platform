@@ -179,7 +179,8 @@
     "validate:server:start-postgres-smoke": "tsx app/knowledge/composition/runListeningOperationsHostPostgresSmokeValidation.ts",
     "validate:server:start-postgres-live": "tsx app/knowledge/composition/runListeningOperationsHostPostgresLiveValidation.ts",
     "validate:server:start-opensearch-smoke": "tsx app/knowledge/composition/runListeningOperationsHostOpenSearchSmokeValidation.ts",
-    "validate:server:start-postgres-opensearch-smoke": "tsx app/knowledge/composition/runListeningOperationsHostPostgresOpenSearchSmokeValidation.ts"
+    "validate:server:start-postgres-opensearch-smoke": "tsx app/knowledge/composition/runListeningOperationsHostPostgresOpenSearchSmokeValidation.ts",
+    "validate:server:start-opensearch-live": "tsx app/knowledge/composition/runListeningOperationsHostOpenSearchLiveValidation.ts"
   },
   "devDependencies": {
     "@types/node": "^20.17.0",

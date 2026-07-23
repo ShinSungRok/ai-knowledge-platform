@@ -1,5 +1,6 @@
 /**
- * Optional live Postgres listen smoke. Skips (exit 0) when DATABASE_URL unset.
+ * Optional live OpenSearch listen smoke. Skips (exit 0) when OPENSEARCH_URL unset.
+ * Prefers postgres+opensearch when DATABASE_URL is also set.
  * Not included in top-level `pnpm validate`.
  */
 import {
@@ -23,10 +24,10 @@ function assertTruthy(value: unknown, message: string): void {
 }
 
 async function main(): Promise<void> {
-  const databaseUrl = process.env["DATABASE_URL"];
-  if (databaseUrl === undefined || databaseUrl.trim().length === 0) {
+  const openSearchUrl = process.env["OPENSEARCH_URL"];
+  if (openSearchUrl === undefined || openSearchUrl.trim().length === 0) {
     console.log(
-      "[start-postgres-live] DATABASE_URL unset — skipping live Postgres host smoke.",
+      "[start-opensearch-live] OPENSEARCH_URL unset — skipping live OpenSearch host smoke.",
     );
     return;
   }
@@ -39,21 +40,35 @@ async function main(): Promise<void> {
     API_KEY_SUBJECT: "demo-user",
     WORKSPACE_ID: "workspace-a",
     SKIP_DEMO_SEED: "0",
-    // Postgres-only live path (OpenSearch covered by start-opensearch-live).
-    OPENSEARCH_URL: "",
   });
-  assertEqual(hostEnv.storeMode, "postgres", "expected postgres store mode");
-  assertEqual(hostEnv.vectorMode, "sql", "expected sql vector mode");
+  assertEqual(hostEnv.vectorMode, "opensearch", "vector mode");
+  assertTruthy(
+    hostEnv.storeMode === "opensearch" ||
+      hostEnv.storeMode === "postgres+opensearch",
+    `expected opensearch store mode (got ${hostEnv.storeMode})`,
+  );
 
   const host = await createConfiguredListeningHost(hostEnv);
   try {
-    console.log("[start-postgres-live] seed + start ephemeral host...");
+    console.log(
+      `[start-opensearch-live] STORE=${host.storeMode} VECTOR=${host.vectorMode}; seed + start...`,
+    );
     await seedDemoKnowledge(host.server.composition, host.workspaceId);
     const address = await host.server.start();
     const base = `http://127.0.0.1:${address.port}`;
 
     const health = await fetch(`${base}/health`);
     assertEqual(health.status, 200, "health");
+
+    const unauthorized = await fetch(
+      `${base}/workspaces/${host.workspaceId}/cited-answers`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ query: DEMO_QUERY }),
+      },
+    );
+    assertEqual(unauthorized.status, 401, "missing bearer");
 
     const authorized = await fetch(
       `${base}/workspaces/${host.workspaceId}/cited-answers`,
@@ -82,7 +97,7 @@ async function main(): Promise<void> {
     await host.dispose();
   }
 
-  console.log("Postgres listening host live smoke succeeded.");
+  console.log("OpenSearch listening host live smoke succeeded.");
 }
 
 main().catch((error: unknown) => {
