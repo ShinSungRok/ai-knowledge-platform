@@ -1,15 +1,15 @@
 # Project 4 Roadmap Status
 
 > Enterprise LLMOps Platform  
-> **Active — Run Tracking + Registry + Gates + Serving Partial** — Sprint 49
+> **Active — Five LLMOps Capabilities Partial** — Sprint 50
 
 ## Status
 
-**Active — Run Tracking + Registry + Gates + Serving Partial.**
+**Active — Five LLMOps Capabilities Partial.**
 Experiment / Run Tracking, Prompt & Model Registry, Evaluation Gates /
-Regression Harness, and Deployment / Serving Configuration are
-Fake/InMemory-proven (**Partial**, not Completed). LLMOps Observability
-remains **Not Started**.
+Regression Harness, Deployment / Serving Configuration, and LLMOps
+Observability are Fake/InMemory-proven (**Partial**, not Completed). All five
+charter capabilities are **Partial**.
 
 **Project 2 remains CLOSED** (Sprint 37). **Project 3 remains CLOSED
 (Partial)** (Sprint 44). Do not reopen Project 2/3 tracks.
@@ -22,7 +22,7 @@ capabilities, and Project 4 LLMOps Partial capabilities.
 - `app/knowledge/jobs` — JobStore / InMemoryJobStore pattern (not replaced)
 - `app/knowledge/mcp` — registry duplicate-reject / list patterns
 - `app/knowledge/evaluation` — Default evaluator pattern (gates use generic numeric metrics only; evaluation API unchanged)
-- `app/knowledge/observability` — OTLP / metrics boundaries (not extended yet)
+- `app/knowledge/observability` — OTLP / metrics boundaries (soft-map naming only from `llmops`; not imported by `llmops`)
 - `app/knowledge/ai` — HTTP LLM + Fake LLM paths (not bound to registry or serving)
 - `app/knowledge/composition` — composition root
 - `app/knowledge/workflow` — Project 3 Multi-Agent workflow (Partial)
@@ -37,15 +37,16 @@ capabilities, and Project 4 LLMOps Partial capabilities.
 | Prompt & Model Registry | **Partial** | `PromptRegistry` / `ModelRegistry` + `pnpm validate:llmops:prompt-registry` / `validate:llmops:model-registry` |
 | Evaluation Gates / Regression Harness | **Partial** | `EvaluationGateEvaluator` / `RegressionHarness` + `pnpm validate:llmops:evaluation-gate` / `validate:llmops:regression-harness`; no LLM-as-judge |
 | Deployment / Serving Configuration | **Partial** | `ServingConfigStore` + `pnpm validate:llmops:serving-config`; soft-link ids only; no HTTP/Express |
-| LLMOps Observability | **Not Started** | Build on OTLP/metrics later; official SDK still deferred |
+| LLMOps Observability | **Partial** | `LlmopsObservationStore` + `pnpm validate:llmops:observation-store`; soft-map to Metrics/OTLP names; no `@opentelemetry/*` / live OTLP |
 
 ## Remaining by design
 
-- LLMOps Observability product code
+- Project 4 closeout (later)
 - Promoting Partial → Completed
 - Reopening Project 2 CLOSED or Project 3 CLOSED (Partial)
 - Express/Fastify HTTP serving, full OIDC login, official vendor LLMOps SaaS SDKs as hard deps
 - LLM-as-judge; binding `ai` LanguageModelProvider to registry/serving; SQL adapters
+- Live OTLP export / wiring ExportingMetrics from `llmops` observations
 
 ## Task range
 
@@ -56,6 +57,7 @@ capabilities, and Project 4 LLMOps Partial capabilities.
 | Sprint 47 (Task 194–197) | Establish Prompt & Model Registry (Partial) |
 | Sprint 48 (Task 198–201) | Establish Evaluation Gates / Regression Harness (Partial) |
 | Sprint 49 (Task 202–205) | Establish Deployment / Serving Configuration (Partial) |
+| Sprint 50 (Task 206–209) | Establish LLMOps Observability (Partial) |
 
 ## Sprint 45 close note
 
@@ -95,3 +97,14 @@ Observability remain **Not Started**. No LLM-as-judge. Project 2 remains
 validators. Deployment / Serving Configuration is **Partial** (not Completed).
 LLMOps Observability remains **Not Started**. No HTTP/Express serving. Project 2
 remains **CLOSED**. Project 3 remains **CLOSED (Partial)**.
+
+## Sprint 50 close note
+
+**Sprint 50 — Establish LLMOps Observability: Partial.** Tasks 206–209 added
+LlmopsObservationStore contract, InMemoryLlmopsObservationStore, and
+`pnpm validate:llmops:observation-store`. LLMOps Observability is **Partial**
+(not Completed). All five charter capabilities are **Partial**. Soft-map only to
+observability Metrics/OTLP names (`llmops.quality.<key>`, `llmops.cost.units`,
+`llmops.latency.ms`); `llmops` does not import `observability`. No live OTLP /
+`@opentelemetry/*` / HTTP serving. Project 2 remains **CLOSED**. Project 3
+remains **CLOSED (Partial)**. Project 4 is **not** CLOSED.

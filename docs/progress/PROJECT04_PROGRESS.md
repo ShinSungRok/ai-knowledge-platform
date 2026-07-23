@@ -602,3 +602,30 @@ Add LLMOps Observability validation runners
 
 **Status**
 Completed
+
+## Task 209
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Update roadmap/portfolio for Observability Partial
+
+**Summary**
+- Roadmap: Active — Five LLMOps Capabilities Partial; Sprint 50 close note
+- Portfolio/README: observation Partial evidence; all five caps Partial
+- Charter-skeleton allows Five LLMOps Capabilities Partial phrase
+- Partial≠Completed; P2/P3 CLOSED; Project 4 not CLOSED
+
+**Validation**
+- `pnpm validate:llmops:observation-store`
+- `pnpm validate:project04:charter-skeleton`
+- `pnpm validate:project03:closeout`
+- `pnpm validate:project:final-closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed

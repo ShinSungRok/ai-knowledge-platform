@@ -72,7 +72,8 @@ function main(): void {
       ) ||
       roadmap.includes(
         "Active — Run Tracking + Registry + Gates + Serving Partial",
-      ),
+      ) ||
+      roadmap.includes("Active — Five LLMOps Capabilities Partial"),
     "PROJECT04 roadmap must declare an Active charter/Partial status phrase",
   );
   assertContains(
