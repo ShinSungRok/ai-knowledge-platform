@@ -4292,7 +4292,7 @@ Completed
 2026-07-23
 
 **Commit**
-Pending
+f32b9a2
 
 **Title**
 Wire optional HTTP LLM into pnpm start
