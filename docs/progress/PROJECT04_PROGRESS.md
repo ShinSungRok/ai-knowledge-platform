@@ -503,7 +503,7 @@ Completed
 2026-07-23
 
 **Commit**
-Pending
+9f9e395
 
 **Title**
 Update roadmap/portfolio for Serving Partial
