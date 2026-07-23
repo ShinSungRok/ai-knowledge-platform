@@ -123,6 +123,8 @@ Smoke (ephemeral port, included in `pnpm validate`):
 
 ```bash
 pnpm validate:server:start-smoke
+# optional live HTTP LLM (skips without LLM_API_KEY; not in pnpm validate):
+# LLM_API_KEY=sk-... pnpm validate:server:start-llm-live
 ```
 
 ### In-process / library usage

@@ -4310,3 +4310,27 @@ Wire optional HTTP LLM into pnpm start
 **Status**
 Completed
 
+## Task 225
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Add optional live HTTP LLM host smoke (skip without key)
+
+**Summary**
+- Added validate:server:start-llm-live (skip exit 0 without LLM_API_KEY)
+- Not wired into top-level pnpm validate
+- Documented in development.md / README
+
+**Validation**
+- `pnpm validate:server:start-smoke`
+- `pnpm validate:server:start-llm-live`
+- `pnpm typecheck`
+
+**Status**
+Completed
+

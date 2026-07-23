@@ -178,6 +178,7 @@ Phase A/B local service checks:
 pnpm validate:server:start-smoke
 pnpm validate:composition:listening-operations
 pnpm start   # HOST/PORT/API_KEY defaults; Fake LLM unless LLM_API_KEY set
+pnpm validate:server:start-llm-live  # optional; skips when LLM_API_KEY unset
 ```
 
 **Project 4: CLOSED (Partial).** Historical Progress/Roadmap remain under
