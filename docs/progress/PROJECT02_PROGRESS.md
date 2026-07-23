@@ -4491,7 +4491,7 @@ Completed
 2026-07-23
 
 **Commit**
-Pending
+6b3321c
 
 **Title**
 Wire OPENSEARCH_URL into pnpm start host
