@@ -5,7 +5,8 @@
  *
  * Env defaults: HOST=127.0.0.1 PORT=8080 API_KEY=demo-key
  * API_KEY_SUBJECT=demo-user WORKSPACE_ID=workspace-a
- * STORE: inmemory by default; postgres when DATABASE_URL is set.
+ * STORE: inmemory | postgres | opensearch | postgres+opensearch
+ * VECTOR: inmemory | sql | opensearch
  * Fake LLM by default; HTTP LLM when LLM_API_KEY is set.
  * NodeHttpListener (no Express). Demo seed unless SKIP_DEMO_SEED=1.
  */
@@ -20,6 +21,7 @@ async function main(): Promise<void> {
   const host = await createConfiguredListeningHost(hostEnv);
 
   console.log(`STORE: ${host.storeMode}`);
+  console.log(`VECTOR: ${host.vectorMode}`);
   console.log(`LLM: ${host.llmMode}`);
 
   if (!host.skipDemoSeed) {

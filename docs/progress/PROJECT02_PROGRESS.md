@@ -4485,3 +4485,26 @@ Prepare OpenSearch composition for listening host
 **Status**
 Completed
 
+## Task 232
+
+**Date**
+2026-07-23
+
+**Commit**
+Pending
+
+**Title**
+Wire OPENSEARCH_URL into pnpm start host
+
+**Summary**
+- Host storeMode: inmemory | postgres | opensearch | postgres+opensearch
+- VECTOR log: inmemory | sql | opensearch; FetchOpenSearch when URL set
+- OPENSEARCH unset paths unchanged; both URLs → Postgres SoT + OpenSearch
+
+**Validation**
+- `pnpm validate:server:start-smoke`
+- `pnpm validate:server:start-postgres-smoke`
+- `pnpm typecheck`
+
+**Status**
+Completed

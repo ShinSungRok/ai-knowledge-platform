@@ -1,11 +1,19 @@
 /**
  * Shared env + factory for P2 Service Completion Phase A/B HTTP host.
- * InMemory by default; optional Postgres when DATABASE_URL is set.
+ *
+ * Selection rules:
+ * 1. OPENSEARCH_URL unset → InMemory (no DATABASE_URL) or Postgres SoT + SqlVectorIndex
+ * 2. OPENSEARCH_URL set, DATABASE_URL unset → InMemorySql SoT + OpenSearch VectorIndex
+ * 3. Both set → Postgres SoT + OpenSearch VectorIndex
+ *
  * Fake LLM by default; optional HTTP LLM when LLM_API_KEY is set.
- * No Express / OpenSearch.
+ * No Express; no official OpenSearch JS SDK.
  */
 
 import { loadLlmHttpProviderConfig } from "../ai/loadLlmHttpProviderConfig";
+import { FetchOpenSearchHttpTransport } from "../embedding/FetchOpenSearchHttpTransport";
+import { loadOpenSearchClientConfig } from "../embedding/loadOpenSearchClientConfig";
+import type { OpenSearchClientConfig } from "../embedding/OpenSearchClientConfig";
 import type { PostgresPool } from "../infra/PostgresPool";
 import {
   createListeningOperationsServer,
@@ -16,8 +24,19 @@ import {
   type ListeningOperationsServerBase,
 } from "./createListeningOperationsServerFromComposition";
 import type { LlmProviderOption } from "./createLanguageModelProvider";
+import { createOpenSearchKnowledgeComposition } from "./createOpenSearchKnowledgeComposition";
 import { createPostgresKnowledgeComposition } from "./createPostgresKnowledgeComposition";
 import type { SqlKnowledgeComposition } from "./SqlKnowledgeComposition";
+
+/** Document/source store + vector combination label for logs. */
+export type HostStoreMode =
+  | "inmemory"
+  | "postgres"
+  | "opensearch"
+  | "postgres+opensearch";
+
+/** Vector index backend for logs. */
+export type HostVectorMode = "inmemory" | "sql" | "opensearch";
 
 export type ListeningOperationsHostEnv = {
   host: string;
@@ -29,13 +48,17 @@ export type ListeningOperationsHostEnv = {
   /** `fake` when LLM_API_KEY unset; `http` when set. */
   llmMode: "fake" | "http";
   llm?: LlmProviderOption;
-  /** Unset → InMemory; set → Postgres SoT. */
+  /** Unset → no Postgres pool. */
   databaseUrl?: string;
-  storeMode: "inmemory" | "postgres";
+  /** Present when OPENSEARCH_URL is set. */
+  openSearchConfig?: OpenSearchClientConfig;
+  storeMode: HostStoreMode;
+  vectorMode: HostVectorMode;
 };
 
 export type ListeningHostHandle = {
-  storeMode: "inmemory" | "postgres";
+  storeMode: HostStoreMode;
+  vectorMode: HostVectorMode;
   llmMode: "fake" | "http";
   workspaceId: string;
   skipDemoSeed: boolean;
@@ -90,6 +113,24 @@ function resolveLlmOption(
   };
 }
 
+function resolveStoreAndVector(
+  databaseUrl: string | undefined,
+  openSearchConfig: OpenSearchClientConfig | null,
+): Pick<ListeningOperationsHostEnv, "storeMode" | "vectorMode"> {
+  const hasDb = databaseUrl !== undefined;
+  const hasOs = openSearchConfig !== null;
+  if (!hasOs && !hasDb) {
+    return { storeMode: "inmemory", vectorMode: "inmemory" };
+  }
+  if (!hasOs && hasDb) {
+    return { storeMode: "postgres", vectorMode: "sql" };
+  }
+  if (hasOs && !hasDb) {
+    return { storeMode: "opensearch", vectorMode: "opensearch" };
+  }
+  return { storeMode: "postgres+opensearch", vectorMode: "opensearch" };
+}
+
 export function loadListeningOperationsHostEnv(
   env: NodeJS.ProcessEnv = process.env,
 ): ListeningOperationsHostEnv {
@@ -105,6 +146,8 @@ export function loadListeningOperationsHostEnv(
     databaseUrlRaw !== undefined && databaseUrlRaw.length > 0
       ? databaseUrlRaw
       : undefined;
+  const openSearchConfig = loadOpenSearchClientConfig(env);
+  const modes = resolveStoreAndVector(databaseUrl, openSearchConfig);
   return {
     host: getEnv(env, "HOST", "127.0.0.1"),
     port,
@@ -113,7 +156,8 @@ export function loadListeningOperationsHostEnv(
     workspaceId: getEnv(env, "WORKSPACE_ID", "workspace-a"),
     skipDemoSeed: skip === "1" || skip.toLowerCase() === "true",
     databaseUrl,
-    storeMode: databaseUrl !== undefined ? "postgres" : "inmemory",
+    ...(openSearchConfig !== null ? { openSearchConfig } : {}),
+    ...modes,
     ...llm,
   };
 }
@@ -146,8 +190,8 @@ async function createPostgresPool(
 }
 
 /**
- * Creates the Phase A/B listening host: InMemory by default, Postgres when
- * `DATABASE_URL` is set. Caller must `dispose()` after stop.
+ * Creates the Phase A/B listening host per store/vector selection rules.
+ * Caller must `dispose()` after stop (ends Postgres pool when used).
  */
 export async function createConfiguredListeningHost(
   hostEnv: ListeningOperationsHostEnv = loadListeningOperationsHostEnv(),
@@ -159,19 +203,95 @@ export async function createConfiguredListeningHost(
     },
   } as const;
   const listen = { host: hostEnv.host, port: hostEnv.port };
+  const llmOpt =
+    hostEnv.llm !== undefined ? { llm: hostEnv.llm } : {};
 
-  if (hostEnv.storeMode === "inmemory" || hostEnv.databaseUrl === undefined) {
-    const server = createListeningOperationsServer({
+  const baseHandle = {
+    storeMode: hostEnv.storeMode,
+    vectorMode: hostEnv.vectorMode,
+    llmMode: hostEnv.llmMode,
+    workspaceId: hostEnv.workspaceId,
+    skipDemoSeed: hostEnv.skipDemoSeed,
+  };
+
+  // Path 1: no OpenSearch — InMemory or Postgres+SqlVectorIndex
+  if (hostEnv.openSearchConfig === undefined) {
+    if (
+      hostEnv.storeMode === "inmemory" ||
+      hostEnv.databaseUrl === undefined
+    ) {
+      const server = createListeningOperationsServer({
+        listen,
+        apiKeys,
+        ...llmOpt,
+      });
+      return {
+        ...baseHandle,
+        storeMode: "inmemory",
+        vectorMode: "inmemory",
+        server,
+        dispose: async () => {
+          /* no pool */
+        },
+      };
+    }
+
+    const pool = await createPostgresPool(hostEnv.databaseUrl);
+    const composition = await createPostgresKnowledgeComposition({
+      pool,
+      applySchema: true,
+      ...llmOpt,
+    });
+    const server = createListeningOperationsServerFromComposition({
+      composition,
       listen,
       apiKeys,
-      ...(hostEnv.llm !== undefined ? { llm: hostEnv.llm } : {}),
     });
     return {
-      storeMode: "inmemory",
-      llmMode: hostEnv.llmMode,
-      workspaceId: hostEnv.workspaceId,
-      skipDemoSeed: hostEnv.skipDemoSeed,
-      server,
+      ...baseHandle,
+      storeMode: "postgres",
+      vectorMode: "sql",
+      server: {
+        ...server,
+        composition,
+      },
+      dispose: async () => {
+        if (typeof pool.end === "function") {
+          await pool.end();
+        }
+      },
+    };
+  }
+
+  // Path 2/3: OpenSearch VectorIndex (Fetch transport)
+  const openSearch = {
+    config: hostEnv.openSearchConfig,
+    transport: new FetchOpenSearchHttpTransport(
+      hostEnv.openSearchConfig.baseUrl,
+    ),
+  };
+
+  if (hostEnv.databaseUrl === undefined) {
+    const composition = await createOpenSearchKnowledgeComposition(
+      undefined,
+      {
+        openSearch,
+        ...llmOpt,
+      },
+    );
+    const server = createListeningOperationsServerFromComposition({
+      composition,
+      listen,
+      apiKeys,
+    });
+    return {
+      ...baseHandle,
+      storeMode: "opensearch",
+      vectorMode: "opensearch",
+      server: {
+        ...server,
+        composition,
+      },
       dispose: async () => {
         /* no pool */
       },
@@ -179,10 +299,11 @@ export async function createConfiguredListeningHost(
   }
 
   const pool = await createPostgresPool(hostEnv.databaseUrl);
-  const composition = await createPostgresKnowledgeComposition({
+  const composition = await createOpenSearchKnowledgeComposition(undefined, {
     pool,
     applySchema: true,
-    ...(hostEnv.llm !== undefined ? { llm: hostEnv.llm } : {}),
+    openSearch,
+    ...llmOpt,
   });
   const server = createListeningOperationsServerFromComposition({
     composition,
@@ -190,10 +311,9 @@ export async function createConfiguredListeningHost(
     apiKeys,
   });
   return {
-    storeMode: "postgres",
-    llmMode: hostEnv.llmMode,
-    workspaceId: hostEnv.workspaceId,
-    skipDemoSeed: hostEnv.skipDemoSeed,
+    ...baseHandle,
+    storeMode: "postgres+opensearch",
+    vectorMode: "opensearch",
     server: {
       ...server,
       composition,
