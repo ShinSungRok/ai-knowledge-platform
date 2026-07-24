@@ -127,6 +127,45 @@ async function main(): Promise<void> {
       Array.isArray(wfBody.stepResults) && wfBody.stepResults.length === 3,
       "three workflow steps",
     );
+
+    console.log("[start-smoke] llmops/control-plane without Bearer → 401...");
+    const llmUnauthorized = await fetch(
+      `${base}/workspaces/${hostEnv.workspaceId}/llmops/control-plane`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({}),
+      },
+    );
+    assertEqual(llmUnauthorized.status, 401, "llmops missing bearer");
+
+    console.log("[start-smoke] llmops/control-plane with Bearer → 200...");
+    const llmAuthorized = await fetch(
+      `${base}/workspaces/${hostEnv.workspaceId}/llmops/control-plane`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${hostEnv.apiKey}`,
+        },
+        body: JSON.stringify({}),
+      },
+    );
+    assertEqual(llmAuthorized.status, 200, "llmops authorized status");
+    const llmBody = (await llmAuthorized.json()) as {
+      gatePassed?: boolean;
+      regressionPassed?: boolean;
+      servingStatus?: string;
+      observationId?: string;
+    };
+    assertEqual(llmBody.gatePassed, true, "gatePassed");
+    assertEqual(llmBody.regressionPassed, true, "regressionPassed");
+    assertEqual(llmBody.servingStatus, "active", "servingStatus");
+    assertTruthy(
+      typeof llmBody.observationId === "string" &&
+        llmBody.observationId.length > 0,
+      "observationId",
+    );
   } finally {
     if (server.listener.isListening()) {
       await server.stop();

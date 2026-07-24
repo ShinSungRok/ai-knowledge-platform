@@ -23,17 +23,18 @@ Partial≠Completed 서술을 되돌리지 않는다. **Do not invent Project 5 
 PROJECT05**. Do not reopen Partial tracks.
 
 **Current implementation track status (human-authorized):**
-**P4 Later — Thin Control Plane HTTP** (Sprint 71, Tasks 217+). Adds
+**P4 Later — Thin Control Plane HTTP: Complete** (Sprint 71, Tasks 217–220).
 Bearer-protected `POST /workspaces/:workspaceId/llmops/control-plane` on
 `pnpm start` (InMemory story). Does **not** promote Project 4 Partial →
 Completed. Does **not** invent Project 5. Express/Fastify forbidden. Live OTLP
-/ official LLMOps SaaS SDKs remain deferred. P3 Later Thin Workflow HTTP and
-P2 Service Completion remain **Complete**.
+/ official LLMOps SaaS SDKs remain deferred. Await further human charter for
+additional work. P3 Later Thin Workflow HTTP and P2 Service Completion remain
+**Complete**.
 
 문서 간 우선순위는 다음과 같다.
 
 ```text
-Active human-authorized track (P4 Later — Thin Control Plane HTTP)
+Closed human-authorized track (P4 Later Thin Control Plane HTTP Complete)
         ↓
 Closed human-authorized tracks (P3 Later Thin Workflow HTTP Complete;
   P4 Phase 0 Complete; P3 Phase A+B Complete; P2 Service Completion Complete)

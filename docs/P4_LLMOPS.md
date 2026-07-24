@@ -8,9 +8,31 @@
 
 ```bash
 pnpm demo:llmops:control-plane
+
+# Thin HTTP on same host as P2/P3 (Later)
+pnpm start
 ```
 
 InMemory 한 줄기로 Registry → Run → Gate → Regression → Serving → Observation을 출력합니다 (Docker/키 불필요).
+
+### Call via `pnpm start` (Later — Thin Control Plane HTTP)
+
+Same `NodeHttpListener` host as cited-answers / workflow-runs (no Express).
+Bearer + workspace AuthZ. Body may be `{}` (default metrics).
+
+```bash
+pnpm start
+# logs include LLMOPS: inmemory-control-plane
+
+curl -sS -X POST http://127.0.0.1:8080/workspaces/workspace-a/llmops/control-plane \
+  -H 'content-type: application/json' \
+  -H 'Authorization: Bearer demo-key' \
+  -d '{}'
+```
+
+Expect HTTP 200 with `gatePassed: true`, `regressionPassed: true`,
+`servingStatus: "active"`, and `observationId`. Without Bearer → 401.
+Smoke: `pnpm validate:server:start-smoke` (includes llmops/control-plane).
 
 포트폴리오 스토리: [`PORTFOLIO_NARRATIVE.md`](PORTFOLIO_NARRATIVE.md).
 

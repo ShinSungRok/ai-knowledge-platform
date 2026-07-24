@@ -165,6 +165,10 @@ curl -sS -X POST http://127.0.0.1:8080/workspaces/workspace-a/workflow-runs \
   -H 'content-type: application/json' \
   -H 'Authorization: Bearer demo-key' \
   -d '{"objective":"aaaaaaaa"}'
+curl -sS -X POST http://127.0.0.1:8080/workspaces/workspace-a/llmops/control-plane \
+  -H 'content-type: application/json' \
+  -H 'Authorization: Bearer demo-key' \
+  -d '{}'
 ```
 
 Smoke (ephemeral port, included in `pnpm validate`):

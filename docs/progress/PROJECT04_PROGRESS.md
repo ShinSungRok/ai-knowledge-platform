@@ -880,3 +880,27 @@ Wire llmops control-plane into listening pnpm start
 
 **Status**
 Completed
+
+## Task 220
+
+**Date**
+2026-07-24
+
+**Commit**
+Pending
+
+**Title**
+Smoke + docs; mark P4 Later thin Control Plane HTTP Complete
+
+**Summary**
+- start-smoke asserts llmops/control-plane 401/200 gate+regression+serving
+- P4_LLMOPS curl + README/portfolio pointers
+- Roadmap Later Complete; agent-ops track Complete; Partial caps unchanged
+
+**Validation**
+- `pnpm validate:server:start-smoke`
+- `pnpm validate:project04:closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed
