@@ -20,7 +20,7 @@ Project 2 stay Partial — not Completed. Do not reopen Project 2 tracks.
 
 ## P3 Portfolio Reinforcement Track (human-authorized)
 
-**Status: Phase B Complete; await Later charter** — Sprint 64
+**Status: Later Active — Thin Workflow HTTP** — Sprint 69
 
 Additional portfolio track **after** Project 3: CLOSED (Partial). Does **not**
 reopen Multi-Agent capabilities to Completed. Does **not** invent Project 5.
@@ -30,10 +30,11 @@ reopen Multi-Agent capabilities to Completed. Does **not** invent Project 5.
 | P3-0 | Console engine demo + `docs/P3_WORKFLOW_ENGINE.md` | **Complete** (Task 186) |
 | Phase A | Researcher step reuses P2 cited-answer (InMemory/Fake) | **Complete** (Tasks 187–189) |
 | Phase B | Evaluation demo (run → score metrics, no LLM-as-judge) | **Complete** (Tasks 190–192) |
-| Later | Optional thin HTTP / optional real invoker | Deferred |
+| Later | Thin Workflow HTTP on `pnpm start` (Bearer; Fake invoker default) | **Active** (Sprint 69, Tasks 193+) |
 
 **Frozen in this track:** Express/Fastify; Partial→Completed; LLM-as-judge;
-SQL workflow memory; full multi-agent HTTP product API (unless later Phase).
+SQL workflow memory; full multi-agent HTTP product API beyond thin workflow-runs;
+P4 HTTP; Project 5.
 
 ## Reuse from Project 2
 
@@ -77,6 +78,7 @@ SQL workflow memory; full multi-agent HTTP product API (unless later Phase).
 | Sprint 42 (Task 174–177) | Establish Shared Workflow Memory (Partial) |
 | Sprint 43 (Task 178–181) | Establish Multi-Agent Evaluation (Partial) |
 | Sprint 44 (Task 182–185) | Close Out Project 3 / Project 4 Handoff (CLOSED Partial) |
+| Sprint 69 (Task 193–196) | P3 Later Thin Workflow HTTP (Bearer workflow-runs on pnpm start; Partial caps unchanged) |
 
 ## Sprint 38–43 summary
 

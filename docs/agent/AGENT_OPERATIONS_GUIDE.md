@@ -23,20 +23,21 @@ Partial≠Completed 서술을 되돌리지 않는다. **Do not invent Project 5 
 PROJECT05**. Do not reopen Partial tracks.
 
 **Current implementation track status (human-authorized):**
-**P4 Portfolio Reinforcement Track: Phase 0 Complete** (Control Plane Demo —
-Sprint 65 Tasks 214–216). P3 Portfolio Reinforcement Phase A+B remains
-**Complete**. P2 Service Completion Track remains **Complete** (Sprint 61).
-Await human charter for Later (optional HTTP / live OTLP). Do **not** invent
-Project 5 / PROJECT05. Do **not** promote Project 2/3/4 Partial → Completed.
-Do **not** use Express/Fastify. Partial infra adapters stay Partial.
-LLM-as-judge / live OTLP / official LLMOps SaaS SDKs remain deferred.
+**P3 Later — Thin Workflow HTTP** (Sprint 69, Tasks 193+). Adds Bearer-protected
+`POST /workspaces/:workspaceId/workflow-runs` on existing `pnpm start` host.
+Does **not** reopen Project 3 Multi-Agent capabilities to Completed. Does **not**
+invent Project 5. Does **not** implement P4 HTTP. Express/Fastify forbidden.
+Fake invoker default; optional P2 researcher bridge. LLM-as-judge / SQL workflow
+memory remain deferred. P4 Portfolio Phase 0 and P2 Service Completion remain
+**Complete** (frozen for product work unless separately chartered).
 
 문서 간 우선순위는 다음과 같다.
 
 ```text
-Active human-authorized track (P4 Portfolio Reinforcement — Phase 0 Complete)
+Active human-authorized track (P3 Later — Thin Workflow HTTP)
         ↓
-Closed human-authorized tracks (P3 Phase A+B Complete; P2 Service Completion)
+Closed human-authorized tracks (P4 Phase 0 Complete; P3 Phase A+B Complete;
+  P2 Service Completion Complete)
         ↓
 Closed historical charters (PROJECT04 / PROJECT03 / PROJECT02) for constraints
         ↓
@@ -51,9 +52,9 @@ AGENT_OPERATIONS_GUIDE.md
 - `AGENT_OPERATIONS_GUIDE.md`: 어떤 Agent Skill을 언제 어떻게 사용할지 정의
 - 개별 Task Prompt: 현재 작업의 구체적인 범위와 완료 조건 정의
 
-P4 Portfolio Reinforcement 작업은 `docs/progress/PROJECT04_PROGRESS.md`에
-기록한다 (Task 214+). P3 Portfolio Reinforcement는
-`docs/progress/PROJECT03_PROGRESS.md`에 유지한다. Skill 결과가
+P3 Later (Thin Workflow HTTP) 작업은 `docs/progress/PROJECT03_PROGRESS.md`에
+기록한다 (Task 193+). P4 Portfolio Reinforcement는
+`docs/progress/PROJECT04_PROGRESS.md`에 유지한다. Skill 결과가
 Project 2/3/4 CLOSED 서술과 충돌하면 CLOSED / CLOSED (Partial)를 보존한다.
 
 ---
