@@ -887,7 +887,7 @@ Completed
 2026-07-24
 
 **Commit**
-Pending
+476101c
 
 **Title**
 Smoke + docs; mark P4 Later thin Control Plane HTTP Complete
