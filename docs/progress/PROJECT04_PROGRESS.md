@@ -793,7 +793,7 @@ Completed
 2026-07-24
 
 **Commit**
-Pending
+a8f6de5
 
 **Title**
 Document P4 control-plane demo and close Phase 0
