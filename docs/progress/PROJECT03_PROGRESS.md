@@ -915,7 +915,7 @@ Completed
 2026-07-24
 
 **Commit**
-Pending
+7aa9b9b
 
 **Title**
 Wire workflow into listening pnpm start host
