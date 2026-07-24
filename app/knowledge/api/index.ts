@@ -17,4 +17,11 @@ export const KNOWLEDGE_MODULE_API = "app/knowledge/api" as const;
 export { HealthController } from "./HealthController";
 export { CitedGroundedAnswerController } from "./CitedGroundedAnswerController";
 export { McpJsonRpcController } from "./McpJsonRpcController";
-export { createKnowledgeHttpRouter } from "./createKnowledgeHttpRouter";
+export {
+  WorkflowRunController,
+  WORKFLOW_RUN_PATH,
+} from "./WorkflowRunController";
+export {
+  createKnowledgeHttpRouter,
+  type CreateKnowledgeHttpRouterOptions,
+} from "./createKnowledgeHttpRouter";

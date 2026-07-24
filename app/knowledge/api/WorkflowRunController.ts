@@ -1,0 +1,96 @@
+import type { RunWorkflowUseCase } from "../application/RunWorkflowUseCase";
+import type { HttpRequest } from "../http/HttpRequest";
+import type { HttpResponse } from "../http/HttpResponse";
+import type { HttpBearerGuard } from "../security/HttpBearerGuard";
+import type { WorkspaceAuthorizer } from "../security/WorkspaceAuthorizer";
+
+const JSON_HEADERS = { "content-type": "application/json" } as const;
+
+export const WORKFLOW_RUN_PATH =
+  /^\/workspaces\/([^/]+)\/workflow-runs$/;
+
+function jsonResponse(status: number, body: unknown): HttpResponse {
+  return {
+    status,
+    headers: { ...JSON_HEADERS },
+    body,
+  };
+}
+
+function errorMessage(error: unknown): string {
+  if (error instanceof Error && error.message.length > 0) {
+    return error.message;
+  }
+  return "Internal Server Error";
+}
+
+/**
+ * HTTP controller for thin Multi-Agent workflow runs (P3 Later).
+ * AuthN via {@link HttpBearerGuard}, then AuthZ via {@link WorkspaceAuthorizer}.
+ * Same pattern as {@link CitedGroundedAnswerController}.
+ */
+export class WorkflowRunController {
+  constructor(
+    private readonly runWorkflow: RunWorkflowUseCase,
+    private readonly bearerGuard: HttpBearerGuard,
+    private readonly workspaceAuthorizer: WorkspaceAuthorizer,
+  ) {}
+
+  async create(request: HttpRequest): Promise<HttpResponse> {
+    const pathMatch = WORKFLOW_RUN_PATH.exec(request.path);
+    if (pathMatch === null) {
+      return jsonResponse(404, { error: "Not Found" });
+    }
+    if (request.method !== "POST") {
+      return jsonResponse(405, { error: "Method Not Allowed" });
+    }
+
+    const workspaceId = pathMatch[1]!;
+
+    let principal;
+    try {
+      principal = await this.bearerGuard.authenticateRequest(request);
+    } catch (error: unknown) {
+      return jsonResponse(401, { error: errorMessage(error) });
+    }
+
+    try {
+      this.workspaceAuthorizer.authorize({
+        workspaceId,
+        principalWorkspaceId: principal.workspaceId,
+      });
+    } catch (error: unknown) {
+      return jsonResponse(403, { error: errorMessage(error) });
+    }
+
+    const body = request.body;
+    if (body === null || typeof body !== "object" || Array.isArray(body)) {
+      return jsonResponse(400, { error: "body must be a plain object" });
+    }
+
+    const record = body as Record<string, unknown>;
+    if (typeof record.objective !== "string") {
+      return jsonResponse(400, { error: "objective must be a string" });
+    }
+    if (record.objective.trim().length === 0) {
+      return jsonResponse(400, { error: "objective must be a non-empty string" });
+    }
+
+    try {
+      const result = await this.runWorkflow.execute({
+        workspaceId,
+        objective: record.objective,
+      });
+      return jsonResponse(200, result);
+    } catch (error: unknown) {
+      const message = errorMessage(error);
+      if (
+        message.includes("must be a non-empty string") ||
+        message.includes("must be an object")
+      ) {
+        return jsonResponse(400, { error: message });
+      }
+      return jsonResponse(500, { error: message });
+    }
+  }
+}

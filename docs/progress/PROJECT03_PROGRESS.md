@@ -884,3 +884,27 @@ Record P3 Later thin HTTP track Active
 
 **Status**
 Completed
+
+## Task 194
+
+**Date**
+2026-07-24
+
+**Commit**
+Pending
+
+**Title**
+Workflow HTTP controller + router path
+
+**Summary**
+- Added RunWorkflowUseCase + WorkflowRunController (Bearer + workspace AuthZ)
+- createKnowledgeHttpRouter optional workflowOrchestrator registers POST .../workflow-runs
+- validate:api:workflow-run with Fake orchestrator/invoker
+
+**Validation**
+- `pnpm validate:api:workflow-run`
+- `pnpm validate:api:cited-answer`
+- `pnpm typecheck`
+
+**Status**
+Completed
