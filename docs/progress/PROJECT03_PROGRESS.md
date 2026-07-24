@@ -843,7 +843,7 @@ Completed
 2026-07-24
 
 **Commit**
-Pending
+e930a3b
 
 **Title**
 Document Phase B evaluation demos and close Phase B
