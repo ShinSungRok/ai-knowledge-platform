@@ -178,6 +178,7 @@
     "validate:llmops:regression-harness": "tsx app/knowledge/llmops/runRegressionHarnessValidation.ts",
     "validate:llmops:serving-config": "tsx app/knowledge/llmops/runServingConfigStoreValidation.ts",
     "validate:llmops:observation-store": "tsx app/knowledge/llmops/runLlmopsObservationStoreValidation.ts",
+    "demo:llmops:control-plane": "tsx app/knowledge/llmops/runP4LlmopsControlPlaneDemo.ts",
     "validate:project04:closeout": "tsx scripts/validate-project04-closeout.ts",
     "start": "tsx app/knowledge/composition/runListeningOperationsHost.ts",
     "validate:server:start-smoke": "tsx app/knowledge/composition/runListeningOperationsHostSmokeValidation.ts",

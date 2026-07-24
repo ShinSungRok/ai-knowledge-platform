@@ -761,3 +761,28 @@ Open P4 Portfolio Reinforcement Phase 0 (Control Plane Demo)
 
 **Status**
 Completed
+
+## Task 215
+
+**Date**
+2026-07-24
+
+**Commit**
+Pending
+
+**Title**
+Add P4 LLMOps control-plane console demo
+
+**Summary**
+- Added `pnpm demo:llmops:control-plane` (registry→run→gate→regression→serving→obs)
+- InMemory only; exits non-zero if gate/regression fail
+- Project 4 Partial capabilities unchanged
+
+**Validation**
+- `pnpm demo:llmops:control-plane`
+- `pnpm validate:llmops:evaluation-gate`
+- `pnpm validate:llmops:serving-config`
+- `pnpm typecheck`
+
+**Status**
+Completed
