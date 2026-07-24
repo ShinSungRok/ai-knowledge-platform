@@ -863,7 +863,7 @@ Completed
 2026-07-24
 
 **Commit**
-Pending
+a1ec313
 
 **Title**
 Wire llmops control-plane into listening pnpm start
