@@ -817,7 +817,7 @@ Completed
 2026-07-24
 
 **Commit**
-Pending
+08c520b
 
 **Title**
 Add workflow evaluation demos (Fake and P2 bridge)
