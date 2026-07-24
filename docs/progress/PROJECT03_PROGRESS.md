@@ -940,7 +940,7 @@ Completed
 2026-07-24
 
 **Commit**
-Pending
+96eb031
 
 **Title**
 Smoke validator + docs; mark Later thin HTTP Complete
