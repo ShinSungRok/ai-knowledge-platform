@@ -62,6 +62,10 @@ export { createOperationsKnowledgeServer } from "./createOperationsKnowledgeServ
 export { createOperationsKnowledgeServerFromEnv } from "./createOperationsKnowledgeServerFromEnv";
 export { createListeningOperationsServer } from "./createListeningOperationsServer";
 export { createListeningOperationsServerFromComposition } from "./createListeningOperationsServerFromComposition";
+export {
+  createHostWorkflowOrchestrator,
+  resolveWorkflowP2Bridge,
+} from "./createHostWorkflowOrchestrator";
 export type { OperationsObservability } from "./createOperationsObservability";
 export { createOperationsObservability } from "./createOperationsObservability";
 export { createSqlDocumentKnowledgeComposition } from "./createSqlDocumentKnowledgeComposition";

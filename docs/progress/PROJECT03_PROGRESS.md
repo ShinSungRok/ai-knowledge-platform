@@ -908,3 +908,28 @@ Workflow HTTP controller + router path
 
 **Status**
 Completed
+
+## Task 195
+
+**Date**
+2026-07-24
+
+**Commit**
+Pending
+
+**Title**
+Wire workflow into listening pnpm start host
+
+**Summary**
+- createHostWorkflowOrchestrator: Fake default; optional P2 researcher bridge
+- Listening FromComposition always registers workflow-runs
+- WORKFLOW_P2_BRIDGE / demo-seed default: bridge on when seed runs
+- Host logs WORKFLOW: fake|+p2-bridge
+
+**Validation**
+- `pnpm validate:composition:listening-operations`
+- `pnpm validate:api:workflow-run`
+- `pnpm typecheck`
+
+**Status**
+Completed

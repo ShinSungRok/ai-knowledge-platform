@@ -26,6 +26,9 @@ import {
 import type { LlmProviderOption } from "./createLanguageModelProvider";
 import { createOpenSearchKnowledgeComposition } from "./createOpenSearchKnowledgeComposition";
 import { createPostgresKnowledgeComposition } from "./createPostgresKnowledgeComposition";
+import {
+  resolveWorkflowP2Bridge,
+} from "./createHostWorkflowOrchestrator";
 import type { SqlKnowledgeComposition } from "./SqlKnowledgeComposition";
 
 /** Document/source store + vector combination label for logs. */
@@ -54,12 +57,18 @@ export type ListeningOperationsHostEnv = {
   openSearchConfig?: OpenSearchClientConfig;
   storeMode: HostStoreMode;
   vectorMode: HostVectorMode;
+  /**
+   * Researcher P2 cited-answer bridge. Default: on when demo seed runs;
+   * override with WORKFLOW_P2_BRIDGE=0|1.
+   */
+  workflowP2Bridge: boolean;
 };
 
 export type ListeningHostHandle = {
   storeMode: HostStoreMode;
   vectorMode: HostVectorMode;
   llmMode: "fake" | "http";
+  workflowP2Bridge: boolean;
   workspaceId: string;
   skipDemoSeed: boolean;
   server: ListeningOperationsServerBase & {
@@ -148,16 +157,18 @@ export function loadListeningOperationsHostEnv(
       : undefined;
   const openSearchConfig = loadOpenSearchClientConfig(env);
   const modes = resolveStoreAndVector(databaseUrl, openSearchConfig);
+  const skipDemoSeed = skip === "1" || skip.toLowerCase() === "true";
   return {
     host: getEnv(env, "HOST", "127.0.0.1"),
     port,
     apiKey: getEnv(env, "API_KEY", "demo-key"),
     apiKeySubject: getEnv(env, "API_KEY_SUBJECT", "demo-user"),
     workspaceId: getEnv(env, "WORKSPACE_ID", "workspace-a"),
-    skipDemoSeed: skip === "1" || skip.toLowerCase() === "true",
+    skipDemoSeed,
     databaseUrl,
     ...(openSearchConfig !== null ? { openSearchConfig } : {}),
     ...modes,
+    workflowP2Bridge: resolveWorkflowP2Bridge(env, skipDemoSeed),
     ...llm,
   };
 }
@@ -175,6 +186,7 @@ export function createConfiguredListeningOperationsServer(
       },
     },
     ...(hostEnv.llm !== undefined ? { llm: hostEnv.llm } : {}),
+    workflowP2Bridge: hostEnv.workflowP2Bridge,
   });
 }
 
@@ -210,9 +222,12 @@ export async function createConfiguredListeningHost(
     storeMode: hostEnv.storeMode,
     vectorMode: hostEnv.vectorMode,
     llmMode: hostEnv.llmMode,
+    workflowP2Bridge: hostEnv.workflowP2Bridge,
     workspaceId: hostEnv.workspaceId,
     skipDemoSeed: hostEnv.skipDemoSeed,
   };
+
+  const workflowOpt = { workflowP2Bridge: hostEnv.workflowP2Bridge };
 
   // Path 1: no OpenSearch — InMemory or Postgres+SqlVectorIndex
   if (hostEnv.openSearchConfig === undefined) {
@@ -224,6 +239,7 @@ export async function createConfiguredListeningHost(
         listen,
         apiKeys,
         ...llmOpt,
+        ...workflowOpt,
       });
       return {
         ...baseHandle,
@@ -246,6 +262,7 @@ export async function createConfiguredListeningHost(
       composition,
       listen,
       apiKeys,
+      ...workflowOpt,
     });
     return {
       ...baseHandle,
@@ -283,6 +300,7 @@ export async function createConfiguredListeningHost(
       composition,
       listen,
       apiKeys,
+      ...workflowOpt,
     });
     return {
       ...baseHandle,
@@ -309,6 +327,7 @@ export async function createConfiguredListeningHost(
     composition,
     listen,
     apiKeys,
+    ...workflowOpt,
   });
   return {
     ...baseHandle,

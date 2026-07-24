@@ -10,10 +10,12 @@ import { NodeHttpListener } from "../server/NodeHttpListener";
 import type { ApiKeyPrincipalEntry } from "../security/ApiKeyAuthenticator";
 import { DefaultWorkspaceAuthorizer } from "../security/DefaultWorkspaceAuthorizer";
 import { HttpBearerGuard } from "../security/HttpBearerGuard";
+import type { WorkflowOrchestrator } from "../workflow/WorkflowOrchestrator";
 import {
   createAuthenticatorFromOption,
   type AuthProviderOption,
 } from "./createAuthenticator";
+import { createHostWorkflowOrchestrator } from "./createHostWorkflowOrchestrator";
 import { createOperationsObservability } from "./createOperationsObservability";
 import type { KnowledgeRuntime } from "./KnowledgeRuntime";
 
@@ -27,6 +29,13 @@ export type CreateListeningFromCompositionOptions = {
   listen?: HttpListenConfig;
   auth?: AuthProviderOption;
   apiKeys?: Readonly<Record<string, ApiKeyPrincipalEntry>>;
+  /**
+   * When true, researcher steps use P2 cited-answer via runtime.
+   * Default false (Fake invoker). Host sets true when demo seed runs.
+   */
+  workflowP2Bridge?: boolean;
+  /** Inject orchestrator (tests). When omitted, host factory builds one. */
+  workflowOrchestrator?: WorkflowOrchestrator;
 };
 
 export type ListeningOperationsServerBase = {
@@ -63,6 +72,7 @@ function resolveAuthenticator(
 /**
  * Wires ObservingHttpRouter + NodeHttpListener around an existing
  * composition that already exposes runtime + mcpJsonRpcHandler.
+ * Always registers thin POST .../workflow-runs (Fake or optional P2 bridge).
  */
 export function createListeningOperationsServerFromComposition(
   options: CreateListeningFromCompositionOptions,
@@ -74,11 +84,18 @@ export function createListeningOperationsServerFromComposition(
   const authenticator = resolveAuthenticator(options);
   const bearerGuard = new HttpBearerGuard(authenticator);
   const workspaceAuthorizer = new DefaultWorkspaceAuthorizer();
+  const workflowOrchestrator =
+    options.workflowOrchestrator ??
+    createHostWorkflowOrchestrator({
+      p2Bridge: options.workflowP2Bridge === true,
+      runtime: options.composition.runtime,
+    });
   const innerRouter = createKnowledgeHttpRouter(
     options.composition.runtime,
     bearerGuard,
     workspaceAuthorizer,
     options.composition.mcpJsonRpcHandler,
+    { workflowOrchestrator },
   );
   const router = new ObservingHttpRouter(
     innerRouter,

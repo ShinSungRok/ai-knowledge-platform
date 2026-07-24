@@ -30,6 +30,8 @@ export type CreateListeningOperationsServerOptions = {
   auth?: AuthProviderOption;
   /** Default ApiKey AuthN when `auth` is omitted. */
   apiKeys?: Readonly<Record<string, ApiKeyPrincipalEntry>>;
+  /** When true, researcher uses P2 cited-answer (default false / Fake). */
+  workflowP2Bridge?: boolean;
 };
 
 export type ListeningOperationsServer = {
@@ -60,6 +62,9 @@ export function createListeningOperationsServer(
     listen: listenConfig,
     auth: options.auth,
     apiKeys: options.apiKeys,
+    ...(options.workflowP2Bridge !== undefined
+      ? { workflowP2Bridge: options.workflowP2Bridge }
+      : {}),
   });
   return {
     ...base,

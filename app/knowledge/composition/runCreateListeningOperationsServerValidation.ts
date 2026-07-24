@@ -210,11 +210,50 @@ async function assertMcpToolsOverHttp(): Promise<void> {
   }
 }
 
+async function assertWorkflowRunsOverHttp(): Promise<void> {
+  console.log(
+    "[composition] createListeningOperationsServer workflow-runs Bearer + 200...",
+  );
+  const server = createListeningOperationsServer({ apiKeys: TEST_API_KEYS });
+  try {
+    const address = await server.start();
+    const unauthorized = await fetch(
+      `http://127.0.0.1:${address.port}/workspaces/${WORKSPACE_A}/workflow-runs`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ objective: "summarize policy" }),
+      },
+    );
+    assertEqual(unauthorized.status, 401, "workflow 401");
+
+    const authorized = await fetch(
+      `http://127.0.0.1:${address.port}/workspaces/${WORKSPACE_A}/workflow-runs`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${TEST_API_KEY}`,
+        },
+        body: JSON.stringify({ objective: "summarize policy" }),
+      },
+    );
+    assertEqual(authorized.status, 200, "workflow 200");
+    const body = (await authorized.json()) as { status?: string };
+    assertEqual(body.status, "completed", "workflow completed");
+  } finally {
+    if (server.listener.isListening()) {
+      await server.stop();
+    }
+  }
+}
+
 async function main(): Promise<void> {
   assertModuleConstant();
   await assertEphemeralHealth();
   await assertCitedAnswerRequiresBearer();
   await assertMcpToolsOverHttp();
+  await assertWorkflowRunsOverHttp();
   console.log("createListeningOperationsServer validation succeeded.");
 }
 

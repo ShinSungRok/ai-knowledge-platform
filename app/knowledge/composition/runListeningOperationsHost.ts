@@ -23,6 +23,9 @@ async function main(): Promise<void> {
   console.log(`STORE: ${host.storeMode}`);
   console.log(`VECTOR: ${host.vectorMode}`);
   console.log(`LLM: ${host.llmMode}`);
+  console.log(
+    `WORKFLOW: fake${host.workflowP2Bridge ? "+p2-bridge" : ""}`,
+  );
 
   if (!host.skipDemoSeed) {
     await seedDemoKnowledge(host.server.composition, host.workspaceId);
