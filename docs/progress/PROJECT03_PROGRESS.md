@@ -836,3 +836,28 @@ Add workflow evaluation demos (Fake and P2 bridge)
 
 **Status**
 Completed
+
+## Task 192
+
+**Date**
+2026-07-24
+
+**Commit**
+Pending
+
+**Title**
+Document Phase B evaluation demos and close Phase B
+
+**Summary**
+- Updated P3 runbook / narrative / README / portfolio with evaluation demos
+- Roadmap + agent-ops: Phase B Complete; Later (HTTP/real invoker) deferred
+- Project 3: CLOSED (Partial) preserved
+
+**Validation**
+- `pnpm demo:workflow:evaluation`
+- `pnpm demo:workflow:evaluation-bridge`
+- `pnpm validate:project03:closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed

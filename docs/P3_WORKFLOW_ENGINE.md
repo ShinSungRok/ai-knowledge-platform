@@ -12,9 +12,13 @@ pnpm demo:workflow:engine
 
 # Researcher → P2 InMemory cited-answer (portfolio bridge)
 pnpm demo:workflow:p2-bridge
+
+# Evaluation metrics (Fake / bridge) — no LLM-as-judge
+pnpm demo:workflow:evaluation
+pnpm demo:workflow:evaluation-bridge
 ```
 
-콘솔에 plan / step handoff / shared memory가 출력됩니다 (Docker/키 불필요).
+콘솔에 plan / step handoff / shared memory / evaluation metrics가 출력됩니다 (Docker/키 불필요).
 
 포트폴리오 스토리: [`PORTFOLIO_NARRATIVE.md`](PORTFOLIO_NARRATIVE.md).
 
@@ -31,7 +35,7 @@ Goal
       → Invoker (Fake or KnowledgeAnswerWorkflowAgentInvoker)
       → Shared Workflow Memory (append-only)
   → Run result (aggregation)
-  → Workflow evaluation (separate validators)
+  → Workflow evaluation (DefaultWorkflowRunEvaluator / RunWorkflowEvaluationUseCase)
 ```
 
 | Role (예) | 책임 |
@@ -55,6 +59,17 @@ P2와의 관계: Workflow Engine은 **실행 계층**. Knowledge Serving(P2)을 
 
 Researcher step output 형식: `knowledge:grounded:citations=N:<answer text>`.
 
+### Workflow Evaluation (Phase B 증거)
+
+| Item | Detail |
+|---|---|
+| Evaluator | `DefaultWorkflowRunEvaluator` (deterministic; no LLM-as-judge) |
+| Use case | `RunWorkflowEvaluationUseCase` |
+| Demo | `pnpm demo:workflow:evaluation` · `pnpm demo:workflow:evaluation-bridge` |
+| Validator | `pnpm validate:workflow:evaluation` · `pnpm validate:application:eval-workflow` |
+
+Metrics: `passRate` / `passedCount` / per-case `failureReasons`.
+
 ---
 
 ## 검증 (증거)
@@ -68,9 +83,10 @@ pnpm validate:workflow:memory
 pnpm validate:workflow:evaluation
 pnpm validate:workflow:knowledge-invoker
 pnpm validate:workflow:p2-bridge
+pnpm validate:application:eval-workflow
 ```
 
-모듈: `app/knowledge/workflow` (+ bridge wiring in `composition`).
+모듈: `app/knowledge/workflow` (+ bridge/evaluation wiring in `composition`).
 
 ---
 
@@ -78,10 +94,10 @@ pnpm validate:workflow:p2-bridge
 
 보안 정책 요지 + 리스크 한 줄 요청  
 → researcher가 P2 cited-answer로 조사 → synthesizer 초안 → critic 검토  
-→ memory에 objective / handoff / step_output 기록.
+→ memory에 objective / handoff / step_output 기록 → evaluation passRate=1.
 
 ---
 
 ## 면접 한 줄
 
-> I implemented a multi-agent **workflow engine** and proved it **reuses** our knowledge serving layer: researcher steps call cited-answer through a port, with Fake-validated orchestration, handoff, and shared run memory—so complex work runs as a backend workflow, not a single prompt.
+> I implemented a multi-agent **workflow engine** and proved it **reuses** our knowledge serving layer: researcher steps call cited-answer through a port, with Fake-validated orchestration, handoff, shared run memory, and **deterministic workflow evaluation**—so complex work runs as a backend workflow, not a single prompt.

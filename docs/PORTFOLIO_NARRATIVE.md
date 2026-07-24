@@ -120,8 +120,8 @@ Roles (examples): coordinator · researcher · synthesizer · critic · executor
 | Item | Detail |
 |---|---|
 | Module | `app/knowledge/workflow` |
-| Demo | `pnpm demo:workflow:engine` · `pnpm demo:workflow:p2-bridge` · [`P3_WORKFLOW_ENGINE.md`](P3_WORKFLOW_ENGINE.md) |
-| Proof | `pnpm validate:workflow:*` · `pnpm validate:workflow:p2-bridge` |
+| Demo | `pnpm demo:workflow:engine` · `pnpm demo:workflow:p2-bridge` · `pnpm demo:workflow:evaluation` · `pnpm demo:workflow:evaluation-bridge` · [`P3_WORKFLOW_ENGINE.md`](P3_WORKFLOW_ENGINE.md) |
+| Proof | `pnpm validate:workflow:*` · `pnpm validate:workflow:p2-bridge` · `pnpm validate:application:eval-workflow` |
 | Relation to P2 | Researcher reuses P2 cited-answer via `WorkflowKnowledgeAnswerPort` |
 
 **Interview one-liner:**  
@@ -179,7 +179,7 @@ Registry (prompt / model versions)
 |---|---|
 | P2 serve | `pnpm start` · [`P2_SERVICE_MANUAL.md`](P2_SERVICE_MANUAL.md) |
 | P2 smoke | `pnpm validate:server:start-smoke` |
-| P3 demo | `pnpm demo:workflow:engine` · `pnpm demo:workflow:p2-bridge` · [`P3_WORKFLOW_ENGINE.md`](P3_WORKFLOW_ENGINE.md) |
-| P3 | `pnpm validate:workflow:orchestrator` · `pnpm validate:workflow:p2-bridge` |
+| P3 demo | `pnpm demo:workflow:engine` · `pnpm demo:workflow:p2-bridge` · `pnpm demo:workflow:evaluation` · `pnpm demo:workflow:evaluation-bridge` · [`P3_WORKFLOW_ENGINE.md`](P3_WORKFLOW_ENGINE.md) |
+| P3 | `pnpm validate:workflow:orchestrator` · `pnpm validate:workflow:p2-bridge` · `pnpm validate:application:eval-workflow` |
 | P4 | `pnpm validate:llmops:run-store` (and related `llmops:*`) |
 | Full | `pnpm validate` |

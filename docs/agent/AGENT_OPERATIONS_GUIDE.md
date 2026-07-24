@@ -23,17 +23,17 @@ Partial≠Completed 서술을 되돌리지 않는다. **Do not invent Project 5 
 PROJECT05**. Do not reopen Partial tracks.
 
 **Current implementation track status (human-authorized):**
-**P3 Portfolio Reinforcement Track: Active — Phase B (Evaluation Demo)**
-(Sprint 64). Phase A (P2 Knowledge Bridge) remains **Complete**. P2 Service
-Completion Track remains **Complete** (Sprint 61). Do **not** invent
-Project 5 / PROJECT05. Do **not** promote Project 3/4 Partial → Completed.
-Do **not** use Express/Fastify. Partial infra adapters stay Partial.
-LLM-as-judge remains deferred.
+**P3 Portfolio Reinforcement Track: Phase A + Phase B Complete** (P2 Knowledge
+Bridge + Evaluation Demo — Sprint 63–64). Await human charter for Later
+(optional HTTP / real invoker). P2 Service Completion Track remains
+**Complete** (Sprint 61). Do **not** invent Project 5 / PROJECT05. Do **not**
+promote Project 3/4 Partial → Completed. Do **not** use Express/Fastify.
+Partial infra adapters stay Partial. LLM-as-judge remains deferred.
 
 문서 간 우선순위는 다음과 같다.
 
 ```text
-Active human-authorized track (P3 Portfolio Reinforcement — Phase B)
+Active human-authorized track (P3 Portfolio Reinforcement — Phase A+B Complete)
         ↓
 Closed human-authorized track (P2 Service Completion Complete)
         ↓
