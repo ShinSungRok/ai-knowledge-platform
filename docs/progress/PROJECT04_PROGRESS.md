@@ -810,3 +810,26 @@ Document P4 control-plane demo and close Phase 0
 
 **Status**
 Completed
+
+## Task 217
+
+**Date**
+2026-07-24
+
+**Commit**
+Pending
+
+**Title**
+Record P4 Later thin Control Plane HTTP track Active
+
+**Summary**
+- Roadmap Later → Active — Thin Control Plane HTTP (Sprint 71); Project 4 CLOSED (Partial) preserved
+- AGENT_OPERATIONS_GUIDE current track = P4 Later Thin Control Plane HTTP
+- No runtime code
+
+**Validation**
+- `pnpm validate:project04:closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed

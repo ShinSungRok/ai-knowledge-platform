@@ -19,18 +19,19 @@ capabilities, and Project 4 LLMOps Partial capabilities.
 
 ## P4 Portfolio Reinforcement Track (human-authorized)
 
-**Status: Phase 0 Complete; await Later charter** — Sprint 65
+**Status: Later Active — Thin Control Plane HTTP** — Sprint 71
 
 Additional portfolio track **after** Project 4: CLOSED (Partial). Does **not**
 promote Partial → Completed. Does **not** invent Project 5. Does **not** add
-Express/HTTP LLMOps API.
+Express/Fastify or full CRUD LLMOps API.
 
 | Phase | Goal | Status |
 |---|---|---|
 | Phase 0 | Console control-plane demo + `docs/P4_LLMOPS.md` | **Complete** (Tasks 214–216) |
-| Later | Optional thin HTTP / live OTLP / SQL adapters | Deferred |
+| Later | Thin Control Plane HTTP on `pnpm start` (Bearer; InMemory) | **Active** (Sprint 71, Tasks 217+) |
 
-P3 Portfolio Reinforcement Phase A+B remains Complete (Sprint 63–64).
+P3 Portfolio Reinforcement Phase A+B and Later Thin Workflow HTTP remain
+Complete. Charter LLMOps capabilities stay **Partial**.
 
 ## Reuse from Project 2 / Project 3
 
@@ -75,6 +76,7 @@ P3 Portfolio Reinforcement Phase A+B remains Complete (Sprint 63–64).
 | Sprint 49 (Task 202–205) | Establish Deployment / Serving Configuration (Partial) |
 | Sprint 50 (Task 206–209) | Establish LLMOps Observability (Partial) |
 | Sprint 51 (Task 210–213) | Close Out Project 4 (CLOSED Partial) |
+| Sprint 71 (Task 217–220) | P4 Later Thin Control Plane HTTP (Bearer llmops/control-plane on pnpm start; Partial caps unchanged) |
 
 ## Sprint 45 close note
 

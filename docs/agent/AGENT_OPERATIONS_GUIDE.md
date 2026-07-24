@@ -23,20 +23,20 @@ Partial≠Completed 서술을 되돌리지 않는다. **Do not invent Project 5 
 PROJECT05**. Do not reopen Partial tracks.
 
 **Current implementation track status (human-authorized):**
-**P3 Later — Thin Workflow HTTP: Complete** (Sprint 69, Tasks 193–196).
-Bearer-protected `POST /workspaces/:workspaceId/workflow-runs` on `pnpm start`.
-Does **not** reopen Project 3 Multi-Agent capabilities to Completed. Does **not**
-invent Project 5. Does **not** implement P4 HTTP. Express/Fastify forbidden.
-Await further human charter for additional Later work (e.g. P4 HTTP / live OTLP).
-P4 Portfolio Phase 0 and P2 Service Completion remain **Complete**.
+**P4 Later — Thin Control Plane HTTP** (Sprint 71, Tasks 217+). Adds
+Bearer-protected `POST /workspaces/:workspaceId/llmops/control-plane` on
+`pnpm start` (InMemory story). Does **not** promote Project 4 Partial →
+Completed. Does **not** invent Project 5. Express/Fastify forbidden. Live OTLP
+/ official LLMOps SaaS SDKs remain deferred. P3 Later Thin Workflow HTTP and
+P2 Service Completion remain **Complete**.
 
 문서 간 우선순위는 다음과 같다.
 
 ```text
-Closed human-authorized track (P3 Later Thin Workflow HTTP Complete)
+Active human-authorized track (P4 Later — Thin Control Plane HTTP)
         ↓
-Closed human-authorized tracks (P4 Phase 0 Complete; P3 Phase A+B Complete;
-  P2 Service Completion Complete)
+Closed human-authorized tracks (P3 Later Thin Workflow HTTP Complete;
+  P4 Phase 0 Complete; P3 Phase A+B Complete; P2 Service Completion Complete)
         ↓
 Closed historical charters (PROJECT04 / PROJECT03 / PROJECT02) for constraints
         ↓
@@ -51,10 +51,10 @@ AGENT_OPERATIONS_GUIDE.md
 - `AGENT_OPERATIONS_GUIDE.md`: 어떤 Agent Skill을 언제 어떻게 사용할지 정의
 - 개별 Task Prompt: 현재 작업의 구체적인 범위와 완료 조건 정의
 
-P3 Later (Thin Workflow HTTP) 작업은 `docs/progress/PROJECT03_PROGRESS.md`에
-기록한다 (Task 193+). P4 Portfolio Reinforcement는
-`docs/progress/PROJECT04_PROGRESS.md`에 유지한다. Skill 결과가
-Project 2/3/4 CLOSED 서술과 충돌하면 CLOSED / CLOSED (Partial)를 보존한다.
+P4 Later (Thin Control Plane HTTP) 작업은 `docs/progress/PROJECT04_PROGRESS.md`에
+기록한다 (Task 217+). P3 Later는 `docs/progress/PROJECT03_PROGRESS.md`에
+유지한다. Skill 결과가 Project 2/3/4 CLOSED 서술과 충돌하면 CLOSED /
+CLOSED (Partial)를 보존한다.
 
 ---
 
