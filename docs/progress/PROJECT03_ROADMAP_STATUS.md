@@ -15,10 +15,24 @@ evaluation remain unchanged.
 Project 2 stay Partial — not Completed. Do not reopen Project 2 tracks.
 **Partial ≠ Completed** for Project 3 Multi-Agent capabilities.
 
-**Next:** Project 4 — Enterprise LLMOps Platform (out of active Project 3
-charter). Reuses Project 2 Knowledge/MCP/Agent platform and Project 3
-Multi-Agent workflow boundaries. Project 4 active docs: `PROJECT04_*`
-(`docs/agent/PROJECT04_INSTRUCTIONS.md`, `docs/progress/PROJECT04_*`).
+**Charter next (historical):** Project 4 — Enterprise LLMOps Platform
+(CLOSED Partial). Project 4 docs: `PROJECT04_*`.
+
+## P3 Portfolio Reinforcement Track (human-authorized)
+
+**Status: Active — Phase A (P2 Knowledge Bridge)** — Sprint 63
+
+Additional portfolio track **after** Project 3: CLOSED (Partial). Does **not**
+reopen Multi-Agent capabilities to Completed. Does **not** invent Project 5.
+
+| Phase | Goal | Status |
+|---|---|---|
+| P3-0 | Console engine demo + `docs/P3_WORKFLOW_ENGINE.md` | In progress (Task 186) |
+| Phase A | Researcher step reuses P2 cited-answer (InMemory/Fake) | Active |
+| Phase B+ | Evaluation demo / optional thin HTTP / optional real invoker | Later |
+
+**Frozen in this track:** Express/Fastify; Partial→Completed; LLM-as-judge;
+SQL workflow memory; full multi-agent HTTP product API (unless later Phase).
 
 ## Reuse from Project 2
 

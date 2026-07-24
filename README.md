@@ -1,14 +1,23 @@
 # AI Knowledge Platform
 
-Production-shaped TypeScript backend for knowledge retrieval and grounded Q&A.
-**Project 2 Platform Baseline is complete**: workspace-scoped knowledge through
-cited RAG answers, MCP/tool/agent/memory/jobs, evaluation, in-process runtime,
-and operations foundations — all proven by dependency-free validation runners
-against fake/in-memory adapters.
+Production-shaped TypeScript **AI backend** platform: knowledge retrieval &
+serving, multi-agent workflow engine, and LLMOps control plane.
 
-Architecture philosophy is inherited from Project1 (`public-law-ai`): **Clean /
-Hexagonal Architecture** with **Domain-Driven Design** boundaries, a single
-composition root, and dependency-free validation runners.
+| Layer | Name | Why |
+|---|---|---|
+| **P2** | Knowledge Retrieval & Serving Platform | Enterprise knowledge ingest → retrieve → serve |
+| **P3** | Multi-Agent Workflow Engine | Complex work as role-based workflows |
+| **P4** | LLMOps / Control Plane | Version, evaluate, deploy-config, observe |
+
+**Why → What → How** portfolio narrative:
+[`docs/PORTFOLIO_NARRATIVE.md`](docs/PORTFOLIO_NARRATIVE.md).  
+P2 runbook: [`docs/P2_SERVICE_MANUAL.md`](docs/P2_SERVICE_MANUAL.md).  
+P3 workflow demo: [`docs/P3_WORKFLOW_ENGINE.md`](docs/P3_WORKFLOW_ENGINE.md) (`pnpm demo:workflow:engine`).
+
+**Project 2 baseline is complete** (cited RAG, MCP/agent/jobs, evaluation,
+runtime/ops) with dependency-free validators. Architecture from Project1
+(`public-law-ai`): Clean / Hexagonal / DDD, composition root, Fake-first
+validation.
 
 ## Status
 
@@ -96,6 +105,8 @@ pnpm validate:llmops:observation-store
 ## Local runtime
 
 ### P2 Service Completion Phase A/B (`pnpm start`)
+
+터미널 실행 매뉴얼: [`docs/P2_SERVICE_MANUAL.md`](docs/P2_SERVICE_MANUAL.md)
 
 Long-running HTTP host (`NodeHttpListener`, no Express).
 **Phase A Complete** / **Phase B Complete** / track **Complete** (Sprint 61).

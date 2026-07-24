@@ -1,11 +1,21 @@
 # Portfolio / Project Intent
 
+Interview / resume narrative (Why → What → How, Backend framing):
+[`docs/PORTFOLIO_NARRATIVE.md`](PORTFOLIO_NARRATIVE.md).
+
 ## 1. What this is
 
 **AI Knowledge Platform** is a production-shaped TypeScript backend for
 knowledge retrieval and grounded question answering. It inherits the Clean /
 Hexagonal / DDD architecture philosophy proven in Project1 (`public-law-ai`),
 generalized beyond a single legal domain.
+
+**Portfolio framing (adopted):** P2 = Knowledge Retrieval & Serving Platform;
+P3 = Multi-Agent Workflow Engine; P4 = LLMOps / Control Plane — Knowledge →
+Execution → Operations over Public Law AI (P1).
+
+P3 demo/runbook: [`P3_WORKFLOW_ENGINE.md`](P3_WORKFLOW_ENGINE.md)
+(`pnpm demo:workflow:engine`).
 
 ## 1b. Project 2: CLOSED
 
@@ -106,12 +116,12 @@ Static checks: `pnpm validate:project04:charter-skeleton`,
 
 ## 1e. Project sequence
 
-| Project | Focus | Status (this portfolio) |
-|---|---|---|
-| Project 1 | Public Law AI — Grounded RAG | Complete (separate repo) |
-| Project 2 | AI Knowledge Platform — Knowledge + MCP + Agent | **CLOSED** |
-| Project 3 | Enterprise AI Workflow — Multi-Agent | **CLOSED (Partial)** |
-| Project 4 | Enterprise LLMOps Platform | **CLOSED (Partial)** |
+| Project | Portfolio name | Why (one line) | Status |
+|---|---|---|---|
+| Project 1 | Public Law AI | 공공 법률을 신뢰 가능한 AI 검색·답변으로 | Complete (separate repo) |
+| Project 2 | Knowledge Retrieval & Serving Platform | 기업 지식을 AI가 검색·serving할 기반 | **CLOSED** + Service Completion **Complete** |
+| Project 3 | Multi-Agent Workflow Engine | 복잡한 업무를 역할 워크플로로 실행 | **CLOSED (Partial)** |
+| Project 4 | LLMOps / Control Plane | 버전·평가·배포설정·관측으로 운영 | **CLOSED (Partial)** |
 
 Project 2 delivers a **completed platform baseline**: workspace-scoped
 knowledge pipelines through cited RAG answers, MCP/tool/agent/memory/jobs,

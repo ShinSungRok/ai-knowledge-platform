@@ -23,14 +23,18 @@ Partial≠Completed 서술을 되돌리지 않는다. **Do not invent Project 5 
 PROJECT05**. Do not reopen Partial tracks.
 
 **Current implementation track status (human-authorized):**
-**P2 Service Completion Track: Complete** (Phase A + Phase B Complete —
-Sprint 61). Do **not** invent Project 5 / PROJECT05. Do **not** reopen
-Project 3 / Project 4 Partial tracks or implement P3/P4 product features.
-Do **not** use Express/Fastify. Partial infra adapters stay Partial.
+**P3 Portfolio Reinforcement Track: Active — Phase A (P2 Knowledge Bridge)**
+(Sprint 63). P2 Service Completion Track remains **Complete** (Sprint 61).
+Do **not** invent Project 5 / PROJECT05. Do **not** promote Project 3/4
+Partial → Completed. Do **not** use Express/Fastify. Partial infra adapters
+stay Partial. This track may add portfolio demo/bridge evidence on top of
+CLOSED (Partial) boundaries — not a charter reopen.
 
 문서 간 우선순위는 다음과 같다.
 
 ```text
+Active human-authorized track (P3 Portfolio Reinforcement Phase A)
+        ↓
 Closed human-authorized track (P2 Service Completion Complete)
         ↓
 Closed historical charters (PROJECT04 / PROJECT03 / PROJECT02) for constraints
@@ -46,9 +50,10 @@ AGENT_OPERATIONS_GUIDE.md
 - `AGENT_OPERATIONS_GUIDE.md`: 어떤 Agent Skill을 언제 어떻게 사용할지 정의
 - 개별 Task Prompt: 현재 작업의 구체적인 범위와 완료 조건 정의
 
-P2 Service Completion 작업은 `docs/progress/PROJECT02_PROGRESS.md`에
-기록한다. Skill 결과가 Project 2/3/4 CLOSED 서술과 충돌하면 CLOSED /
-CLOSED (Partial)를 보존한다.
+P3 Portfolio Reinforcement 작업은 `docs/progress/PROJECT03_PROGRESS.md`에
+기록한다 (Task 186+). P2 Service Completion 기록은
+`docs/progress/PROJECT02_PROGRESS.md`에 유지한다. Skill 결과가
+Project 2/3/4 CLOSED 서술과 충돌하면 CLOSED / CLOSED (Partial)를 보존한다.
 
 ---
 
