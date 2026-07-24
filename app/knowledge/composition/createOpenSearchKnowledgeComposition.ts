@@ -141,6 +141,7 @@ export async function createOpenSearchKnowledgeComposition(
   return {
     runtime,
     mcpJsonRpcHandler,
+    languageModelProvider,
     knowledgeDocumentRepository,
     knowledgeSourceRepository,
     documentChunkRepository,

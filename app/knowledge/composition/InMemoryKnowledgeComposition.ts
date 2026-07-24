@@ -1,3 +1,4 @@
+import type { LanguageModelProvider } from "../ai/LanguageModelProvider";
 import type { InMemoryVectorIndex } from "../embedding/InMemoryVectorIndex";
 import type { McpJsonRpcHandler } from "../mcp/McpJsonRpcHandler";
 import type { DefaultInMemoryDocumentChunkRepository } from "../persistence/DefaultInMemoryDocumentChunkRepository";
@@ -11,6 +12,7 @@ import type { KnowledgeRuntime } from "./KnowledgeRuntime";
 export interface InMemoryKnowledgeComposition {
   runtime: KnowledgeRuntime;
   mcpJsonRpcHandler: McpJsonRpcHandler;
+  languageModelProvider: LanguageModelProvider;
   knowledgeDocumentRepository: DefaultInMemoryRepository;
   documentChunkRepository: DefaultInMemoryDocumentChunkRepository;
   vectorIndex: InMemoryVectorIndex;

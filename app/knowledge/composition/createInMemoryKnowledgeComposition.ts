@@ -100,6 +100,7 @@ export function createInMemoryKnowledgeComposition(
   return {
     runtime,
     mcpJsonRpcHandler,
+    languageModelProvider,
     knowledgeDocumentRepository,
     documentChunkRepository,
     vectorIndex,

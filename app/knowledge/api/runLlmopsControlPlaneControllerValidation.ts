@@ -104,6 +104,29 @@ async function main(): Promise<void> {
     "observationId",
   );
 
+  console.log("[api] llmops/control-plane metrics + servingLabels → 200...");
+  const labeled = await controller.create({
+    method: "POST",
+    path: `/workspaces/${WORKSPACE_A}/llmops/control-plane`,
+    headers: bearerHeaders(),
+    body: {
+      metrics: { latencyMs: 640, hitRateAtK: 0.92, meanReciprocalRank: 0.81 },
+      servingLabels: {
+        modelName: "gemini-test",
+        providerModel: "gemini-test",
+      },
+    },
+  });
+  assertEqual(labeled.status, 200, "labeled 200");
+  const labeledBody = labeled.body as {
+    modelName?: string;
+    providerModel?: string;
+    metrics?: { latencyMs?: number };
+  };
+  assertEqual(labeledBody.modelName, "gemini-test", "modelName");
+  assertEqual(labeledBody.providerModel, "gemini-test", "providerModel");
+  assertEqual(labeledBody.metrics?.latencyMs, 640, "latency override");
+
   console.log("[api] createKnowledgeHttpRouter wires llmops when use case set...");
   const composition = createInMemoryKnowledgeComposition();
   const router = createKnowledgeHttpRouter(

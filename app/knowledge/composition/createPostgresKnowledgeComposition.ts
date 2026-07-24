@@ -121,6 +121,7 @@ export async function createPostgresKnowledgeComposition(
   return {
     runtime,
     mcpJsonRpcHandler,
+    languageModelProvider,
     knowledgeDocumentRepository,
     knowledgeSourceRepository,
     documentChunkRepository,

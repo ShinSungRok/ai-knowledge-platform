@@ -17,12 +17,25 @@ import { InMemoryPromptRegistry } from "../llmops/InMemoryPromptRegistry";
 import { InMemoryServingConfigStore } from "../llmops/InMemoryServingConfigStore";
 
 /**
+ * Optional registry labels (host may seed from `LLM_MODEL`).
+ * Soft-link strings only — does not bind LanguageModelProvider.
+ */
+export interface LlmopsControlPlaneServingLabels {
+  modelName?: string;
+  providerModel?: string;
+  promptTemplateName?: string;
+  promptBody?: string;
+}
+
+/**
  * Input for one thin LLMOps control-plane HTTP/application run.
  * Empty body `{}` is valid; metrics default to demo-passing values.
  */
 export interface RunLlmopsControlPlaneInput {
   workspaceId: string;
   metrics?: Readonly<Record<string, number>>;
+  /** Per-request override of registry labels (e.g. live Gemini model id). */
+  servingLabels?: LlmopsControlPlaneServingLabels;
 }
 
 /**
@@ -32,6 +45,8 @@ export interface RunLlmopsControlPlaneResultView {
   workspaceId: string;
   promptVersionId: string;
   modelVersionId: string;
+  modelName: string;
+  providerModel: string;
   experimentRunId: string;
   gateId: string;
   gatePassed: boolean;
@@ -48,12 +63,33 @@ const DEFAULT_METRICS: Readonly<Record<string, number>> = {
   latencyMs: 120,
 };
 
+const DEFAULT_LABELS: Readonly<Required<LlmopsControlPlaneServingLabels>> = {
+  modelName: "fake-chat",
+  providerModel: "fake-llm-v1",
+  promptTemplateName: "cited-answer",
+  promptBody: "Answer using evidence only.\nQuestion: {{query}}",
+};
+
 /**
  * Thin application use case: one InMemory control-plane story
  * (same shape as `pnpm demo:llmops:control-plane`). Soft-link ids only;
  * does not bind LanguageModelProvider. Depends on llmops InMemory adapters.
  */
 export class RunLlmopsControlPlaneUseCase {
+  private readonly defaults: Required<LlmopsControlPlaneServingLabels>;
+
+  constructor(defaults: LlmopsControlPlaneServingLabels = {}) {
+    this.defaults = {
+      modelName: defaults.modelName?.trim() || DEFAULT_LABELS.modelName,
+      providerModel:
+        defaults.providerModel?.trim() || DEFAULT_LABELS.providerModel,
+      promptTemplateName:
+        defaults.promptTemplateName?.trim() ||
+        DEFAULT_LABELS.promptTemplateName,
+      promptBody: defaults.promptBody?.trim() || DEFAULT_LABELS.promptBody,
+    };
+  }
+
   async execute(
     input: RunLlmopsControlPlaneInput,
   ): Promise<RunLlmopsControlPlaneResultView> {
@@ -68,6 +104,7 @@ export class RunLlmopsControlPlaneUseCase {
     }
     const workspaceId = input.workspaceId.trim();
     const metrics = resolveMetrics(input.metrics);
+    const labels = resolveLabels(this.defaults, input.servingLabels);
     const suffix = randomUUID().slice(0, 8);
     const now = Date.now();
 
@@ -85,30 +122,32 @@ export class RunLlmopsControlPlaneUseCase {
     const gateId = asEvaluationGateId(`gate-${suffix}`);
     const servingId = asServingConfigId(`svc-${suffix}`);
     const observationId = asLlmopsObservationId(`obs-${suffix}`);
+    const templateId = asPromptTemplateId(`tpl-${suffix}`);
+    const modelId = asModelId(`mdl-${suffix}`);
 
     await prompts.registerTemplate({
-      id: asPromptTemplateId(`tpl-${suffix}`),
+      id: templateId,
       workspaceId,
-      name: "cited-answer",
+      name: labels.promptTemplateName,
     });
     await prompts.registerVersion({
       id: promptVersionId,
-      templateId: asPromptTemplateId(`tpl-${suffix}`),
+      templateId,
       workspaceId,
       version: "1.0.0",
-      body: "Answer using evidence only.\nQuestion: {{query}}",
+      body: labels.promptBody,
     });
     await models.registerModel({
-      id: asModelId(`mdl-${suffix}`),
+      id: modelId,
       workspaceId,
-      name: "fake-chat",
+      name: labels.modelName,
     });
     await models.registerVersion({
       id: modelVersionId,
-      modelId: asModelId(`mdl-${suffix}`),
+      modelId,
       workspaceId,
       version: "1.0.0",
-      providerModel: "fake-llm-v1",
+      providerModel: labels.providerModel,
     });
 
     await runs.create({
@@ -119,6 +158,8 @@ export class RunLlmopsControlPlaneUseCase {
       params: {
         promptVersionId: String(promptVersionId),
         modelVersionId: String(modelVersionId),
+        modelName: labels.modelName,
+        providerModel: labels.providerModel,
       },
       startedAtUnixMs: now,
     });
@@ -178,13 +219,19 @@ export class RunLlmopsControlPlaneUseCase {
       },
       costUnits: 0.002,
       latencyMs: metrics.latencyMs ?? 0,
-      attributes: { softMap: "llmops.quality/cost/latency" },
+      attributes: {
+        softMap: "llmops.quality/cost/latency",
+        modelName: labels.modelName,
+        providerModel: labels.providerModel,
+      },
     });
 
     return {
       workspaceId,
       promptVersionId: String(promptVersionId),
       modelVersionId: String(modelVersionId),
+      modelName: labels.modelName,
+      providerModel: labels.providerModel,
       experimentRunId: String(runId),
       gateId: String(gateId),
       gatePassed: gateResult.passed,
@@ -195,6 +242,42 @@ export class RunLlmopsControlPlaneUseCase {
       metrics: { ...metrics },
     };
   }
+}
+
+function resolveLabels(
+  defaults: Required<LlmopsControlPlaneServingLabels>,
+  override: LlmopsControlPlaneServingLabels | undefined,
+): Required<LlmopsControlPlaneServingLabels> {
+  if (override === undefined) {
+    return { ...defaults };
+  }
+  if (
+    override === null ||
+    typeof override !== "object" ||
+    Array.isArray(override)
+  ) {
+    throw new Error("servingLabels must be a plain object");
+  }
+  return {
+    modelName: nonEmptyOr(override.modelName, defaults.modelName),
+    providerModel: nonEmptyOr(override.providerModel, defaults.providerModel),
+    promptTemplateName: nonEmptyOr(
+      override.promptTemplateName,
+      defaults.promptTemplateName,
+    ),
+    promptBody: nonEmptyOr(override.promptBody, defaults.promptBody),
+  };
+}
+
+function nonEmptyOr(
+  value: string | undefined,
+  fallback: string,
+): string {
+  if (typeof value !== "string") {
+    return fallback;
+  }
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : fallback;
 }
 
 function resolveMetrics(

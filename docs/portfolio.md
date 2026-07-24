@@ -17,7 +17,7 @@ Execution → Operations over Public Law AI (P1).
 P3 demo/runbook: [`P3_WORKFLOW_ENGINE.md`](P3_WORKFLOW_ENGINE.md)
 (`pnpm demo:workflow:*`; thin HTTP: `POST .../workflow-runs` on `pnpm start`).  
 P4 control-plane demo: [`P4_LLMOPS.md`](P4_LLMOPS.md)
-(`pnpm demo:llmops:control-plane`; thin HTTP: `POST .../llmops/control-plane` on `pnpm start`).
+(`pnpm demo:llmops:control-plane`; live metrics: `pnpm demo:llmops:from-cited-answer`; thin HTTP: `POST .../llmops/control-plane` on `pnpm start`).
 
 ## 1b. Project 2: CLOSED
 

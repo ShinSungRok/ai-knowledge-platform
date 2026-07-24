@@ -31,6 +31,7 @@ Same `NodeHttpListener` host as cited-answers (no Express). Bearer + workspace A
 pnpm start
 # STORE / VECTOR / LLM / WORKFLOW logs on boot
 # Default: demo seed on → WORKFLOW: fake+p2-bridge (researcher uses cited-answer)
+# LLM_API_KEY set → WORKFLOW: …+agent-llm (synthesizer/critic use HTTP LLM)
 # SKIP_DEMO_SEED=1 → Fake-only unless WORKFLOW_P2_BRIDGE=1
 
 curl -sS -X POST http://127.0.0.1:8080/workspaces/workspace-a/workflow-runs \
@@ -40,6 +41,7 @@ curl -sS -X POST http://127.0.0.1:8080/workspaces/workspace-a/workflow-runs \
 ```
 
 Expect HTTP 200 with `status: "completed"`, `workflowRunId`, and three `stepResults`.
+With HTTP LLM: synthesizer/critic outputs are model text (not `echo:…`).
 Without Bearer → 401. Smoke: `pnpm validate:server:start-smoke` (includes workflow-runs).
 
 포트폴리오 스토리: [`PORTFOLIO_NARRATIVE.md`](PORTFOLIO_NARRATIVE.md).
@@ -54,7 +56,7 @@ Goal
   → Orchestrator (DefaultWorkflowOrchestrator)
       → resolve role agent (Registry)
       → Handoff (sequential / delegation)
-      → Invoker (Fake or KnowledgeAnswerWorkflowAgentInvoker)
+      → Invoker (Fake / KnowledgeAnswer / LanguageModel for synth+critic)
       → Shared Workflow Memory (append-only)
   → Run result (aggregation)
   → Workflow evaluation (DefaultWorkflowRunEvaluator / RunWorkflowEvaluationUseCase)
@@ -75,7 +77,7 @@ P2와의 관계: Workflow Engine은 **실행 계층**. Knowledge Serving(P2)을 
 | Item | Detail |
 |---|---|
 | Port | `WorkflowKnowledgeAnswerPort` |
-| Invoker | `KnowledgeAnswerWorkflowAgentInvoker` (researcher → knowledge; else Fake) |
+| Invoker | `KnowledgeAnswerWorkflowAgentInvoker` (researcher → knowledge) + optional `LanguageModelWorkflowAgentInvoker` (synthesizer/critic → LLM when `LLM_API_KEY` set); else Fake |
 | Demo | `pnpm demo:workflow:p2-bridge` |
 | Validator | `pnpm validate:workflow:p2-bridge` |
 

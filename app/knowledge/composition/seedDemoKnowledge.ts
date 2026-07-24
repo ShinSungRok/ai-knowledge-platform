@@ -8,8 +8,9 @@ import type { KnowledgeDocumentRepository } from "../repository/KnowledgeDocumen
 import type { KnowledgeSourceRepository } from "../repository/KnowledgeSourceRepository";
 
 /** Stable token that FakeEmbeddingProvider retrieval can hit. */
-export const DEMO_CHUNK_TEXT = "aaaaaaaa";
-export const DEMO_QUERY = DEMO_CHUNK_TEXT;
+export const DEMO_CHUNK_TEXT =
+  "Security policy Q3: MFA is mandatory for all remote VPN access. Temporary exceptions require security-team approval within 48 hours.";
+export const DEMO_QUERY = "Is MFA required for VPN?";
 
 /**
  * Minimal surface required to seed demo document/chunk/vector for local

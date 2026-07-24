@@ -127,5 +127,6 @@ export {
   RunLlmopsControlPlaneUseCase,
   type RunLlmopsControlPlaneInput,
   type RunLlmopsControlPlaneResultView,
+  type LlmopsControlPlaneServingLabels,
 } from "./RunLlmopsControlPlaneUseCase";
 

@@ -1,4 +1,7 @@
-import type { RunLlmopsControlPlaneUseCase } from "../application/RunLlmopsControlPlaneUseCase";
+import type {
+  LlmopsControlPlaneServingLabels,
+  RunLlmopsControlPlaneUseCase,
+} from "../application/RunLlmopsControlPlaneUseCase";
 import type { HttpRequest } from "../http/HttpRequest";
 import type { HttpResponse } from "../http/HttpResponse";
 import type { HttpBearerGuard } from "../security/HttpBearerGuard";
@@ -22,6 +25,58 @@ function errorMessage(error: unknown): string {
     return error.message;
   }
   return "Internal Server Error";
+}
+
+function parseOptionalString(
+  value: unknown,
+  field: string,
+): string | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (typeof value !== "string") {
+    throw new Error(`${field} must be a string`);
+  }
+  return value;
+}
+
+function parseServingLabels(
+  raw: unknown,
+): LlmopsControlPlaneServingLabels | undefined {
+  if (raw === undefined) {
+    return undefined;
+  }
+  if (raw === null || typeof raw !== "object" || Array.isArray(raw)) {
+    throw new Error("servingLabels must be a plain object");
+  }
+  const record = raw as Record<string, unknown>;
+  const labels: LlmopsControlPlaneServingLabels = {};
+  const modelName = parseOptionalString(record.modelName, "servingLabels.modelName");
+  const providerModel = parseOptionalString(
+    record.providerModel,
+    "servingLabels.providerModel",
+  );
+  const promptTemplateName = parseOptionalString(
+    record.promptTemplateName,
+    "servingLabels.promptTemplateName",
+  );
+  const promptBody = parseOptionalString(
+    record.promptBody,
+    "servingLabels.promptBody",
+  );
+  if (modelName !== undefined) {
+    labels.modelName = modelName;
+  }
+  if (providerModel !== undefined) {
+    labels.providerModel = providerModel;
+  }
+  if (promptTemplateName !== undefined) {
+    labels.promptTemplateName = promptTemplateName;
+  }
+  if (promptBody !== undefined) {
+    labels.promptBody = promptBody;
+  }
+  return labels;
 }
 
 /**
@@ -64,6 +119,7 @@ export class LlmopsControlPlaneController {
 
     const body = request.body;
     let metrics: Record<string, number> | undefined;
+    let servingLabels: LlmopsControlPlaneServingLabels | undefined;
     if (body !== undefined && body !== null) {
       if (typeof body !== "object" || Array.isArray(body)) {
         return jsonResponse(400, { error: "body must be a plain object" });
@@ -92,12 +148,18 @@ export class LlmopsControlPlaneController {
         }
         metrics = parsed;
       }
+      try {
+        servingLabels = parseServingLabels(record.servingLabels);
+      } catch (error: unknown) {
+        return jsonResponse(400, { error: errorMessage(error) });
+      }
     }
 
     try {
       const result = await this.runControlPlane.execute({
         workspaceId,
         ...(metrics !== undefined ? { metrics } : {}),
+        ...(servingLabels !== undefined ? { servingLabels } : {}),
       });
       return jsonResponse(200, result);
     } catch (error: unknown) {
@@ -105,7 +167,8 @@ export class LlmopsControlPlaneController {
       if (
         message.includes("must be a non-empty string") ||
         message.includes("must be a plain object") ||
-        message.includes("must be a finite number")
+        message.includes("must be a finite number") ||
+        message.includes("must be a string")
       ) {
         return jsonResponse(400, { error: message });
       }

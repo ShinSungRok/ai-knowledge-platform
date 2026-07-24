@@ -62,6 +62,11 @@ export type ListeningOperationsHostEnv = {
    * override with WORKFLOW_P2_BRIDGE=0|1.
    */
   workflowP2Bridge: boolean;
+  /**
+   * Synthesizer/critic via LanguageModelProvider. On when llmMode is http
+   * (`LLM_API_KEY` set).
+   */
+  workflowAgentLlm: boolean;
 };
 
 export type ListeningHostHandle = {
@@ -69,6 +74,7 @@ export type ListeningHostHandle = {
   vectorMode: HostVectorMode;
   llmMode: "fake" | "http";
   workflowP2Bridge: boolean;
+  workflowAgentLlm: boolean;
   workspaceId: string;
   skipDemoSeed: boolean;
   server: ListeningOperationsServerBase & {
@@ -169,6 +175,7 @@ export function loadListeningOperationsHostEnv(
     ...(openSearchConfig !== null ? { openSearchConfig } : {}),
     ...modes,
     workflowP2Bridge: resolveWorkflowP2Bridge(env, skipDemoSeed),
+    workflowAgentLlm: llm.llmMode === "http",
     ...llm,
   };
 }
@@ -187,6 +194,7 @@ export function createConfiguredListeningOperationsServer(
     },
     ...(hostEnv.llm !== undefined ? { llm: hostEnv.llm } : {}),
     workflowP2Bridge: hostEnv.workflowP2Bridge,
+    workflowAgentLlm: hostEnv.workflowAgentLlm,
   });
 }
 
@@ -223,11 +231,15 @@ export async function createConfiguredListeningHost(
     vectorMode: hostEnv.vectorMode,
     llmMode: hostEnv.llmMode,
     workflowP2Bridge: hostEnv.workflowP2Bridge,
+    workflowAgentLlm: hostEnv.workflowAgentLlm,
     workspaceId: hostEnv.workspaceId,
     skipDemoSeed: hostEnv.skipDemoSeed,
   };
 
-  const workflowOpt = { workflowP2Bridge: hostEnv.workflowP2Bridge };
+  const workflowOpt = {
+    workflowP2Bridge: hostEnv.workflowP2Bridge,
+    workflowAgentLlm: hostEnv.workflowAgentLlm,
+  };
 
   // Path 1: no OpenSearch — InMemory or Postgres+SqlVectorIndex
   if (hostEnv.openSearchConfig === undefined) {

@@ -50,6 +50,10 @@ export {
   KnowledgeAnswerWorkflowAgentInvoker,
   type KnowledgeAnswerWorkflowAgentInvokerOptions,
 } from "./KnowledgeAnswerWorkflowAgentInvoker";
+export {
+  LanguageModelWorkflowAgentInvoker,
+  type LanguageModelWorkflowAgentInvokerOptions,
+} from "./LanguageModelWorkflowAgentInvoker";
 export { DeterministicWorkflowPlanner } from "./DeterministicWorkflowPlanner";
 export { DefaultWorkflowOrchestrator } from "./DefaultWorkflowOrchestrator";
 export type { WorkflowHandoffKind } from "./WorkflowHandoffKind";

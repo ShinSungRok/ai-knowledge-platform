@@ -1,7 +1,9 @@
 /**
  * Host-side Multi-Agent workflow wiring for `pnpm start` / listening servers.
- * Fake invoker by default; optional P2 researcher bridge via knowledge port.
+ * Fake invoker by default; optional P2 researcher bridge via knowledge port;
+ * optional LanguageModel for synthesizer/critic when HTTP LLM is configured.
  */
+import type { LanguageModelProvider } from "../ai/LanguageModelProvider";
 import { asWorkflowAgentId } from "../workflow/WorkflowAgentId";
 import { DefaultWorkflowHandoffBuilder } from "../workflow/DefaultWorkflowHandoffBuilder";
 import { DefaultWorkflowOrchestrator } from "../workflow/DefaultWorkflowOrchestrator";
@@ -10,6 +12,7 @@ import { FakeWorkflowAgentInvoker } from "../workflow/FakeWorkflowAgentInvoker";
 import { InMemoryWorkflowAgentRegistry } from "../workflow/InMemoryWorkflowAgentRegistry";
 import { InMemoryWorkflowMemoryStore } from "../workflow/InMemoryWorkflowMemoryStore";
 import { KnowledgeAnswerWorkflowAgentInvoker } from "../workflow/KnowledgeAnswerWorkflowAgentInvoker";
+import { LanguageModelWorkflowAgentInvoker } from "../workflow/LanguageModelWorkflowAgentInvoker";
 import type { WorkflowAgent } from "../workflow/WorkflowAgent";
 import type { WorkflowAgentDescriptor } from "../workflow/WorkflowAgentDescriptor";
 import type { WorkflowAgentInvoker } from "../workflow/WorkflowAgentInvoker";
@@ -45,11 +48,20 @@ export type CreateHostWorkflowOrchestratorOptions = {
   p2Bridge?: boolean;
   /** Required for p2Bridge. */
   runtime?: KnowledgeRuntime;
+  /**
+   * When set, synthesizer/critic steps use
+   * {@link LanguageModelWorkflowAgentInvoker} (HTTP LLM on host when
+   * `LLM_API_KEY` is set).
+   */
+  languageModelProvider?: LanguageModelProvider;
 };
 
 /**
  * Builds DefaultWorkflowOrchestrator with researcher/synthesizer/critic
  * and InMemory workflow memory. No Express; no SQL workflow memory.
+ *
+ * Invoker stack (outer → inner): optional knowledge bridge → optional LLM
+ * roles → Fake echo.
  */
 export function createHostWorkflowOrchestrator(
   options: CreateHostWorkflowOrchestratorOptions = {},
@@ -59,8 +71,13 @@ export function createHostWorkflowOrchestrator(
   registry.register(agent("agent-synthesizer", "synthesizer", "Synthesizer"));
   registry.register(agent("agent-critic", "critic", "Critic"));
 
-  const fake = new FakeWorkflowAgentInvoker();
-  let invoker: WorkflowAgentInvoker = fake;
+  let invoker: WorkflowAgentInvoker = new FakeWorkflowAgentInvoker();
+  if (options.languageModelProvider !== undefined) {
+    invoker = new LanguageModelWorkflowAgentInvoker(
+      options.languageModelProvider,
+      invoker,
+    );
+  }
   if (options.p2Bridge === true) {
     if (options.runtime === undefined) {
       throw new Error(
@@ -81,7 +98,7 @@ export function createHostWorkflowOrchestrator(
         };
       },
     };
-    invoker = new KnowledgeAnswerWorkflowAgentInvoker(knowledge, fake);
+    invoker = new KnowledgeAnswerWorkflowAgentInvoker(knowledge, invoker);
   }
 
   return new DefaultWorkflowOrchestrator(

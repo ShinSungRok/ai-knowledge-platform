@@ -11,6 +11,10 @@ pnpm demo:llmops:control-plane
 
 # Thin HTTP on same host as P2/P3 (Later)
 pnpm start
+
+# B-path: measure live cited-answers latency → inject into control-plane
+# (host must already be running)
+pnpm demo:llmops:from-cited-answer
 ```
 
 InMemory 한 줄기로 Registry → Run → Gate → Regression → Serving → Observation을 출력합니다 (Docker/키 불필요).
@@ -19,6 +23,9 @@ InMemory 한 줄기로 Registry → Run → Gate → Regression → Serving → 
 
 Same `NodeHttpListener` host as cited-answers / workflow-runs (no Express).
 Bearer + workspace AuthZ. Body may be `{}` (default metrics).
+
+When `LLM_MODEL` is set on the host, registry labels use that model id
+(soft-link only — still InMemory control plane).
 
 ```bash
 pnpm start
@@ -33,6 +40,30 @@ curl -sS -X POST http://127.0.0.1:8080/workspaces/workspace-a/llmops/control-pla
 Expect HTTP 200 with `gatePassed: true`, `regressionPassed: true`,
 `servingStatus: "active"`, and `observationId`. Without Bearer → 401.
 Smoke: `pnpm validate:server:start-smoke` (includes llmops/control-plane).
+
+### Live metrics from cited-answers (B-path)
+
+With the host running (and ideally `LLM_API_KEY` / `LLM_MODEL` set):
+
+```bash
+export LLM_MODEL=gemini-3.6-flash   # optional; copied into servingLabels
+pnpm demo:llmops:from-cited-answer
+```
+
+The helper:
+1. `POST .../cited-answers` and records **wall-clock `latencyMs`**
+2. Soft quality proxies from `insufficientEvidence` (not a full eval suite)
+3. `POST .../llmops/control-plane` with those `metrics` (+ `servingLabels` when `LLM_MODEL` is set)
+
+Manual equivalent:
+
+```bash
+# after measuring latencyMs yourself:
+curl -sS -X POST http://127.0.0.1:8080/workspaces/workspace-a/llmops/control-plane \
+  -H 'content-type: application/json' \
+  -H 'Authorization: Bearer demo-key' \
+  -d '{"metrics":{"latencyMs":640,"hitRateAtK":0.92,"meanReciprocalRank":0.81,"citationCount":1},"servingLabels":{"modelName":"gemini-3.6-flash","providerModel":"gemini-3.6-flash"}}'
+```
 
 포트폴리오 스토리: [`PORTFOLIO_NARRATIVE.md`](PORTFOLIO_NARRATIVE.md).
 

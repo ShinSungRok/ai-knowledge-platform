@@ -24,7 +24,9 @@ async function main(): Promise<void> {
   console.log(`VECTOR: ${host.vectorMode}`);
   console.log(`LLM: ${host.llmMode}`);
   console.log(
-    `WORKFLOW: fake${host.workflowP2Bridge ? "+p2-bridge" : ""}`,
+    `WORKFLOW: fake${host.workflowP2Bridge ? "+p2-bridge" : ""}${
+      host.workflowAgentLlm ? "+agent-llm" : ""
+    }`,
   );
   console.log("LLMOPS: inmemory-control-plane");
 

@@ -1,5 +1,6 @@
 import { createKnowledgeHttpRouter } from "../api/createKnowledgeHttpRouter";
 import type { RunLlmopsControlPlaneUseCase } from "../application/RunLlmopsControlPlaneUseCase";
+import type { LanguageModelProvider } from "../ai/LanguageModelProvider";
 import { ObservingHttpRouter } from "../http/ObservingHttpRouter";
 import type { McpJsonRpcHandler } from "../mcp/McpJsonRpcHandler";
 import type { InMemoryLogger } from "../observability/InMemoryLogger";
@@ -24,6 +25,8 @@ import type { KnowledgeRuntime } from "./KnowledgeRuntime";
 export type ListeningCompositionSurface = {
   runtime: KnowledgeRuntime;
   mcpJsonRpcHandler: McpJsonRpcHandler;
+  /** Present on host compositions; used when workflowAgentLlm is on. */
+  languageModelProvider?: LanguageModelProvider;
 };
 
 export type CreateListeningFromCompositionOptions = {
@@ -36,6 +39,11 @@ export type CreateListeningFromCompositionOptions = {
    * Default false (Fake invoker). Host sets true when demo seed runs.
    */
   workflowP2Bridge?: boolean;
+  /**
+   * When true and composition exposes languageModelProvider, synthesizer
+   * and critic steps use LanguageModelWorkflowAgentInvoker.
+   */
+  workflowAgentLlm?: boolean;
   /** Inject orchestrator (tests). When omitted, host factory builds one. */
   workflowOrchestrator?: WorkflowOrchestrator;
   /** Inject llmops use case (tests). When omitted, host factory builds one. */
@@ -88,11 +96,19 @@ export function createListeningOperationsServerFromComposition(
   const authenticator = resolveAuthenticator(options);
   const bearerGuard = new HttpBearerGuard(authenticator);
   const workspaceAuthorizer = new DefaultWorkspaceAuthorizer();
+  const useAgentLlm =
+    options.workflowAgentLlm === true &&
+    options.composition.languageModelProvider !== undefined;
   const workflowOrchestrator =
     options.workflowOrchestrator ??
     createHostWorkflowOrchestrator({
       p2Bridge: options.workflowP2Bridge === true,
       runtime: options.composition.runtime,
+      ...(useAgentLlm
+        ? {
+            languageModelProvider: options.composition.languageModelProvider,
+          }
+        : {}),
     });
   const runLlmopsControlPlane =
     options.runLlmopsControlPlane ?? createHostLlmopsControlPlane();

@@ -32,6 +32,11 @@ export type CreateListeningOperationsServerOptions = {
   apiKeys?: Readonly<Record<string, ApiKeyPrincipalEntry>>;
   /** When true, researcher uses P2 cited-answer (default false / Fake). */
   workflowP2Bridge?: boolean;
+  /**
+   * When true, synthesizer/critic use composition LanguageModelProvider
+   * (host enables when LLM_API_KEY is set).
+   */
+  workflowAgentLlm?: boolean;
 };
 
 export type ListeningOperationsServer = {
@@ -64,6 +69,9 @@ export function createListeningOperationsServer(
     apiKeys: options.apiKeys,
     ...(options.workflowP2Bridge !== undefined
       ? { workflowP2Bridge: options.workflowP2Bridge }
+      : {}),
+    ...(options.workflowAgentLlm !== undefined
+      ? { workflowAgentLlm: options.workflowAgentLlm }
       : {}),
   });
   return {
