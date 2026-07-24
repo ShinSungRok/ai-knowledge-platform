@@ -810,3 +810,29 @@ Open P3 Portfolio Reinforcement Phase B (Evaluation Demo)
 
 **Status**
 Completed
+
+## Task 191
+
+**Date**
+2026-07-24
+
+**Commit**
+Pending
+
+**Title**
+Add workflow evaluation demos (Fake and P2 bridge)
+
+**Summary**
+- Added `pnpm demo:workflow:evaluation` (Fake invoker + metrics)
+- Added `pnpm demo:workflow:evaluation-bridge` (knowledge bridge + metrics)
+- Both exit non-zero unless passRate=1; composition wires use case
+
+**Validation**
+- `pnpm demo:workflow:evaluation`
+- `pnpm demo:workflow:evaluation-bridge`
+- `pnpm validate:workflow:evaluation`
+- `pnpm validate:application:eval-workflow`
+- `pnpm typecheck`
+
+**Status**
+Completed

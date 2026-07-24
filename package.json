@@ -165,6 +165,8 @@
     "validate:workflow:p2-bridge": "tsx app/knowledge/composition/runWorkflowP2KnowledgeBridgeValidation.ts",
     "demo:workflow:engine": "tsx app/knowledge/workflow/runP3WorkflowEngineDemo.ts",
     "demo:workflow:p2-bridge": "tsx app/knowledge/composition/runP3WorkflowP2BridgeDemo.ts",
+    "demo:workflow:evaluation": "tsx app/knowledge/composition/runP3WorkflowEvaluationDemo.ts",
+    "demo:workflow:evaluation-bridge": "tsx app/knowledge/composition/runP3WorkflowEvaluationBridgeDemo.ts",
     "validate:application:eval-workflow": "tsx app/knowledge/application/runRunWorkflowEvaluationUseCaseValidation.ts",
     "validate:project03:closeout": "tsx scripts/validate-project03-closeout.ts",
     "validate:project04:charter-skeleton": "tsx scripts/validate-project04-charter-skeleton.ts",
