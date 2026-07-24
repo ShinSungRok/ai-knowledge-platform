@@ -712,3 +712,52 @@ Land P3-0 workflow engine demo and open Portfolio Reinforcement Phase A
 
 **Status**
 Completed
+
+## Task 187
+
+**Date**
+2026-07-24
+
+**Commit**
+29c615d
+
+**Title**
+Add KnowledgeAnswerWorkflowAgentInvoker and Fake-port validator
+
+**Summary**
+- Added `WorkflowKnowledgeAnswerPort` and `KnowledgeAnswerWorkflowAgentInvoker`
+- Researcher routes to knowledge port; other roles use Fake fallback
+- Added `pnpm validate:workflow:knowledge-invoker`
+- Exported types/classes from workflow `index.ts`
+
+**Validation**
+- `pnpm validate:workflow:knowledge-invoker`
+- `pnpm validate:workflow:orchestrator`
+- `pnpm typecheck`
+
+**Status**
+Completed
+
+## Task 188
+
+**Date**
+2026-07-24
+
+**Commit**
+Pending
+
+**Title**
+Add InMemory P2 knowledge bridge workflow validator
+
+**Summary**
+- Added composition `runWorkflowP2KnowledgeBridgeValidation.ts`
+- Seeds demo knowledge and runs researcher→synth→critic via bridging invoker
+- Asserts researcher output is grounded cited-answer (`pnpm validate:workflow:p2-bridge`)
+
+**Validation**
+- `pnpm validate:workflow:p2-bridge`
+- `pnpm validate:workflow:knowledge-invoker`
+- `pnpm typecheck`
+
+**Status**
+Completed
