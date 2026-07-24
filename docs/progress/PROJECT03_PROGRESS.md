@@ -786,3 +786,27 @@ Add P2-bridge demo and close Phase A docs
 
 **Status**
 Completed
+
+## Task 190
+
+**Date**
+2026-07-24
+
+**Commit**
+Pending
+
+**Title**
+Open P3 Portfolio Reinforcement Phase B (Evaluation Demo)
+
+**Summary**
+- Roadmap: Phase B Active — Evaluation Demo (Sprint 64)
+- AGENT_OPERATIONS_GUIDE: current track → Phase B
+- Phase A Complete preserved; HTTP/real invoker remain deferred
+- No product runtime code in this Task
+
+**Validation**
+- `pnpm validate:project03:closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed
