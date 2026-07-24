@@ -1,4 +1,5 @@
 import { createKnowledgeHttpRouter } from "../api/createKnowledgeHttpRouter";
+import type { RunLlmopsControlPlaneUseCase } from "../application/RunLlmopsControlPlaneUseCase";
 import { ObservingHttpRouter } from "../http/ObservingHttpRouter";
 import type { McpJsonRpcHandler } from "../mcp/McpJsonRpcHandler";
 import type { InMemoryLogger } from "../observability/InMemoryLogger";
@@ -15,6 +16,7 @@ import {
   createAuthenticatorFromOption,
   type AuthProviderOption,
 } from "./createAuthenticator";
+import { createHostLlmopsControlPlane } from "./createHostLlmopsControlPlane";
 import { createHostWorkflowOrchestrator } from "./createHostWorkflowOrchestrator";
 import { createOperationsObservability } from "./createOperationsObservability";
 import type { KnowledgeRuntime } from "./KnowledgeRuntime";
@@ -36,6 +38,8 @@ export type CreateListeningFromCompositionOptions = {
   workflowP2Bridge?: boolean;
   /** Inject orchestrator (tests). When omitted, host factory builds one. */
   workflowOrchestrator?: WorkflowOrchestrator;
+  /** Inject llmops use case (tests). When omitted, host factory builds one. */
+  runLlmopsControlPlane?: RunLlmopsControlPlaneUseCase;
 };
 
 export type ListeningOperationsServerBase = {
@@ -72,7 +76,7 @@ function resolveAuthenticator(
 /**
  * Wires ObservingHttpRouter + NodeHttpListener around an existing
  * composition that already exposes runtime + mcpJsonRpcHandler.
- * Always registers thin POST .../workflow-runs (Fake or optional P2 bridge).
+ * Always registers workflow-runs and llmops/control-plane (InMemory).
  */
 export function createListeningOperationsServerFromComposition(
   options: CreateListeningFromCompositionOptions,
@@ -90,12 +94,14 @@ export function createListeningOperationsServerFromComposition(
       p2Bridge: options.workflowP2Bridge === true,
       runtime: options.composition.runtime,
     });
+  const runLlmopsControlPlane =
+    options.runLlmopsControlPlane ?? createHostLlmopsControlPlane();
   const innerRouter = createKnowledgeHttpRouter(
     options.composition.runtime,
     bearerGuard,
     workspaceAuthorizer,
     options.composition.mcpJsonRpcHandler,
-    { workflowOrchestrator },
+    { workflowOrchestrator, runLlmopsControlPlane },
   );
   const router = new ObservingHttpRouter(
     innerRouter,

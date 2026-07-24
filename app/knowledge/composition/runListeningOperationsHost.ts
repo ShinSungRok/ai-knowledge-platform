@@ -26,6 +26,7 @@ async function main(): Promise<void> {
   console.log(
     `WORKFLOW: fake${host.workflowP2Bridge ? "+p2-bridge" : ""}`,
   );
+  console.log("LLMOPS: inmemory-control-plane");
 
   if (!host.skipDemoSeed) {
     await seedDemoKnowledge(host.server.composition, host.workspaceId);

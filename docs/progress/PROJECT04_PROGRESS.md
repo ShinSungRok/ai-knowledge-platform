@@ -856,3 +856,27 @@ Control-plane HTTP use case + controller + router
 
 **Status**
 Completed
+
+## Task 219
+
+**Date**
+2026-07-24
+
+**Commit**
+Pending
+
+**Title**
+Wire llmops control-plane into listening pnpm start
+
+**Summary**
+- createHostLlmopsControlPlane + FromComposition always registers llmops/control-plane
+- Listening validation asserts 401/200 gate+regression passed
+- Host logs LLMOPS: inmemory-control-plane
+
+**Validation**
+- `pnpm validate:composition:listening-operations`
+- `pnpm validate:api:llmops-control-plane`
+- `pnpm typecheck`
+
+**Status**
+Completed

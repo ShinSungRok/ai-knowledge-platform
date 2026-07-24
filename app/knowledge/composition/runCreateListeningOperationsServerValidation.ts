@@ -248,12 +248,55 @@ async function assertWorkflowRunsOverHttp(): Promise<void> {
   }
 }
 
+async function assertLlmopsControlPlaneOverHttp(): Promise<void> {
+  console.log(
+    "[composition] createListeningOperationsServer llmops/control-plane Bearer + 200...",
+  );
+  const server = createListeningOperationsServer({ apiKeys: TEST_API_KEYS });
+  try {
+    const address = await server.start();
+    const unauthorized = await fetch(
+      `http://127.0.0.1:${address.port}/workspaces/${WORKSPACE_A}/llmops/control-plane`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({}),
+      },
+    );
+    assertEqual(unauthorized.status, 401, "llmops 401");
+
+    const authorized = await fetch(
+      `http://127.0.0.1:${address.port}/workspaces/${WORKSPACE_A}/llmops/control-plane`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${TEST_API_KEY}`,
+        },
+        body: JSON.stringify({}),
+      },
+    );
+    assertEqual(authorized.status, 200, "llmops 200");
+    const body = (await authorized.json()) as {
+      gatePassed?: boolean;
+      regressionPassed?: boolean;
+    };
+    assertEqual(body.gatePassed, true, "gate");
+    assertEqual(body.regressionPassed, true, "regression");
+  } finally {
+    if (server.listener.isListening()) {
+      await server.stop();
+    }
+  }
+}
+
 async function main(): Promise<void> {
   assertModuleConstant();
   await assertEphemeralHealth();
   await assertCitedAnswerRequiresBearer();
   await assertMcpToolsOverHttp();
   await assertWorkflowRunsOverHttp();
+  await assertLlmopsControlPlaneOverHttp();
   console.log("createListeningOperationsServer validation succeeded.");
 }
 

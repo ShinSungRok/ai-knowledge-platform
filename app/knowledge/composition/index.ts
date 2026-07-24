@@ -66,6 +66,7 @@ export {
   createHostWorkflowOrchestrator,
   resolveWorkflowP2Bridge,
 } from "./createHostWorkflowOrchestrator";
+export { createHostLlmopsControlPlane } from "./createHostLlmopsControlPlane";
 export type { OperationsObservability } from "./createOperationsObservability";
 export { createOperationsObservability } from "./createOperationsObservability";
 export { createSqlDocumentKnowledgeComposition } from "./createSqlDocumentKnowledgeComposition";
