@@ -840,7 +840,7 @@ Completed
 2026-07-24
 
 **Commit**
-Pending
+a6ac522
 
 **Title**
 Control-plane HTTP use case + controller + router
