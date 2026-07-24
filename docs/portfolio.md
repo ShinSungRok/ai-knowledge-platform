@@ -15,7 +15,7 @@ P3 = Multi-Agent Workflow Engine; P4 = LLMOps / Control Plane — Knowledge →
 Execution → Operations over Public Law AI (P1).
 
 P3 demo/runbook: [`P3_WORKFLOW_ENGINE.md`](P3_WORKFLOW_ENGINE.md)
-(`pnpm demo:workflow:engine`).
+(`pnpm demo:workflow:engine`, `pnpm demo:workflow:p2-bridge`).
 
 ## 1b. Project 2: CLOSED
 

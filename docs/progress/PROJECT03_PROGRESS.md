@@ -761,3 +761,28 @@ Add InMemory P2 knowledge bridge workflow validator
 
 **Status**
 Completed
+
+## Task 189
+
+**Date**
+2026-07-24
+
+**Commit**
+Pending
+
+**Title**
+Add P2-bridge demo and close Phase A docs
+
+**Summary**
+- Added `pnpm demo:workflow:p2-bridge` composition demo
+- Updated P3 runbook / narrative / README with bridge evidence
+- Marked Portfolio Reinforcement Phase A Complete on roadmap + agent-ops
+
+**Validation**
+- `pnpm demo:workflow:p2-bridge`
+- `pnpm validate:workflow:p2-bridge`
+- `pnpm validate:project03:closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed

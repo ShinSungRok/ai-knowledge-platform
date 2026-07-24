@@ -120,9 +120,9 @@ Roles (examples): coordinator · researcher · synthesizer · critic · executor
 | Item | Detail |
 |---|---|
 | Module | `app/knowledge/workflow` |
-| Demo | `pnpm demo:workflow:engine` · [`P3_WORKFLOW_ENGINE.md`](P3_WORKFLOW_ENGINE.md) |
-| Proof | `pnpm validate:workflow:*` |
-| Relation to P2 | Workflow execution layer that **reuses** P2 knowledge/tools |
+| Demo | `pnpm demo:workflow:engine` · `pnpm demo:workflow:p2-bridge` · [`P3_WORKFLOW_ENGINE.md`](P3_WORKFLOW_ENGINE.md) |
+| Proof | `pnpm validate:workflow:*` · `pnpm validate:workflow:p2-bridge` |
+| Relation to P2 | Researcher reuses P2 cited-answer via `WorkflowKnowledgeAnswerPort` |
 
 **Interview one-liner:**  
 “I extended the platform with a multi-agent workflow engine: planner, orchestration, handoff, and shared memory—so complex work is executed as backend workflows, not a single prompt.”
@@ -179,7 +179,7 @@ Registry (prompt / model versions)
 |---|---|
 | P2 serve | `pnpm start` · [`P2_SERVICE_MANUAL.md`](P2_SERVICE_MANUAL.md) |
 | P2 smoke | `pnpm validate:server:start-smoke` |
-| P3 demo | `pnpm demo:workflow:engine` · [`P3_WORKFLOW_ENGINE.md`](P3_WORKFLOW_ENGINE.md) |
-| P3 | `pnpm validate:workflow:orchestrator` (and related `workflow:*`) |
+| P3 demo | `pnpm demo:workflow:engine` · `pnpm demo:workflow:p2-bridge` · [`P3_WORKFLOW_ENGINE.md`](P3_WORKFLOW_ENGINE.md) |
+| P3 | `pnpm validate:workflow:orchestrator` · `pnpm validate:workflow:p2-bridge` |
 | P4 | `pnpm validate:llmops:run-store` (and related `llmops:*`) |
 | Full | `pnpm validate` |

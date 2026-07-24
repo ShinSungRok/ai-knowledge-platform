@@ -5,6 +5,9 @@
  * Shows Planner → Orchestrator → Handoff → Memory → Aggregation.
  *
  *   pnpm demo:workflow:engine
+ *
+ * For researcher → P2 cited-answer bridge:
+ *   pnpm demo:workflow:p2-bridge
  */
 import { asWorkflowAgentId } from "./WorkflowAgentId";
 import { asWorkflowRunId } from "./WorkflowRunId";

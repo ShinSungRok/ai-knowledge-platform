@@ -7,10 +7,14 @@
 **How (run locally):**
 
 ```bash
+# Fake invoker only (engine shape)
 pnpm demo:workflow:engine
+
+# Researcher → P2 InMemory cited-answer (portfolio bridge)
+pnpm demo:workflow:p2-bridge
 ```
 
-콘솔에 plan / step handoff / shared memory가 출력됩니다 (Fake invoker, Docker 불필요).
+콘솔에 plan / step handoff / shared memory가 출력됩니다 (Docker/키 불필요).
 
 포트폴리오 스토리: [`PORTFOLIO_NARRATIVE.md`](PORTFOLIO_NARRATIVE.md).
 
@@ -24,7 +28,7 @@ Goal
   → Orchestrator (DefaultWorkflowOrchestrator)
       → resolve role agent (Registry)
       → Handoff (sequential / delegation)
-      → Invoker (Fake or real adapters)
+      → Invoker (Fake or KnowledgeAnswerWorkflowAgentInvoker)
       → Shared Workflow Memory (append-only)
   → Run result (aggregation)
   → Workflow evaluation (separate validators)
@@ -33,12 +37,23 @@ Goal
 | Role (예) | 책임 |
 |---|---|
 | coordinator | 목표 분해·위임 |
-| researcher | 조사·근거 수집 |
+| researcher | 조사·근거 수집 (**P2 cited-answer 재사용 가능**) |
 | synthesizer | 초안·요약 |
 | critic | 검토·리스크 |
 | executor | 최종 산출 |
 
 P2와의 관계: Workflow Engine은 **실행 계층**. Knowledge Serving(P2)을 도구/지식으로 **재사용**하는 설계 (벤더 LLM 고르기가 아님).
+
+### P2 Knowledge Bridge (Phase A 증거)
+
+| Item | Detail |
+|---|---|
+| Port | `WorkflowKnowledgeAnswerPort` |
+| Invoker | `KnowledgeAnswerWorkflowAgentInvoker` (researcher → knowledge; else Fake) |
+| Demo | `pnpm demo:workflow:p2-bridge` |
+| Validator | `pnpm validate:workflow:p2-bridge` |
+
+Researcher step output 형식: `knowledge:grounded:citations=N:<answer text>`.
 
 ---
 
@@ -51,20 +66,22 @@ pnpm validate:workflow:orchestrator
 pnpm validate:workflow:handoff
 pnpm validate:workflow:memory
 pnpm validate:workflow:evaluation
+pnpm validate:workflow:knowledge-invoker
+pnpm validate:workflow:p2-bridge
 ```
 
-모듈: `app/knowledge/workflow`.
+모듈: `app/knowledge/workflow` (+ bridge wiring in `composition`).
 
 ---
 
 ## 가상 시나리오 (한 줄)
 
 보안 정책 요지 + 리스크 한 줄 요청  
-→ researcher 조사 → synthesizer 초안 → critic 검토 → (executor) 확정  
+→ researcher가 P2 cited-answer로 조사 → synthesizer 초안 → critic 검토  
 → memory에 objective / handoff / step_output 기록.
 
 ---
 
 ## 면접 한 줄
 
-> I implemented a multi-agent **workflow engine**: deterministic planning, orchestration with sequential/delegation handoff, shared run memory, and Fake-validated execution—so complex work runs as a backend workflow, not a single prompt.
+> I implemented a multi-agent **workflow engine** and proved it **reuses** our knowledge serving layer: researcher steps call cited-answer through a port, with Fake-validated orchestration, handoff, and shared run memory—so complex work runs as a backend workflow, not a single prompt.
