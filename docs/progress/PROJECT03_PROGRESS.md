@@ -768,7 +768,7 @@ Completed
 2026-07-24
 
 **Commit**
-Pending
+d04038c
 
 **Title**
 Add P2-bridge demo and close Phase A docs
