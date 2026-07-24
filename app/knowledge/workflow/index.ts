@@ -45,6 +45,11 @@ export type {
   FakeWorkflowAgentInvokerHandler,
   FakeWorkflowAgentInvokerOptions,
 } from "./FakeWorkflowAgentInvoker";
+export type { WorkflowKnowledgeAnswerPort } from "./WorkflowKnowledgeAnswerPort";
+export {
+  KnowledgeAnswerWorkflowAgentInvoker,
+  type KnowledgeAnswerWorkflowAgentInvokerOptions,
+} from "./KnowledgeAnswerWorkflowAgentInvoker";
 export { DeterministicWorkflowPlanner } from "./DeterministicWorkflowPlanner";
 export { DefaultWorkflowOrchestrator } from "./DefaultWorkflowOrchestrator";
 export type { WorkflowHandoffKind } from "./WorkflowHandoffKind";

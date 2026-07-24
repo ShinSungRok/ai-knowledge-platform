@@ -161,6 +161,7 @@
     "validate:workflow:handoff": "tsx app/knowledge/workflow/runWorkflowHandoffValidation.ts",
     "validate:workflow:memory": "tsx app/knowledge/workflow/runInMemoryWorkflowMemoryStoreValidation.ts",
     "validate:workflow:evaluation": "tsx app/knowledge/workflow/runDefaultWorkflowRunEvaluatorValidation.ts",
+    "validate:workflow:knowledge-invoker": "tsx app/knowledge/workflow/runKnowledgeAnswerWorkflowAgentInvokerValidation.ts",
     "demo:workflow:engine": "tsx app/knowledge/workflow/runP3WorkflowEngineDemo.ts",
     "validate:application:eval-workflow": "tsx app/knowledge/application/runRunWorkflowEvaluationUseCaseValidation.ts",
     "validate:project03:closeout": "tsx scripts/validate-project03-closeout.ts",
