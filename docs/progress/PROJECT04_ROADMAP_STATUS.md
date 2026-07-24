@@ -13,9 +13,24 @@ out of this closeout. This closeout does **not** invent a Project 5 /
 PROJECT05 charter.
 
 **Project 2 remains CLOSED** (Sprint 37). **Project 3 remains CLOSED
-(Partial)** (Sprint 44). Do not reopen Project 2/3/4 tracks.
+(Partial)** (Sprint 44). Do not reopen Project 2/3/4 **charter** tracks.
 **Partial ≠ Completed** for Project 2 infra adapters, Project 3 Multi-Agent
 capabilities, and Project 4 LLMOps Partial capabilities.
+
+## P4 Portfolio Reinforcement Track (human-authorized)
+
+**Status: Active — Phase 0 (Control Plane Demo)** — Sprint 65
+
+Additional portfolio track **after** Project 4: CLOSED (Partial). Does **not**
+promote Partial → Completed. Does **not** invent Project 5. Does **not** add
+Express/HTTP LLMOps API.
+
+| Phase | Goal | Status |
+|---|---|---|
+| Phase 0 | Console control-plane demo + `docs/P4_LLMOPS.md` | **Active** (Sprint 65) |
+| Later | Optional thin HTTP / live OTLP / SQL adapters | Deferred |
+
+P3 Portfolio Reinforcement Phase A+B remains Complete (Sprint 63–64).
 
 ## Reuse from Project 2 / Project 3
 

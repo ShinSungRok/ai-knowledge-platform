@@ -23,19 +23,19 @@ Partial≠Completed 서술을 되돌리지 않는다. **Do not invent Project 5 
 PROJECT05**. Do not reopen Partial tracks.
 
 **Current implementation track status (human-authorized):**
-**P3 Portfolio Reinforcement Track: Phase A + Phase B Complete** (P2 Knowledge
-Bridge + Evaluation Demo — Sprint 63–64). Await human charter for Later
-(optional HTTP / real invoker). P2 Service Completion Track remains
-**Complete** (Sprint 61). Do **not** invent Project 5 / PROJECT05. Do **not**
-promote Project 3/4 Partial → Completed. Do **not** use Express/Fastify.
-Partial infra adapters stay Partial. LLM-as-judge remains deferred.
+**P4 Portfolio Reinforcement Track: Active — Phase 0 (Control Plane Demo)**
+(Sprint 65). P3 Portfolio Reinforcement Phase A+B remains **Complete**. P2
+Service Completion Track remains **Complete** (Sprint 61). Do **not** invent
+Project 5 / PROJECT05. Do **not** promote Project 2/3/4 Partial → Completed.
+Do **not** use Express/Fastify. Partial infra adapters stay Partial.
+LLM-as-judge / live OTLP / official LLMOps SaaS SDKs remain deferred.
 
 문서 간 우선순위는 다음과 같다.
 
 ```text
-Active human-authorized track (P3 Portfolio Reinforcement — Phase A+B Complete)
+Active human-authorized track (P4 Portfolio Reinforcement — Phase 0)
         ↓
-Closed human-authorized track (P2 Service Completion Complete)
+Closed human-authorized tracks (P3 Phase A+B Complete; P2 Service Completion)
         ↓
 Closed historical charters (PROJECT04 / PROJECT03 / PROJECT02) for constraints
         ↓
@@ -50,9 +50,9 @@ AGENT_OPERATIONS_GUIDE.md
 - `AGENT_OPERATIONS_GUIDE.md`: 어떤 Agent Skill을 언제 어떻게 사용할지 정의
 - 개별 Task Prompt: 현재 작업의 구체적인 범위와 완료 조건 정의
 
-P3 Portfolio Reinforcement 작업은 `docs/progress/PROJECT03_PROGRESS.md`에
-기록한다 (Task 186+). P2 Service Completion 기록은
-`docs/progress/PROJECT02_PROGRESS.md`에 유지한다. Skill 결과가
+P4 Portfolio Reinforcement 작업은 `docs/progress/PROJECT04_PROGRESS.md`에
+기록한다 (Task 214+). P3 Portfolio Reinforcement는
+`docs/progress/PROJECT03_PROGRESS.md`에 유지한다. Skill 결과가
 Project 2/3/4 CLOSED 서술과 충돌하면 CLOSED / CLOSED (Partial)를 보존한다.
 
 ---
