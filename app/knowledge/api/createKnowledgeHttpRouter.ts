@@ -7,9 +7,14 @@ import type { McpJsonRpcHandler } from "../mcp/McpJsonRpcHandler";
 import type { HttpBearerGuard } from "../security/HttpBearerGuard";
 import type { WorkspaceAuthorizer } from "../security/WorkspaceAuthorizer";
 import type { WorkflowOrchestrator } from "../workflow/WorkflowOrchestrator";
+import type { RunLlmopsControlPlaneUseCase } from "../application/RunLlmopsControlPlaneUseCase";
 import { RunWorkflowUseCase } from "../application/RunWorkflowUseCase";
 import { CitedGroundedAnswerController } from "./CitedGroundedAnswerController";
 import { HealthController } from "./HealthController";
+import {
+  LLMOPS_CONTROL_PLANE_PATH,
+  LlmopsControlPlaneController,
+} from "./LlmopsControlPlaneController";
 import { McpJsonRpcController } from "./McpJsonRpcController";
 import {
   WORKFLOW_RUN_PATH,
@@ -21,11 +26,13 @@ const CITED_ANSWER_PATH = /^\/workspaces\/[^/]+\/cited-answers$/;
 export type CreateKnowledgeHttpRouterOptions = {
   /** When set, registers Bearer-protected POST .../workflow-runs. */
   workflowOrchestrator?: WorkflowOrchestrator;
+  /** When set, registers Bearer-protected POST .../llmops/control-plane. */
+  runLlmopsControlPlane?: RunLlmopsControlPlaneUseCase;
 };
 
 /**
- * Registers health + cited-answer + MCP JSON-RPC routes (+ optional workflow-runs).
- * Cited-answer, `/mcp`, and workflow-runs require Bearer AuthN then workspace AuthZ.
+ * Registers health + cited-answer + MCP JSON-RPC (+ optional workflow / llmops).
+ * Protected routes require Bearer AuthN then workspace AuthZ.
  * Health does not require authentication.
  */
 export function createKnowledgeHttpRouter(
@@ -54,6 +61,14 @@ export function createKnowledgeHttpRouter(
           workspaceAuthorizer,
         )
       : null;
+  const llmopsControlPlane =
+    options.runLlmopsControlPlane !== undefined
+      ? new LlmopsControlPlaneController(
+          options.runLlmopsControlPlane,
+          bearerGuard,
+          workspaceAuthorizer,
+        )
+      : null;
   const exactRouter = new DefaultHttpRouter([
     {
       method: "GET",
@@ -74,6 +89,12 @@ export function createKnowledgeHttpRouter(
       }
       if (workflowRuns !== null && WORKFLOW_RUN_PATH.test(request.path)) {
         return workflowRuns.create(request);
+      }
+      if (
+        llmopsControlPlane !== null &&
+        LLMOPS_CONTROL_PLANE_PATH.test(request.path)
+      ) {
+        return llmopsControlPlane.create(request);
       }
       return exactRouter.handle(request);
     },

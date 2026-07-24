@@ -123,4 +123,9 @@ export {
   type RunWorkflowInput,
   type RunWorkflowResultView,
 } from "./RunWorkflowUseCase";
+export {
+  RunLlmopsControlPlaneUseCase,
+  type RunLlmopsControlPlaneInput,
+  type RunLlmopsControlPlaneResultView,
+} from "./RunLlmopsControlPlaneUseCase";
 

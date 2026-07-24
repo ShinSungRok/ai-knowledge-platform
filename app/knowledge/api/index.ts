@@ -22,6 +22,10 @@ export {
   WORKFLOW_RUN_PATH,
 } from "./WorkflowRunController";
 export {
+  LlmopsControlPlaneController,
+  LLMOPS_CONTROL_PLANE_PATH,
+} from "./LlmopsControlPlaneController";
+export {
   createKnowledgeHttpRouter,
   type CreateKnowledgeHttpRouterOptions,
 } from "./createKnowledgeHttpRouter";

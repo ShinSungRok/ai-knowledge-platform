@@ -833,3 +833,26 @@ Record P4 Later thin Control Plane HTTP track Active
 
 **Status**
 Completed
+
+## Task 218
+
+**Date**
+2026-07-24
+
+**Commit**
+Pending
+
+**Title**
+Control-plane HTTP use case + controller + router
+
+**Summary**
+- Added RunLlmopsControlPlaneUseCase (InMemory story; empty {} defaults)
+- LlmopsControlPlaneController POST .../llmops/control-plane Bearer+AuthZ
+- createKnowledgeHttpRouter optional runLlmopsControlPlane; validate:api:llmops-control-plane
+
+**Validation**
+- `pnpm validate:api:llmops-control-plane`
+- `pnpm typecheck`
+
+**Status**
+Completed
