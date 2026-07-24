@@ -20,7 +20,7 @@ Project 2 stay Partial — not Completed. Do not reopen Project 2 tracks.
 
 ## P3 Portfolio Reinforcement Track (human-authorized)
 
-**Status: Active — Phase A Complete; await Phase B+ charter** — Sprint 63
+**Status: Active — Phase B (Evaluation Demo)** — Sprint 64
 
 Additional portfolio track **after** Project 3: CLOSED (Partial). Does **not**
 reopen Multi-Agent capabilities to Completed. Does **not** invent Project 5.
@@ -29,7 +29,8 @@ reopen Multi-Agent capabilities to Completed. Does **not** invent Project 5.
 |---|---|---|
 | P3-0 | Console engine demo + `docs/P3_WORKFLOW_ENGINE.md` | **Complete** (Task 186) |
 | Phase A | Researcher step reuses P2 cited-answer (InMemory/Fake) | **Complete** (Tasks 187–189) |
-| Phase B+ | Evaluation demo / optional thin HTTP / optional real invoker | Later |
+| Phase B | Evaluation demo (run → score metrics, no LLM-as-judge) | **Active** (Sprint 64) |
+| Later | Optional thin HTTP / optional real invoker | Deferred |
 
 **Frozen in this track:** Express/Fastify; Partial→Completed; LLM-as-judge;
 SQL workflow memory; full multi-agent HTTP product API (unless later Phase).
