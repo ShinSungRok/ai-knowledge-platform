@@ -23,9 +23,10 @@ Partial≠Completed 서술을 되돌리지 않는다. **Do not invent Project 5 
 PROJECT05**. Do not reopen Partial tracks.
 
 **Current implementation track status (human-authorized):**
-**P4 Portfolio Reinforcement Track: Active — Phase 0 (Control Plane Demo)**
-(Sprint 65). P3 Portfolio Reinforcement Phase A+B remains **Complete**. P2
-Service Completion Track remains **Complete** (Sprint 61). Do **not** invent
+**P4 Portfolio Reinforcement Track: Phase 0 Complete** (Control Plane Demo —
+Sprint 65 Tasks 214–216). P3 Portfolio Reinforcement Phase A+B remains
+**Complete**. P2 Service Completion Track remains **Complete** (Sprint 61).
+Await human charter for Later (optional HTTP / live OTLP). Do **not** invent
 Project 5 / PROJECT05. Do **not** promote Project 2/3/4 Partial → Completed.
 Do **not** use Express/Fastify. Partial infra adapters stay Partial.
 LLM-as-judge / live OTLP / official LLMOps SaaS SDKs remain deferred.
@@ -33,7 +34,7 @@ LLM-as-judge / live OTLP / official LLMOps SaaS SDKs remain deferred.
 문서 간 우선순위는 다음과 같다.
 
 ```text
-Active human-authorized track (P4 Portfolio Reinforcement — Phase 0)
+Active human-authorized track (P4 Portfolio Reinforcement — Phase 0 Complete)
         ↓
 Closed human-authorized tracks (P3 Phase A+B Complete; P2 Service Completion)
         ↓

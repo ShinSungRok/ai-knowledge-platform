@@ -786,3 +786,27 @@ Add P4 LLMOps control-plane console demo
 
 **Status**
 Completed
+
+## Task 216
+
+**Date**
+2026-07-24
+
+**Commit**
+Pending
+
+**Title**
+Document P4 control-plane demo and close Phase 0
+
+**Summary**
+- Added `docs/P4_LLMOPS.md`; linked README / narrative / portfolio
+- Roadmap + agent-ops: Phase 0 Complete; Later deferred
+- Project 4: CLOSED (Partial) preserved
+
+**Validation**
+- `pnpm demo:llmops:control-plane`
+- `pnpm validate:project04:closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed

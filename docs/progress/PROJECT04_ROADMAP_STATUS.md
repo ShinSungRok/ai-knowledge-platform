@@ -19,7 +19,7 @@ capabilities, and Project 4 LLMOps Partial capabilities.
 
 ## P4 Portfolio Reinforcement Track (human-authorized)
 
-**Status: Active — Phase 0 (Control Plane Demo)** — Sprint 65
+**Status: Phase 0 Complete; await Later charter** — Sprint 65
 
 Additional portfolio track **after** Project 4: CLOSED (Partial). Does **not**
 promote Partial → Completed. Does **not** invent Project 5. Does **not** add
@@ -27,7 +27,7 @@ Express/HTTP LLMOps API.
 
 | Phase | Goal | Status |
 |---|---|---|
-| Phase 0 | Console control-plane demo + `docs/P4_LLMOPS.md` | **Active** (Sprint 65) |
+| Phase 0 | Console control-plane demo + `docs/P4_LLMOPS.md` | **Complete** (Tasks 214–216) |
 | Later | Optional thin HTTP / live OTLP / SQL adapters | Deferred |
 
 P3 Portfolio Reinforcement Phase A+B remains Complete (Sprint 63–64).

@@ -14,7 +14,9 @@ serving, multi-agent workflow engine, and LLMOps control plane.
 P2 runbook: [`docs/P2_SERVICE_MANUAL.md`](docs/P2_SERVICE_MANUAL.md).  
 P3 demo/runbook: [`docs/P3_WORKFLOW_ENGINE.md`](docs/P3_WORKFLOW_ENGINE.md)
 (`pnpm demo:workflow:engine`, `pnpm demo:workflow:p2-bridge`,
-`pnpm demo:workflow:evaluation`, `pnpm demo:workflow:evaluation-bridge`).
+`pnpm demo:workflow:evaluation`, `pnpm demo:workflow:evaluation-bridge`).  
+P4 control-plane demo: [`docs/P4_LLMOPS.md`](docs/P4_LLMOPS.md)
+(`pnpm demo:llmops:control-plane`).
 
 **Project 2 baseline is complete** (cited RAG, MCP/agent/jobs, evaluation,
 runtime/ops) with dependency-free validators. Architecture from Project1

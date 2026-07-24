@@ -150,6 +150,7 @@ Registry (prompt / model versions)
 | Item | Detail |
 |---|---|
 | Module | `app/knowledge/llmops` |
+| Demo | `pnpm demo:llmops:control-plane` · [`P4_LLMOPS.md`](P4_LLMOPS.md) |
 | Proof | `pnpm validate:llmops:*` |
 | Relation | Operates **above** knowledge + workflow execution |
 
@@ -181,5 +182,6 @@ Registry (prompt / model versions)
 | P2 smoke | `pnpm validate:server:start-smoke` |
 | P3 demo | `pnpm demo:workflow:engine` · `pnpm demo:workflow:p2-bridge` · `pnpm demo:workflow:evaluation` · `pnpm demo:workflow:evaluation-bridge` · [`P3_WORKFLOW_ENGINE.md`](P3_WORKFLOW_ENGINE.md) |
 | P3 | `pnpm validate:workflow:orchestrator` · `pnpm validate:workflow:p2-bridge` · `pnpm validate:application:eval-workflow` |
+| P4 demo | `pnpm demo:llmops:control-plane` · [`P4_LLMOPS.md`](P4_LLMOPS.md) |
 | P4 | `pnpm validate:llmops:run-store` (and related `llmops:*`) |
 | Full | `pnpm validate` |
