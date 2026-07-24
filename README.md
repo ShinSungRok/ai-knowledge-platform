@@ -161,6 +161,10 @@ curl -sS -X POST http://127.0.0.1:8080/workspaces/workspace-a/cited-answers \
   -H 'content-type: application/json' \
   -H 'Authorization: Bearer demo-key' \
   -d '{"query":"aaaaaaaa"}'
+curl -sS -X POST http://127.0.0.1:8080/workspaces/workspace-a/workflow-runs \
+  -H 'content-type: application/json' \
+  -H 'Authorization: Bearer demo-key' \
+  -d '{"objective":"aaaaaaaa"}'
 ```
 
 Smoke (ephemeral port, included in `pnpm validate`):

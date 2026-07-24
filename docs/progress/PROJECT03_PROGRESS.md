@@ -933,3 +933,27 @@ Wire workflow into listening pnpm start host
 
 **Status**
 Completed
+
+## Task 196
+
+**Date**
+2026-07-24
+
+**Commit**
+Pending
+
+**Title**
+Smoke validator + docs; mark Later thin HTTP Complete
+
+**Summary**
+- start-smoke asserts workflow-runs 401/200 completed
+- P3_WORKFLOW_ENGINE curl + README/portfolio pointers
+- Roadmap Later Complete; agent-ops track Complete; Partial caps unchanged
+
+**Validation**
+- `pnpm validate:server:start-smoke`
+- `pnpm validate:project03:closeout`
+- `pnpm typecheck`
+
+**Status**
+Completed

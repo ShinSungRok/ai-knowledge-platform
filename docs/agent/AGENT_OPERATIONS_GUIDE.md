@@ -23,18 +23,17 @@ Partial≠Completed 서술을 되돌리지 않는다. **Do not invent Project 5 
 PROJECT05**. Do not reopen Partial tracks.
 
 **Current implementation track status (human-authorized):**
-**P3 Later — Thin Workflow HTTP** (Sprint 69, Tasks 193+). Adds Bearer-protected
-`POST /workspaces/:workspaceId/workflow-runs` on existing `pnpm start` host.
+**P3 Later — Thin Workflow HTTP: Complete** (Sprint 69, Tasks 193–196).
+Bearer-protected `POST /workspaces/:workspaceId/workflow-runs` on `pnpm start`.
 Does **not** reopen Project 3 Multi-Agent capabilities to Completed. Does **not**
 invent Project 5. Does **not** implement P4 HTTP. Express/Fastify forbidden.
-Fake invoker default; optional P2 researcher bridge. LLM-as-judge / SQL workflow
-memory remain deferred. P4 Portfolio Phase 0 and P2 Service Completion remain
-**Complete** (frozen for product work unless separately chartered).
+Await further human charter for additional Later work (e.g. P4 HTTP / live OTLP).
+P4 Portfolio Phase 0 and P2 Service Completion remain **Complete**.
 
 문서 간 우선순위는 다음과 같다.
 
 ```text
-Active human-authorized track (P3 Later — Thin Workflow HTTP)
+Closed human-authorized track (P3 Later Thin Workflow HTTP Complete)
         ↓
 Closed human-authorized tracks (P4 Phase 0 Complete; P3 Phase A+B Complete;
   P2 Service Completion Complete)

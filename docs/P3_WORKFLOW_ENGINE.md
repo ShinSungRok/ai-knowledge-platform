@@ -16,9 +16,31 @@ pnpm demo:workflow:p2-bridge
 # Evaluation metrics (Fake / bridge) — no LLM-as-judge
 pnpm demo:workflow:evaluation
 pnpm demo:workflow:evaluation-bridge
+
+# Thin HTTP on same host as P2 service (Later)
+pnpm start
 ```
 
 콘솔에 plan / step handoff / shared memory / evaluation metrics가 출력됩니다 (Docker/키 불필요).
+
+### Call via `pnpm start` (Later — Thin Workflow HTTP)
+
+Same `NodeHttpListener` host as cited-answers (no Express). Bearer + workspace AuthZ.
+
+```bash
+pnpm start
+# STORE / VECTOR / LLM / WORKFLOW logs on boot
+# Default: demo seed on → WORKFLOW: fake+p2-bridge (researcher uses cited-answer)
+# SKIP_DEMO_SEED=1 → Fake-only unless WORKFLOW_P2_BRIDGE=1
+
+curl -sS -X POST http://127.0.0.1:8080/workspaces/workspace-a/workflow-runs \
+  -H 'content-type: application/json' \
+  -H 'Authorization: Bearer demo-key' \
+  -d '{"objective":"aaaaaaaa"}'
+```
+
+Expect HTTP 200 with `status: "completed"`, `workflowRunId`, and three `stepResults`.
+Without Bearer → 401. Smoke: `pnpm validate:server:start-smoke` (includes workflow-runs).
 
 포트폴리오 스토리: [`PORTFOLIO_NARRATIVE.md`](PORTFOLIO_NARRATIVE.md).
 

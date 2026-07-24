@@ -87,6 +87,46 @@ async function main(): Promise<void> {
       Array.isArray(body.citations) && body.citations.length > 0,
       "citations present",
     );
+
+    console.log("[start-smoke] workflow-runs without Bearer → 401...");
+    const wfUnauthorized = await fetch(
+      `${base}/workspaces/${hostEnv.workspaceId}/workflow-runs`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ objective: DEMO_QUERY }),
+      },
+    );
+    assertEqual(wfUnauthorized.status, 401, "workflow missing bearer");
+
+    console.log("[start-smoke] workflow-runs with Bearer → 200 completed...");
+    const wfAuthorized = await fetch(
+      `${base}/workspaces/${hostEnv.workspaceId}/workflow-runs`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${hostEnv.apiKey}`,
+        },
+        body: JSON.stringify({ objective: DEMO_QUERY }),
+      },
+    );
+    assertEqual(wfAuthorized.status, 200, "workflow authorized status");
+    const wfBody = (await wfAuthorized.json()) as {
+      status?: string;
+      workflowRunId?: string;
+      stepResults?: unknown[];
+    };
+    assertEqual(wfBody.status, "completed", "workflow status");
+    assertTruthy(
+      typeof wfBody.workflowRunId === "string" &&
+        wfBody.workflowRunId.length > 0,
+      "workflowRunId",
+    );
+    assertTruthy(
+      Array.isArray(wfBody.stepResults) && wfBody.stepResults.length === 3,
+      "three workflow steps",
+    );
   } finally {
     if (server.listener.isListening()) {
       await server.stop();

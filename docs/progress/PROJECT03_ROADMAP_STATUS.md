@@ -20,7 +20,7 @@ Project 2 stay Partial — not Completed. Do not reopen Project 2 tracks.
 
 ## P3 Portfolio Reinforcement Track (human-authorized)
 
-**Status: Later Active — Thin Workflow HTTP** — Sprint 69
+**Status: Later Complete — Thin Workflow HTTP** — Sprint 69
 
 Additional portfolio track **after** Project 3: CLOSED (Partial). Does **not**
 reopen Multi-Agent capabilities to Completed. Does **not** invent Project 5.
@@ -30,7 +30,12 @@ reopen Multi-Agent capabilities to Completed. Does **not** invent Project 5.
 | P3-0 | Console engine demo + `docs/P3_WORKFLOW_ENGINE.md` | **Complete** (Task 186) |
 | Phase A | Researcher step reuses P2 cited-answer (InMemory/Fake) | **Complete** (Tasks 187–189) |
 | Phase B | Evaluation demo (run → score metrics, no LLM-as-judge) | **Complete** (Tasks 190–192) |
-| Later | Thin Workflow HTTP on `pnpm start` (Bearer; Fake invoker default) | **Active** (Sprint 69, Tasks 193+) |
+| Later | Thin Workflow HTTP on `pnpm start` (Bearer; Fake + optional P2 bridge) | **Complete** (Sprint 69, Tasks 193–196) |
+
+**Evidence:** `POST /workspaces/:workspaceId/workflow-runs` on listening host;
+`pnpm validate:api:workflow-run`; `pnpm validate:server:start-smoke` (401/200);
+curl in `docs/P3_WORKFLOW_ENGINE.md`. Charter Multi-Agent capabilities stay
+**Partial**.
 
 **Frozen in this track:** Express/Fastify; Partial→Completed; LLM-as-judge;
 SQL workflow memory; full multi-agent HTTP product API beyond thin workflow-runs;
@@ -64,7 +69,7 @@ P4 HTTP; Project 5.
 - Official SDKs, Express/Fastify, full OIDC login, full W3C propagator
 - Reopening Project 2 CLOSED tracks or promoting Partial → Completed
 - Conflating Project 2 `AgentRole` / session `MemoryStore` / RAG evaluation with workflow caps
-- Application/HTTP multi-agent API wiring / SQL workflow memory
+- Application/HTTP multi-agent API beyond thin `workflow-runs` / SQL workflow memory
 - Full PROJECT04 charter implementation (handoff text only in Project 3 closeout)
 
 ## Task range
