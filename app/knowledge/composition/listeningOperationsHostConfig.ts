@@ -7,11 +7,15 @@
  * 3. Both set → Postgres SoT + OpenSearch VectorIndex
  *
  * Fake LLM by default; optional HTTP LLM when LLM_API_KEY is set.
+ * Fake embedding by default; optional HTTP embedding when EMBEDDING_API_KEY
+ * is set (also works against a local Ollama instance via EMBEDDING_BASE_URL).
  * No Express; no official OpenSearch JS SDK.
  */
 
 import { loadLlmHttpProviderConfig } from "../ai/loadLlmHttpProviderConfig";
+import { EMBEDDING_VECTOR_DIMENSION } from "../embedding/EmbeddingVectorDimension";
 import { FetchOpenSearchHttpTransport } from "../embedding/FetchOpenSearchHttpTransport";
+import { loadEmbeddingHttpProviderConfig } from "../embedding/loadEmbeddingHttpProviderConfig";
 import { loadOpenSearchClientConfig } from "../embedding/loadOpenSearchClientConfig";
 import type { OpenSearchClientConfig } from "../embedding/OpenSearchClientConfig";
 import type { PostgresPool } from "../infra/PostgresPool";
@@ -23,6 +27,7 @@ import {
   createListeningOperationsServerFromComposition,
   type ListeningOperationsServerBase,
 } from "./createListeningOperationsServerFromComposition";
+import type { EmbeddingProviderOption } from "./createEmbeddingProvider";
 import type { LlmProviderOption } from "./createLanguageModelProvider";
 import { createOpenSearchKnowledgeComposition } from "./createOpenSearchKnowledgeComposition";
 import { createPostgresKnowledgeComposition } from "./createPostgresKnowledgeComposition";
@@ -51,6 +56,9 @@ export type ListeningOperationsHostEnv = {
   /** `fake` when LLM_API_KEY unset; `http` when set. */
   llmMode: "fake" | "http";
   llm?: LlmProviderOption;
+  /** `fake` when EMBEDDING_API_KEY unset; `http` when set. */
+  embeddingMode: "fake" | "http";
+  embedding?: EmbeddingProviderOption;
   /** Unset → no Postgres pool. */
   databaseUrl?: string;
   /** Present when OPENSEARCH_URL is set. */
@@ -73,6 +81,7 @@ export type ListeningHostHandle = {
   storeMode: HostStoreMode;
   vectorMode: HostVectorMode;
   llmMode: "fake" | "http";
+  embeddingMode: "fake" | "http";
   workflowP2Bridge: boolean;
   workflowAgentLlm: boolean;
   workspaceId: string;
@@ -128,6 +137,28 @@ function resolveLlmOption(
   };
 }
 
+function resolveEmbeddingOption(
+  env: NodeJS.ProcessEnv,
+): Pick<ListeningOperationsHostEnv, "embeddingMode" | "embedding"> {
+  const apiKey = env["EMBEDDING_API_KEY"];
+  if (apiKey === undefined || apiKey.trim() === "") {
+    return { embeddingMode: "fake" };
+  }
+  const raw: Record<string, unknown> = {
+    baseUrl: getEnv(env, "EMBEDDING_BASE_URL", "https://api.openai.com/v1"),
+    apiKey: apiKey.trim(),
+    model: getEnv(env, "EMBEDDING_MODEL", "text-embedding-3-large"),
+    dimensions: EMBEDDING_VECTOR_DIMENSION,
+  };
+  return {
+    embeddingMode: "http",
+    embedding: {
+      type: "http",
+      config: loadEmbeddingHttpProviderConfig(raw),
+    },
+  };
+}
+
 function resolveStoreAndVector(
   databaseUrl: string | undefined,
   openSearchConfig: OpenSearchClientConfig | null,
@@ -156,6 +187,7 @@ export function loadListeningOperationsHostEnv(
   }
   const skip = getEnv(env, "SKIP_DEMO_SEED", "0");
   const llm = resolveLlmOption(env);
+  const embedding = resolveEmbeddingOption(env);
   const databaseUrlRaw = env["DATABASE_URL"]?.trim();
   const databaseUrl =
     databaseUrlRaw !== undefined && databaseUrlRaw.length > 0
@@ -177,6 +209,7 @@ export function loadListeningOperationsHostEnv(
     workflowP2Bridge: resolveWorkflowP2Bridge(env, skipDemoSeed),
     workflowAgentLlm: llm.llmMode === "http",
     ...llm,
+    ...embedding,
   };
 }
 
@@ -193,6 +226,7 @@ export function createConfiguredListeningOperationsServer(
       },
     },
     ...(hostEnv.llm !== undefined ? { llm: hostEnv.llm } : {}),
+    ...(hostEnv.embedding !== undefined ? { embedding: hostEnv.embedding } : {}),
     workflowP2Bridge: hostEnv.workflowP2Bridge,
     workflowAgentLlm: hostEnv.workflowAgentLlm,
   });
@@ -225,11 +259,14 @@ export async function createConfiguredListeningHost(
   const listen = { host: hostEnv.host, port: hostEnv.port };
   const llmOpt =
     hostEnv.llm !== undefined ? { llm: hostEnv.llm } : {};
+  const embeddingOpt =
+    hostEnv.embedding !== undefined ? { embedding: hostEnv.embedding } : {};
 
   const baseHandle = {
     storeMode: hostEnv.storeMode,
     vectorMode: hostEnv.vectorMode,
     llmMode: hostEnv.llmMode,
+    embeddingMode: hostEnv.embeddingMode,
     workflowP2Bridge: hostEnv.workflowP2Bridge,
     workflowAgentLlm: hostEnv.workflowAgentLlm,
     workspaceId: hostEnv.workspaceId,
@@ -251,6 +288,7 @@ export async function createConfiguredListeningHost(
         listen,
         apiKeys,
         ...llmOpt,
+        ...embeddingOpt,
         ...workflowOpt,
       });
       return {
@@ -269,6 +307,7 @@ export async function createConfiguredListeningHost(
       pool,
       applySchema: true,
       ...llmOpt,
+      ...embeddingOpt,
     });
     const server = createListeningOperationsServerFromComposition({
       composition,
@@ -306,6 +345,7 @@ export async function createConfiguredListeningHost(
       {
         openSearch,
         ...llmOpt,
+        ...embeddingOpt,
       },
     );
     const server = createListeningOperationsServerFromComposition({
@@ -334,6 +374,7 @@ export async function createConfiguredListeningHost(
     applySchema: true,
     openSearch,
     ...llmOpt,
+    ...embeddingOpt,
   });
   const server = createListeningOperationsServerFromComposition({
     composition,

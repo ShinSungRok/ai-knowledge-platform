@@ -38,11 +38,25 @@ async function assertThrowsAsync(
   throw new Error(`Expected async throw containing: ${messageSubstring}`);
 }
 
+function seqVector(): number[] {
+  return Array.from({ length: EMBEDDING_VECTOR_DIMENSION }, (_, i) => i + 1);
+}
+
+function fillVector(value: number): number[] {
+  return new Array(EMBEDDING_VECTOR_DIMENSION).fill(value);
+}
+
+function withInvalidEntry(value: number): number[] {
+  const vector = fillVector(1);
+  vector[vector.length - 1] = value;
+  return vector;
+}
+
 function makeVector(overrides: Partial<EmbeddingVector> = {}): EmbeddingVector {
   return {
     workspaceId: WORKSPACE_A,
     chunkId: "chunk-1",
-    vector: [1, 2, 3, 4, 5, 6, 7, 8],
+    vector: seqVector(),
     ...overrides,
   };
 }
@@ -73,7 +87,7 @@ async function assertUpsertAndFindRoundTrip(): Promise<void> {
   assertTruthy(found !== null, "expected a stored vector to be found");
   assertEqual(found?.workspaceId, WORKSPACE_A, "found.workspaceId mismatch");
   assertEqual(found?.chunkId, "chunk-1", "found.chunkId mismatch");
-  assertEqual(found?.vector.join(","), "1,2,3,4,5,6,7,8", "found.vector mismatch");
+  assertEqual(found?.vector.join(","), seqVector().join(","), "found.vector mismatch");
 }
 
 async function assertFindMissingReturnsNull(): Promise<void> {
@@ -86,29 +100,29 @@ async function assertFindMissingReturnsNull(): Promise<void> {
 async function assertUpsertReplacesExistingVector(): Promise<void> {
   console.log("[embedding] upsert replaces the existing vector for the same (workspaceId, chunkId) identity...");
   const index: VectorIndex = new SqlVectorIndex(new InMemorySqlGateway());
-  await index.upsert(makeVector({ vector: [1, 1, 1, 1, 1, 1, 1, 1] }));
-  await index.upsert(makeVector({ vector: [2, 2, 2, 2, 2, 2, 2, 2] }));
+  await index.upsert(makeVector({ vector: fillVector(1) }));
+  await index.upsert(makeVector({ vector: fillVector(2) }));
 
   const found = await index.findByChunkId(WORKSPACE_A, "chunk-1");
-  assertEqual(found?.vector.join(","), "2,2,2,2,2,2,2,2", "expected the second upsert to fully replace the first");
+  assertEqual(found?.vector.join(","), fillVector(2).join(","), "expected the second upsert to fully replace the first");
 }
 
 async function assertWorkspaceIsolation(): Promise<void> {
   console.log("[embedding] the same chunkId is isolated per workspace...");
   const index: VectorIndex = new SqlVectorIndex(new InMemorySqlGateway());
-  await index.upsert(makeVector({ workspaceId: WORKSPACE_A, vector: [1, 1, 1, 1, 1, 1, 1, 1] }));
-  await index.upsert(makeVector({ workspaceId: WORKSPACE_B, vector: [2, 2, 2, 2, 2, 2, 2, 2] }));
+  await index.upsert(makeVector({ workspaceId: WORKSPACE_A, vector: fillVector(1) }));
+  await index.upsert(makeVector({ workspaceId: WORKSPACE_B, vector: fillVector(2) }));
 
   const foundA = await index.findByChunkId(WORKSPACE_A, "chunk-1");
   const foundB = await index.findByChunkId(WORKSPACE_B, "chunk-1");
-  assertEqual(foundA?.vector.join(","), "1,1,1,1,1,1,1,1", "workspace A vector must be unaffected by workspace B upsert");
-  assertEqual(foundB?.vector.join(","), "2,2,2,2,2,2,2,2", "workspace B vector must be unaffected by workspace A upsert");
+  assertEqual(foundA?.vector.join(","), fillVector(1).join(","), "workspace A vector must be unaffected by workspace B upsert");
+  assertEqual(foundB?.vector.join(","), fillVector(2).join(","), "workspace B vector must be unaffected by workspace A upsert");
 }
 
 async function assertDefensiveCopyOnUpsertInputAndFindOutput(): Promise<void> {
   console.log("[embedding] defensive copy on upsert input and findByChunkId output...");
   const index: VectorIndex = new SqlVectorIndex(new InMemorySqlGateway());
-  const input = makeVector({ chunkId: "chunk-defensive", vector: [1, 2, 3, 4, 5, 6, 7, 8] });
+  const input = makeVector({ chunkId: "chunk-defensive", vector: seqVector() });
   await index.upsert(input);
 
   input.vector[0] = 999;
@@ -199,11 +213,11 @@ async function assertRejectsWrongDimensionOrNonFiniteVector(): Promise<void> {
     `must have exactly ${EMBEDDING_VECTOR_DIMENSION} entries`,
   );
   await assertThrowsAsync(
-    () => index.upsert(makeVector({ vector: [1, 2, 3, 4, 5, 6, 7, Number.NaN] })),
+    () => index.upsert(makeVector({ vector: withInvalidEntry(Number.NaN) })),
     "must all be finite numbers",
   );
   await assertThrowsAsync(
-    () => index.upsert(makeVector({ vector: [1, 2, 3, 4, 5, 6, 7, Number.POSITIVE_INFINITY] })),
+    () => index.upsert(makeVector({ vector: withInvalidEntry(Number.POSITIVE_INFINITY) })),
     "must all be finite numbers",
   );
   await assertThrowsAsync(
@@ -315,7 +329,7 @@ async function assertFindNearestRejectsInvalidQueryVectorOrLimit(): Promise<void
     `must have exactly ${EMBEDDING_VECTOR_DIMENSION} entries`,
   );
   await assertThrowsAsync(
-    () => index.findNearest(WORKSPACE_A, [1, 2, 3, 4, 5, 6, 7, Number.NaN], 5),
+    () => index.findNearest(WORKSPACE_A, withInvalidEntry(Number.NaN), 5),
     "must all be finite numbers",
   );
   await assertThrowsAsync(

@@ -3,6 +3,7 @@ import { EmbedDocumentChunksPipeline } from "./EmbedDocumentChunksPipeline";
 import { DefaultInMemoryKnowledgeSourceRepository } from "../persistence/DefaultInMemoryKnowledgeSourceRepository";
 import { DefaultInMemoryRepository } from "../persistence/DefaultInMemoryRepository";
 import { DefaultInMemoryDocumentChunkRepository } from "../persistence/DefaultInMemoryDocumentChunkRepository";
+import { EMBEDDING_VECTOR_DIMENSION } from "../embedding/EmbeddingVectorDimension";
 import { FakeEmbeddingProvider } from "../embedding/FakeEmbeddingProvider";
 import { InMemoryVectorIndex } from "../embedding/InMemoryVectorIndex";
 import type { KnowledgeDocumentRepository } from "../repository/KnowledgeDocumentRepository";
@@ -206,7 +207,7 @@ async function assertOnlyTargetSourceDocumentsAreProcessed(): Promise<void> {
     { workspaceId: WORKSPACE_A, id: "chunk-s2-a-0", documentId: "doc-s2-a", text: "source 2 chunk", order: 0 },
   ]);
 
-  const staleVector = new Array(8).fill(0.5);
+  const staleVector = new Array(EMBEDDING_VECTOR_DIMENSION).fill(0.5);
   await vectorIndex.upsert({ workspaceId: WORKSPACE_A, chunkId: "chunk-s2-a-0", vector: staleVector });
 
   const result = await pipeline.reindex({ workspaceId: WORKSPACE_A, sourceId: "source-1" });

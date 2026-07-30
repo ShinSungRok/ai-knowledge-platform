@@ -50,11 +50,25 @@ function makeIndex(): VectorIndex {
   );
 }
 
+function seqVector(): number[] {
+  return Array.from({ length: EMBEDDING_VECTOR_DIMENSION }, (_, i) => i + 1);
+}
+
+function fillVector(value: number): number[] {
+  return new Array(EMBEDDING_VECTOR_DIMENSION).fill(value);
+}
+
+function withInvalidEntry(value: number): number[] {
+  const vector = fillVector(1);
+  vector[vector.length - 1] = value;
+  return vector;
+}
+
 function makeVector(overrides: Partial<EmbeddingVector> = {}): EmbeddingVector {
   return {
     workspaceId: WORKSPACE_A,
     chunkId: "chunk-1",
-    vector: [1, 2, 3, 4, 5, 6, 7, 8],
+    vector: seqVector(),
     ...overrides,
   };
 }
@@ -84,7 +98,7 @@ async function assertUpsertAndFindRoundTrip(): Promise<void> {
   assertTruthy(found !== null, "expected stored vector");
   assertEqual(found?.workspaceId, WORKSPACE_A, "workspaceId");
   assertEqual(found?.chunkId, "chunk-1", "chunkId");
-  assertEqual(found?.vector.join(","), "1,2,3,4,5,6,7,8", "vector");
+  assertEqual(found?.vector.join(","), seqVector().join(","), "vector");
 }
 
 async function assertFindMissingReturnsNull(): Promise<void> {
@@ -96,29 +110,29 @@ async function assertFindMissingReturnsNull(): Promise<void> {
 async function assertUpsertReplacesExistingVector(): Promise<void> {
   console.log("[embedding] OpenSearch upsert replaces existing...");
   const index = makeIndex();
-  await index.upsert(makeVector({ vector: [1, 1, 1, 1, 1, 1, 1, 1] }));
-  await index.upsert(makeVector({ vector: [2, 2, 2, 2, 2, 2, 2, 2] }));
+  await index.upsert(makeVector({ vector: fillVector(1) }));
+  await index.upsert(makeVector({ vector: fillVector(2) }));
   const found = await index.findByChunkId(WORKSPACE_A, "chunk-1");
-  assertEqual(found?.vector.join(","), "2,2,2,2,2,2,2,2", "replaced");
+  assertEqual(found?.vector.join(","), fillVector(2).join(","), "replaced");
 }
 
 async function assertWorkspaceIsolation(): Promise<void> {
   console.log("[embedding] OpenSearch workspace isolation...");
   const index = makeIndex();
   await index.upsert(
-    makeVector({ workspaceId: WORKSPACE_A, vector: [1, 1, 1, 1, 1, 1, 1, 1] }),
+    makeVector({ workspaceId: WORKSPACE_A, vector: fillVector(1) }),
   );
   await index.upsert(
-    makeVector({ workspaceId: WORKSPACE_B, vector: [2, 2, 2, 2, 2, 2, 2, 2] }),
+    makeVector({ workspaceId: WORKSPACE_B, vector: fillVector(2) }),
   );
   assertEqual(
     (await index.findByChunkId(WORKSPACE_A, "chunk-1"))?.vector.join(","),
-    "1,1,1,1,1,1,1,1",
+    fillVector(1).join(","),
     "A",
   );
   assertEqual(
     (await index.findByChunkId(WORKSPACE_B, "chunk-1"))?.vector.join(","),
-    "2,2,2,2,2,2,2,2",
+    fillVector(2).join(","),
     "B",
   );
 }
@@ -128,7 +142,7 @@ async function assertDefensiveCopyOnUpsertInputAndFindOutput(): Promise<void> {
   const index = makeIndex();
   const input = makeVector({
     chunkId: "chunk-defensive",
-    vector: [1, 2, 3, 4, 5, 6, 7, 8],
+    vector: seqVector(),
   });
   await index.upsert(input);
   input.vector[0] = 999;
@@ -205,7 +219,7 @@ async function assertRejectsWrongDimensionOrNonFiniteVector(): Promise<void> {
     `must have exactly ${EMBEDDING_VECTOR_DIMENSION} entries`,
   );
   await assertThrowsAsync(
-    () => index.upsert(makeVector({ vector: [1, 2, 3, 4, 5, 6, 7, Number.NaN] })),
+    () => index.upsert(makeVector({ vector: withInvalidEntry(Number.NaN) })),
     "must all be finite numbers",
   );
 }

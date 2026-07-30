@@ -114,6 +114,7 @@ export function createSqlKnowledgeComposition(
     runtime,
     mcpJsonRpcHandler,
     languageModelProvider,
+    embeddingProvider,
     knowledgeDocumentRepository,
     knowledgeSourceRepository,
     documentChunkRepository,

@@ -8,13 +8,17 @@
  * STORE: inmemory | postgres | opensearch | postgres+opensearch
  * VECTOR: inmemory | sql | opensearch
  * Fake LLM by default; HTTP LLM when LLM_API_KEY is set.
- * NodeHttpListener (no Express). Demo seed unless SKIP_DEMO_SEED=1.
+ * NodeHttpListener (no Express). Demo seed unless SKIP_DEMO_SEED=1 — also
+ * seeds the static law.go.kr snapshot (app/knowledge/composition/data/
+ * lawKnowledgeSnapshot.json) if present; that file is refreshed manually via
+ * `pnpm demo:seed:law-snapshot`, never fetched live at start.
  */
 import {
   createConfiguredListeningHost,
   loadListeningOperationsHostEnv,
 } from "./listeningOperationsHostConfig";
 import { seedDemoKnowledge } from "./seedDemoKnowledge";
+import { seedLawKnowledgeFromSnapshot } from "./seedLawKnowledgeFromSnapshot";
 
 async function main(): Promise<void> {
   const hostEnv = loadListeningOperationsHostEnv();
@@ -23,6 +27,7 @@ async function main(): Promise<void> {
   console.log(`STORE: ${host.storeMode}`);
   console.log(`VECTOR: ${host.vectorMode}`);
   console.log(`LLM: ${host.llmMode}`);
+  console.log(`EMBEDDING: ${host.embeddingMode}`);
   console.log(
     `WORKFLOW: fake${host.workflowP2Bridge ? "+p2-bridge" : ""}${
       host.workflowAgentLlm ? "+agent-llm" : ""
@@ -33,6 +38,13 @@ async function main(): Promise<void> {
   if (!host.skipDemoSeed) {
     await seedDemoKnowledge(host.server.composition, host.workspaceId);
     console.log(`Demo knowledge seeded for workspace ${host.workspaceId}`);
+
+    const lawArticleCount = await seedLawKnowledgeFromSnapshot(
+      host.server.composition,
+    );
+    if (lawArticleCount > 0) {
+      console.log(`Law knowledge snapshot seeded (${lawArticleCount} articles)`);
+    }
   } else {
     console.log("SKIP_DEMO_SEED set; starting without demo seed.");
   }

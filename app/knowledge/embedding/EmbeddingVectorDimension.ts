@@ -4,4 +4,4 @@
  * vector index it feeds never drift because both are validated against
  * this same constant.
  */
-export const EMBEDDING_VECTOR_DIMENSION = 8;
+export const EMBEDDING_VECTOR_DIMENSION = 1536;

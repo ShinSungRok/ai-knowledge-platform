@@ -7,7 +7,6 @@ import {
 } from "../config/DEFAULT_KNOWLEDGE_RUNTIME_CONFIG";
 import type { KnowledgeRuntimeConfig } from "../config/KnowledgeRuntimeConfig";
 import { DefaultContextAssembler } from "../context/DefaultContextAssembler";
-import { FakeEmbeddingProvider } from "../embedding/FakeEmbeddingProvider";
 import { SqlVectorIndex } from "../embedding/SqlVectorIndex";
 import { applyKnowledgeSchema } from "../infra/applyKnowledgeSchema";
 import type { PostgresPool } from "../infra/PostgresPool";
@@ -20,11 +19,23 @@ import { SqlKnowledgeDocumentRepository } from "../persistence/SqlKnowledgeDocum
 import { SqlKnowledgeSourceRepository } from "../persistence/SqlKnowledgeSourceRepository";
 import { DefaultPromptBuilder } from "../prompt/DefaultPromptBuilder";
 import { DefaultGroundedAnswerAssembler } from "../rag/DefaultGroundedAnswerAssembler";
+import { MIN_VECTOR_SIMILARITY } from "../retrieval/MIN_VECTOR_SIMILARITY";
 import { DefaultVectorRetriever } from "../retrieval/DefaultVectorRetriever";
+import { ThresholdFilteringVectorRetriever } from "../retrieval/ThresholdFilteringVectorRetriever";
 import { DefaultHybridSearch } from "../search/DefaultHybridSearch";
 import { DefaultKeywordSearch } from "../search/DefaultKeywordSearch";
 import { DefaultRerankedSearch } from "../search/DefaultRerankedSearch";
-import { DefaultReranker } from "../search/DefaultReranker";
+import { LlmRerankedSearch } from "../search/LlmRerankedSearch";
+import { MIN_KEYWORD_COVERAGE } from "../search/MIN_KEYWORD_COVERAGE";
+import { MIN_LLM_RELEVANCE_SCORE } from "../search/MIN_LLM_RELEVANCE_SCORE";
+import { ThresholdFilteringKeywordSearch } from "../search/ThresholdFilteringKeywordSearch";
+import { MIN_RELEVANCE_SCORE } from "../search/MIN_RELEVANCE_SCORE";
+import { NormalizedReranker } from "../search/NormalizedReranker";
+import { ThresholdFilteringRerankedSearch } from "../search/ThresholdFilteringRerankedSearch";
+import {
+  createEmbeddingProvider,
+  type EmbeddingProviderOption,
+} from "./createEmbeddingProvider";
 import {
   createLanguageModelProvider,
   type LlmProviderOption,
@@ -39,12 +50,15 @@ export type CreatePostgresKnowledgeCompositionOptions = {
   applySchema?: boolean;
   /** Defaults to Fake LLM. */
   llm?: LlmProviderOption;
+  /** Defaults to Fake embedding. */
+  embedding?: EmbeddingProviderOption;
 };
 
 /**
  * Composition root with SQL-backed document/source/chunk/vector index over
- * {@link PostgresSqlGateway}. Cited-answer stack reuses fake embedding/search
- * adapters; LLM defaults to Fake. Caller owns the pool lifecycle.
+ * {@link PostgresSqlGateway}. Embedding and LLM both default to Fake; pass
+ * `embedding`/`llm` options for HTTP-backed adapters. Caller owns the pool
+ * lifecycle.
  *
  * Default in-memory and InMemorySqlGateway SQL paths remain available.
  */
@@ -65,17 +79,36 @@ export async function createPostgresKnowledgeComposition(
   );
   const documentChunkRepository = new SqlDocumentChunkRepository(sqlGateway);
   const vectorIndex = new SqlVectorIndex(sqlGateway);
-  const embeddingProvider = new FakeEmbeddingProvider();
-
-  const vectorRetriever = new DefaultVectorRetriever(
-    embeddingProvider,
-    vectorIndex,
-    documentChunkRepository,
+  const embeddingProvider = createEmbeddingProvider(
+    options.embedding ?? { type: "fake" },
   );
-  const keywordSearch = new DefaultKeywordSearch(documentChunkRepository);
+
+  const vectorRetriever = new ThresholdFilteringVectorRetriever(
+    new DefaultVectorRetriever(embeddingProvider, vectorIndex, documentChunkRepository),
+    MIN_VECTOR_SIMILARITY,
+  );
+  const keywordSearch = new ThresholdFilteringKeywordSearch(
+    new DefaultKeywordSearch(documentChunkRepository),
+    MIN_KEYWORD_COVERAGE,
+  );
   const hybridSearch = new DefaultHybridSearch(vectorRetriever, keywordSearch);
-  const reranker = new DefaultReranker();
-  const rerankedSearch = new DefaultRerankedSearch(hybridSearch, reranker);
+  const languageModelProvider = createLanguageModelProvider(
+    options.llm ?? { type: "fake" },
+  );
+  const reranker = new NormalizedReranker();
+  const baseRerankedSearch = new DefaultRerankedSearch(hybridSearch, reranker);
+  const vectorKeywordFilteredSearch = new ThresholdFilteringRerankedSearch(
+    baseRerankedSearch,
+    MIN_RELEVANCE_SCORE,
+  );
+  const llmJudgedSearch = new LlmRerankedSearch(
+    vectorKeywordFilteredSearch,
+    languageModelProvider,
+  );
+  const rerankedSearch = new ThresholdFilteringRerankedSearch(
+    llmJudgedSearch,
+    MIN_LLM_RELEVANCE_SCORE,
+  );
   const contextAssembler = new DefaultContextAssembler(
     knowledgeDocumentRepository,
   );
@@ -84,9 +117,6 @@ export async function createPostgresKnowledgeComposition(
     contextAssembler,
   );
   const promptBuilder = new DefaultPromptBuilder();
-  const languageModelProvider = createLanguageModelProvider(
-    options.llm ?? { type: "fake" },
-  );
   const groundedAnswerAssembler = new DefaultGroundedAnswerAssembler();
   const generateGroundedAnswerUseCase = new GenerateGroundedAnswerUseCase(
     retrieveGroundingContextUseCase,
@@ -122,6 +152,7 @@ export async function createPostgresKnowledgeComposition(
     runtime,
     mcpJsonRpcHandler,
     languageModelProvider,
+    embeddingProvider,
     knowledgeDocumentRepository,
     knowledgeSourceRepository,
     documentChunkRepository,

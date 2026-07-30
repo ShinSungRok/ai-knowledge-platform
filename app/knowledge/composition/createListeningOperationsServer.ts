@@ -9,6 +9,7 @@ import type { HttpListenConfig } from "../server/HttpListenConfig";
 import type { HttpListener } from "../server/HttpListener";
 import type { ApiKeyPrincipalEntry } from "../security/ApiKeyAuthenticator";
 import type { AuthProviderOption } from "./createAuthenticator";
+import type { EmbeddingProviderOption } from "./createEmbeddingProvider";
 import { createInMemoryKnowledgeComposition } from "./createInMemoryKnowledgeComposition";
 import type { LlmProviderOption } from "./createLanguageModelProvider";
 import {
@@ -26,6 +27,8 @@ export type CreateListeningOperationsServerOptions = {
   listen?: HttpListenConfig;
   /** Defaults to Fake LLM. */
   llm?: LlmProviderOption;
+  /** Defaults to Fake embedding. */
+  embedding?: EmbeddingProviderOption;
   /** Explicit AuthN provider. When set, `apiKeys` is ignored. */
   auth?: AuthProviderOption;
   /** Default ApiKey AuthN when `auth` is omitted. */
@@ -61,6 +64,7 @@ export function createListeningOperationsServer(
   const listenConfig = options.listen ?? DEFAULT_LISTEN;
   const composition = createInMemoryKnowledgeComposition(config, {
     llm: options.llm,
+    embedding: options.embedding,
   });
   const base = createListeningOperationsServerFromComposition({
     composition,

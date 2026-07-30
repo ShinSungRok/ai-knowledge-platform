@@ -7,7 +7,6 @@ import {
 } from "../config/DEFAULT_KNOWLEDGE_RUNTIME_CONFIG";
 import type { KnowledgeRuntimeConfig } from "../config/KnowledgeRuntimeConfig";
 import { DefaultContextAssembler } from "../context/DefaultContextAssembler";
-import { FakeEmbeddingProvider } from "../embedding/FakeEmbeddingProvider";
 import { InMemoryVectorIndex } from "../embedding/InMemoryVectorIndex";
 import { DefaultMcpJsonRpcHandler } from "../mcp/DefaultMcpJsonRpcHandler";
 import { DefaultMcpToolRegistry } from "../mcp/DefaultMcpToolRegistry";
@@ -16,11 +15,23 @@ import { DefaultInMemoryDocumentChunkRepository } from "../persistence/DefaultIn
 import { DefaultInMemoryRepository } from "../persistence/DefaultInMemoryRepository";
 import { DefaultPromptBuilder } from "../prompt/DefaultPromptBuilder";
 import { DefaultGroundedAnswerAssembler } from "../rag/DefaultGroundedAnswerAssembler";
+import { MIN_VECTOR_SIMILARITY } from "../retrieval/MIN_VECTOR_SIMILARITY";
 import { DefaultVectorRetriever } from "../retrieval/DefaultVectorRetriever";
+import { ThresholdFilteringVectorRetriever } from "../retrieval/ThresholdFilteringVectorRetriever";
 import { DefaultHybridSearch } from "../search/DefaultHybridSearch";
 import { DefaultKeywordSearch } from "../search/DefaultKeywordSearch";
 import { DefaultRerankedSearch } from "../search/DefaultRerankedSearch";
-import { DefaultReranker } from "../search/DefaultReranker";
+import { LlmRerankedSearch } from "../search/LlmRerankedSearch";
+import { MIN_KEYWORD_COVERAGE } from "../search/MIN_KEYWORD_COVERAGE";
+import { MIN_LLM_RELEVANCE_SCORE } from "../search/MIN_LLM_RELEVANCE_SCORE";
+import { MIN_RELEVANCE_SCORE } from "../search/MIN_RELEVANCE_SCORE";
+import { NormalizedReranker } from "../search/NormalizedReranker";
+import { ThresholdFilteringKeywordSearch } from "../search/ThresholdFilteringKeywordSearch";
+import { ThresholdFilteringRerankedSearch } from "../search/ThresholdFilteringRerankedSearch";
+import {
+  createEmbeddingProvider,
+  type EmbeddingProviderOption,
+} from "./createEmbeddingProvider";
 import {
   createLanguageModelProvider,
   type LlmProviderOption,
@@ -30,6 +41,7 @@ import type { KnowledgeRuntime } from "./KnowledgeRuntime";
 
 export type CreateInMemoryKnowledgeCompositionOptions = {
   llm?: LlmProviderOption;
+  embedding?: EmbeddingProviderOption;
 };
 
 /**
@@ -44,17 +56,36 @@ export function createInMemoryKnowledgeComposition(
   const knowledgeDocumentRepository = new DefaultInMemoryRepository();
   const documentChunkRepository = new DefaultInMemoryDocumentChunkRepository();
   const vectorIndex = new InMemoryVectorIndex();
-  const embeddingProvider = new FakeEmbeddingProvider();
-
-  const vectorRetriever = new DefaultVectorRetriever(
-    embeddingProvider,
-    vectorIndex,
-    documentChunkRepository,
+  const embeddingProvider = createEmbeddingProvider(
+    options.embedding ?? { type: "fake" },
   );
-  const keywordSearch = new DefaultKeywordSearch(documentChunkRepository);
+
+  const vectorRetriever = new ThresholdFilteringVectorRetriever(
+    new DefaultVectorRetriever(embeddingProvider, vectorIndex, documentChunkRepository),
+    MIN_VECTOR_SIMILARITY,
+  );
+  const keywordSearch = new ThresholdFilteringKeywordSearch(
+    new DefaultKeywordSearch(documentChunkRepository),
+    MIN_KEYWORD_COVERAGE,
+  );
   const hybridSearch = new DefaultHybridSearch(vectorRetriever, keywordSearch);
-  const reranker = new DefaultReranker();
-  const rerankedSearch = new DefaultRerankedSearch(hybridSearch, reranker);
+  const languageModelProvider = createLanguageModelProvider(
+    options.llm ?? { type: "fake" },
+  );
+  const reranker = new NormalizedReranker();
+  const baseRerankedSearch = new DefaultRerankedSearch(hybridSearch, reranker);
+  const vectorKeywordFilteredSearch = new ThresholdFilteringRerankedSearch(
+    baseRerankedSearch,
+    MIN_RELEVANCE_SCORE,
+  );
+  const llmJudgedSearch = new LlmRerankedSearch(
+    vectorKeywordFilteredSearch,
+    languageModelProvider,
+  );
+  const rerankedSearch = new ThresholdFilteringRerankedSearch(
+    llmJudgedSearch,
+    MIN_LLM_RELEVANCE_SCORE,
+  );
   const contextAssembler = new DefaultContextAssembler(
     knowledgeDocumentRepository,
   );
@@ -63,9 +94,6 @@ export function createInMemoryKnowledgeComposition(
     contextAssembler,
   );
   const promptBuilder = new DefaultPromptBuilder();
-  const languageModelProvider = createLanguageModelProvider(
-    options.llm ?? { type: "fake" },
-  );
   const groundedAnswerAssembler = new DefaultGroundedAnswerAssembler();
   const generateGroundedAnswerUseCase = new GenerateGroundedAnswerUseCase(
     retrieveGroundingContextUseCase,
@@ -101,6 +129,7 @@ export function createInMemoryKnowledgeComposition(
     runtime,
     mcpJsonRpcHandler,
     languageModelProvider,
+    embeddingProvider,
     knowledgeDocumentRepository,
     documentChunkRepository,
     vectorIndex,

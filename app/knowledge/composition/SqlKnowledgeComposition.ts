@@ -1,4 +1,5 @@
 import type { LanguageModelProvider } from "../ai/LanguageModelProvider";
+import type { EmbeddingProvider } from "../embedding/EmbeddingProvider";
 import type { VectorIndex } from "../embedding/VectorIndex";
 import type { SqlGateway } from "../infra/SqlGateway";
 import type { McpJsonRpcHandler } from "../mcp/McpJsonRpcHandler";
@@ -16,6 +17,7 @@ export interface SqlKnowledgeComposition {
   runtime: KnowledgeRuntime;
   mcpJsonRpcHandler: McpJsonRpcHandler;
   languageModelProvider: LanguageModelProvider;
+  embeddingProvider: EmbeddingProvider;
   knowledgeDocumentRepository: SqlKnowledgeDocumentRepository;
   knowledgeSourceRepository: SqlKnowledgeSourceRepository;
   documentChunkRepository: SqlDocumentChunkRepository;

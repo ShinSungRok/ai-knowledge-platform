@@ -234,9 +234,11 @@ async function assertInvalidProviderResultRejectedBeforeAnyWrite(): Promise<void
   const stored = await vectorIndex.findByChunkId(WORKSPACE_A, "chunk-0");
   assertEqual(stored, null, "chunk-0's vector must not have been written despite being valid, since chunk-1 failed validation");
 
+  const nonFiniteVector = new Array(EMBEDDING_VECTOR_DIMENSION).fill(1);
+  nonFiniteVector[nonFiniteVector.length - 1] = Number.NaN;
   const nonFiniteProvider = new SequencedEmbeddingProvider([
     validVector,
-    [1, 2, 3, 4, 5, 6, 7, Number.NaN],
+    nonFiniteVector,
   ]);
   const nonFiniteVectorIndex = new CountingVectorIndex(new InMemoryVectorIndex());
   const nonFinitePipeline = new EmbedDocumentChunksPipeline(

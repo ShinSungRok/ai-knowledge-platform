@@ -27,9 +27,12 @@
  * `DefaultKnowledgeSourceReconciler` cleans removed documents'
  * chunks/vectors via repository and `VectorIndex.deleteByChunkId`.
  * `ReconcilingSyncKnowledgeSourcePipeline` orchestrates detect → upsert →
- * reconcile and returns `SyncLifecycleResult`. Real connectors, automatic
- * chunking/embedding during sync, and background scheduling remain out of
- * scope until scoped.
+ * reconcile and returns `SyncLifecycleResult`. `LawGoKrKnowledgeSourceConnector`
+ * is a real adapter for this port — fetches and normalizes law.go.kr (국가
+ * 법령정보센터) Open API articles — used only by a one-off manual snapshot
+ * fetch (`runFetchLawKnowledgeSnapshot.ts`), not by live per-request sync.
+ * Automatic chunking/embedding during sync and background scheduling remain
+ * out of scope until scoped.
  */
 export const KNOWLEDGE_MODULE_PIPELINE = "app/knowledge/pipeline" as const;
 
@@ -41,6 +44,10 @@ export {
   FakeKnowledgeSourceConnector,
   type FakeKnowledgeSourceFixture,
 } from "./FakeKnowledgeSourceConnector";
+export {
+  LawGoKrKnowledgeSourceConnector,
+  type LawGoKrSourceMapping,
+} from "./LawGoKrKnowledgeSourceConnector";
 export {
   SyncKnowledgeSourcePipeline,
   type SyncKnowledgeSourceInput,

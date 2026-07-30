@@ -100,11 +100,15 @@ async function assertHttpLlmCompositionUsesFakeTransport(): Promise<void> {
     maxCharacters: 10_000,
   });
   assertEqual(result.answer.text, MODEL_REPLY, "answer text from HTTP LLM");
-  assertEqual(transport.requests.length, 1, "transport called once");
-  assertTruthy(
-    transport.requests[0]!.url.endsWith("/chat/completions"),
-    "chat completions url",
-  );
+  // The same LanguageModelProvider now serves two calls per request:
+  // LlmRerankedSearch's relevance judging, then the final grounded-answer
+  // generation. MODEL_REPLY isn't a parseable "N: score" line, so the
+  // reranking call is a no-op (falls back to the incoming ranking) — this
+  // only asserts the composition wires one shared HTTP LLM path for both.
+  assertEqual(transport.requests.length, 2, "transport called twice (rerank judge + final answer)");
+  for (const request of transport.requests) {
+    assertTruthy(request.url.endsWith("/chat/completions"), "chat completions url");
+  }
 }
 
 async function assertDefaultRemainsFake(): Promise<void> {

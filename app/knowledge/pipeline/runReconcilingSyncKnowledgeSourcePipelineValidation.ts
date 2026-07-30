@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import type { KnowledgeDocument } from "../domain/KnowledgeDocument";
 import type { KnowledgeSource } from "../domain/KnowledgeSource";
+import { EMBEDDING_VECTOR_DIMENSION } from "../embedding/EmbeddingVectorDimension";
 import { InMemoryVectorIndex } from "../embedding/InMemoryVectorIndex";
 import { DefaultInMemoryDocumentChunkRepository } from "../persistence/DefaultInMemoryDocumentChunkRepository";
 import { DefaultInMemoryKnowledgeSourceRepository } from "../persistence/DefaultInMemoryKnowledgeSourceRepository";
@@ -259,7 +260,7 @@ async function assertReconcilesRemovedDocuments(): Promise<void> {
   await vectorIndex.upsert({
     workspaceId: WORKSPACE_A,
     chunkId: "chunk-gone",
-    vector: [1, 0, 0, 0, 0, 0, 0, 0],
+    vector: new Array(EMBEDDING_VECTOR_DIMENSION).fill(0),
   });
 
   const pipeline = new ReconcilingSyncKnowledgeSourcePipeline(
