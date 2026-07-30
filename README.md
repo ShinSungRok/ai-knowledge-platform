@@ -14,8 +14,10 @@ own**: typed modules, a composition root, Fake-first validation, and a single
 runnable HTTP host — not only a notebook or a chat UI.
 
 See [`docs/PORTFOLIO_NARRATIVE.md`](docs/PORTFOLIO_NARRATIVE.md) for Why → What
-→ How, and [`docs/portfolio.md`](docs/portfolio.md) for charter closeouts and
-intentional non-goals.
+→ How, [`docs/PROJECT_SYSTEM_REPORT.md`](docs/PROJECT_SYSTEM_REPORT.md) for the
+full system assessment (flows / processes / principles), and
+[`docs/portfolio.md`](docs/portfolio.md) for charter closeouts and intentional
+non-goals.
 
 | Layer | Name | Responsibility |
 |---|---|---|
@@ -86,8 +88,20 @@ not depend on a live cluster or a paid API key.
 - **Cited knowledge serving (P2)** — retrieve evidence, assemble a grounded
   prompt, generate an answer, attach citations; served on
   `POST /workspaces/:id/cited-answers`.
-- **Hybrid retrieval** — keyword, vector, hybrid, and re-ranking behind
-  ports; Fake/InMemory by default, optional Postgres / OpenSearch wiring.
+- **Hybrid retrieval with quality gates** — keyword, vector, and hybrid
+  search behind ports; per-signal threshold filters reject off-topic
+  queries (`insufficientEvidence`), then a normalized reranker plus an
+  LLM-judged reranking pass (reusing the same `LanguageModelProvider`, no
+  extra dependency) pick the single most relevant chunk among similar
+  candidates. Fake/InMemory by default, optional Postgres / OpenSearch
+  wiring.
+- **Real demo content** — the original MFA/VPN policy excerpt plus a
+  law.go.kr snapshot (416 real 개인정보보호법 / 근로기준법 / 정보통신망법
+  articles), fetched once via `pnpm demo:seed:law-snapshot` into a committed
+  JSON file and served with zero live network calls at runtime.
+- **Optional real embeddings** — `EMBEDDING_API_KEY` wires an
+  OpenAI-compatible (also Ollama-compatible) embedding provider mirroring
+  `LLM_API_KEY`; defaults to Fake char-hash embedding.
 - **MCP + agent foundations** — JSON-RPC tools, tool executor, session
   memory, background jobs — Fake-validated, composition-wired.
 - **Multi-agent workflow engine (P3)** — researcher / synthesizer / critic
@@ -106,7 +120,9 @@ not depend on a live cluster or a paid API key.
 
 ```text
 Source / document → Chunk → Embed → Index
-  → Retrieve (keyword / vector / hybrid / rerank)
+  → Retrieve (keyword / vector / hybrid)
+  → Threshold filter (reject off-topic) → Normalized rerank
+  → LLM-judged rerank (reuses LanguageModelProvider)
   → Grounding context → Prompt → Language model
   → Grounded answer + citations → HTTP / MCP
 ```
@@ -175,6 +191,7 @@ flowchart TD
 | Persistence (optional) | PostgreSQL (`pg`), SQL vector index |
 | Search (optional) | OpenSearch HTTP (no official OpenSearch JS SDK) |
 | AI (optional) | OpenAI-compatible HTTP chat completions (no vendor SDK) |
+| Embeddings (optional) | OpenAI-compatible HTTP embeddings, also Ollama-compatible (no vendor SDK) |
 | Tooling | pnpm, Docker Compose scaffolding under `docker/` |
 
 Cross-cutting concerns (retry/timeout, AuthN/AuthZ, logging/metrics/OTLP-lite)
@@ -294,6 +311,7 @@ Optional (see `.env.example`):
 | Env | Effect |
 |---|---|
 | `LLM_API_KEY` (+ `LLM_BASE_URL` / `LLM_MODEL`) | HTTP LLM for cited-answers and workflow synth/critic |
+| `EMBEDDING_API_KEY` (+ `EMBEDDING_BASE_URL` / `EMBEDDING_MODEL`) | HTTP embedding provider (defaults to `text-embedding-3-large`, 1536-dim) |
 | `DATABASE_URL` | Postgres document store + SQL vectors |
 | `OPENSEARCH_URL` | OpenSearch vector index |
 | `SKIP_DEMO_SEED=1` | Start without demo seed |
@@ -331,6 +349,10 @@ pnpm demo:llmops:control-plane
 
 # host must be running — measures cited-answer latency into control-plane
 pnpm demo:llmops:from-cited-answer
+
+# one-off: fetch law.go.kr articles into the committed snapshot JSON
+# (pnpm start reads the snapshot only — never calls law.go.kr live)
+pnpm demo:seed:law-snapshot
 ```
 
 Full env / Docker notes: [`docs/deployment.md`](docs/deployment.md),
