@@ -2,7 +2,8 @@
 
 > 산출물: 프로젝트 전체 총평 · 논리 흐름 · 프로세스 · 설계 원리  
 > 대상: P2 Knowledge Serving · P3 Workflow Engine · P4 LLMOps Control Plane  
-> 일자: 2026-07-24 (2026-07-30 갱신: P2 리트리벌 품질 개선 반영 — §11)  
+> 일자: 2026-07-24 (2026-07-30 갱신: P2 리트리벌 품질 개선 — §11;
+> 2026-07-31 갱신: P3/P4 5/5 Completed — §12/§13)  
 > 저장소: https://github.com/ShinSungRok/ai-knowledge-platform
 
 관련 문서: [`README.md`](../README.md) ·
@@ -20,9 +21,12 @@
 Knowledge(기반) → Workflow(실행) → LLMOps(운영) 스토리와, 동일 호스트에서
 돌릴 수 있는 HTTP 증거가 갖춰져 있다.
 
-이것은 **엔터프라이즈 완제품 출시**를 의미하지 않는다. P3/P4는 헌장상
-**CLOSED (Partial)** 이며 Partial ≠ Completed다. 기본 증명은 Fake/InMemory
-검증이고, 실 LLM·실측 latency는 **선택적 데모 경로**다.
+이것은 **엔터프라이즈 완제품 출시**를 의미하지 않는다. P2/P3/P4 모두
+**CLOSED**이고, P3/P4는 5/5 charter capability가 **Completed**다
+(2026-07-31 — §12/§13). 기본 증명은 Fake/InMemory 검증이고, 실 LLM·실측
+latency는 **선택적 데모 경로**다. 일부 인프라 어댑터(Postgres/OpenSearch/
+공식 OTLP SDK 등)는 여전히 **Partial**로 남아 있다 — Project 2 자체가
+일부 infra Partial 상태로도 CLOSED 라벨을 쓰는 것과 같은 원칙.
 
 | 관점 | 평가 |
 |---|---|
@@ -253,7 +257,9 @@ domain (0 outward)
 
 - 임베딩은 기본 Fake; `EMBEDDING_API_KEY` 설정 시 실 임베딩(선택 경로)
 - P4 품질 메트릭은 soft proxy
-- P4 저장은 요청 단위 InMemory (영속 대시보드 아님)
+- P4 저장은 2026-07-31부로 호스트 프로세스 생존 기간 동안 영속(composition
+  singleton) — 이전의 "요청마다 버려짐"에서 바뀜; 단, 디스크/SQL 영속은
+  아님 (재시작하면 초기화, 상시 대시보드 아님) — §13
 
 ---
 
@@ -286,7 +292,10 @@ control plane — 동일 `pnpm start` 호스트.
 **How:** Ports/adapters + Fake validators; researcher→P2; synth/critic→HTTP LLM;
 control plane에 cited-answer latency 주입 헬퍼.
 
-**Honest limit:** Partial ≠ Completed; Fake embedding; InMemory ops by default.
+**Honest limit:** P2/P3/P4 charter capabilities are Completed, but Fake
+embedding stays the default and InMemory (process-lifetime, non-durable)
+ops stay the default — Postgres/OpenSearch/live OTLP are optional paths,
+not requirements.
 
 ---
 
@@ -311,7 +320,10 @@ control plane에 cited-answer latency 주입 헬퍼.
 1. 포트폴리오 **스크린샷/터미널 캡처**를 README에 보강  
 2. ~~실 임베딩~~ (2026-07-30 완료 — §11); 문서 import API(상시 커넥터)는
    여전히 **별도 인간 승인 스코프**  
-3. Partial→Completed 승격은 **새 헌장 없이 하지 말 것**
+3. ~~Partial→Completed 승격은 새 헌장 없이 하지 말 것~~ (P3/P4 모두
+   2026-07-31에 새 헌장 없이, Project 2 선례를 따라 5/5 Completed로
+   승격 완료 — §12/§13). 남은 Partial은 인프라 어댑터(Postgres/
+   OpenSearch/공식 OTLP SDK)뿐이며 이는 의도적으로 영구 보류 항목
 
 ---
 

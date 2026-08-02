@@ -1,5 +1,7 @@
 # AI Knowledge Platform
 
+[![CI](https://github.com/ShinSungRok/ai-knowledge-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/ShinSungRok/ai-knowledge-platform/actions/workflows/ci.yml)
+
 **AI Knowledge Platform** is a backend-first, TypeScript platform for
 **enterprise knowledge retrieval & serving**, **multi-agent workflow
 execution**, and an **LLMOps control plane** — built in public, project by
@@ -18,10 +20,10 @@ runnable HTTP host — not only a notebook or a chat UI.
 - **3 projects, all CLOSED** — P2 knowledge serving, P3 multi-agent
   workflow engine, P4 LLMOps control plane, each with every charter
   capability at **Completed**, not just scaffolded.
-- **154 dependency-free validation scripts + `tsc`** — `pnpm validate`
-  proves correctness with zero Docker, network calls, or API keys (188
-  total scripts including optional live Postgres/OpenSearch/OTLP checks,
-  which skip with exit 0 when unconfigured).
+- **180 dependency-free validation scripts + `tsc`** — `pnpm validate`
+  proves correctness with zero Docker, network calls, or API keys (8 more
+  optional live Postgres/OpenSearch/OTLP/JWT/LLM checks skip with exit 0
+  when unconfigured).
 - **Real data, not a toy fixture** — 416 real 개인정보보호법 /
   근로기준법 / 정보통신망법 articles from law.go.kr, retrieved with
   hybrid search + LLM-judged reranking (optional real embeddings/LLM via
