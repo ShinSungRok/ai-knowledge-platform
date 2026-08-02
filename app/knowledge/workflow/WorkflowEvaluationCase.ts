@@ -5,7 +5,9 @@ import type { WorkflowRunStatus } from "./WorkflowRunStatus";
 /**
  * One Multi-Agent workflow evaluation case.
  *
- * Scores orchestrator/memory artifacts only — no LLM-as-judge.
+ * Used by both {@link WorkflowRunEvaluator} (pure structural scoring of
+ * orchestrator/memory artifacts) and {@link WorkflowRunContentEvaluator}
+ * (async LLM-as-judge content scoring against `objective`).
  * Distinct from Project 2 RAG {@link EvaluationCase}.
  */
 export interface WorkflowEvaluationCase {

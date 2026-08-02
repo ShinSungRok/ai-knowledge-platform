@@ -189,6 +189,101 @@ async function assertCoordinatorDelegationKind(): Promise<void> {
   );
 }
 
+async function assertDynamicDelegationToSecondCandidate(): Promise<void> {
+  console.log(
+    "[workflow-handoff] agent-requested delegateToAgentId steers execution to a second registered same-role agent...",
+  );
+  const registry = new InMemoryWorkflowAgentRegistry();
+  registry.register(agent("agent-researcher", "researcher", "Researcher"));
+  registry.register(agent("agent-synthesizer", "synthesizer", "Synthesizer"));
+  registry.register(agent("agent-critic-1", "critic", "Critic One"));
+  registry.register(agent("agent-critic-2", "critic", "Critic Two"));
+
+  const invoker = new FakeWorkflowAgentInvoker({
+    handlers: new Map([
+      [
+        "agent-synthesizer",
+        async (input: { role: string; input: string }) => ({
+          ok: true,
+          output: `echo:${input.role}:${input.input}`,
+          delegateToAgentId: asWorkflowAgentId("agent-critic-2"),
+        }),
+      ],
+    ]),
+  });
+  const orchestrator = new DefaultWorkflowOrchestrator(
+    new DeterministicWorkflowPlanner(registry),
+    registry,
+    invoker,
+    new DefaultWorkflowHandoffBuilder(),
+    new InMemoryWorkflowMemoryStore(),
+    () => asWorkflowRunId("run-fixed-handoff"),
+  );
+
+  const result = await orchestrator.run(sampleGoal());
+  assertEqual(result.status, "completed", "completed with delegation");
+  assertEqual(result.stepResults.length, 3, "3 steps");
+  assertEqual(
+    String(result.stepResults[2]?.agentId),
+    "agent-critic-2",
+    "critic step executed by the delegated agent, not the planned agent-critic-1",
+  );
+  assertEqual(
+    String(result.stepResults[2]?.handoff?.toAgentId),
+    "agent-critic-2",
+    "handoff toAgentId reflects the delegated agent",
+  );
+  assertEqual(
+    invoker.calls.find((call) => call.role === "critic")?.agentId &&
+      String(invoker.calls.find((call) => call.role === "critic")?.agentId),
+    "agent-critic-2",
+    "invoker actually invoked agent-critic-2",
+  );
+  assertTruthy(
+    !invoker.calls.some((call) => String(call.agentId) === "agent-critic-1"),
+    "planned agent-critic-1 never invoked",
+  );
+}
+
+async function assertDelegationFallsBackWhenTargetInvalid(): Promise<void> {
+  console.log(
+    "[workflow-handoff] delegateToAgentId naming an unregistered agent falls back to the planned agent silently...",
+  );
+  const registry = new InMemoryWorkflowAgentRegistry();
+  registry.register(agent("agent-researcher", "researcher", "Researcher"));
+  registry.register(agent("agent-synthesizer", "synthesizer", "Synthesizer"));
+  registry.register(agent("agent-critic-1", "critic", "Critic One"));
+
+  const invoker = new FakeWorkflowAgentInvoker({
+    handlers: new Map([
+      [
+        "agent-synthesizer",
+        async (input: { role: string; input: string }) => ({
+          ok: true,
+          output: `echo:${input.role}:${input.input}`,
+          delegateToAgentId: asWorkflowAgentId("agent-does-not-exist"),
+        }),
+      ],
+    ]),
+  });
+  const orchestrator = new DefaultWorkflowOrchestrator(
+    new DeterministicWorkflowPlanner(registry),
+    registry,
+    invoker,
+    new DefaultWorkflowHandoffBuilder(),
+    new InMemoryWorkflowMemoryStore(),
+    () => asWorkflowRunId("run-fixed-handoff"),
+  );
+
+  const result = await orchestrator.run(sampleGoal());
+  assertEqual(result.status, "completed", "completed via fallback");
+  assertEqual(
+    String(result.stepResults[2]?.agentId),
+    "agent-critic-1",
+    "falls back to the planned agent when delegate target is invalid",
+  );
+}
+
 async function assertBuilderDirectInvariants(): Promise<void> {
   console.log("[workflow-handoff] builder rejects same-agent handoff...");
   const builder: WorkflowHandoffBuilder = new DefaultWorkflowHandoffBuilder();
@@ -221,6 +316,8 @@ async function main(): Promise<void> {
   await assertMultiStepHandoffChain();
   await assertEmptyPreviousOutputFails();
   await assertCoordinatorDelegationKind();
+  await assertDynamicDelegationToSecondCandidate();
+  await assertDelegationFallsBackWhenTargetInvalid();
   await assertBuilderDirectInvariants();
   console.log("Workflow handoff validation succeeded.");
 }

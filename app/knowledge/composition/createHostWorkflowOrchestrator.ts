@@ -11,14 +11,18 @@ import { DeterministicWorkflowPlanner } from "../workflow/DeterministicWorkflowP
 import { FakeWorkflowAgentInvoker } from "../workflow/FakeWorkflowAgentInvoker";
 import { InMemoryWorkflowAgentRegistry } from "../workflow/InMemoryWorkflowAgentRegistry";
 import { InMemoryWorkflowMemoryStore } from "../workflow/InMemoryWorkflowMemoryStore";
+import { InMemoryWorkflowRunStore } from "../workflow/InMemoryWorkflowRunStore";
 import { KnowledgeAnswerWorkflowAgentInvoker } from "../workflow/KnowledgeAnswerWorkflowAgentInvoker";
 import { LanguageModelWorkflowAgentInvoker } from "../workflow/LanguageModelWorkflowAgentInvoker";
 import type { WorkflowAgent } from "../workflow/WorkflowAgent";
 import type { WorkflowAgentDescriptor } from "../workflow/WorkflowAgentDescriptor";
 import type { WorkflowAgentInvoker } from "../workflow/WorkflowAgentInvoker";
+import type { WorkflowAgentRegistry } from "../workflow/WorkflowAgentRegistry";
 import type { WorkflowAgentRole } from "../workflow/WorkflowAgentRole";
 import type { WorkflowKnowledgeAnswerPort } from "../workflow/WorkflowKnowledgeAnswerPort";
+import type { WorkflowMemoryStore } from "../workflow/WorkflowMemoryStore";
 import type { WorkflowOrchestrator } from "../workflow/WorkflowOrchestrator";
+import type { WorkflowRunStore } from "../workflow/WorkflowRunStore";
 import type { KnowledgeRuntime } from "./KnowledgeRuntime";
 
 class HostWorkflowAgent implements WorkflowAgent {
@@ -57,6 +61,19 @@ export type CreateHostWorkflowOrchestratorOptions = {
 };
 
 /**
+ * Result of {@link createHostWorkflowOrchestrator}: the orchestrator plus
+ * the memory/run stores and agent registry it was built with, so callers
+ * (the listening host) can thread read access to all three into HTTP
+ * controllers without the `WorkflowOrchestrator` port itself exposing them.
+ */
+export type HostWorkflowOrchestrator = {
+  orchestrator: WorkflowOrchestrator;
+  memory: WorkflowMemoryStore;
+  runStore: WorkflowRunStore;
+  registry: WorkflowAgentRegistry;
+};
+
+/**
  * Builds DefaultWorkflowOrchestrator with researcher/synthesizer/critic
  * and InMemory workflow memory. No Express; no SQL workflow memory.
  *
@@ -65,7 +82,7 @@ export type CreateHostWorkflowOrchestratorOptions = {
  */
 export function createHostWorkflowOrchestrator(
   options: CreateHostWorkflowOrchestratorOptions = {},
-): WorkflowOrchestrator {
+): HostWorkflowOrchestrator {
   const registry = new InMemoryWorkflowAgentRegistry();
   registry.register(agent("agent-researcher", "researcher", "Researcher"));
   registry.register(agent("agent-synthesizer", "synthesizer", "Synthesizer"));
@@ -101,13 +118,16 @@ export function createHostWorkflowOrchestrator(
     invoker = new KnowledgeAnswerWorkflowAgentInvoker(knowledge, invoker);
   }
 
-  return new DefaultWorkflowOrchestrator(
+  const memory = new InMemoryWorkflowMemoryStore();
+  const runStore = new InMemoryWorkflowRunStore();
+  const orchestrator = new DefaultWorkflowOrchestrator(
     new DeterministicWorkflowPlanner(registry),
     registry,
     invoker,
     new DefaultWorkflowHandoffBuilder(),
-    new InMemoryWorkflowMemoryStore(),
+    memory,
   );
+  return { orchestrator, memory, runStore, registry };
 }
 
 /**

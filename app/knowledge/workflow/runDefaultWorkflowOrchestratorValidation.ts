@@ -13,6 +13,7 @@ import type { WorkflowGoal } from "./WorkflowGoal";
 import type { WorkflowOrchestrator } from "./WorkflowOrchestrator";
 import type { WorkflowPlan } from "./WorkflowPlan";
 import type { WorkflowPlanner } from "./WorkflowPlanner";
+import { WORKFLOW_SKIP_ROLES_METADATA_KEY } from "./WORKFLOW_SKIP_ROLES_METADATA_KEY";
 
 function assertTruthy(value: unknown, message: string): void {
   if (!value) {
@@ -188,7 +189,10 @@ async function assertInvokerFailureStops(): Promise<void> {
   assertEqual(result.stepResults.length, 2, "stopped after failed step");
   assertEqual(result.stepResults[0]?.status, "completed", "researcher ok");
   assertEqual(result.stepResults[1]?.status, "failed", "synthesizer failed");
-  assertEqual(invoker.calls.length, 2, "critic never invoked");
+  // Deterministic failure retries once (MAX_STEP_INVOKE_ATTEMPTS=2) before
+  // giving up: 1 researcher call + 2 synthesizer attempts.
+  assertEqual(invoker.calls.length, 3, "synthesizer retried once then critic never invoked");
+  assertEqual(result.stepResults[1]?.attempts, 2, "synthesizer exhausted retries");
   assertTruthy(
     !invoker.calls.some((call) => String(call.agentId) === "agent-critic"),
     "critic not in invoker calls",
@@ -287,6 +291,158 @@ async function assertRoleMismatchFails(): Promise<void> {
   assertEqual(invoker.calls.length, 0, "invoker not called on mismatch");
 }
 
+async function assertRetrySucceedsOnSecondAttempt(): Promise<void> {
+  console.log(
+    "[workflow] transient invoke failure retries and succeeds on 2nd attempt...",
+  );
+  const registry = new InMemoryWorkflowAgentRegistry();
+  registerCoreTrio(registry);
+  let synthesizerCallCount = 0;
+  const invoker = new FakeWorkflowAgentInvoker({
+    handlers: new Map([
+      [
+        "agent-synthesizer",
+        async (input) => {
+          synthesizerCallCount += 1;
+          if (synthesizerCallCount === 1) {
+            return { ok: false, output: "", error: "transient failure" };
+          }
+          return { ok: true, output: `echo:${input.role}:${input.input}` };
+        },
+      ],
+    ]),
+  });
+  const orchestrator = buildOrchestrator(registry, invoker);
+
+  const result = await orchestrator.run(sampleGoal());
+  assertEqual(result.status, "completed", "status completed after retry");
+  assertEqual(result.stepResults[1]?.status, "completed", "synthesizer completed");
+  assertEqual(result.stepResults[1]?.attempts, 2, "synthesizer attempts recorded");
+  assertEqual(result.stepResults[0]?.attempts, undefined, "no attempts field when first try succeeds");
+  assertEqual(
+    invoker.calls.length,
+    4,
+    "researcher + 2 synthesizer attempts + critic",
+  );
+}
+
+async function assertSkipRoleProducesPartialStatus(): Promise<void> {
+  console.log(
+    "[workflow] skipRoles metadata skips critic and yields partial status...",
+  );
+  const registry = new InMemoryWorkflowAgentRegistry();
+  registerCoreTrio(registry);
+  const invoker = new FakeWorkflowAgentInvoker();
+  const orchestrator = buildOrchestrator(registry, invoker);
+
+  const result = await orchestrator.run(
+    sampleGoal({ metadata: { [WORKFLOW_SKIP_ROLES_METADATA_KEY]: "critic" } }),
+  );
+  assertEqual(result.status, "partial", "partial status");
+  assertEqual(result.stepResults.length, 3, "three step results");
+  assertEqual(result.stepResults[0]?.status, "completed", "researcher completed");
+  assertEqual(result.stepResults[1]?.status, "completed", "synthesizer completed");
+  assertEqual(result.stepResults[2]?.status, "skipped", "critic skipped");
+  assertEqual(result.stepResults[2]?.output, "", "skipped step has empty output");
+  assertEqual(invoker.calls.length, 2, "critic never invoked when skipped");
+  assertTruthy(result.summary?.includes("skipped"), "summary mentions skipped");
+}
+
+async function assertSkipInMiddleStillHandoffsFromLastCompleted(): Promise<void> {
+  console.log(
+    "[workflow] skipping a middle step still builds handoff from the last completed step...",
+  );
+  const registry = new InMemoryWorkflowAgentRegistry();
+  registerCoreTrio(registry);
+  registry.register(agent("agent-executor", "executor", "Executor"));
+  const invoker = new FakeWorkflowAgentInvoker();
+  const orchestrator = buildOrchestrator(registry, invoker);
+
+  const result = await orchestrator.run(
+    sampleGoal({
+      metadata: { [WORKFLOW_SKIP_ROLES_METADATA_KEY]: "synthesizer" },
+    }),
+  );
+  assertEqual(result.status, "partial", "partial status");
+  assertEqual(result.stepResults.length, 4, "four step results");
+  assertEqual(result.stepResults[0]?.role, "researcher", "step0 researcher");
+  assertEqual(result.stepResults[1]?.role, "synthesizer", "step1 synthesizer");
+  assertEqual(result.stepResults[1]?.status, "skipped", "synthesizer skipped");
+  assertEqual(result.stepResults[2]?.role, "critic", "step2 critic");
+  assertEqual(result.stepResults[2]?.status, "completed", "critic completed");
+  assertEqual(result.stepResults[3]?.role, "executor", "step3 executor");
+  assertEqual(result.stepResults[3]?.status, "completed", "executor completed");
+
+  const objective = "summarize the policy";
+  const researcherOut = `echo:researcher:${objective}`;
+  assertEqual(
+    result.stepResults[2]?.handoff?.fromAgentId &&
+      String(result.stepResults[2]?.handoff?.fromAgentId),
+    "agent-researcher",
+    "critic handoff comes from researcher (last completed), not skipped synthesizer",
+  );
+  assertEqual(
+    invoker.calls.find((call) => String(call.agentId) === "agent-critic")
+      ?.input,
+    researcherOut,
+    "critic invoked with researcher's output, not synthesizer's",
+  );
+  assertTruthy(
+    !invoker.calls.some((call) => String(call.agentId) === "agent-synthesizer"),
+    "synthesizer never invoked when skipped",
+  );
+}
+
+async function assertAllRolesSkippedIsPartialNotFailed(): Promise<void> {
+  console.log(
+    "[workflow] every planned role skipped still yields partial, not failed...",
+  );
+  const registry = new InMemoryWorkflowAgentRegistry();
+  registerCoreTrio(registry);
+  const invoker = new FakeWorkflowAgentInvoker();
+  const orchestrator = buildOrchestrator(registry, invoker);
+
+  const result = await orchestrator.run(
+    sampleGoal({
+      metadata: {
+        [WORKFLOW_SKIP_ROLES_METADATA_KEY]: "researcher,synthesizer,critic",
+      },
+    }),
+  );
+  assertEqual(result.status, "partial", "partial, not failed, when nothing ran");
+  assertEqual(result.stepResults.length, 3, "three step results");
+  assertTruthy(
+    result.stepResults.every((step) => step.status === "skipped"),
+    "all steps skipped",
+  );
+  assertEqual(invoker.calls.length, 0, "invoker never called");
+}
+
+async function assertStepZeroSkippedFallsBackToObjective(): Promise<void> {
+  console.log(
+    "[workflow] skipping the first planned step: next step has no handoff, uses objective directly...",
+  );
+  const registry = new InMemoryWorkflowAgentRegistry();
+  registerCoreTrio(registry);
+  const invoker = new FakeWorkflowAgentInvoker();
+  const orchestrator = buildOrchestrator(registry, invoker);
+
+  const result = await orchestrator.run(
+    sampleGoal({
+      metadata: { [WORKFLOW_SKIP_ROLES_METADATA_KEY]: "researcher" },
+    }),
+  );
+  assertEqual(result.status, "partial", "partial status");
+  assertEqual(result.stepResults[0]?.status, "skipped", "researcher skipped");
+  assertEqual(result.stepResults[1]?.handoff, undefined, "synthesizer has no handoff (no prior completed step)");
+  assertEqual(invoker.calls.length, 2, "synthesizer + critic only");
+  assertEqual(
+    invoker.calls[0]?.input,
+    "summarize the policy",
+    "synthesizer invoked directly with objective, matching today's step-0 behavior",
+  );
+}
+
 async function assertEmptyGoalThrows(): Promise<void> {
   console.log("[workflow] empty goal fields throw from planner...");
   const registry = new InMemoryWorkflowAgentRegistry();
@@ -307,6 +463,11 @@ async function assertEmptyGoalThrows(): Promise<void> {
 async function main(): Promise<void> {
   await assertSuccessfulRun();
   await assertInvokerFailureStops();
+  await assertRetrySucceedsOnSecondAttempt();
+  await assertSkipRoleProducesPartialStatus();
+  await assertSkipInMiddleStillHandoffsFromLastCompleted();
+  await assertAllRolesSkippedIsPartialNotFailed();
+  await assertStepZeroSkippedFallsBackToObjective();
   await assertMissingAgentFails();
   await assertRoleMismatchFails();
   await assertEmptyGoalThrows();

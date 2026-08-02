@@ -1,13 +1,21 @@
 import type { RunWorkflowUseCase } from "../application/RunWorkflowUseCase";
+import { toWorkflowRunResultView } from "../application/RunWorkflowUseCase";
 import type { HttpRequest } from "../http/HttpRequest";
 import type { HttpResponse } from "../http/HttpResponse";
 import type { HttpBearerGuard } from "../security/HttpBearerGuard";
 import type { WorkspaceAuthorizer } from "../security/WorkspaceAuthorizer";
+import { asWorkflowRunId } from "../workflow/WorkflowRunId";
+import type { WorkflowMemoryStore } from "../workflow/WorkflowMemoryStore";
+import type { WorkflowRunStore } from "../workflow/WorkflowRunStore";
 
 const JSON_HEADERS = { "content-type": "application/json" } as const;
 
 export const WORKFLOW_RUN_PATH =
   /^\/workspaces\/([^/]+)\/workflow-runs$/;
+export const WORKFLOW_RUN_BY_ID_PATH =
+  /^\/workspaces\/([^/]+)\/workflow-runs\/([^/]+)$/;
+export const WORKFLOW_RUN_MEMORY_PATH =
+  /^\/workspaces\/([^/]+)\/workflow-runs\/([^/]+)\/memory$/;
 
 function jsonResponse(status: number, body: unknown): HttpResponse {
   return {
@@ -34,6 +42,8 @@ export class WorkflowRunController {
     private readonly runWorkflow: RunWorkflowUseCase,
     private readonly bearerGuard: HttpBearerGuard,
     private readonly workspaceAuthorizer: WorkspaceAuthorizer,
+    private readonly runStore?: WorkflowRunStore,
+    private readonly memoryStore?: WorkflowMemoryStore,
   ) {}
 
   async create(request: HttpRequest): Promise<HttpResponse> {
@@ -91,6 +101,93 @@ export class WorkflowRunController {
         return jsonResponse(400, { error: message });
       }
       return jsonResponse(500, { error: message });
+    }
+  }
+
+  async getById(request: HttpRequest): Promise<HttpResponse> {
+    const pathMatch = WORKFLOW_RUN_BY_ID_PATH.exec(request.path);
+    if (pathMatch === null || this.runStore === undefined) {
+      return jsonResponse(404, { error: "Not Found" });
+    }
+    if (request.method !== "GET") {
+      return jsonResponse(405, { error: "Method Not Allowed" });
+    }
+
+    const workspaceId = pathMatch[1]!;
+
+    let principal;
+    try {
+      principal = await this.bearerGuard.authenticateRequest(request);
+    } catch (error: unknown) {
+      return jsonResponse(401, { error: errorMessage(error) });
+    }
+
+    try {
+      this.workspaceAuthorizer.authorize({
+        workspaceId,
+        principalWorkspaceId: principal.workspaceId,
+      });
+    } catch (error: unknown) {
+      return jsonResponse(403, { error: errorMessage(error) });
+    }
+
+    try {
+      const record = await this.runStore.getById(
+        workspaceId,
+        asWorkflowRunId(pathMatch[2]!),
+      );
+      if (record === null) {
+        return jsonResponse(404, { error: "Not Found" });
+      }
+      return jsonResponse(
+        200,
+        toWorkflowRunResultView(
+          record.workspaceId,
+          record.objective,
+          record.result,
+        ),
+      );
+    } catch (error: unknown) {
+      return jsonResponse(500, { error: errorMessage(error) });
+    }
+  }
+
+  async getMemory(request: HttpRequest): Promise<HttpResponse> {
+    const pathMatch = WORKFLOW_RUN_MEMORY_PATH.exec(request.path);
+    if (pathMatch === null || this.memoryStore === undefined) {
+      return jsonResponse(404, { error: "Not Found" });
+    }
+    if (request.method !== "GET") {
+      return jsonResponse(405, { error: "Method Not Allowed" });
+    }
+
+    const workspaceId = pathMatch[1]!;
+
+    let principal;
+    try {
+      principal = await this.bearerGuard.authenticateRequest(request);
+    } catch (error: unknown) {
+      return jsonResponse(401, { error: errorMessage(error) });
+    }
+
+    try {
+      this.workspaceAuthorizer.authorize({
+        workspaceId,
+        principalWorkspaceId: principal.workspaceId,
+      });
+    } catch (error: unknown) {
+      return jsonResponse(403, { error: errorMessage(error) });
+    }
+
+    try {
+      const workflowRunId = asWorkflowRunId(pathMatch[2]!);
+      const entries = await this.memoryStore.listByRun(
+        workspaceId,
+        workflowRunId,
+      );
+      return jsonResponse(200, { workflowRunId: String(workflowRunId), entries });
+    } catch (error: unknown) {
+      return jsonResponse(500, { error: errorMessage(error) });
     }
   }
 }

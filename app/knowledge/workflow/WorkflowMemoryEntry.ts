@@ -8,7 +8,7 @@ import type { WorkflowStepId } from "./WorkflowStepId";
  * One Shared Workflow Memory entry scoped to a workspace + workflow run.
  *
  * Distinct from Project 2 session {@link MemoryEntry}. Not a Knowledge
- * search substitute. Multi-Agent Evaluation remains deferred.
+ * search substitute.
  */
 export interface WorkflowMemoryEntry {
   id: string;

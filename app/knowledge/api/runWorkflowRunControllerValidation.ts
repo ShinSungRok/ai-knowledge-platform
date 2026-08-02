@@ -15,11 +15,13 @@ import { DeterministicWorkflowPlanner } from "../workflow/DeterministicWorkflowP
 import { FakeWorkflowAgentInvoker } from "../workflow/FakeWorkflowAgentInvoker";
 import { InMemoryWorkflowAgentRegistry } from "../workflow/InMemoryWorkflowAgentRegistry";
 import { InMemoryWorkflowMemoryStore } from "../workflow/InMemoryWorkflowMemoryStore";
+import { InMemoryWorkflowRunStore } from "../workflow/InMemoryWorkflowRunStore";
 import type { WorkflowAgent } from "../workflow/WorkflowAgent";
 import type { WorkflowAgentDescriptor } from "../workflow/WorkflowAgentDescriptor";
 import type { WorkflowAgentRole } from "../workflow/WorkflowAgentRole";
 import { asWorkflowRunId } from "../workflow/WorkflowRunId";
 import type { WorkflowOrchestrator } from "../workflow/WorkflowOrchestrator";
+import type { WorkflowMemoryStore } from "../workflow/WorkflowMemoryStore";
 import { createInMemoryKnowledgeComposition } from "../composition/createInMemoryKnowledgeComposition";
 import { WorkflowRunController } from "./WorkflowRunController";
 import { createKnowledgeHttpRouter } from "./createKnowledgeHttpRouter";
@@ -79,7 +81,10 @@ function buildAuth(): {
   };
 }
 
-function buildOrchestrator(): WorkflowOrchestrator {
+function buildOrchestrator(
+  memory: InMemoryWorkflowMemoryStore = new InMemoryWorkflowMemoryStore(),
+  fixedRunId: string = "run-http-fixed",
+): WorkflowOrchestrator {
   const registry = new InMemoryWorkflowAgentRegistry();
   registry.register(agent("agent-researcher", "researcher", "Researcher"));
   registry.register(agent("agent-synthesizer", "synthesizer", "Synthesizer"));
@@ -89,8 +94,8 @@ function buildOrchestrator(): WorkflowOrchestrator {
     registry,
     new FakeWorkflowAgentInvoker(),
     new DefaultWorkflowHandoffBuilder(),
-    new InMemoryWorkflowMemoryStore(),
-    () => asWorkflowRunId("run-http-fixed"),
+    memory,
+    () => asWorkflowRunId(fixedRunId),
   );
 }
 
@@ -200,6 +205,172 @@ async function main(): Promise<void> {
   });
   assertEqual(missing.status, 404, "404 without orchestrator");
 
+  console.log("[api] GET workflow-runs/:id 404 when runStore not wired (3-arg controller)...");
+  const noStoreGetById = await controller.getById({
+    method: "GET",
+    path: `/workspaces/${WORKSPACE_A}/workflow-runs/run-http-fixed`,
+    headers: bearerHeaders(),
+    body: null,
+  });
+  assertEqual(noStoreGetById.status, 404, "404 without runStore wired");
+
+  console.log("[api] GET workflow-runs/:id/memory 404 when memoryStore not wired (3-arg controller)...");
+  const noStoreGetMemory = await controller.getMemory({
+    method: "GET",
+    path: `/workspaces/${WORKSPACE_A}/workflow-runs/run-http-fixed/memory`,
+    headers: bearerHeaders(),
+    body: null,
+  });
+  assertEqual(noStoreGetMemory.status, 404, "404 without memoryStore wired");
+
+  console.log("[api] POST + GET workflow-runs/:id + GET .../memory with stores wired...");
+  const memoryWithStores = new InMemoryWorkflowMemoryStore();
+  const runStore = new InMemoryWorkflowRunStore();
+  const orchestratorWithStores = buildOrchestrator(memoryWithStores, "run-http-get-1");
+  const controllerWithStores = new WorkflowRunController(
+    new RunWorkflowUseCase(orchestratorWithStores, runStore),
+    bearerGuard,
+    workspaceAuthorizer,
+    runStore,
+    memoryWithStores,
+  );
+  const posted = await controllerWithStores.create({
+    method: "POST",
+    path: `/workspaces/${WORKSPACE_A}/workflow-runs`,
+    headers: bearerHeaders(),
+    body: { objective: "summarize policy" },
+  });
+  assertEqual(posted.status, 200, "post 200");
+  const postedBody = posted.body as { workflowRunId?: string };
+  assertEqual(postedBody.workflowRunId, "run-http-get-1", "posted run id");
+
+  console.log("[api] GET workflow-runs/:id without Bearer → 401...");
+  const getByIdUnauthorized = await controllerWithStores.getById({
+    method: "GET",
+    path: `/workspaces/${WORKSPACE_A}/workflow-runs/run-http-get-1`,
+    headers: {},
+    body: null,
+  });
+  assertEqual(getByIdUnauthorized.status, 401, "getById 401");
+
+  console.log("[api] GET workflow-runs/:id wrong workspace → 403...");
+  const getByIdForbidden = await controllerWithStores.getById({
+    method: "GET",
+    path: `/workspaces/${WORKSPACE_A}/workflow-runs/run-http-get-1`,
+    headers: bearerHeaders(OTHER_WORKSPACE_KEY),
+    body: null,
+  });
+  assertEqual(getByIdForbidden.status, 403, "getById 403");
+
+  console.log("[api] GET workflow-runs/:id unknown id → 404...");
+  const getByIdMissing = await controllerWithStores.getById({
+    method: "GET",
+    path: `/workspaces/${WORKSPACE_A}/workflow-runs/does-not-exist`,
+    headers: bearerHeaders(),
+    body: null,
+  });
+  assertEqual(getByIdMissing.status, 404, "getById 404 unknown id");
+
+  console.log("[api] GET workflow-runs/:id known id → 200 matching the POST response...");
+  const getByIdOk = await controllerWithStores.getById({
+    method: "GET",
+    path: `/workspaces/${WORKSPACE_A}/workflow-runs/run-http-get-1`,
+    headers: bearerHeaders(),
+    body: null,
+  });
+  assertEqual(getByIdOk.status, 200, "getById 200");
+  const getByIdBody = getByIdOk.body as {
+    status?: string;
+    workflowRunId?: string;
+    stepResults?: unknown[];
+  };
+  const postedStatus = (posted.body as { status?: string }).status;
+  assertEqual(getByIdBody.status, postedStatus, "getById status matches POST");
+  assertEqual(getByIdBody.workflowRunId, "run-http-get-1", "getById run id matches POST");
+
+  console.log("[api] GET workflow-runs/:id/memory without Bearer → 401...");
+  const getMemoryUnauthorized = await controllerWithStores.getMemory({
+    method: "GET",
+    path: `/workspaces/${WORKSPACE_A}/workflow-runs/run-http-get-1/memory`,
+    headers: {},
+    body: null,
+  });
+  assertEqual(getMemoryUnauthorized.status, 401, "getMemory 401");
+
+  console.log("[api] GET workflow-runs/:id/memory wrong workspace → 403...");
+  const getMemoryForbidden = await controllerWithStores.getMemory({
+    method: "GET",
+    path: `/workspaces/${WORKSPACE_A}/workflow-runs/run-http-get-1/memory`,
+    headers: bearerHeaders(OTHER_WORKSPACE_KEY),
+    body: null,
+  });
+  assertEqual(getMemoryForbidden.status, 403, "getMemory 403");
+
+  console.log("[api] GET workflow-runs/:id/memory known id → 200 with non-empty entries...");
+  const getMemoryOk = await controllerWithStores.getMemory({
+    method: "GET",
+    path: `/workspaces/${WORKSPACE_A}/workflow-runs/run-http-get-1/memory`,
+    headers: bearerHeaders(),
+    body: null,
+  });
+  assertEqual(getMemoryOk.status, 200, "getMemory 200");
+  const getMemoryBody = getMemoryOk.body as {
+    workflowRunId?: string;
+    entries?: readonly { kind?: string }[];
+  };
+  assertEqual(getMemoryBody.workflowRunId, "run-http-get-1", "memory response run id");
+  assertTruthy(
+    Array.isArray(getMemoryBody.entries) && getMemoryBody.entries.length > 0,
+    "expected non-empty memory entries",
+  );
+  assertTruthy(
+    getMemoryBody.entries!.some((entry) => entry.kind === "objective"),
+    "expected an objective memory entry",
+  );
+
+  console.log("[api] router wires GET workflow-runs/:id + memory when stores are set...");
+  const routerWithStores = createKnowledgeHttpRouter(
+    composition.runtime,
+    bearerGuard,
+    workspaceAuthorizer,
+    composition.mcpJsonRpcHandler,
+    {
+      workflowOrchestrator: orchestratorWithStores,
+      workflowRunStore: runStore,
+      workflowMemoryStore: memoryWithStores,
+    },
+  );
+  const routedGetById = await routerWithStores.handle({
+    method: "GET",
+    path: `/workspaces/${WORKSPACE_A}/workflow-runs/run-http-get-1`,
+    headers: bearerHeaders(),
+    body: null,
+  });
+  assertEqual(routedGetById.status, 200, "router getById 200");
+  const routedGetMemory = await routerWithStores.handle({
+    method: "GET",
+    path: `/workspaces/${WORKSPACE_A}/workflow-runs/run-http-get-1/memory`,
+    headers: bearerHeaders(),
+    body: null,
+  });
+  assertEqual(routedGetMemory.status, 200, "router getMemory 200");
+
+  console.log("[api] router still 404s GET workflow-runs/:id when stores are not set, even with orchestrator...");
+  const routerNoStores = createKnowledgeHttpRouter(
+    composition.runtime,
+    bearerGuard,
+    workspaceAuthorizer,
+    composition.mcpJsonRpcHandler,
+    { workflowOrchestrator: orchestratorWithStores },
+  );
+  const routedNoStoreGetById = await routerNoStores.handle({
+    method: "GET",
+    path: `/workspaces/${WORKSPACE_A}/workflow-runs/run-http-get-1`,
+    headers: bearerHeaders(),
+    body: null,
+  });
+  assertEqual(routedNoStoreGetById.status, 404, "router 404 without stores wired");
+
   console.log("[api] WorkflowRunController depends on use case + auth ports...");
   const source = readFileSync(
     path.join(
@@ -215,6 +386,14 @@ async function main(): Promise<void> {
   assertTruthy(
     !source.includes("DefaultWorkflowOrchestrator"),
     "no Default orchestrator import",
+  );
+  assertTruthy(
+    !source.includes("InMemoryWorkflowRunStore"),
+    "no InMemory run store import (ports only)",
+  );
+  assertTruthy(
+    !source.includes("InMemoryWorkflowMemoryStore"),
+    "no InMemory memory store import (ports only)",
   );
 
   console.log("WorkflowRunController validation succeeded.");

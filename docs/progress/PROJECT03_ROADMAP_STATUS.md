@@ -98,3 +98,55 @@ recorded portfolio **Project 3: CLOSED (Partial)**, aligned README/development,
 added `pnpm validate:project03:closeout`, and finalized this roadmap header.
 Five capabilities stay **Partial** (none Completed). **Next:** Project 4 —
 Enterprise LLMOps Platform. Project 2 remains **CLOSED**.
+
+## 업데이트 (2026-07-30)
+
+This roadmap page is left as the Sprint-44-era historical closeout record
+above and is **not** rewritten in place. As of 2026-07-30, per
+`docs/portfolio.md` §1c, two of the five charter capabilities have been
+promoted from Partial to **Completed** as substantive functional work (not a
+relabel):
+
+- **Multi-Agent Evaluation** — `LlmWorkflowRunContentEvaluator` /
+  `WorkflowRunContentEvaluator` (`app/knowledge/workflow/`) adds LLM-as-judge
+  content scoring alongside the existing deterministic
+  `DefaultWorkflowRunEvaluator`; `pnpm validate:workflow:content-evaluation`,
+  `validate:application:eval-workflow-content`.
+- **Shared Workflow Memory** — `WorkflowRunStore` /
+  `InMemoryWorkflowRunStore` persist run results, and
+  `GET /workspaces/:id/workflow-runs/:runId` /
+  `GET /workspaces/:id/workflow-runs/:runId/memory` expose both the run and
+  its Shared Workflow Memory over HTTP; `pnpm validate:workflow:run-store`,
+  `validate:api:workflow-run`, `validate:composition:listening-operations`.
+
+The Sprint-44-era "Frozen in this track: ... LLM-as-judge; Partial→Completed"
+line above reflects that point in time and is intentionally left unchanged
+as the historical record; `docs/portfolio.md` is the current source of truth
+for P3 capability status.
+
+## 업데이트 (2026-07-31)
+
+The remaining three of five charter capabilities have now also been
+promoted from Partial to **Completed** per `docs/portfolio.md` §1c, as
+substantive functional work:
+
+- **Multi-Agent Role Contract** — `WorkflowAgentController` adds
+  `GET /workspaces/:id/workflow-agents`, a read-only HTTP view of the
+  already-working `WorkflowAgentRegistry`; `pnpm validate:api:workflow-agents`.
+- **Workflow Orchestrator** — `DefaultWorkflowOrchestrator` now produces the
+  `"skipped"` step status and `"partial"` run status that had been declared
+  in the type system but never reachable, via a `workflow.skipRoles` goal
+  metadata key, plus bounded invoke retry (`MAX_STEP_INVOKE_ATTEMPTS`);
+  `pnpm validate:workflow:orchestrator`.
+- **Agent Handoff / Delegation** — a step's invoke result can set
+  `delegateToAgentId` to steer execution to a different registered agent of
+  the same role, instead of always the planner's fixed first pick;
+  `pnpm validate:workflow:handoff`.
+
+All five charter capabilities are now **Completed**. Per this update, the
+project-level label moves from **CLOSED (Partial)** to **CLOSED** — the
+same precedent already set by Project 2 (labeled plain `CLOSED` while some
+infra adapters remain Partial; those are frozen infra, not capability gaps).
+The Sprint-44-era historical record and the 2026-07-30 update above remain
+unchanged as written; `docs/portfolio.md` §1c is the current source of
+truth for P3 status.

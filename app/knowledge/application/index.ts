@@ -119,7 +119,12 @@ export {
   type RunWorkflowEvaluationInput,
 } from "./RunWorkflowEvaluationUseCase";
 export {
+  RunWorkflowContentEvaluationUseCase,
+  type RunWorkflowContentEvaluationInput,
+} from "./RunWorkflowContentEvaluationUseCase";
+export {
   RunWorkflowUseCase,
+  toWorkflowRunResultView,
   type RunWorkflowInput,
   type RunWorkflowResultView,
 } from "./RunWorkflowUseCase";

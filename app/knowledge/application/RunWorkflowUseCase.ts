@@ -1,5 +1,6 @@
 import type { WorkflowOrchestrator } from "../workflow/WorkflowOrchestrator";
 import type { WorkflowRunResult } from "../workflow/WorkflowRunResult";
+import type { WorkflowRunStore } from "../workflow/WorkflowRunStore";
 
 /**
  * Input for a single Multi-Agent workflow HTTP/application run.
@@ -32,10 +33,15 @@ export interface RunWorkflowResultView {
  * Thin application wrapper: run one {@link WorkflowOrchestrator} goal and
  * return a serializable view (omits full plan graph).
  *
- * Depends only on the orchestrator port.
+ * Depends only on the orchestrator port, plus an optional
+ * {@link WorkflowRunStore} — when provided, the run result is persisted
+ * after a successful run so it can later be fetched by id over HTTP.
  */
 export class RunWorkflowUseCase {
-  constructor(private readonly orchestrator: WorkflowOrchestrator) {}
+  constructor(
+    private readonly orchestrator: WorkflowOrchestrator,
+    private readonly runStore?: WorkflowRunStore,
+  ) {}
 
   async execute(input: RunWorkflowInput): Promise<RunWorkflowResultView> {
     if (!input || typeof input !== "object") {
@@ -54,15 +60,17 @@ export class RunWorkflowUseCase {
       throw new Error("objective must be a non-empty string");
     }
 
-    const result = await this.orchestrator.run({
-      workspaceId: input.workspaceId.trim(),
-      objective: input.objective.trim(),
-    });
-    return toView(input.workspaceId.trim(), input.objective.trim(), result);
+    const workspaceId = input.workspaceId.trim();
+    const objective = input.objective.trim();
+    const result = await this.orchestrator.run({ workspaceId, objective });
+    if (this.runStore !== undefined) {
+      await this.runStore.save({ workspaceId, objective, result });
+    }
+    return toWorkflowRunResultView(workspaceId, objective, result);
   }
 }
 
-function toView(
+export function toWorkflowRunResultView(
   workspaceId: string,
   objective: string,
   result: WorkflowRunResult,

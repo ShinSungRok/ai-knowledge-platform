@@ -2,8 +2,10 @@
  * Module: `app/knowledge/workflow`
  *
  * Multi-Agent role/identity, Workflow Orchestrator, Agent Handoff /
- * Delegation, Shared Workflow Memory, and Multi-Agent Evaluation
- * contract ({@link WorkflowRunEvaluator}). LLM-as-judge remains deferred.
+ * Delegation, Shared Workflow Memory, and Multi-Agent Evaluation —
+ * both the pure structural contract ({@link WorkflowRunEvaluator}) and
+ * the async LLM-as-judge content contract
+ * ({@link WorkflowRunContentEvaluator}).
  *
  * Shared Workflow Memory is **not** Project 2 session `MemoryStore` and
  * is unrelated to Knowledge search. Workflow evaluation is **not** Project 2
@@ -79,3 +81,19 @@ export type {
   WorkflowRunEvaluator,
 } from "./WorkflowRunEvaluator";
 export { DefaultWorkflowRunEvaluator } from "./DefaultWorkflowRunEvaluator";
+export type { WorkflowContentCaseScore } from "./WorkflowContentCaseScore";
+export type { WorkflowContentEvaluationMetrics } from "./WorkflowContentEvaluationMetrics";
+export type { WorkflowRunContentEvaluator } from "./WorkflowRunContentEvaluator";
+export { LlmWorkflowRunContentEvaluator } from "./LlmWorkflowRunContentEvaluator";
+export { MIN_LLM_JUDGE_SCORE } from "./MIN_LLM_JUDGE_SCORE";
+export type { WorkflowRunRecord } from "./WorkflowRunRecord";
+export type {
+  WorkflowRunSaveInput,
+  WorkflowRunStore,
+} from "./WorkflowRunStore";
+export {
+  InMemoryWorkflowRunStore,
+  DefaultWorkflowRunStore,
+} from "./InMemoryWorkflowRunStore";
+export { WORKFLOW_SKIP_ROLES_METADATA_KEY } from "./WORKFLOW_SKIP_ROLES_METADATA_KEY";
+export { MAX_STEP_INVOKE_ATTEMPTS } from "./MAX_STEP_INVOKE_ATTEMPTS";

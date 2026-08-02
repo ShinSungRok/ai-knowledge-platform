@@ -7,8 +7,7 @@ import type { WorkflowRunId } from "./WorkflowRunId";
  *
  * Records Multi-Agent run artifacts (objective, step outputs, handoffs).
  * This is **not** Project 2 session {@link MemoryStore} and does **not**
- * replace Knowledge document/chunk/vector search. Multi-Agent Evaluation
- * remains deferred.
+ * replace Knowledge document/chunk/vector search.
  */
 export interface WorkflowMemoryStore {
   append(input: WorkflowMemoryAppendInput): Promise<WorkflowMemoryEntry>;
