@@ -13,6 +13,22 @@ repository asks what that looks like as a **backend an engineering team could
 own**: typed modules, a composition root, Fake-first validation, and a single
 runnable HTTP host — not only a notebook or a chat UI.
 
+**Highlights:**
+
+- **3 projects, all CLOSED** — P2 knowledge serving, P3 multi-agent
+  workflow engine, P4 LLMOps control plane, each with every charter
+  capability at **Completed**, not just scaffolded.
+- **154 dependency-free validation scripts + `tsc`** — `pnpm validate`
+  proves correctness with zero Docker, network calls, or API keys (188
+  total scripts including optional live Postgres/OpenSearch/OTLP checks,
+  which skip with exit 0 when unconfigured).
+- **Real data, not a toy fixture** — 416 real 개인정보보호법 /
+  근로기준법 / 정보통신망법 articles from law.go.kr, retrieved with
+  hybrid search + LLM-judged reranking (optional real embeddings/LLM via
+  env vars, Fake by default).
+- **One clone-and-run host** — `pnpm start` serves P2 + P3 + P4 behind a
+  single Bearer-guarded HTTP listener, no Express/Fastify.
+
 See [`docs/PORTFOLIO_NARRATIVE.md`](docs/PORTFOLIO_NARRATIVE.md) for Why → What
 → How, [`docs/PROJECT_SYSTEM_REPORT.md`](docs/PROJECT_SYSTEM_REPORT.md) for the
 full system assessment (flows / processes / principles), and
@@ -46,9 +62,13 @@ P4 LLMOps                 Operations / control plane
 | **P3** Workflow Engine | **CLOSED** | Five Multi-Agent capabilities all **Completed** |
 | **P4** LLMOps Control Plane | **CLOSED** | Five LLMOps capabilities all **Completed** |
 
-Later thin HTTP (same host as P2): P3 `workflow-runs` and P4
-`llmops/control-plane` are **Complete** as portfolio evidence tracks. They do
-**not** reopen charters or invent Project 5.
+Thin HTTP (same host as P2) now covers all ten P3/P4 capabilities, not just
+the original write paths — `workflow-runs`, `workflow-agents`,
+`llmops/control-plane`, `llmops/experiment-runs/:id`, `llmops/prompts`,
+`llmops/models`, `llmops/evaluation-gates`, `llmops/serving-configs`, and
+`llmops/observations` (full list under "Completed Scope" below). This is
+portfolio evidence layered on top of the charters — it does **not** reopen
+charters or invent Project 5.
 
 Default validation stays **dependency-free** (Fake / InMemory — no Docker,
 network, or API keys):
@@ -107,6 +127,9 @@ not depend on a live cluster or a paid API key.
 - **Multi-agent workflow engine (P3)** — researcher / synthesizer / critic
   (and more roles in the contract); researcher can bridge to P2 cited-answer;
   with `LLM_API_KEY`, synthesizer/critic call the same HTTP LLM path.
+  Supports conditional step skipping, bounded retry, and dynamic agent
+  delegation (see Completed Scope). A separate LLM-as-judge evaluator can
+  score a run's content quality, alongside the pure rule-based evaluator.
 - **LLMOps control plane (P4)** — InMemory registry → run → gate →
   regression → serving → observation story; thin HTTP plus a live helper that
   measures cited-answer latency into the plane
@@ -386,8 +409,10 @@ Still deferred by design (see portfolio docs):
 - Official OpenTelemetry / OpenSearch / LLM / MCP vendor SDKs
 - Express / Fastify as the HTTP stack
 - Full OIDC authorization-code login
-- Live OTLP export / `@opentelemetry/*`, LLM-as-judge evaluation gates
-  (P3 and P4 are both fully Completed as of 2026-07-31)
+- Live OTLP export / `@opentelemetry/*`
+- LLM-as-judge evaluation *gates* specifically (P4's gates stay numeric
+  `gte`/`lte`/`eq` rules; P3's separate workflow-content evaluator does use
+  an LLM judge — see Core Features)
 - Inventing Project 5
 
 Live LLM and infra are **optional** paths for demos; Fake validation remains
