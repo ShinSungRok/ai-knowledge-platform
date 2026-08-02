@@ -97,6 +97,14 @@ export type {
 } from "./RegressionHarness";
 export { DefaultEvaluationGateEvaluator } from "./DefaultEvaluationGateEvaluator";
 export { DefaultRegressionHarness } from "./DefaultRegressionHarness";
+export type {
+  EvaluationGateDefinitionRegisterInput,
+  EvaluationGateDefinitionStore,
+} from "./EvaluationGateDefinitionStore";
+export {
+  InMemoryEvaluationGateDefinitionStore,
+  DefaultEvaluationGateDefinitionStore,
+} from "./InMemoryEvaluationGateDefinitionStore";
 
 export type { ServingConfigId } from "./ServingConfigId";
 export { asServingConfigId } from "./ServingConfigId";

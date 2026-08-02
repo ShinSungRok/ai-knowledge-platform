@@ -65,8 +65,12 @@ export { createListeningOperationsServerFromComposition } from "./createListenin
 export {
   createHostWorkflowOrchestrator,
   resolveWorkflowP2Bridge,
+  type HostWorkflowOrchestrator,
 } from "./createHostWorkflowOrchestrator";
-export { createHostLlmopsControlPlane } from "./createHostLlmopsControlPlane";
+export {
+  createHostLlmopsControlPlane,
+  type HostLlmopsControlPlane,
+} from "./createHostLlmopsControlPlane";
 export type { OperationsObservability } from "./createOperationsObservability";
 export { createOperationsObservability } from "./createOperationsObservability";
 export { createSqlDocumentKnowledgeComposition } from "./createSqlDocumentKnowledgeComposition";

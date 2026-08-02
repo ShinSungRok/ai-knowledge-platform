@@ -232,9 +232,9 @@ domain (0 outward)
 |---|---|---|
 | P2 Charter baseline | CLOSED | 플랫폼 골격 Completed |
 | P2 Service Completion | Complete | `pnpm start` 등 인간 승인 트랙 |
-| P3 Multi-Agent (5 caps) | CLOSED (Partial) each | Fake 경계 증명; Completed 아님 |
+| P3 Multi-Agent (5 caps) | CLOSED, all 5 Completed (2026-07-31) | Role Contract HTTP + Orchestrator skip/retry/partial + 동적 delegation까지 실측 |
 | P3 Thin Workflow HTTP | Complete | Bearer `workflow-runs` |
-| P4 LLMOps (5 caps) | CLOSED (Partial) each | InMemory 스토리; Completed 아님 |
+| P4 LLMOps (5 caps) | CLOSED, all 5 Completed (2026-07-31) | 영속 스토어 + GET 라우트 6개 + gate definition 활성화까지 실측 |
 | P4 Thin Control Plane HTTP | Complete | Bearer `control-plane` |
 | Live LLM / live metrics | Demo path | 선택 env; 기본 validate와 분리 |
 
@@ -270,8 +270,8 @@ domain (0 outward)
 
 1. 제품형 프론트엔드 없음  
 2. 문서 업로드/커넥터 운영 HTTP 제품화 미완 (law.go.kr는 1회성 스냅샷 스크립트이지 상시 커넥터 아님)  
-3. 영속 LLMOps·공식 OTLP SDK 미채택 (실 임베딩은 2026-07-30부로 선택 경로 채택 — §11)  
-4. P3/P4 charter Completed 승격 없음  
+3. LLMOps 스토어는 호스트 프로세스 생존 기간만 영속(InMemory) — SQL/디스크 영속화·공식 OTLP SDK는 미채택 (실 임베딩은 2026-07-30부로 선택 경로 채택 — §11)  
+4. P3/P4 모두 charter 5/5 Completed 완료 (P3 2026-07-31 — §12, P4 2026-07-31 — §13); 남은 비목표는 공식 SDK/Express/OIDC/OTLP 등 영구 프리즈 항목뿐  
 
 ---
 
@@ -352,5 +352,103 @@ root에서 추가 배선):**
 대조해 매번 1위임을 확인.
 
 **커밋:** `6fceed1`, `origin/main` 푸시 완료.
+
+---
+
+## 12. 2026-07-31 업데이트 — P3 Multi-Agent 5/5 Completed (CLOSED)
+
+**배경:** 2026-07-30 같은 세션 후속 작업에서 P3 5개 캐퍼빌리티 중 2개
+(Multi-Agent Evaluation, Shared Workflow Memory)를 실질 기능 보강으로
+Completed 승격. 사용자가 "아직 남은 3개까지 하자"고 요청, 나머지 3개도
+동일 원칙(기존 Complete 클래스 무수정, 타입 시스템에 이미 선언됐지만 한
+번도 도달하지 못하던 죽은 상태를 실제로 살림)으로 마저 승격.
+
+**변경 사항 (전부 옵셔널 필드 추가 방식 — 기존 export 타입 signature
+breaking 없음):**
+
+1. **Multi-Agent Role Contract → Completed** — `WorkflowAgentController`가
+   `GET /workspaces/:id/workflow-agents`를 추가해 이미 동작하던
+   `WorkflowAgentRegistry`를 읽기 전용으로 HTTP 노출. 레지스트리는
+   워크스페이스 스코프가 아니라 프로세스 전역이라는 사실을 그대로 문서화
+   (가짜로 스코프하지 않음).
+2. **Workflow Orchestrator → Completed** — `WorkflowStepStatus`의
+   `"skipped"`와 `WorkflowRunStatus`의 `"partial"`은 이전부터 타입에
+   선언돼 있었지만 한 번도 실제로 만들어진 적이 없었음. `WorkflowGoal.
+   metadata["workflow.skipRoles"]`로 특정 역할 스텝을 실패 없이 건너뛸 수
+   있게 했고, invoke 실패에 한해(구조적 실패 제외) `MAX_STEP_INVOKE_
+   ATTEMPTS=2`로 1회 재시도. 스킵된 스텝 다음 handoff는 "마지막 완료된"
+   스텝 기준으로 정확히 이어짐(`lastCompleted` 추적).
+3. **Agent Handoff/Delegation → Completed** — `WorkflowAgentInvokeResult.
+   delegateToAgentId`(옵셔널)로 에이전트 자신의 출력이 다음 스텝을 같은
+   역할의 다른 등록 에이전트로 지정할 수 있게 함 — 기존엔 항상 planner의
+   고정 첫 번째 픽만 실행됐음. 미등록/역할 불일치 대상은 조용히 계획된
+   에이전트로 폴백.
+
+**검증:** `pnpm validate` 전체 체인(신규 `validate:api:workflow-agents`
+포함) exit code 명시적으로 0 확인 + `pnpm typecheck` clean. 실제
+`pnpm start` 기동 후 curl로 GET workflow-agents(200/401), POST→GET
+run→GET memory 라운드트립, 알 수 없는 run id(404), 잘못된 workspace(403)
+전부 실측 확인.
+
+**프로젝트 라벨 변경:** 5/5 Completed에 따라 **Project 3: CLOSED (Partial)
+→ CLOSED**로 승격 — Project 2가 일부 infra adapter는 Partial로 남아있지만
+프로젝트 자체는 CLOSED로 라벨된 선례를 그대로 따름 (SDK/Express/OIDC 등은
+frozen 비목표이지 캐퍼빌리티 갭이 아님).
+
+**커밋:** 아직 미완료 — 사용자 요청 시 진행 예정.
+
+---
+
+## 13. 2026-07-31 업데이트 — P4 LLMOps 5/5 Completed (CLOSED)
+
+**배경:** P3를 5/5 Completed로 마무리한 직후, 사용자가 "이제 p4 가자"고 요청.
+동일 원칙(기존 InMemory adapter는 이미 완성·검증돼 있었지만, 유일한 실행
+경로인 `RunLlmopsControlPlaneUseCase.execute()`가 매 호출마다 스토어를
+새로 만들고 버려서(주석: "Each execute() runs a fresh InMemory control-plane
+story") 실제 이력이 전혀 축적되지 않았고, HTTP 읽기 라우트가 5개 캐퍼빌리티
+전부 0개였으며, `EvaluationGateDefinition` 타입은 코드베이스 어디서도
+생성된 적 없는 완전한 죽은 타입이었음)으로 5개 캐퍼빌리티 전부 승격.
+
+**변경 사항 (전부 옵셔널 필드/신규 포트 추가 방식 — 기존 export 타입
+signature breaking 없음):**
+
+1. **영속화 (5개 캐퍼빌리티 공통)** — `RunLlmopsControlPlaneUseCase` 생성자가
+   `prompts`/`models`/`runs`/`serving`/`observations`/`gateDefinitions` 스토어를
+   옵셔널 2번째 인자로 주입받도록 리팩터링, `createHostLlmopsControlPlane`이
+   6개 스토어를 한 번만 만들어 호스트 프로세스 생존 기간 내내 재사용하는
+   번들(`HostLlmopsControlPlane`)을 반환. 요청마다 재사용되던 8자 축약
+   UUID(`randomUUID().slice(0,8)`)는 스토어가 영속화되면 누적 충돌 확률이
+   현실적으로 위험해져 전체 UUID로 변경.
+2. **Experiment/Run Tracking → Completed** — gate/regression 결과에 따라
+   실제 `"failed"` 상태(+`error` 메시지)를 기록하도록 활성화(이전엔 항상
+   `"completed"`). `GET /workspaces/:id/llmops/experiment-runs/:runId` 추가.
+3. **Prompt & Model Registry → Completed** — `description` 필드를 실제로
+   채워 넣도록 활성화(이전엔 항상 `undefined`). `GET .../llmops/prompts`,
+   `GET .../llmops/models` 추가.
+4. **Evaluation Gates/Regression Harness → Completed** — 신규
+   `EvaluationGateDefinitionStore`/`InMemoryEvaluationGateDefinitionStore`로
+   완전히 죽어있던 `EvaluationGateDefinition` 타입을 실제 스토어로 활성화;
+   워크스페이스당 기본 정의를 최초 1회만 등록하고 이후 재사용(idempotent);
+   요청 바디로 커스텀 `gateRules`를 넘기면 `"eq"`/`"lte"` 비교자까지 실측
+   경로에서 도달 가능. `GET .../llmops/evaluation-gates` 추가.
+5. **Deployment/Serving Configuration → Completed** — `environment`/
+   `trafficPercent`를 요청 바디에서 받도록 활성화(이전엔 항상
+   `"dev"`/`100` 하드코딩). `GET .../llmops/serving-configs` 추가.
+6. **LLMOps Observability → Completed** — 이미 계산돼 있었지만 버려지던
+   `meanReciprocalRank`를 quality map에 포함. `GET .../llmops/observations`
+   추가. Live OTLP export는 로드맵 문서에 명시된 대로 그대로 비목표 유지.
+
+**검증:** `pnpm validate` 전체 체인(신규 `validate:llmops:gate-definition-store`
+포함) exit code 명시적으로 0 확인 + `pnpm typecheck` clean. 실제 `pnpm start`
+기동 후 curl로 3연속 POST 실행 → prompts/models/serving-configs/observations가
+각각 정확히 3개씩 누적됨을 확인(영속화 실증), evaluation-gates는 3번 POST 후에도
+`gate-def-default` 1개만 존재함을 확인(idempotent 재사용 실증), 실패 메트릭
+POST 시 GET experiment-runs가 `status:"failed"` + `error` 메시지를 정확히
+반영함을 확인, 401/403 케이스 확인.
+
+**프로젝트 라벨 변경:** 5/5 Completed에 따라 **Project 4: CLOSED (Partial)
+→ CLOSED**로 승격 — Project 2/3과 동일한 선례.
+
+**커밋:** 아직 미완료 — 사용자 요청 시 진행 예정.
 
 **보고 종료.**

@@ -44,23 +44,69 @@ Postgres / OpenSearch, compose `app`). Does **not** reopen charter baseline
 CLOSED or promote Partial infra to Completed. P3/P4 product work remains
 frozen. No Project 5.
 
-## 1c. Project 3: CLOSED (Partial) — Enterprise AI Workflow (Multi-Agent)
+## 1c. Project 3: CLOSED — Enterprise AI Workflow (Multi-Agent)
 
-**Project 3: CLOSED (Partial).** The active Project 3 Multi-Agent charter is
-complete as a **Partial** closeout — five charter capabilities are each
-**Partial** (none Completed):
+**Project 3: CLOSED.** The Project 3 Multi-Agent charter is complete — as of
+2026-07-31, all five charter capabilities are **Completed** through
+substantive functional work, not relabeling. Two (Multi-Agent Evaluation,
+Shared Workflow Memory) were promoted 2026-07-30; the remaining three
+(Multi-Agent Role Contract, Workflow Orchestrator, Agent Handoff/Delegation)
+were promoted 2026-07-31 by activating type surface that had been declared
+but never produced (`"skipped"` step status, `"partial"` run status) and
+exposing the already-working agent registry over HTTP:
 
 | Capability | Status | Representative validators |
 |---|---|---|
-| Multi-Agent Role Contract | **Partial** | `pnpm validate:workflow:contract`, `validate:workflow:registry` |
-| Workflow Orchestrator | **Partial** | `pnpm validate:workflow:orchestrator` |
-| Agent Handoff / Delegation | **Partial** | `pnpm validate:workflow:handoff` |
-| Shared Workflow Memory | **Partial** | `pnpm validate:workflow:memory` |
-| Multi-Agent Evaluation | **Partial** | `pnpm validate:workflow:evaluation`, `validate:application:eval-workflow` |
+| Multi-Agent Role Contract | **Completed** | `pnpm validate:workflow:contract`, `validate:workflow:registry`, `validate:api:workflow-agents` |
+| Workflow Orchestrator | **Completed** | `pnpm validate:workflow:orchestrator` |
+| Agent Handoff / Delegation | **Completed** | `pnpm validate:workflow:handoff` |
+| Shared Workflow Memory | **Completed** | `pnpm validate:workflow:memory`, `validate:workflow:run-store`, `validate:api:workflow-run`, `validate:composition:listening-operations` |
+| Multi-Agent Evaluation | **Completed** | `pnpm validate:workflow:evaluation`, `validate:application:eval-workflow`, `validate:workflow:content-evaluation`, `validate:application:eval-workflow-content` |
 
-Partial means Fake/InMemory-proven boundaries exist; they are **not** promoted
-to Completed. Charter Skeleton (Sprint 38) through Evaluation (Sprint 43)
-remain the evidence base; Sprint 44 records overall closeout.
+Charter Skeleton (Sprint 38) through Evaluation (Sprint 43) remain the
+evidence base for all five capabilities; Sprint 44 recorded the original
+Partial closeout. The project-level label moves from **CLOSED (Partial)** to
+**CLOSED** — mirroring Project 2's own precedent (labeled plain `CLOSED`
+even though some Project 2 infra adapters stay Partial; those are frozen
+infra, not capability gaps).
+
+**Shared Workflow Memory → Completed (2026-07-30):** `WorkflowRunStore` /
+`InMemoryWorkflowRunStore` (`app/knowledge/workflow/`) persist a run's result
+after `POST /workflow-runs`, so it can be fetched later — the memory captured
+during a run is no longer write-only-then-unreachable. `WorkflowRunController`
+adds `GET /workspaces/:id/workflow-runs/:runId` (the persisted run) and
+`GET /workspaces/:id/workflow-runs/:runId/memory` (its Shared Workflow Memory
+entries), both Bearer + workspace-authorized like the existing POST route.
+
+**Multi-Agent Evaluation → Completed (2026-07-30):** `LlmWorkflowRunContentEvaluator`
+implements a new async `WorkflowRunContentEvaluator` port alongside (not
+replacing) the existing pure `DefaultWorkflowRunEvaluator` — it reuses the
+same `LanguageModelProvider` port (zero new external dependency, mirroring
+P2's `LlmRerankedSearch`) to judge whether a run's actual step-output content
+substantively satisfies its objective, closing the gap the deterministic
+evaluator structurally cannot: it only checks status/step-count/roles/
+handoff/memory presence, never what an agent actually wrote.
+
+**Multi-Agent Role Contract → Completed (2026-07-31):** `WorkflowAgentController`
+adds `GET /workspaces/:id/workflow-agents`, a read-only Bearer + workspace-
+authorized view of the already-working `WorkflowAgentRegistry` — the
+registry is process-global (not workspace-scoped), so every authorized
+workspace sees the same registered agent list, honestly documented rather
+than faked.
+
+**Workflow Orchestrator → Completed (2026-07-31):** `DefaultWorkflowOrchestrator`
+now actually produces the `WorkflowStepStatus` `"skipped"` and
+`WorkflowRunStatus` `"partial"` values that had been declared in the type
+system since earlier sprints but never reachable. A `WorkflowGoal.metadata`
+key (`workflow.skipRoles`) lets a run skip specific roles without failing;
+bounded retry (`MAX_STEP_INVOKE_ATTEMPTS`) retries a failed invoke once
+before giving up, distinguishing transient from structural failures.
+
+**Agent Handoff / Delegation → Completed (2026-07-31):** a step's invoke
+result can now set `delegateToAgentId`, letting the *agent itself* steer
+execution to a different registered agent of the same role instead of
+always the planner's fixed first pick — genuine agent-initiated delegation,
+not just a static role-pair label on a fixed edge.
 
 **Reuse from Project 2:**
 
@@ -70,44 +116,56 @@ remain the evidence base; Sprint 44 records overall closeout.
 - Partial infra adapters (Postgres, OpenSearch, HTTP LLM, OTLP, JWT OIDC-lite,
   Prometheus scrape, MCP HTTP + stdio) as optional Fake-validated paths
 
-**Remaining by design (out of Project 3 closeout):**
-LLM-as-judge, HTTP multi-agent API, promoting Partial → Completed, and
+**Remaining by design (permanently out of scope, not a capability gap):**
 inherited Project 2 non-goals where still applicable (official SDKs,
-Express/Fastify, full OIDC authorization-code login, full W3C propagator suite
-/ `prom-client`).
+Express/Fastify, full OIDC authorization-code login, full W3C propagator
+suite / `prom-client`), and no Project 5 charter.
 
 **Project 4 handoff — Enterprise LLMOps Platform:** See §1d. Project 4 is
-**CLOSED (Partial)** and reuses Project 2/3 platforms. Closing Project 4 does
+**CLOSED** and reuses Project 2/3 platforms. Closing Project 4 does
 **not** reopen Project 2 or Project 3.
 
 Charter (historical after Sprint 44): [`docs/agent/PROJECT03_INSTRUCTIONS.md`](agent/PROJECT03_INSTRUCTIONS.md).
 Progress / roadmap: [`docs/progress/PROJECT03_PROGRESS.md`](progress/PROJECT03_PROGRESS.md),
 [`docs/progress/PROJECT03_ROADMAP_STATUS.md`](progress/PROJECT03_ROADMAP_STATUS.md).
 
-## 1d. Project 4: CLOSED (Partial) — Enterprise LLMOps Platform
+## 1d. Project 4: CLOSED — Enterprise LLMOps Platform
 
-**Project 4: CLOSED (Partial).** The active Project 4 Enterprise LLMOps charter
-is complete as a **Partial** closeout — five charter capabilities are each
-**Partial** (none Completed): Experiment / Run Tracking (Sprint 46), Prompt &
-Model Registry (Sprint 47), Evaluation Gates / Regression Harness (Sprint 48),
-Deployment / Serving Configuration (Sprint 49), LLMOps Observability
-(Sprint 50). Reuses Project 2/3 platforms. Soft link only: run `params` /
-`metrics` and serving config ids may reference registry or gates. Observation
-records soft-link run/serving ids and soft-map Metrics/OTLP names
-(`llmops.quality.<key>`, `llmops.cost.units`, `llmops.latency.ms`) without
-importing `observability`. Sprint 51 records overall closeout.
+**Project 4: CLOSED.** As of 2026-07-31, all five charter capabilities are
+**Completed** through substantive functional work, not relabeling. Every
+capability's InMemory adapter was already fully implemented and validated
+(Sprint 46–50); the gap was that the single live entry point,
+`RunLlmopsControlPlaneUseCase`, threw its stores away after every request
+and never exposed a single HTTP read route. The fix: persistent
+composition-level store singletons (repeated calls now accumulate real
+history instead of a fresh throwaway demo each time), a read-only HTTP
+route per capability, activation of the previously fully-dead
+`EvaluationGateDefinition` type via a new `EvaluationGateDefinitionStore`,
+and request-driven `environment` / `trafficPercent` / `gateRules` /
+`promptTemplateDescription` in place of the old hardcoded single path. The
+project-level label moves from **CLOSED (Partial)** to **CLOSED** —
+mirroring the same Project 2 precedent already cited for Project 3 in §1c.
 
 | Capability | Status | Evidence |
 |---|---|---|
-| Experiment / Run Tracking | **Partial** | `app/knowledge/llmops`, `pnpm validate:llmops:contract`, `validate:llmops:run-store` |
-| Prompt & Model Registry | **Partial** | `PromptRegistry` / `ModelRegistry`, `pnpm validate:llmops:prompt-registry`, `validate:llmops:model-registry` |
-| Evaluation Gates / Regression Harness | **Partial** | `EvaluationGateEvaluator` / `RegressionHarness`, `pnpm validate:llmops:evaluation-gate`, `validate:llmops:regression-harness` |
-| Deployment / Serving Configuration | **Partial** | `ServingConfigStore` / `InMemoryServingConfigStore`, `pnpm validate:llmops:serving-config` |
-| LLMOps Observability | **Partial** | `LlmopsObservationStore` / `InMemoryLlmopsObservationStore`, `pnpm validate:llmops:observation-store` |
+| Experiment / Run Tracking | **Completed** | `ExperimentRunStore`, persistent singleton + real `"failed"` status on gate/regression failure, `GET /workspaces/:id/llmops/experiment-runs/:id`; `pnpm validate:llmops:contract`, `validate:llmops:run-store` |
+| Prompt & Model Registry | **Completed** | `PromptRegistry` / `ModelRegistry`, persistent singletons + `description` field populated, `GET .../llmops/prompts`, `GET .../llmops/models`; `pnpm validate:llmops:prompt-registry`, `validate:llmops:model-registry` |
+| Evaluation Gates / Regression Harness | **Completed** | new `EvaluationGateDefinitionStore` activates the previously-dead `EvaluationGateDefinition` type (idempotent per-workspace default + request-driven `gateRules` override reaching `eq`/`lte` comparators live), `GET .../llmops/evaluation-gates`; `pnpm validate:llmops:evaluation-gate`, `validate:llmops:gate-definition-store`, `validate:llmops:regression-harness` |
+| Deployment / Serving Configuration | **Completed** | `ServingConfigStore`, persistent singleton + request-driven `environment`/`trafficPercent` (previously always `"dev"`/`100`), `GET .../llmops/serving-configs`; `pnpm validate:llmops:serving-config` |
+| LLMOps Observability | **Completed** | `LlmopsObservationStore`, persistent singleton + `meanReciprocalRank` in the quality map, `GET .../llmops/observations`; `pnpm validate:llmops:observation-store` |
 
-Project 2 remains **CLOSED**. Project 3 remains **CLOSED (Partial)**.
-**Partial ≠ Completed**. Closing Project 4 does **not** reopen Project 2 or
-Project 3. This closeout does **not** invent a Project 5 / PROJECT05 charter.
+Reuses Project 2/3 platforms. Soft link only: run `params` / `metrics` and
+serving config ids may reference registry or gates. Observation records
+soft-link run/serving ids and soft-map Metrics/OTLP names
+(`llmops.quality.<key>`, `llmops.cost.units`, `llmops.latency.ms`) without
+importing `observability` — live OTLP export stays out of scope, unchanged.
+
+Project 2 remains **CLOSED**. Project 3 remains **CLOSED**. Closing
+Project 4 does **not** reopen Project 2 or Project 3, and does **not**
+invent a Project 5 / PROJECT05 charter. Remaining by design, permanently
+out of scope: official SDKs, Express/Fastify, live OTLP export /
+`@opentelemetry/*`, LLM-as-judge gates, binding `ai` LanguageModelProvider
+to the registry or serving config.
 
 Charter: [`docs/agent/PROJECT04_INSTRUCTIONS.md`](agent/PROJECT04_INSTRUCTIONS.md)
 (Closed historical).
@@ -122,8 +180,8 @@ Static checks: `pnpm validate:project04:charter-skeleton`,
 |---|---|---|---|
 | Project 1 | Public Law AI | 공공 법률을 신뢰 가능한 AI 검색·답변으로 | Complete (separate repo) |
 | Project 2 | Knowledge Retrieval & Serving Platform | 기업 지식을 AI가 검색·serving할 기반 | **CLOSED** + Service Completion **Complete** |
-| Project 3 | Multi-Agent Workflow Engine | 복잡한 업무를 역할 워크플로로 실행 | **CLOSED (Partial)** |
-| Project 4 | LLMOps / Control Plane | 버전·평가·배포설정·관측으로 운영 | **CLOSED (Partial)** |
+| Project 3 | Multi-Agent Workflow Engine | 복잡한 업무를 역할 워크플로로 실행 | **CLOSED** |
+| Project 4 | LLMOps / Control Plane | 버전·평가·배포설정·관측으로 운영 | **CLOSED** |
 
 Project 2 delivers a **completed platform baseline**: workspace-scoped
 knowledge pipelines through cited RAG answers, MCP/tool/agent/memory/jobs,

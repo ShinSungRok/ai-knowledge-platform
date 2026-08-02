@@ -141,3 +141,44 @@ added `pnpm validate:project04:closeout`, and finalized roadmap/charter as
 Closed (historical). All five LLMOps capabilities remain **Partial** (not
 Completed). Project 2 remains **CLOSED**. Project 3 remains **CLOSED
 (Partial)**. No Project 5 / PROJECT05 charter.
+
+## 업데이트 (2026-07-31)
+
+This roadmap page is left as the Sprint 45–51-era historical closeout
+record above and is **not** rewritten in place. As of 2026-07-31, per
+`docs/portfolio.md` §1d, all five charter capabilities have been promoted
+from Partial to **Completed** as substantive functional work (not a
+relabel), following the same pattern already used for Project 3 (see
+`docs/progress/PROJECT03_ROADMAP_STATUS.md`'s own 2026-07-31 update):
+
+- **Experiment / Run Tracking** — persistent `ExperimentRunStore` singleton
+  (previously discarded after every request) plus a real `"failed"` status
+  when the evaluation gate or regression check fails (previously always
+  `"completed"`); `GET /workspaces/:id/llmops/experiment-runs/:id`.
+- **Prompt & Model Registry** — persistent `PromptRegistry`/`ModelRegistry`
+  singletons, `description` field now populated; `GET .../llmops/prompts`,
+  `GET .../llmops/models`.
+- **Evaluation Gates / Regression Harness** — new
+  `EvaluationGateDefinitionStore` activates the previously fully-dead
+  `EvaluationGateDefinition` type (registered once per workspace, reused
+  idempotently); request-driven `gateRules` override reaches the `"eq"`/
+  `"lte"` comparators live; `GET .../llmops/evaluation-gates`;
+  `pnpm validate:llmops:gate-definition-store`.
+- **Deployment / Serving Configuration** — persistent `ServingConfigStore`
+  singleton, request-driven `environment`/`trafficPercent` (previously
+  always hardcoded `"dev"`/`100`); `GET .../llmops/serving-configs`.
+- **LLMOps Observability** — persistent `LlmopsObservationStore` singleton,
+  `meanReciprocalRank` added to the recorded quality map;
+  `GET .../llmops/observations`.
+
+All changes are additive (optional constructor/input fields, new ports) —
+no existing exported type signature broke. Live OTLP export stays
+explicitly out of scope, unchanged from the Sprint 50 close note above.
+
+The project-level label moves from **CLOSED (Partial)** to **CLOSED** —
+the same precedent already set for Project 3 (mirroring Project 2, which
+is labeled plain `CLOSED` while some infra adapters remain Partial; those
+are frozen infra, not capability gaps). The Sprint 45–51-era "Partial"
+language above reflects that point in time and is intentionally left
+unchanged as the historical record; `docs/portfolio.md` §1d is the current
+source of truth for P4 status.

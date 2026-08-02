@@ -239,8 +239,80 @@ async function assertWorkflowRunsOverHttp(): Promise<void> {
       },
     );
     assertEqual(authorized.status, 200, "workflow 200");
-    const body = (await authorized.json()) as { status?: string };
+    const body = (await authorized.json()) as {
+      status?: string;
+      workflowRunId?: string;
+    };
     assertEqual(body.status, "completed", "workflow completed");
+    assertTruthy(
+      typeof body.workflowRunId === "string" && body.workflowRunId.length > 0,
+      "workflow run id present",
+    );
+
+    console.log(
+      "[composition] ...and the returned run is fetchable via GET workflow-runs/:id + /memory...",
+    );
+    const getByIdResponse = await fetch(
+      `http://127.0.0.1:${address.port}/workspaces/${WORKSPACE_A}/workflow-runs/${body.workflowRunId}`,
+      { headers: { Authorization: `Bearer ${TEST_API_KEY}` } },
+    );
+    assertEqual(getByIdResponse.status, 200, "getById 200");
+    const getByIdBody = (await getByIdResponse.json()) as {
+      status?: string;
+      workflowRunId?: string;
+    };
+    assertEqual(getByIdBody.status, "completed", "getById status matches");
+    assertEqual(
+      getByIdBody.workflowRunId,
+      body.workflowRunId,
+      "getById run id matches",
+    );
+
+    const getMemoryResponse = await fetch(
+      `http://127.0.0.1:${address.port}/workspaces/${WORKSPACE_A}/workflow-runs/${body.workflowRunId}/memory`,
+      { headers: { Authorization: `Bearer ${TEST_API_KEY}` } },
+    );
+    assertEqual(getMemoryResponse.status, 200, "getMemory 200");
+    const getMemoryBody = (await getMemoryResponse.json()) as {
+      entries?: readonly unknown[];
+    };
+    assertTruthy(
+      Array.isArray(getMemoryBody.entries) && getMemoryBody.entries.length > 0,
+      "non-empty memory entries",
+    );
+
+    const getByIdUnknown = await fetch(
+      `http://127.0.0.1:${address.port}/workspaces/${WORKSPACE_A}/workflow-runs/does-not-exist`,
+      { headers: { Authorization: `Bearer ${TEST_API_KEY}` } },
+    );
+    assertEqual(getByIdUnknown.status, 404, "getById unknown id 404");
+
+    const getByIdNoBearer = await fetch(
+      `http://127.0.0.1:${address.port}/workspaces/${WORKSPACE_A}/workflow-runs/${body.workflowRunId}`,
+    );
+    assertEqual(getByIdNoBearer.status, 401, "getById no bearer 401");
+
+    console.log(
+      "[composition] ...and GET workflow-agents exposes the Role Contract registry...",
+    );
+    const workflowAgentsResponse = await fetch(
+      `http://127.0.0.1:${address.port}/workspaces/${WORKSPACE_A}/workflow-agents`,
+      { headers: { Authorization: `Bearer ${TEST_API_KEY}` } },
+    );
+    assertEqual(workflowAgentsResponse.status, 200, "workflow-agents 200");
+    const workflowAgentsBody = (await workflowAgentsResponse.json()) as {
+      agents?: readonly unknown[];
+    };
+    assertTruthy(
+      Array.isArray(workflowAgentsBody.agents) &&
+        workflowAgentsBody.agents.length === 3,
+      "3 workflow agents",
+    );
+
+    const workflowAgentsNoBearer = await fetch(
+      `http://127.0.0.1:${address.port}/workspaces/${WORKSPACE_A}/workflow-agents`,
+    );
+    assertEqual(workflowAgentsNoBearer.status, 401, "workflow-agents no bearer 401");
   } finally {
     if (server.listener.isListening()) {
       await server.stop();
@@ -280,9 +352,103 @@ async function assertLlmopsControlPlaneOverHttp(): Promise<void> {
     const body = (await authorized.json()) as {
       gatePassed?: boolean;
       regressionPassed?: boolean;
+      runStatus?: string;
+      experimentRunId?: string;
     };
     assertEqual(body.gatePassed, true, "gate");
     assertEqual(body.regressionPassed, true, "regression");
+    assertEqual(body.runStatus, "completed", "run status");
+
+    console.log(
+      "[composition] ...GET llmops/experiment-runs/:id reflects the persisted run...",
+    );
+    const runResponse = await fetch(
+      `http://127.0.0.1:${address.port}/workspaces/${WORKSPACE_A}/llmops/experiment-runs/${body.experimentRunId}`,
+      { headers: { Authorization: `Bearer ${TEST_API_KEY}` } },
+    );
+    assertEqual(runResponse.status, 200, "experiment-runs getById 200");
+    const runBody = (await runResponse.json()) as { status?: string };
+    assertEqual(runBody.status, "completed", "persisted run status");
+
+    console.log(
+      "[composition] ...calling llmops/control-plane again accumulates real history (persistent stores)...",
+    );
+    const second = await fetch(
+      `http://127.0.0.1:${address.port}/workspaces/${WORKSPACE_A}/llmops/control-plane`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${TEST_API_KEY}`,
+        },
+        body: JSON.stringify({}),
+      },
+    );
+    assertEqual(second.status, 200, "second llmops 200");
+
+    const promptsResponse = await fetch(
+      `http://127.0.0.1:${address.port}/workspaces/${WORKSPACE_A}/llmops/prompts`,
+      { headers: { Authorization: `Bearer ${TEST_API_KEY}` } },
+    );
+    assertEqual(promptsResponse.status, 200, "prompts 200");
+    const promptsBody = (await promptsResponse.json()) as {
+      templates?: readonly unknown[];
+    };
+    assertEqual(promptsBody.templates?.length, 2, "two accumulated templates");
+
+    const modelsResponse = await fetch(
+      `http://127.0.0.1:${address.port}/workspaces/${WORKSPACE_A}/llmops/models`,
+      { headers: { Authorization: `Bearer ${TEST_API_KEY}` } },
+    );
+    assertEqual(modelsResponse.status, 200, "models 200");
+    const modelsBody = (await modelsResponse.json()) as {
+      models?: readonly unknown[];
+    };
+    assertEqual(modelsBody.models?.length, 2, "two accumulated models");
+
+    const gatesResponse = await fetch(
+      `http://127.0.0.1:${address.port}/workspaces/${WORKSPACE_A}/llmops/evaluation-gates`,
+      { headers: { Authorization: `Bearer ${TEST_API_KEY}` } },
+    );
+    assertEqual(gatesResponse.status, 200, "evaluation-gates 200");
+    const gatesBody = (await gatesResponse.json()) as {
+      gates?: readonly { id?: string }[];
+    };
+    assertEqual(
+      gatesBody.gates?.length,
+      1,
+      "default gate definition reused across both calls, not duplicated",
+    );
+    assertEqual(gatesBody.gates?.[0]?.id, "gate-def-default", "default gate id");
+
+    const servingResponse = await fetch(
+      `http://127.0.0.1:${address.port}/workspaces/${WORKSPACE_A}/llmops/serving-configs`,
+      { headers: { Authorization: `Bearer ${TEST_API_KEY}` } },
+    );
+    assertEqual(servingResponse.status, 200, "serving-configs 200");
+    const servingBody = (await servingResponse.json()) as {
+      servingConfigs?: readonly unknown[];
+    };
+    assertEqual(servingBody.servingConfigs?.length, 2, "two accumulated serving configs");
+
+    const observationsResponse = await fetch(
+      `http://127.0.0.1:${address.port}/workspaces/${WORKSPACE_A}/llmops/observations`,
+      { headers: { Authorization: `Bearer ${TEST_API_KEY}` } },
+    );
+    assertEqual(observationsResponse.status, 200, "observations 200");
+    const observationsBody = (await observationsResponse.json()) as {
+      observations?: readonly unknown[];
+    };
+    assertEqual(
+      observationsBody.observations?.length,
+      2,
+      "two accumulated observations",
+    );
+
+    const noBearerPrompts = await fetch(
+      `http://127.0.0.1:${address.port}/workspaces/${WORKSPACE_A}/llmops/prompts`,
+    );
+    assertEqual(noBearerPrompts.status, 401, "prompts no bearer 401");
   } finally {
     if (server.listener.isListening()) {
       await server.stop();

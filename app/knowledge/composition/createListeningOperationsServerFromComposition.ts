@@ -12,7 +12,16 @@ import { NodeHttpListener } from "../server/NodeHttpListener";
 import type { ApiKeyPrincipalEntry } from "../security/ApiKeyAuthenticator";
 import { DefaultWorkspaceAuthorizer } from "../security/DefaultWorkspaceAuthorizer";
 import { HttpBearerGuard } from "../security/HttpBearerGuard";
+import type { WorkflowAgentRegistry } from "../workflow/WorkflowAgentRegistry";
+import type { WorkflowMemoryStore } from "../workflow/WorkflowMemoryStore";
 import type { WorkflowOrchestrator } from "../workflow/WorkflowOrchestrator";
+import type { WorkflowRunStore } from "../workflow/WorkflowRunStore";
+import type { EvaluationGateDefinitionStore } from "../llmops/EvaluationGateDefinitionStore";
+import type { ExperimentRunStore } from "../llmops/ExperimentRunStore";
+import type { LlmopsObservationStore } from "../llmops/LlmopsObservationStore";
+import type { ModelRegistry } from "../llmops/ModelRegistry";
+import type { PromptRegistry } from "../llmops/PromptRegistry";
+import type { ServingConfigStore } from "../llmops/ServingConfigStore";
 import {
   createAuthenticatorFromOption,
   type AuthProviderOption,
@@ -46,8 +55,42 @@ export type CreateListeningFromCompositionOptions = {
   workflowAgentLlm?: boolean;
   /** Inject orchestrator (tests). When omitted, host factory builds one. */
   workflowOrchestrator?: WorkflowOrchestrator;
+  /**
+   * Inject the run store backing GET .../workflow-runs/:id (tests). When
+   * `workflowOrchestrator` is omitted, defaults to the host factory's own
+   * store; when `workflowOrchestrator` is injected, the GET-by-id route
+   * only activates if this is also supplied.
+   */
+  workflowRunStore?: WorkflowRunStore;
+  /**
+   * Inject the memory store backing GET .../workflow-runs/:id/memory
+   * (tests). Same defaulting rule as `workflowRunStore`.
+   */
+  workflowMemoryStore?: WorkflowMemoryStore;
+  /**
+   * Inject the agent registry backing GET .../workflow-agents (tests).
+   * Same defaulting rule as `workflowRunStore`.
+   */
+  workflowAgentRegistry?: WorkflowAgentRegistry;
   /** Inject llmops use case (tests). When omitted, host factory builds one. */
   runLlmopsControlPlane?: RunLlmopsControlPlaneUseCase;
+  /**
+   * Inject the store backing GET .../llmops/experiment-runs/:id (tests).
+   * When `runLlmopsControlPlane` is omitted, defaults to the host
+   * factory's own store; when `runLlmopsControlPlane` is injected, the
+   * route only activates if this is also supplied.
+   */
+  llmopsExperimentRunStore?: ExperimentRunStore;
+  /** Inject the registry backing GET .../llmops/prompts. Same defaulting rule. */
+  llmopsPromptRegistry?: PromptRegistry;
+  /** Inject the registry backing GET .../llmops/models. Same defaulting rule. */
+  llmopsModelRegistry?: ModelRegistry;
+  /** Inject the store backing GET .../llmops/evaluation-gates. Same defaulting rule. */
+  llmopsGateDefinitionStore?: EvaluationGateDefinitionStore;
+  /** Inject the store backing GET .../llmops/serving-configs. Same defaulting rule. */
+  llmopsServingConfigStore?: ServingConfigStore;
+  /** Inject the store backing GET .../llmops/observations. Same defaulting rule. */
+  llmopsObservationStore?: LlmopsObservationStore;
 };
 
 export type ListeningOperationsServerBase = {
@@ -99,25 +142,62 @@ export function createListeningOperationsServerFromComposition(
   const useAgentLlm =
     options.workflowAgentLlm === true &&
     options.composition.languageModelProvider !== undefined;
+  const hostWorkflow =
+    options.workflowOrchestrator === undefined
+      ? createHostWorkflowOrchestrator({
+          p2Bridge: options.workflowP2Bridge === true,
+          runtime: options.composition.runtime,
+          ...(useAgentLlm
+            ? {
+                languageModelProvider:
+                  options.composition.languageModelProvider,
+              }
+            : {}),
+        })
+      : undefined;
   const workflowOrchestrator =
-    options.workflowOrchestrator ??
-    createHostWorkflowOrchestrator({
-      p2Bridge: options.workflowP2Bridge === true,
-      runtime: options.composition.runtime,
-      ...(useAgentLlm
-        ? {
-            languageModelProvider: options.composition.languageModelProvider,
-          }
-        : {}),
-    });
+    options.workflowOrchestrator ?? hostWorkflow!.orchestrator;
+  const workflowRunStore = options.workflowRunStore ?? hostWorkflow?.runStore;
+  const workflowMemoryStore =
+    options.workflowMemoryStore ?? hostWorkflow?.memory;
+  const workflowAgentRegistry =
+    options.workflowAgentRegistry ?? hostWorkflow?.registry;
+  const hostLlmops =
+    options.runLlmopsControlPlane === undefined
+      ? createHostLlmopsControlPlane()
+      : undefined;
   const runLlmopsControlPlane =
-    options.runLlmopsControlPlane ?? createHostLlmopsControlPlane();
+    options.runLlmopsControlPlane ?? hostLlmops!.runControlPlane;
+  const llmopsExperimentRunStore =
+    options.llmopsExperimentRunStore ?? hostLlmops?.runs;
+  const llmopsPromptRegistry =
+    options.llmopsPromptRegistry ?? hostLlmops?.prompts;
+  const llmopsModelRegistry =
+    options.llmopsModelRegistry ?? hostLlmops?.models;
+  const llmopsGateDefinitionStore =
+    options.llmopsGateDefinitionStore ?? hostLlmops?.gateDefinitions;
+  const llmopsServingConfigStore =
+    options.llmopsServingConfigStore ?? hostLlmops?.serving;
+  const llmopsObservationStore =
+    options.llmopsObservationStore ?? hostLlmops?.observations;
   const innerRouter = createKnowledgeHttpRouter(
     options.composition.runtime,
     bearerGuard,
     workspaceAuthorizer,
     options.composition.mcpJsonRpcHandler,
-    { workflowOrchestrator, runLlmopsControlPlane },
+    {
+      workflowOrchestrator,
+      workflowRunStore,
+      workflowMemoryStore,
+      workflowAgentRegistry,
+      runLlmopsControlPlane,
+      llmopsExperimentRunStore,
+      llmopsPromptRegistry,
+      llmopsModelRegistry,
+      llmopsGateDefinitionStore,
+      llmopsServingConfigStore,
+      llmopsObservationStore,
+    },
   );
   const router = new ObservingHttpRouter(
     innerRouter,

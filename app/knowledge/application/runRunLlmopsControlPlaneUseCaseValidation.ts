@@ -2,6 +2,14 @@
  * Dependency-free validation for RunLlmopsControlPlaneUseCase labels + metrics.
  */
 import { RunLlmopsControlPlaneUseCase } from "./RunLlmopsControlPlaneUseCase";
+import { asExperimentRunId } from "../llmops/ExperimentRunId";
+import { InMemoryEvaluationGateDefinitionStore } from "../llmops/InMemoryEvaluationGateDefinitionStore";
+import { InMemoryExperimentRunStore } from "../llmops/InMemoryExperimentRunStore";
+import { InMemoryLlmopsObservationStore } from "../llmops/InMemoryLlmopsObservationStore";
+import { InMemoryModelRegistry } from "../llmops/InMemoryModelRegistry";
+import { InMemoryPromptRegistry } from "../llmops/InMemoryPromptRegistry";
+import { InMemoryServingConfigStore } from "../llmops/InMemoryServingConfigStore";
+import { asServingConfigId } from "../llmops/ServingConfigId";
 
 function assertEqual(actual: unknown, expected: unknown, message: string): void {
   if (actual !== expected) {
@@ -74,6 +82,107 @@ async function main(): Promise<void> {
     },
   });
   assertEqual(failed.gatePassed, false, "soft fail gate");
+  assertEqual(failed.regressionPassed, false, "soft fail regression too");
+  assertEqual(failed.runStatus, "failed", "run status reflects failed outcome");
+
+  console.log("[application] failing metrics persist a real 'failed' experiment run status...");
+  const runsStore = new InMemoryExperimentRunStore();
+  const withRunStore = new RunLlmopsControlPlaneUseCase({}, { runs: runsStore });
+  const failedPersisted = await withRunStore.execute({
+    workspaceId: "workspace-a",
+    metrics: { hitRateAtK: 0.5, meanReciprocalRank: 0.3, latencyMs: 900 },
+  });
+  const persistedRun = await runsStore.getById(
+    "workspace-a",
+    asExperimentRunId(failedPersisted.experimentRunId),
+  );
+  assertEqual(persistedRun?.status, "failed", "persisted run status failed");
+  assertTruthy(
+    typeof persistedRun?.error === "string" && persistedRun.error.length > 0,
+    "persisted run has an error message",
+  );
+
+  console.log("[application] environment + trafficPercent are request-driven...");
+  const servingStore = new InMemoryServingConfigStore();
+  const withServingStore = new RunLlmopsControlPlaneUseCase(
+    {},
+    { serving: servingStore },
+  );
+  const stagingResult = await withServingStore.execute({
+    workspaceId: "workspace-a",
+    environment: "staging",
+    trafficPercent: 42,
+  });
+  assertEqual(stagingResult.environment, "staging", "result reflects environment");
+  const stagingConfig = await servingStore.getById(
+    "workspace-a",
+    asServingConfigId(stagingResult.servingConfigId),
+  );
+  assertEqual(stagingConfig?.environment, "staging", "persisted environment");
+  assertEqual(stagingConfig?.trafficPercent, 42, "persisted trafficPercent");
+  assertEqual(stagingConfig?.name, "staging-main", "name derives from environment");
+
+  console.log("[application] custom gateRules reach eq/lte comparators live...");
+  const gateStore = new InMemoryEvaluationGateDefinitionStore();
+  const withGateStore = new RunLlmopsControlPlaneUseCase(
+    {},
+    { gateDefinitions: gateStore },
+  );
+  const customGateResult = await withGateStore.execute({
+    workspaceId: "workspace-a",
+    metrics: { hitRateAtK: 0.92, meanReciprocalRank: 0.81, citationCount: 1 },
+    gateRules: [{ metricKey: "citationCount", comparator: "eq", threshold: 1 }],
+  });
+  assertEqual(customGateResult.gatePassed, true, "eq rule passes on match");
+  assertTruthy(
+    customGateResult.gateDefinitionId !== "gate-def-default",
+    "custom gateRules register a fresh definition, not the shared default",
+  );
+
+  console.log("[application] default gate definition is registered once and reused...");
+  const gateStore2 = new InMemoryEvaluationGateDefinitionStore();
+  const withGateStore2 = new RunLlmopsControlPlaneUseCase(
+    {},
+    { gateDefinitions: gateStore2 },
+  );
+  const first = await withGateStore2.execute({ workspaceId: "workspace-a" });
+  const second = await withGateStore2.execute({ workspaceId: "workspace-a" });
+  assertEqual(first.gateDefinitionId, "gate-def-default", "first uses default id");
+  assertEqual(second.gateDefinitionId, "gate-def-default", "second reuses default id");
+  const gateDefs = await gateStore2.listByWorkspace("workspace-a");
+  assertEqual(gateDefs.length, 1, "default gate definition registered exactly once");
+
+  console.log("[application] persistent stores accumulate history across execute() calls...");
+  const prompts = new InMemoryPromptRegistry();
+  const models = new InMemoryModelRegistry();
+  const serving = new InMemoryServingConfigStore();
+  const observations = new InMemoryLlmopsObservationStore();
+  const withAllStores = new RunLlmopsControlPlaneUseCase(
+    {},
+    { prompts, models, serving, observations },
+  );
+  await withAllStores.execute({ workspaceId: "workspace-a" });
+  await withAllStores.execute({ workspaceId: "workspace-a" });
+  assertEqual(
+    (await prompts.listTemplates("workspace-a")).length,
+    2,
+    "two prompt templates accumulated",
+  );
+  assertEqual(
+    (await models.listModels("workspace-a")).length,
+    2,
+    "two models accumulated",
+  );
+  assertEqual(
+    (await serving.listByWorkspace("workspace-a")).length,
+    2,
+    "two serving configs accumulated",
+  );
+  assertEqual(
+    (await observations.listByWorkspace("workspace-a")).length,
+    2,
+    "two observations accumulated",
+  );
 
   console.log("RunLlmopsControlPlaneUseCase validation succeeded.");
 }

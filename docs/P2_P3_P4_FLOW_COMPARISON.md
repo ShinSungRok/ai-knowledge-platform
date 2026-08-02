@@ -5,8 +5,8 @@
 | | 무엇을 하는가 | 핵심 질문 | 상태 |
 |---|---|---|---|
 | P2 지식 서빙 | 질문 하나에 근거 붙여 답변 | "이 답변, 어디서 나온 근거야?" | Complete |
-| P3 멀티 에이전트 워크플로우 | 목표 하나를 여러 에이전트가 순차/위임 처리 | "누가 누구한테 뭘 넘겼어?" | Partial |
-| P4 LLMOps 제어 평면 | 프롬프트/모델 실험을 게이트 통과시켜 서빙에 반영 | "이 변경, 배포해도 안전해?" | Partial |
+| P3 멀티 에이전트 워크플로우 | 목표 하나를 여러 에이전트가 순차/위임 처리 | "누가 누구한테 뭘 넘겼어?" | Completed |
+| P4 LLMOps 제어 평면 | 프롬프트/모델 실험을 게이트 통과시켜 서빙에 반영 | "이 변경, 배포해도 안전해?" | Completed |
 
 관계: **P3는 P2를 도구로 쓰고, P4는 P2/P3의 실행 결과를 관측·평가한다.** 완전히 분리된 3개가 아니라 하위 레이어를 상위 레이어가 감싸는 구조다.
 
@@ -42,13 +42,17 @@
 |---|---|---|---|
 | 1 | 요청 수신 | `POST /workspaces/workspace-a/workflow-runs` body `{objective:"..."}` | 인증/인가 → objective 유효성 검사 |
 | 2 | 플래너 | objective | 결정론적(deterministic) planner가 단계(step) 목록 생성 — 예: researcher → synthesizer → critic |
-| 3 | 오케스트레이터 실행 | plan | 단계를 순서대로 순회하며 각 에이전트 invoke |
-| 4 | invoker 선택 | 에이전트 role | researcher는 **knowledge bridge**(=P2 use case를 내부 호출!), synth/critic은 LLM invoker, 실패 시 Fake fallback |
-| 5 | handoff 빌드 | `previous` step 결과, `next` 에이전트 | `DefaultWorkflowHandoffBuilder`가 `previous.status==="completed"` 검증 → `payload = previous.output.trim()` |
-| 6 | handoff 종류 판정 | previous.role vs next.role | coordinator→비coordinator면 `"delegation"`(reason: coordinator-delegation), 그 외엔 `"sequential"`(reason: sequential-pass) |
-| 7 | 다음 단계 입력 전달 | handoff.payload | 이전 단계의 output이 다음 단계의 input이 됨 (체이닝) |
-| 8 | 메모리 기록 | 각 단계 실행 결과 | append-only workflow memory에 순서대로 적재 (수정 불가, 추가만) |
-| 9 | 응답 | 전체 실행 | `WorkflowRunResult` (단계별 결과 + 최종 산출물) |
+| 3 | 스킵 체크 | `goal.metadata["workflow.skipRoles"]` | 이름이 걸린 역할이면 invoke 없이 즉시 `status:"skipped"`, 실행 계속 (실패로 취급 안 함) |
+| 4 | 동적 위임 대상 해석 | 직전 스텝의 `delegateToAgentId` | 유효(등록됨+같은 역할)하면 그 에이전트로 교체 실행, 아니면 planner가 고른 기본 에이전트 유지 |
+| 5 | invoker 선택 | 에이전트 role | researcher는 **knowledge bridge**(=P2 use case를 내부 호출!), synth/critic은 LLM invoker, 실패 시 Fake fallback |
+| 6 | 재시도 | invoke 실패(throw/`ok:false`) | 구조적 실패(unknown agent/역할 불일치) 제외, 최대 2회 시도 후 포기 |
+| 7 | handoff 빌드 | `previous`(마지막 **완료된**) step 결과, `next` 에이전트 | `DefaultWorkflowHandoffBuilder`가 `previous.status==="completed"` 검증 → `payload = previous.output.trim()` — 중간에 스킵된 스텝은 건너뛰고 참조 |
+| 8 | handoff 종류 판정 | previous.role vs next.role | coordinator→비coordinator면 `"delegation"`(reason: coordinator-delegation), 그 외엔 `"sequential"`(reason: sequential-pass) |
+| 9 | 다음 단계 입력 전달 | handoff.payload | 이전 단계의 output이 다음 단계의 input이 됨 (체이닝) |
+| 10 | 메모리 기록 | 각 단계 실행 결과 | append-only workflow memory에 순서대로 적재 (수정 불가, 추가만) |
+| 11 | 응답 | 전체 실행 | `WorkflowRunResult` — `status`는 `completed`/`partial`(일부 스킵)/`failed` |
+
+이후 조회 경로: `GET .../workflow-runs/:id`(저장된 결과), `GET .../workflow-runs/:id/memory`(shared memory), `GET .../workflow-agents`(등록된 에이전트 레지스트리, 워크스페이스 무관 전역 목록).
 
 **핵심:** researcher 에이전트가 근거를 찾을 때 P2의 cited-answer 로직을 그대로 재사용 — P3는 P2 위에 "여러 에이전트가 순서/위임 규칙을 지키며 협업"하는 레이어를 얹은 것.
 
@@ -58,14 +62,19 @@
 
 | 순서 | 단계 | 입력 | 출력/동작 |
 |---|---|---|---|
-| 1 | registry 등록 | 프롬프트 버전 / 모델 설정 | registry에 candidate로 저장 |
+| 1 | registry 등록 | 프롬프트 버전 / 모델 설정 | 영속 registry에 candidate로 저장 (요청 간 축적, 더 이상 요청마다 버려지지 않음) |
 | 2 | experiment 실행 | registry entry | 실제 요청 실행 (예: `runLlmopsFromCitedAnswerDemo.ts`가 `/cited-answers`를 실제로 호출해 wall-clock 지연시간 측정 = "B-path") |
 | 3 | 메트릭 산출 | 실행 결과 | `insufficientEvidence` 여부·citation 개수 등에서 soft quality 지표 도출 + 실측 latency |
-| 4 | evaluation gate | 메트릭 vs 임계값 | 숫자 임계값(threshold) 통과 여부 판정 — 통과 못하면 여기서 막힘 |
+| 4 | evaluation gate | 메트릭 vs 재사용 가능한 gate definition | 워크스페이스당 등록된 정의(기본 또는 요청이 넘긴 커스텀 `gateRules`)의 규칙으로 통과 여부 판정 — 통과 못하면 run 상태가 실제로 `"failed"`로 기록됨 |
 | 5 | regression harness | baseline vs candidate 메트릭 비교 | 기존 대비 악화 여부 확인 |
-| 6 | serving config 활성화 | gate 통과 + regression 통과 | candidate를 실제 서빙 설정으로 승격 |
-| 7 | observation store 적재 | 활성화된 설정의 이후 실행들 | quality/cost/latency를 지속 기록 |
-| 8 | 응답 | `POST` 결과 | `{metrics, servingLabels?}` 반영 결과 반환 |
+| 6 | serving config 활성화 | gate 통과 + regression 통과, 요청 바디의 environment/trafficPercent | candidate를 요청이 지정한 환경(dev/staging/production)의 실제 서빙 설정으로 승격 |
+| 7 | observation store 적재 | 활성화된 설정의 이후 실행들 | quality(hitRateAtK/meanReciprocalRank/gatePass)/cost/latency를 영속 저장소에 지속 기록 |
+| 8 | 응답 | `POST` 결과 | `{metrics, servingLabels?, environment?, trafficPercent?, gateRules?}` 반영 결과 반환 |
+
+이후 조회 경로: `GET .../llmops/experiment-runs/:id`, `GET .../llmops/prompts`,
+`GET .../llmops/models`, `GET .../llmops/evaluation-gates`,
+`GET .../llmops/serving-configs`, `GET .../llmops/observations` — 6개 캐퍼빌리티
+전부 읽기 전용 HTTP로 조회 가능.
 
 **핵심:** P4는 새로운 기능을 만드는 게 아니라, P2(그리고 간접적으로 P3)의 **변경을 안전하게 승격시키는 게이트 시스템**이다.
 
@@ -74,5 +83,5 @@
 ## 세 레이어를 한 문장씩으로 다시 정리
 
 - **P2**: 질문 → 근거 → 답변 (단발성, 검증된 완성 기능)
-- **P3**: P2를 도구로 쓰는 에이전트들이 목표 하나를 순차/위임으로 협업 (일부 미완성 명시)
-- **P4**: P2/P3의 변경사항이 안전한지 게이트로 검증하고 통과분만 서빙에 반영 (일부 미완성 명시)
+- **P3**: P2를 도구로 쓰는 에이전트들이 목표 하나를 순차/위임(정적+동적)/스킵/재시도로 협업 (5/5 Completed)
+- **P4**: P2/P3의 변경사항이 안전한지 게이트로 검증하고 통과분만 서빙에 반영, 모든 이력이 영속 축적됨 (5/5 Completed)

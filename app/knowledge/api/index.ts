@@ -20,10 +20,22 @@ export { McpJsonRpcController } from "./McpJsonRpcController";
 export {
   WorkflowRunController,
   WORKFLOW_RUN_PATH,
+  WORKFLOW_RUN_BY_ID_PATH,
+  WORKFLOW_RUN_MEMORY_PATH,
 } from "./WorkflowRunController";
+export {
+  WorkflowAgentController,
+  WORKFLOW_AGENTS_PATH,
+} from "./WorkflowAgentController";
 export {
   LlmopsControlPlaneController,
   LLMOPS_CONTROL_PLANE_PATH,
+  LLMOPS_EXPERIMENT_RUN_BY_ID_PATH,
+  LLMOPS_PROMPTS_PATH,
+  LLMOPS_MODELS_PATH,
+  LLMOPS_EVALUATION_GATES_PATH,
+  LLMOPS_SERVING_CONFIGS_PATH,
+  LLMOPS_OBSERVATIONS_PATH,
 } from "./LlmopsControlPlaneController";
 export {
   createKnowledgeHttpRouter,

@@ -43,8 +43,8 @@ P4 LLMOps                 Operations / control plane
 | Project | Status | Notes |
 |---|---|---|
 | **P2** Knowledge Platform | **CLOSED** | Charter baseline complete; Service Completion track **Complete** (`pnpm start`) |
-| **P3** Workflow Engine | **CLOSED (Partial)** | Five Multi-Agent capabilities each **Partial** — Partial ≠ Completed |
-| **P4** LLMOps Control Plane | **CLOSED (Partial)** | Five LLMOps capabilities each **Partial** — Partial ≠ Completed |
+| **P3** Workflow Engine | **CLOSED** | Five Multi-Agent capabilities all **Completed** |
+| **P4** LLMOps Control Plane | **CLOSED** | Five LLMOps capabilities all **Completed** |
 
 Later thin HTTP (same host as P2): P3 `workflow-runs` and P4
 `llmops/control-plane` are **Complete** as portfolio evidence tracks. They do
@@ -249,33 +249,43 @@ OpenSearch. Partial infra adapters remain Partial.
 
 Manual: [`docs/P2_SERVICE_MANUAL.md`](docs/P2_SERVICE_MANUAL.md).
 
-### P3 — Multi-Agent Workflow Engine (CLOSED Partial)
+### P3 — Multi-Agent Workflow Engine (CLOSED)
 
 | Capability | Status |
 |---|---|
-| Multi-Agent Role Contract | Partial |
-| Workflow Orchestrator | Partial |
-| Agent Handoff / Delegation | Partial |
-| Shared Workflow Memory | Partial |
-| Multi-Agent Evaluation | Partial |
+| Multi-Agent Role Contract | Completed |
+| Workflow Orchestrator | Completed |
+| Agent Handoff / Delegation | Completed |
+| Shared Workflow Memory | Completed |
+| Multi-Agent Evaluation | Completed |
 
-Portfolio demos + thin HTTP `POST .../workflow-runs`. Researcher may use P2
-cited-answer; synthesizer/critic may use HTTP LLM when `LLM_API_KEY` is set.
+Portfolio demos + thin HTTP `POST/GET .../workflow-runs`, `GET .../workflow-runs/:id/memory`,
+`GET .../workflow-agents`. Researcher may use P2 cited-answer; synthesizer/critic
+may use HTTP LLM when `LLM_API_KEY` is set. Orchestrator supports conditional
+step skipping + bounded retry (`workflow.skipRoles` goal metadata) and agent-
+initiated dynamic delegation among same-role agents (`delegateToAgentId`).
 
 Manual: [`docs/P3_WORKFLOW_ENGINE.md`](docs/P3_WORKFLOW_ENGINE.md).
 
-### P4 — LLMOps / Control Plane (CLOSED Partial)
+### P4 — LLMOps / Control Plane (CLOSED)
 
 | Capability | Status |
 |---|---|
-| Experiment / Run Tracking | Partial |
-| Prompt & Model Registry | Partial |
-| Evaluation Gates / Regression Harness | Partial |
-| Deployment / Serving Configuration | Partial |
-| LLMOps Observability | Partial |
+| Experiment / Run Tracking | Completed |
+| Prompt & Model Registry | Completed |
+| Evaluation Gates / Regression Harness | Completed |
+| Deployment / Serving Configuration | Completed |
+| LLMOps Observability | Completed |
 
-Portfolio demos + thin HTTP `POST .../llmops/control-plane`. Live metrics
-helper records cited-answer wall latency into the plane.
+Portfolio demos + thin HTTP `POST/GET .../llmops/control-plane`,
+`GET .../llmops/experiment-runs/:id`, `GET .../llmops/prompts`,
+`GET .../llmops/models`, `GET .../llmops/evaluation-gates`,
+`GET .../llmops/serving-configs`, `GET .../llmops/observations`. Stores
+persist for the life of the host process (registered prompts/models/runs/
+serving configs/observations accumulate real history). Live metrics
+helper records cited-answer wall latency into the plane. Evaluation gate
+supports a reusable, request-overridable definition; serving configuration
+supports request-driven `environment`/`trafficPercent`.
 
 Manual: [`docs/P4_LLMOPS.md`](docs/P4_LLMOPS.md).
 
@@ -376,8 +386,8 @@ Still deferred by design (see portfolio docs):
 - Official OpenTelemetry / OpenSearch / LLM / MCP vendor SDKs
 - Express / Fastify as the HTTP stack
 - Full OIDC authorization-code login
-- Promoting P3/P4 Partial charter capabilities to Completed without a new
-  human-authorized scope
+- Live OTLP export / `@opentelemetry/*`, LLM-as-judge evaluation gates
+  (P3 and P4 are both fully Completed as of 2026-07-31)
 - Inventing Project 5
 
 Live LLM and infra are **optional** paths for demos; Fake validation remains
