@@ -173,6 +173,46 @@ async function main(): Promise<void> {
     "three steps",
   );
 
+  console.log("[api] workflow-runs metadata.workflow.skipRoles reaches the orchestrator over HTTP...");
+  const skipResponse = await controller.create({
+    method: "POST",
+    path: `/workspaces/${WORKSPACE_A}/workflow-runs`,
+    headers: bearerHeaders(),
+    body: {
+      objective: "summarize policy",
+      metadata: { "workflow.skipRoles": "critic" },
+    },
+  });
+  assertEqual(skipResponse.status, 200, "skip 200");
+  const skipBody = skipResponse.body as {
+    status?: string;
+    stepResults?: readonly { role?: string; status?: string }[];
+  };
+  assertEqual(skipBody.status, "partial", "skip run status partial");
+  const criticStep = skipBody.stepResults?.find((s) => s.role === "critic");
+  assertEqual(criticStep?.status, "skipped", "critic step skipped");
+
+  console.log("[api] workflow-runs metadata not a plain object → 400...");
+  const badMetadataType = await controller.create({
+    method: "POST",
+    path: `/workspaces/${WORKSPACE_A}/workflow-runs`,
+    headers: bearerHeaders(),
+    body: { objective: "summarize policy", metadata: ["not", "an", "object"] },
+  });
+  assertEqual(badMetadataType.status, 400, "metadata not object → 400");
+
+  console.log("[api] workflow-runs metadata value not a string → 400...");
+  const badMetadataValue = await controller.create({
+    method: "POST",
+    path: `/workspaces/${WORKSPACE_A}/workflow-runs`,
+    headers: bearerHeaders(),
+    body: {
+      objective: "summarize policy",
+      metadata: { "workflow.skipRoles": 123 },
+    },
+  });
+  assertEqual(badMetadataValue.status, 400, "metadata value not string → 400");
+
   console.log("[api] createKnowledgeHttpRouter wires workflow-runs when orchestrator set...");
   const composition = createInMemoryKnowledgeComposition();
   const router = createKnowledgeHttpRouter(

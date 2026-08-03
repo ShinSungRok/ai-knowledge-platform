@@ -32,6 +32,26 @@ function errorMessage(error: unknown): string {
   return "Internal Server Error";
 }
 
+function parseMetadata(
+  raw: unknown,
+): Readonly<Record<string, string>> | undefined {
+  if (raw === undefined) {
+    return undefined;
+  }
+  if (raw === null || typeof raw !== "object" || Array.isArray(raw)) {
+    throw new Error("metadata must be a plain object");
+  }
+  const record = raw as Record<string, unknown>;
+  const metadata: Record<string, string> = {};
+  for (const [key, value] of Object.entries(record)) {
+    if (typeof value !== "string") {
+      throw new Error(`metadata.${key} must be a string`);
+    }
+    metadata[key] = value;
+  }
+  return metadata;
+}
+
 /**
  * HTTP controller for thin Multi-Agent workflow runs (P3 Later).
  * AuthN via {@link HttpBearerGuard}, then AuthZ via {@link WorkspaceAuthorizer}.
@@ -86,10 +106,18 @@ export class WorkflowRunController {
       return jsonResponse(400, { error: "objective must be a non-empty string" });
     }
 
+    let metadata: Readonly<Record<string, string>> | undefined;
+    try {
+      metadata = parseMetadata(record.metadata);
+    } catch (error: unknown) {
+      return jsonResponse(400, { error: errorMessage(error) });
+    }
+
     try {
       const result = await this.runWorkflow.execute({
         workspaceId,
         objective: record.objective,
+        ...(metadata !== undefined ? { metadata } : {}),
       });
       return jsonResponse(200, result);
     } catch (error: unknown) {

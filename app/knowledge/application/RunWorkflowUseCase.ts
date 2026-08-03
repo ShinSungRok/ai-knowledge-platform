@@ -8,6 +8,7 @@ import type { WorkflowRunStore } from "../workflow/WorkflowRunStore";
 export interface RunWorkflowInput {
   workspaceId: string;
   objective: string;
+  metadata?: Readonly<Record<string, string>>;
 }
 
 /**
@@ -62,7 +63,11 @@ export class RunWorkflowUseCase {
 
     const workspaceId = input.workspaceId.trim();
     const objective = input.objective.trim();
-    const result = await this.orchestrator.run({ workspaceId, objective });
+    const result = await this.orchestrator.run({
+      workspaceId,
+      objective,
+      ...(input.metadata !== undefined ? { metadata: input.metadata } : {}),
+    });
     if (this.runStore !== undefined) {
       await this.runStore.save({ workspaceId, objective, result });
     }
