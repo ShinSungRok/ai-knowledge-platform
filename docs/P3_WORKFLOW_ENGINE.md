@@ -41,7 +41,7 @@ pnpm start
 curl -sS -X POST http://127.0.0.1:8080/workspaces/workspace-a/workflow-runs \
   -H 'content-type: application/json' \
   -H 'Authorization: Bearer demo-key' \
-  -d '{"objective":"aaaaaaaa"}'
+  -d '{"objective":"Is MFA required for VPN?"}'
 ```
 
 Expect HTTP 200 with `status: "completed"`, `workflowRunId`, and three `stepResults`.
@@ -218,9 +218,3 @@ pnpm validate:api:workflow-agents
 보안 정책 요지 + 리스크 한 줄 요청  
 → researcher가 P2 cited-answer로 조사 → synthesizer 초안 → critic 검토  
 → memory에 objective / handoff / step_output 기록 → evaluation passRate=1.
-
----
-
-## 면접 한 줄
-
-> I implemented a multi-agent **workflow engine** and proved it **reuses** our knowledge serving layer: researcher steps call cited-answer through a port, with Fake-validated orchestration, handoff, shared run memory, and both **deterministic and LLM-as-judge workflow evaluation**—plus a full run/memory/agent-registry HTTP API, conditional step skipping with bounded retry and a real partial-completion status, and genuine agent-initiated dynamic delegation among multiple registered agents of the same role—so complex work runs as an operable, resilient backend workflow, not a single prompt.

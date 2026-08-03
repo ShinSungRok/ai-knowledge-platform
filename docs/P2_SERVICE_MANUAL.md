@@ -56,17 +56,17 @@ curl -sS http://127.0.0.1:8080/health
 # Metrics (인증 불필요)
 curl -sS http://127.0.0.1:8080/metrics | head
 
-# Cited answers (Bearer 필수) — 데모 쿼리는 aaaaaaaa
+# Cited answers (Bearer 필수) — 데모 쿼리는 "Is MFA required for VPN?"
 curl -sS -X POST http://127.0.0.1:8080/workspaces/workspace-a/cited-answers \
   -H 'content-type: application/json' \
   -H 'Authorization: Bearer demo-key' \
-  -d '{"query":"aaaaaaaa"}'
+  -d '{"query":"Is MFA required for VPN?"}'
 
 # 무인증 → 401 이어야 정상
 curl -sS -o /dev/null -w "%{http_code}\n" -X POST \
   http://127.0.0.1:8080/workspaces/workspace-a/cited-answers \
   -H 'content-type: application/json' \
-  -d '{"query":"aaaaaaaa"}'
+  -d '{"query":"Is MFA required for VPN?"}'
 
 # MCP tools/list
 curl -sS -X POST http://127.0.0.1:8080/mcp \
@@ -91,6 +91,8 @@ curl -sS -X POST http://127.0.0.1:8080/mcp \
 | `OPENSEARCH_URL` | (없음) | 있으면 OpenSearch 벡터 |
 | `OPENSEARCH_INDEX` | `knowledge-embeddings` | 인덱스 이름 |
 | `LLM_API_KEY` | (없음) | 있으면 HTTP LLM, 없으면 Fake |
+| `LLM_TEMPERATURE` | `0` (키 있을 때) | HTTP LLM 샘플링 온도, 재현성 위해 기본 0 |
+| `EMBEDDING_API_KEY` | (없음) | 있으면 HTTP 임베딩, 없으면 Fake 해시 임베딩 |
 
 예:
 
@@ -127,7 +129,7 @@ set -a && source .env && set +a && pnpm start
 | POST | `/mcp` | Bearer (JSON-RPC) |
 
 - `:workspaceId`는 키에 묶인 `WORKSPACE_ID`와 같아야 함 (다르면 403)
-- 데모 시드 문서의 검색 토큰: **`aaaaaaaa`**
+- 데모 시드 문서(MFA/VPN 정책 발췌)의 검색 쿼리 예: **`"Is MFA required for VPN?"`**
 
 ---
 
@@ -199,7 +201,7 @@ Live (환경 없으면 skip, exit 0):
 | `EADDRINUSE` | 다른 프로세스가 8080 사용 → 종료 또는 `PORT=8081 pnpm start` |
 | cited-answers 401 | `Authorization: Bearer demo-key` 헤더 확인 |
 | cited-answers 403 | URL의 workspace가 `workspace-a`(또는 설정한 `WORKSPACE_ID`)인지 확인 |
-| 빈 답 / evidence 없음 | 데모 시드 켰는지 (`SKIP_DEMO_SEED` 끄기), query를 `aaaaaaaa`로 |
+| 빈 답 / evidence 없음 | 데모 시드 켰는지 (`SKIP_DEMO_SEED` 끄기), query를 `"Is MFA required for VPN?"`로 |
 | Postgres 연결 실패 | compose postgres up 여부, `DATABASE_URL` 사용자/비번 |
 | OpenSearch 실패 | compose opensearch up, `OPENSEARCH_URL=http://127.0.0.1:9200` |
 
@@ -216,5 +218,5 @@ curl -sS http://127.0.0.1:8080/health
 curl -sS -X POST http://127.0.0.1:8080/workspaces/workspace-a/cited-answers \
   -H 'content-type: application/json' \
   -H 'Authorization: Bearer demo-key' \
-  -d '{"query":"aaaaaaaa"}'
+  -d '{"query":"Is MFA required for VPN?"}'
 ```

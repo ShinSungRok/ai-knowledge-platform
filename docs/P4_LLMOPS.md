@@ -166,9 +166,3 @@ pnpm validate:application:llmops-control-plane
 ```
 
 모듈: `app/knowledge/llmops`.
-
----
-
-## 면접 한 줄
-
-> I added an LLMOps **control plane**: persistent version registries, experiment run tracking with a real completed/failed status, evaluation gates backed by a reusable, request-overridable gate definition, regression checks, request-driven serving configuration (environment/traffic), and quality/cost/latency observations — plus a read-only HTTP inspection route per capability — so the platform can be operated as a managed system with real accumulated history, not a single throwaway demo call.
