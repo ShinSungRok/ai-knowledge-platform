@@ -152,7 +152,8 @@ not depend on a live cluster or a paid API key.
 Source / document → Chunk → Embed → Index
   → Retrieve (keyword / vector / hybrid)
   → Threshold filter (reject off-topic) → Normalized rerank
-  → LLM-judged rerank (reuses LanguageModelProvider)
+  → LLM-judged rerank (reuses LanguageModelProvider; temperature 0,
+    retries the hybrid→judged-rerank pass up to 3× if empty)
   → Grounding context → Prompt → Language model
   → Grounded answer + citations → HTTP / MCP
 ```
@@ -161,9 +162,11 @@ Source / document → Chunk → Embed → Index
 
 ```text
 Objective → Deterministic planner → Orchestrator
-  → Handoff (sequential)
+  → Skip check (workflow.skipRoles) → Delegation check (delegateToAgentId)
+  → Handoff (sequential / delegation) from the last completed step
   → Invoker stack: knowledge bridge (researcher) → LLM (synth/critic) → Fake
-  → Shared workflow memory → step results
+    (bounded retry on invoke failure)
+  → Shared workflow memory → step results (completed / skipped / partial)
 ```
 
 **Control plane (P4):**
