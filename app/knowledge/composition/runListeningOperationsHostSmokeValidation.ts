@@ -22,7 +22,56 @@ function assertTruthy(value: unknown, message: string): void {
   }
 }
 
+function assertLlmTemperatureDefaulting(): void {
+  console.log("[start-smoke] LLM temperature defaulting...");
+
+  const withoutKey = loadListeningOperationsHostEnv({ PORT: "0" });
+  assertEqual(withoutKey.llmMode, "fake", "no LLM_API_KEY → fake mode");
+
+  const withKeyNoOverride = loadListeningOperationsHostEnv({
+    PORT: "0",
+    LLM_API_KEY: "sk-test",
+  });
+  assertEqual(withKeyNoOverride.llmMode, "http", "LLM_API_KEY set → http mode");
+  assertTruthy(withKeyNoOverride.llm?.type === "http", "http llm option");
+  assertEqual(
+    withKeyNoOverride.llm?.type === "http"
+      ? withKeyNoOverride.llm.config.temperature
+      : undefined,
+    0,
+    "defaults to temperature 0 for reproducibility",
+  );
+
+  const withOverride = loadListeningOperationsHostEnv({
+    PORT: "0",
+    LLM_API_KEY: "sk-test",
+    LLM_TEMPERATURE: "0.7",
+  });
+  assertEqual(
+    withOverride.llm?.type === "http"
+      ? withOverride.llm.config.temperature
+      : undefined,
+    0.7,
+    "LLM_TEMPERATURE overrides the default",
+  );
+
+  const withBogusOverride = loadListeningOperationsHostEnv({
+    PORT: "0",
+    LLM_API_KEY: "sk-test",
+    LLM_TEMPERATURE: "not-a-number",
+  });
+  assertEqual(
+    withBogusOverride.llm?.type === "http"
+      ? withBogusOverride.llm.config.temperature
+      : undefined,
+    0,
+    "malformed LLM_TEMPERATURE falls back to 0, not a crash",
+  );
+}
+
 async function main(): Promise<void> {
+  assertLlmTemperatureDefaulting();
+
   const hostEnv = loadListeningOperationsHostEnv({
     ...process.env,
     HOST: "127.0.0.1",

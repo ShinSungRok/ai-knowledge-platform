@@ -23,6 +23,9 @@ export function loadLlmHttpProviderConfig(raw: unknown): LlmHttpProviderConfig {
   if (source["timeoutMs"] !== undefined) {
     config.timeoutMs = assertPositiveInteger(source["timeoutMs"], "timeoutMs");
   }
+  if (source["temperature"] !== undefined) {
+    config.temperature = assertTemperature(source["temperature"]);
+  }
 
   return { ...config };
 }
@@ -44,6 +47,20 @@ function assertPositiveInteger(value: unknown, field: string): number {
   ) {
     throw new Error(
       `LlmHttpProviderConfig.${field} must be a positive integer`,
+    );
+  }
+  return value;
+}
+
+function assertTemperature(value: unknown): number {
+  if (
+    typeof value !== "number" ||
+    !Number.isFinite(value) ||
+    value < 0 ||
+    value > 2
+  ) {
+    throw new Error(
+      "LlmHttpProviderConfig.temperature must be a finite number in [0, 2]",
     );
   }
   return value;

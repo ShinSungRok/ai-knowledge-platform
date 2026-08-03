@@ -65,11 +65,23 @@ function assertConfigLoaderAcceptsValid(): void {
     apiKey: "sk-test",
     model: "gpt-4o-mini",
     timeoutMs: 5_000,
+    temperature: 0,
   });
   assertEqual(loaded.baseUrl, "https://api.openai.com/v1", "baseUrl");
   assertEqual(loaded.apiKey, "sk-test", "apiKey");
   assertEqual(loaded.model, "gpt-4o-mini", "model");
   assertEqual(loaded.timeoutMs, 5_000, "timeoutMs");
+  assertEqual(loaded.temperature, 0, "temperature");
+}
+
+function assertConfigLoaderTemperatureOmittedWhenAbsent(): void {
+  console.log("[ai] loadLlmHttpProviderConfig omits temperature when absent...");
+  const loaded = loadLlmHttpProviderConfig({
+    baseUrl: "https://api.openai.com/v1",
+    apiKey: "sk-test",
+    model: "gpt-4o-mini",
+  });
+  assertEqual(loaded.temperature, undefined, "temperature omitted");
 }
 
 function assertConfigLoaderDefensiveCopy(): void {
@@ -107,6 +119,26 @@ function assertConfigLoaderRejectsInvalid(): void {
       }),
     "timeoutMs must be a positive integer",
   );
+  assertThrows(
+    () =>
+      loadLlmHttpProviderConfig({
+        baseUrl: "https://x",
+        apiKey: "k",
+        model: "m",
+        temperature: 3,
+      }),
+    "temperature must be a finite number in [0, 2]",
+  );
+  assertThrows(
+    () =>
+      loadLlmHttpProviderConfig({
+        baseUrl: "https://x",
+        apiKey: "k",
+        model: "m",
+        temperature: -0.1,
+      }),
+    "temperature must be a finite number in [0, 2]",
+  );
 }
 
 async function assertTransportPortContract(): Promise<void> {
@@ -136,6 +168,7 @@ async function assertTransportPortContract(): Promise<void> {
 async function main(): Promise<void> {
   assertModuleConstant();
   assertConfigLoaderAcceptsValid();
+  assertConfigLoaderTemperatureOmittedWhenAbsent();
   assertConfigLoaderDefensiveCopy();
   assertConfigLoaderRejectsInvalid();
   await assertTransportPortContract();

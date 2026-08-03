@@ -26,11 +26,13 @@ import { DefaultHybridSearch } from "../search/DefaultHybridSearch";
 import { DefaultKeywordSearch } from "../search/DefaultKeywordSearch";
 import { DefaultRerankedSearch } from "../search/DefaultRerankedSearch";
 import { LlmRerankedSearch } from "../search/LlmRerankedSearch";
+import { MAX_RERANK_RETRY_ATTEMPTS } from "../search/MAX_RERANK_RETRY_ATTEMPTS";
 import { MIN_KEYWORD_COVERAGE } from "../search/MIN_KEYWORD_COVERAGE";
 import { MIN_LLM_RELEVANCE_SCORE } from "../search/MIN_LLM_RELEVANCE_SCORE";
 import { ThresholdFilteringKeywordSearch } from "../search/ThresholdFilteringKeywordSearch";
 import { MIN_RELEVANCE_SCORE } from "../search/MIN_RELEVANCE_SCORE";
 import { NormalizedReranker } from "../search/NormalizedReranker";
+import { RetryingRerankedSearch } from "../search/RetryingRerankedSearch";
 import { ThresholdFilteringRerankedSearch } from "../search/ThresholdFilteringRerankedSearch";
 import {
   createEmbeddingProvider,
@@ -105,9 +107,13 @@ export async function createPostgresKnowledgeComposition(
     vectorKeywordFilteredSearch,
     languageModelProvider,
   );
-  const rerankedSearch = new ThresholdFilteringRerankedSearch(
+  const thresholdFilteredLlmRerankedSearch = new ThresholdFilteringRerankedSearch(
     llmJudgedSearch,
     MIN_LLM_RELEVANCE_SCORE,
+  );
+  const rerankedSearch = new RetryingRerankedSearch(
+    thresholdFilteredLlmRerankedSearch,
+    MAX_RERANK_RETRY_ATTEMPTS,
   );
   const contextAssembler = new DefaultContextAssembler(
     knowledgeDocumentRepository,

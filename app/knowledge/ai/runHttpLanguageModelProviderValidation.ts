@@ -122,6 +122,7 @@ async function assertRequestShape(): Promise<void> {
   const body = JSON.parse(request.body) as {
     model: string;
     messages: Array<{ role: string; content: string }>;
+    temperature?: number;
   };
   assertEqual(body.model, "gpt-4o-mini", "model");
   assertEqual(body.messages.length, 2, "messages length");
@@ -137,6 +138,27 @@ async function assertRequestShape(): Promise<void> {
     input.userMessage,
     "user content unchanged",
   );
+  assertEqual(
+    body.temperature,
+    undefined,
+    "temperature omitted from body when config has none",
+  );
+}
+
+async function assertRequestIncludesTemperatureWhenConfigured(): Promise<void> {
+  console.log(
+    "[ai] HttpLanguageModelProvider includes temperature in body when configured...",
+  );
+  const transport = new FakeLlmHttpTransport("success");
+  const provider = new HttpLanguageModelProvider(
+    { ...CONFIG, temperature: 0 },
+    transport,
+  );
+  await provider.generate(prompt());
+  const body = JSON.parse(transport.requests[0]!.body) as {
+    temperature?: number;
+  };
+  assertEqual(body.temperature, 0, "temperature included in body");
 }
 
 async function assertErrorMapping(): Promise<void> {
@@ -173,6 +195,7 @@ async function assertDoesNotMutatePrompt(): Promise<void> {
 async function main(): Promise<void> {
   await assertSuccessPath();
   await assertRequestShape();
+  await assertRequestIncludesTemperatureWhenConfigured();
   await assertErrorMapping();
   await assertDoesNotMutatePrompt();
   console.log("HttpLanguageModelProvider validation succeeded.");

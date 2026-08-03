@@ -116,10 +116,24 @@ function resolveLlmOption(
     timeoutRaw !== undefined && timeoutRaw !== ""
       ? Number(timeoutRaw)
       : undefined;
+  // Defaults to 0 (greedy/deterministic decoding), not the provider's own
+  // default (often ~1.0) — a grounded-QA/reranking-judge pipeline benefits
+  // far more from reproducibility than from generation variety. Override
+  // via LLM_TEMPERATURE if some variety is wanted.
+  const temperatureRaw = env["LLM_TEMPERATURE"]?.trim();
+  const parsedTemperature =
+    temperatureRaw !== undefined && temperatureRaw !== ""
+      ? Number(temperatureRaw)
+      : undefined;
+  const temperature =
+    parsedTemperature !== undefined && Number.isFinite(parsedTemperature)
+      ? parsedTemperature
+      : 0;
   const raw: Record<string, unknown> = {
     baseUrl: getEnv(env, "LLM_BASE_URL", "https://api.openai.com/v1"),
     apiKey: apiKey.trim(),
     model: getEnv(env, "LLM_MODEL", "gpt-4o-mini"),
+    temperature,
   };
   if (
     timeoutMs !== undefined &&

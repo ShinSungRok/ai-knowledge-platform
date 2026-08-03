@@ -26,6 +26,9 @@ export class HttpLanguageModelProvider implements LanguageModelProvider {
         { role: "system", content: validated.systemInstruction },
         { role: "user", content: validated.userMessage },
       ],
+      ...(this.config.temperature !== undefined
+        ? { temperature: this.config.temperature }
+        : {}),
     });
 
     const response = await this.transport.fetch({
