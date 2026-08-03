@@ -20,7 +20,7 @@ runnable HTTP host — not only a notebook or a chat UI.
 - **3 projects, all CLOSED** — P2 knowledge serving, P3 multi-agent
   workflow engine, P4 LLMOps control plane, each with every charter
   capability at **Completed**, not just scaffolded.
-- **180 dependency-free validation scripts + `tsc`** — `pnpm validate`
+- **181 dependency-free validation scripts + `tsc`** — `pnpm validate`
   proves correctness with zero Docker, network calls, or API keys (8 more
   optional live Postgres/OpenSearch/OTLP/JWT/LLM checks skip with exit 0
   when unconfigured).
@@ -115,8 +115,13 @@ not depend on a live cluster or a paid API key.
   queries (`insufficientEvidence`), then a normalized reranker plus an
   LLM-judged reranking pass (reusing the same `LanguageModelProvider`, no
   extra dependency) pick the single most relevant chunk among similar
-  candidates. Fake/InMemory by default, optional Postgres / OpenSearch
-  wiring.
+  candidates. The judged pass defaults its LLM call to `temperature: 0`
+  and retries the whole hybrid → judged-rerank pipeline up to 3 times if
+  every candidate is filtered out — a borderline judged score on one
+  attempt is common with real hosted LLMs even at low temperature, and
+  this measurably raised real-world recall in testing (a previously
+  ~60–80%-reliable query went to 10/10 across repeated live runs). Fake/
+  InMemory by default, optional Postgres / OpenSearch wiring.
 - **Real demo content** — the original MFA/VPN policy excerpt plus a
   law.go.kr snapshot (416 real 개인정보보호법 / 근로기준법 / 정보통신망법
   articles), fetched once via `pnpm demo:seed:law-snapshot` into a committed
@@ -346,6 +351,7 @@ Optional (see `.env.example`):
 | Env | Effect |
 |---|---|
 | `LLM_API_KEY` (+ `LLM_BASE_URL` / `LLM_MODEL`) | HTTP LLM for cited-answers and workflow synth/critic |
+| `LLM_TEMPERATURE` | Sampling temperature for that HTTP LLM; defaults to `0` (reproducibility) when `LLM_API_KEY` is set |
 | `EMBEDDING_API_KEY` (+ `EMBEDDING_BASE_URL` / `EMBEDDING_MODEL`) | HTTP embedding provider (defaults to `text-embedding-3-large`, 1536-dim) |
 | `DATABASE_URL` | Postgres document store + SQL vectors |
 | `OPENSEARCH_URL` | OpenSearch vector index |
