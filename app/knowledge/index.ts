@@ -123,7 +123,7 @@ export {
   SqlVectorIndex,
   loadOpenSearchClientConfig,
   OpenSearchVectorIndex,
-  OPENSEARCH_VECTOR_COSINE_SCRIPT_SOURCE,
+  OPENSEARCH_FIND_NEAREST_FETCH_SIZE,
   FakeOpenSearchHttpTransport,
   FetchOpenSearchHttpTransport,
 } from "./embedding";

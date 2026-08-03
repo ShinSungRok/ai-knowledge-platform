@@ -11,8 +11,10 @@ type StoredDoc = {
 /**
  * In-memory OpenSearch REST subset for {@link OpenSearchVectorIndex} validation.
  *
- * Supports HEAD/PUT index, PUT/GET/DELETE `_doc`, and POST `_search` with
- * workspace term filter + cosine ranking (score desc, chunkId asc).
+ * Supports HEAD/PUT index, PUT/GET/DELETE `_doc`, and POST `_search` with a
+ * workspace term filter. Ranking is not simulated here — the real cosine
+ * ranking lives in {@link OpenSearchVectorIndex.findNearest} itself, which
+ * this Fake exercises the same as a real cluster would.
  */
 export class FakeOpenSearchHttpTransport implements OpenSearchHttpTransport {
   private readonly indexes = new Set<string>();
@@ -98,10 +100,8 @@ export class FakeOpenSearchHttpTransport implements OpenSearchHttpTransport {
         ? body.size
         : 10;
     const workspaceId = this.extractWorkspaceFilter(body);
-    const queryVector = this.extractQueryVector(body);
 
-    const scored: Array<{ doc: StoredDoc; score: number; id: string }> = [];
-    const queryNorm = this.norm(queryVector);
+    const matches: StoredDoc[] = [];
     for (const [key, doc] of this.documents.entries()) {
       if (!key.startsWith(`${indexName}\0`)) {
         continue;
@@ -109,30 +109,18 @@ export class FakeOpenSearchHttpTransport implements OpenSearchHttpTransport {
       if (doc.workspaceId !== workspaceId) {
         continue;
       }
-      const id = key.slice(indexName.length + 1);
-      scored.push({
-        doc,
-        id,
-        score: this.cosineSimilarity(queryVector, queryNorm, doc.vector),
-      });
+      matches.push(doc);
     }
 
-    scored.sort((a, b) => {
-      if (b.score !== a.score) {
-        return b.score - a.score;
-      }
-      if (a.doc.chunkId < b.doc.chunkId) return -1;
-      if (a.doc.chunkId > b.doc.chunkId) return 1;
-      return 0;
-    });
-
-    const hits = scored.slice(0, size).map((entry) => ({
-      _id: entry.id,
-      _score: entry.score,
+    // Ranking happens client-side in OpenSearchVectorIndex.findNearest, not
+    // here — this just needs to hand back every matching workspace vector
+    // (up to `size`) with its `_source` intact, in whatever order.
+    const hits = matches.slice(0, size).map((doc) => ({
+      _score: 1,
       _source: {
-        workspaceId: entry.doc.workspaceId,
-        chunkId: entry.doc.chunkId,
-        vector: [...entry.doc.vector],
+        workspaceId: doc.workspaceId,
+        chunkId: doc.chunkId,
+        vector: [...doc.vector],
       },
     }));
 
@@ -147,15 +135,7 @@ export class FakeOpenSearchHttpTransport implements OpenSearchHttpTransport {
     if (!query || typeof query !== "object") {
       throw new Error("Fake search requires query");
     }
-    const scriptScore = (query as { script_score?: unknown }).script_score;
-    if (!scriptScore || typeof scriptScore !== "object") {
-      throw new Error("Fake search requires script_score");
-    }
-    const inner = (scriptScore as { query?: unknown }).query;
-    if (!inner || typeof inner !== "object") {
-      throw new Error("Fake search requires script_score.query");
-    }
-    const bool = (inner as { bool?: unknown }).bool;
+    const bool = (query as { bool?: unknown }).bool;
     if (!bool || typeof bool !== "object") {
       throw new Error("Fake search requires bool filter");
     }
@@ -169,20 +149,6 @@ export class FakeOpenSearchHttpTransport implements OpenSearchHttpTransport {
       throw new Error("Fake search requires term.workspaceId");
     }
     return workspaceId;
-  }
-
-  private extractQueryVector(body: Record<string, unknown>): number[] {
-    const query = body.query as { script_score?: { script?: { params?: { queryVector?: unknown } } } };
-    const raw = query.script_score?.script?.params?.queryVector;
-    if (!Array.isArray(raw)) {
-      throw new Error("Fake search requires script.params.queryVector");
-    }
-    return raw.map((value) => {
-      if (typeof value !== "number" || !Number.isFinite(value)) {
-        throw new Error("queryVector entries must be finite numbers");
-      }
-      return value;
-    });
   }
 
   private parsePath(path: string): {
@@ -266,29 +232,5 @@ export class FakeOpenSearchHttpTransport implements OpenSearchHttpTransport {
         return value;
       }),
     };
-  }
-
-  private cosineSimilarity(
-    query: number[],
-    queryNorm: number,
-    candidate: number[],
-  ): number {
-    const candidateNorm = this.norm(candidate);
-    if (queryNorm === 0 || candidateNorm === 0) {
-      return 0;
-    }
-    let dot = 0;
-    for (let i = 0; i < query.length; i += 1) {
-      dot += (query[i] ?? 0) * (candidate[i] ?? 0);
-    }
-    return dot / (queryNorm * candidateNorm);
-  }
-
-  private norm(vector: number[]): number {
-    let sumOfSquares = 0;
-    for (const value of vector) {
-      sumOfSquares += value * value;
-    }
-    return Math.sqrt(sumOfSquares);
   }
 }

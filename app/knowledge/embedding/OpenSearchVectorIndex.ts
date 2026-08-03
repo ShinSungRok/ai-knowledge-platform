@@ -6,19 +6,32 @@ import type { ScoredEmbeddingVector } from "./ScoredEmbeddingVector";
 import type { VectorIndex } from "./VectorIndex";
 
 /**
- * Deterministic Painless source for cosine similarity over a stored float
- * vector array. Shared with Fake transports so ranking stays aligned with
- * {@link InMemoryVectorIndex} / {@link SqlVectorIndex} (zero-norm → 0).
+ * Fetch size for {@link OpenSearchVectorIndex.findNearest}'s workspace-filter
+ * query — bounded by OpenSearch's default `index.max_result_window` (10000).
+ * Every matching workspace vector is fetched and ranked in-process (see
+ * class doc below); a production-scale workspace beyond this bound would
+ * need pagination, out of scope for this demo-scale adapter.
  */
-export const OPENSEARCH_VECTOR_COSINE_SCRIPT_SOURCE =
-  "double dot=0.0;double qn=0.0;double dn=0.0;for(int i=0;i<params.queryVector.length;i++){double q=params.queryVector[i];double d=doc['vector'][i];dot+=q*d;qn+=q*q;dn+=d*d;}if(qn==0.0||dn==0.0){return 0.0;}return dot/(Math.sqrt(qn)*Math.sqrt(dn));";
+export const OPENSEARCH_FIND_NEAREST_FETCH_SIZE = 10000;
 
 /**
  * OpenSearch REST adapter for {@link VectorIndex}.
  *
  * Uses {@link OpenSearchHttpTransport} only — no official OpenSearch JS SDK.
  * Index mapping stores `workspaceId`/`chunkId` as keyword and `vector` as a
- * float array; nearest neighbor uses `script_score` cosine (not knn plugin).
+ * plain float array (not the `knn_vector` type — no ANN plugin dependency).
+ *
+ * `findNearest` filters by `workspaceId` in OpenSearch, then ranks
+ * candidates by cosine similarity **in process**, matching
+ * {@link InMemoryVectorIndex} / {@link SqlVectorIndex} exactly. This is
+ * deliberate, not a missed optimization: OpenSearch/Elasticsearch return a
+ * plain multi-valued field's doc-values from `doc['vector'][i]` in *sorted
+ * ascending order*, not insertion order, when accessed from a Painless
+ * script — so a `script_score` cosine computed there silently scores
+ * against a scrambled vector, not the one that was stored. Ranking on the
+ * `_source` array (which preserves the original JSON order) after fetching
+ * avoids that pitfall entirely, at the cost of not being genuine ANN search
+ * at scale — acceptable for this adapter's demo-scale scope.
  */
 export class OpenSearchVectorIndex implements VectorIndex {
   private indexEnsured = false;
@@ -95,21 +108,12 @@ export class OpenSearchVectorIndex implements VectorIndex {
       path: `/${this.config.indexName}/_search`,
       headers: this.requestHeaders({ "Content-Type": "application/json" }),
       body: JSON.stringify({
-        size: limit,
+        size: OPENSEARCH_FIND_NEAREST_FETCH_SIZE,
         query: {
-          script_score: {
-            query: {
-              bool: {
-                filter: [{ term: { workspaceId } }],
-              },
-            },
-            script: {
-              source: OPENSEARCH_VECTOR_COSINE_SCRIPT_SOURCE,
-              params: { queryVector: [...queryVector] },
-            },
+          bool: {
+            filter: [{ term: { workspaceId } }],
           },
         },
-        sort: [{ _score: "desc" }, { chunkId: "asc" }],
       }),
     });
     this.assertOk(response.status, "search");
@@ -119,19 +123,54 @@ export class OpenSearchVectorIndex implements VectorIndex {
       throw new Error("OpenSearch search response missing hits.hits");
     }
 
+    const queryNorm = this.norm(queryVector);
     const scored: ScoredEmbeddingVector[] = [];
     for (const hit of hits) {
       if (!hit || typeof hit !== "object") {
         throw new Error("OpenSearch hit must be an object");
       }
-      const record = hit as { _source?: unknown; _score?: unknown };
+      const record = hit as { _source?: unknown };
       const vector = this.sourceToVector(record._source);
-      if (typeof record._score !== "number" || !Number.isFinite(record._score)) {
-        throw new Error("OpenSearch hit._score must be a finite number");
-      }
-      scored.push({ vector, score: record._score });
+      scored.push({
+        vector,
+        score: this.cosineSimilarity(queryVector, queryNorm, vector.vector),
+      });
     }
-    return scored;
+
+    scored.sort((a, b) => {
+      if (b.score !== a.score) {
+        return b.score - a.score;
+      }
+      if (a.vector.chunkId < b.vector.chunkId) return -1;
+      if (a.vector.chunkId > b.vector.chunkId) return 1;
+      return 0;
+    });
+
+    return scored.slice(0, limit);
+  }
+
+  private cosineSimilarity(
+    query: number[],
+    queryNorm: number,
+    candidate: number[],
+  ): number {
+    const candidateNorm = this.norm(candidate);
+    if (queryNorm === 0 || candidateNorm === 0) {
+      return 0;
+    }
+    let dot = 0;
+    for (let i = 0; i < query.length; i += 1) {
+      dot += (query[i] ?? 0) * (candidate[i] ?? 0);
+    }
+    return dot / (queryNorm * candidateNorm);
+  }
+
+  private norm(vector: number[]): number {
+    let sumOfSquares = 0;
+    for (const value of vector) {
+      sumOfSquares += value * value;
+    }
+    return Math.sqrt(sumOfSquares);
   }
 
   private async ensureIndex(): Promise<void> {

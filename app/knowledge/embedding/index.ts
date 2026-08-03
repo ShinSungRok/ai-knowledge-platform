@@ -29,7 +29,7 @@ export type { OpenSearchClientConfig } from "./OpenSearchClientConfig";
 export { loadOpenSearchClientConfig } from "./loadOpenSearchClientConfig";
 export {
   OpenSearchVectorIndex,
-  OPENSEARCH_VECTOR_COSINE_SCRIPT_SOURCE,
+  OPENSEARCH_FIND_NEAREST_FETCH_SIZE,
 } from "./OpenSearchVectorIndex";
 export { FakeOpenSearchHttpTransport } from "./FakeOpenSearchHttpTransport";
 export { FetchOpenSearchHttpTransport } from "./FetchOpenSearchHttpTransport";
